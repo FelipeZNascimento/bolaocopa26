@@ -34,12 +34,12 @@
         fluid
         :allowEmpty="false"
         class="buttons"
-        v-model="resultsViewLocalObj"
-        :options="resultsViewOptions"
+        v-model="gamesViewLocalObj"
+        :options="gamesViewOptions"
         optionLabel="label"
         dataKey="label"
         size="small"
-        @click="() => handleResultsViewConfig(resultsViewLocalObj.value)"
+        @click="() => handleGamesViewConfig(gamesViewLocalObj.value)"
       />
     </div>
     <PrimeDivider />
@@ -87,30 +87,48 @@
         @click="() => handleColumnConfig(columnLocalObj.value)"
       />
     </div>
+    <PrimeDivider />
+    <h2>Preferências</h2>
+    <div class="button-group">
+      <div class="label">Favoritos ({{ favoritesCount }})</div>
+      <div>
+        <PrimeButton
+          class="buttons"
+          label="Remover Todos"
+          severity="danger"
+          icon="pi pi-trash"
+          @click="handleClearFavorites"
+        />
+      </div>
+    </div>
     <template #footer> </template>
   </PrimeDialog>
 </template>
 <script setup lang="ts">
 import { isMobile } from '@basitcodeenv/vue3-device-detect';
-import { computed, ref, watch, watchEffect } from 'vue';
+import { computed, onMounted, ref, watch, watchEffect } from 'vue';
 
+import type { IUser } from '@/stores/activeProfile.types';
 import type {
   TColumn,
   TColumnsValue,
+  TGamesView,
+  TGamesViewValue,
   TRankingPosition,
   TRankingPositionValue,
-  TResultsView,
-  TResultsViewValue,
   TRowSpacing,
   TRowSpacingValue,
   TTheme,
   TThemeValue,
 } from '@/stores/configuration.types';
 
+import FavoritesService from '@/services/favorites';
 import { useConfigurationStore } from '@/stores/configuration';
+import { useNotificationStore } from '@/stores/notification';
 import { useRankingStore } from '@/stores/ranking';
 
 const props = defineProps<{
+  activeProfile: IUser | null;
   handleCloseModal: () => void;
   isOpen: boolean;
 }>();
@@ -118,10 +136,12 @@ const props = defineProps<{
 // ------ Refs ------
 const isVisible = ref(false);
 const themeLocalObj = ref();
-const resultsViewLocalObj = ref();
+const gamesViewLocalObj = ref();
 const rankingPositionLocalObj = ref();
 const rowSpacingLocalObj = ref();
 const columnLocalObj = ref();
+const favoritesCount = ref(0);
+
 const themeOptions = ref<TTheme[]>([
   { label: 'Claro', value: 'light' },
   { label: 'Escuro', value: 'dark' },
@@ -130,7 +150,7 @@ const rankingPositionOptions = ref<TRankingPosition[]>([
   { label: 'Sempre ativo', value: 'active' },
   { label: 'Modal (menu)', value: 'modal' },
 ]);
-const resultsViewOptions = ref<TResultsView[]>([
+const gamesViewOptions = ref<TGamesView[]>([
   { label: 'Grid', value: 'grid' },
   { label: 'Linhas', value: 'lines' },
 ]);
@@ -146,25 +166,42 @@ const columnOptions = ref<TColumn[]>([
 // ------ Initialization ------
 const rankingStore = useRankingStore();
 const configurationStore = useConfigurationStore();
+const favoritesService = new FavoritesService();
+const notificationStore = useNotificationStore();
+
+onMounted(() => {
+  loadFavoritesCount();
+});
 
 // ------ Computed Properties ------
 const rankingPosition = computed(() => configurationStore.rankingPosition);
 const columnConfig = computed(() => rankingStore.columnsOption);
 const rowSpacingConfig = computed(() => rankingStore.rowSpacing);
 const theme = computed(() => configurationStore.theme);
-const resultsView = computed(() => configurationStore.resultsView);
+const gamesView = computed(() => configurationStore.gamesView);
 
 // ------ Functions  ------
+function handleClearFavorites() {
+  console.log('Clearing all favorites, current count:', favoritesCount.value);
+  if (favoritesCount.value > 0 && props.activeProfile) {
+    favoritesService.clearAllFavorites(props.activeProfile.id);
+    loadFavoritesCount();
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new CustomEvent('favorites-cleared'));
+  }
+  notificationStore.success('Todos os favoritos foram removidos');
+}
+
 function handleColumnConfig(newOption: TColumnsValue) {
   rankingStore.setColumnsOption(newOption);
 }
 
-function handleRankingPositionConfig(newOption: TRankingPositionValue) {
-  configurationStore.setRankingPosition(newOption);
+function handleGamesViewConfig(newOption: TGamesViewValue) {
+  configurationStore.setGamesView(newOption);
 }
 
-function handleResultsViewConfig(newOption: TResultsViewValue) {
-  configurationStore.setResultsView(newOption);
+function handleRankingPositionConfig(newOption: TRankingPositionValue) {
+  configurationStore.setRankingPosition(newOption);
 }
 
 function handleRowSpacingConfig(newOption: TRowSpacingValue) {
@@ -174,10 +211,17 @@ function handleRowSpacingConfig(newOption: TRowSpacingValue) {
 function handleThemeConfig(newOption: TThemeValue) {
   configurationStore.setTheme(newOption);
 }
+function loadFavoritesCount() {
+  if (props.activeProfile) {
+    favoritesCount.value = favoritesService.getFavoritesCount(props.activeProfile.id);
+  } else {
+    favoritesCount.value = 0;
+  }
+}
 
 // ------ Watch Effect Properties ------
 watchEffect(
-  () => (resultsViewLocalObj.value = resultsViewOptions.value.find((option) => option.value === resultsView.value)),
+  () => (gamesViewLocalObj.value = gamesViewOptions.value.find((option) => option.value === gamesView.value)),
 );
 
 watchEffect(() => (themeLocalObj.value = themeOptions.value.find((option) => option.value === theme.value)));
@@ -201,6 +245,7 @@ watch(
   async (newValue) => {
     if (newValue) {
       isVisible.value = true;
+      loadFavoritesCount();
     }
   },
 );

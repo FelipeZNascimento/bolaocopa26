@@ -1,7 +1,7 @@
 export enum ROUTE_ID {
   HOME,
   BET,
-  RESULTS,
+  GAMES,
   EXTRAS,
   RECORDS,
   RANKING,
@@ -23,10 +23,10 @@ export const ROUTES = [
   //   needCredentials: false,
   // },
   {
-    id: ROUTE_ID.RESULTS,
-    label: 'Resultados',
+    id: ROUTE_ID.GAMES,
+    label: 'Jogos',
     needCredentials: false,
-    url: '/resultados',
+    url: '/jogos',
   },
   {
     id: ROUTE_ID.BET,
@@ -35,6 +35,6 @@ export const ROUTES = [
     url: '/apostar',
   },
   { id: ROUTE_ID.EXTRAS, label: 'Extras', needCredentials: true, url: '/extras' },
-  // { id: ROUTE_ID.RECORDS, label: 'Records', url: '/records', needCredentials: false },
+  { id: ROUTE_ID.RANKING, label: 'Ranking', needCredentials: false, url: '/ranking' },
   { id: ROUTE_ID.RULES, label: 'Regras', needCredentials: false, url: '/regras' },
 ];

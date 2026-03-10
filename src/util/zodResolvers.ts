@@ -19,8 +19,8 @@ export const signupResolver = ref(
       password: z.string().min(6, { message: 'Senha tem que ter pelo menos 6 caracteres' }),
       username: z
         .string()
-        .min(6, { message: 'Usuário tem que ter entre 6 e 12 caracteres' })
-        .max(12, { message: 'Usuário tem que ter entre 6 e 12 caracteres' }),
+        .min(4, { message: 'Apelido tem que ter entre 4 e 12 caracteres' })
+        .max(12, { message: 'Apelido tem que ter entre 4 e 12 caracteres' }),
     }),
   ),
 );
@@ -31,8 +31,8 @@ export const updateProfileResolver = ref(
       name: z.string().min(1, { message: 'Nome está vazio' }),
       username: z
         .string()
-        .min(6, { message: 'Usuário tem que ter entre 6 e 12 caracteres' })
-        .max(12, { message: 'Usuário tem que ter entre 6 e 12 caracteres' }),
+        .min(4, { message: 'Apelido tem que ter entre 4 e 12 caracteres' })
+        .max(12, { message: 'Apelido tem que ter entre 4 e 12 caracteres' }),
     }),
   ),
 );

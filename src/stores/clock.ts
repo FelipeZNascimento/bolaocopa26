@@ -25,7 +25,7 @@ export const useClockStore = defineStore('clock', () => {
     currentTimestamp.value = Math.floor(currentTime.value.getTime() / 1000);
   }
 
-  function formattedTime(customTimestamp?: number) {
+  function getFormattedTime(customTimestamp?: number) {
     if (customTimestamp) {
       const customDate = new Date(customTimestamp * 1000);
       return customDate.toLocaleTimeString('pt-BR', {
@@ -53,7 +53,7 @@ export const useClockStore = defineStore('clock', () => {
     currentTime,
     currentTimestamp,
     formattedDate,
-    formattedTime,
+    getFormattedTime,
     startClock,
     stopClock,
   };

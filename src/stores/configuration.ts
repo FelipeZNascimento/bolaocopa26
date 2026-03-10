@@ -1,36 +1,36 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-import type { TRankingPositionValue, TResultsViewValue, TThemeValue } from './configuration.types';
+import type { TRankingPositionValue, TGamesViewValue, TThemeValue } from './configuration.types';
 
 const initialState = {
   rankingPosition: 'active' as TRankingPositionValue,
-  resultsView: 'grid' as TResultsViewValue,
+  gamesView: 'grid' as TGamesViewValue,
   theme: 'dark' as TThemeValue,
 };
 
 export const useConfigurationStore = defineStore('configuration', () => {
-  const currentSeason = ref<null | number>(null);
-  const seasonStart = ref<null | number>(null);
-  const currentWeek = ref<null | number>(null);
-  const selectedWeek = ref<null | number>(null);
+  const currentEdition = ref<null | number>(null);
+  const editionStart = ref<null | number>(null);
+  const currentRound = ref<null | number>(null);
+  const selectedRound = ref<null | number>(null);
   const isLoading = ref<boolean>(true);
   const error = ref<Error | null>(null);
   const theme = ref<TThemeValue>(initialState.theme);
-  const resultsView = ref<TResultsViewValue>(initialState.resultsView);
+  const gamesView = ref<TGamesViewValue>(initialState.gamesView);
   const rankingPosition = ref<TRankingPositionValue>(initialState.rankingPosition);
 
   function setInitialState() {
     theme.value = initialState.theme;
-    resultsView.value = initialState.resultsView;
+    gamesView.value = initialState.gamesView;
     rankingPosition.value = initialState.rankingPosition;
     localStorage.removeItem('ranking-columns');
     localStorage.removeItem('theme-preference');
     localStorage.removeItem('ranking-position');
   }
 
-  function setSeasonStart(timestamp: number) {
-    seasonStart.value = timestamp;
+  function setEditionStart(timestamp: number) {
+    editionStart.value = timestamp;
   }
 
   function isDarkMode() {
@@ -54,21 +54,21 @@ export const useConfigurationStore = defineStore('configuration', () => {
     localStorage.setItem('ranking-position', newValue);
   }
 
-  function setResultsView(view: TResultsViewValue) {
-    resultsView.value = view;
+  function setGamesView(view: TGamesViewValue) {
+    gamesView.value = view;
     localStorage.setItem('results-view', view);
   }
 
-  function setCurrentSeason(season: number) {
-    currentSeason.value = season;
+  function setCurrentEdition(season: number) {
+    currentEdition.value = season;
   }
 
-  function setCurrentWeek(week: number) {
-    currentWeek.value = week;
+  function setCurrentRound(week: number) {
+    currentRound.value = week;
   }
 
-  function setSelectedWeek(week: number) {
-    selectedWeek.value = week;
+  function setSelectedRound(week: number) {
+    selectedRound.value = week;
   }
 
   function setLoading(loadingState: boolean) {
@@ -80,24 +80,24 @@ export const useConfigurationStore = defineStore('configuration', () => {
   }
 
   return {
-    currentSeason,
-    currentWeek,
+    currentEdition,
+    currentRound,
+    editionStart,
     error,
     isDarkMode,
     isLoading,
     rankingPosition,
-    resultsView,
-    seasonStart,
-    selectedWeek,
-    setCurrentSeason,
-    setCurrentWeek,
+    gamesView,
+    selectedRound,
+    setCurrentEdition,
+    setCurrentRound,
+    setEditionStart,
     setError,
     setInitialState,
     setLoading,
     setRankingPosition,
-    setResultsView,
-    setSeasonStart,
-    setSelectedWeek,
+    setGamesView,
+    setSelectedRound,
     setTheme,
     theme,
   };

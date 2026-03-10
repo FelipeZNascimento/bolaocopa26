@@ -1,18 +1,11 @@
 <template>
   <div class="outer" :class="{ 'outer-short': isShort }">
-    <span class="usericon">
-      <FontAwesomeIcon :style="{ color: color }" :icon="icon" />
-    </span>
     <span class="username" :class="{ active: isActive }">{{ name }}</span>
   </div>
 </template>
 <script lang="ts" setup>
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-
 withDefaults(
   defineProps<{
-    color: string;
-    icon: string;
     isActive?: boolean;
     isShort?: boolean;
     name: string;

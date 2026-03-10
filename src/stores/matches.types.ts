@@ -5,35 +5,73 @@ import type { IUser } from './activeProfile.types';
 export interface IBet {
   id: number;
   matchId: number;
-  user: Pick<IUser, 'color' | 'icon' | 'id' | 'isOnline' | 'name'>;
-  value: number;
+  scoreAway: number;
+  scoreHome: number;
+  timestamp: string;
+  user: Pick<IUser, 'id' | 'nickname'>;
+}
+
+export interface IConfederation {
+  abbreviation: string;
+  id: number;
+  name: string;
+  nameEn: string;
 }
 
 export interface IMatch {
-  away: ITeam;
+  awayTeam: ITeam;
   bets: IBet[];
-  clock: string;
-  home: ITeam;
-  homeTeamOdds: string;
+  homeTeam: ITeam;
   id: number;
+  idFifa: number;
   loggedUserBets: IBet | null;
-  overUnder: string;
+  referee: IReferee;
+  round: number;
+  score: IScore;
+  stadium: IStadium;
   status: TMatchStatus;
   timestamp: number;
 }
+export interface IReferee {
+  country: string;
+  countryEn: string;
+  dateOfBirth: string;
+  id: number;
+  idFifa: number;
+  name: string;
+}
+
+export interface IScore {
+  away: number;
+  awayPenalties: null | number;
+  home: number;
+  homePenalties: null | number;
+}
+
+export interface IStadium {
+  capacity: number;
+  city: string;
+  country: string;
+  countryEn: string;
+  geoLatitude: string;
+  geoLongitude: string;
+  id: number;
+  idCountry: number;
+  name: string;
+}
 
 export interface ITeam {
-  alias: string;
-  background: string;
-  code: string;
-  conference: TConference;
-  division: TDivision;
-  foreground: string;
+  abbreviation: string;
+  abbreviationEn: string;
+  colors: string;
+  confederation: IConfederation;
+  group: string;
   id: number;
+  idConfederation: number;
+  idFifa: number;
+  isoCode: string;
   name: string;
-  possession: boolean;
-  score: number;
-  winLosses: null | string;
+  nameEn: string;
 }
 
 export type TConference = 'AFC' | 'NFC';

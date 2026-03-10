@@ -10,25 +10,30 @@
     style="width: 60%; padding: var(--s-spacing)"
   >
     <template #header>
-      <p>
-        <IconAndName
-          v-if="selectedUser"
-          :color="selectedUser.color"
-          :name="selectedUser.name"
-          :icon="selectedUser.icon"
-          :isActive="isUserActive"
-        />
+      <p style="display: flex; align-items: center; gap: var(--s-spacing)">
+        <i
+          v-if="!isUserActive"
+          :class="isFavorite ? 'pi pi-star-fill' : 'pi pi-star'"
+          class="favorite-star"
+          @click="toggleFavorite"
+          v-tooltip.top="isFavorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'"
+        ></i>
+        <IconAndName v-if="selectedUser" :name="selectedUser.nickname" :isActive="isUserActive" />
       </p>
     </template>
-    <PrimeChart type="bar" :data="chartData()" :style="{ height: '300px' }" :options="chartOptions"></PrimeChart>
+    <PrimeChart type="bar" :data="chartData" :style="{ height: '300px' }" :options="chartOptions"></PrimeChart>
   </PrimeDialog>
 </template>
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+import { computed, onMounted, ref, watch } from 'vue';
 
 import type { IUser } from '@/stores/activeProfile.types';
 
 import IconAndName from '@/components/IconAndName.vue';
+import FavoritesService from '@/services/favorites';
+import { useActiveProfileStore } from '@/stores/activeProfile';
+import { useNotificationStore } from '@/stores/notification';
 import { useRankingStore } from '@/stores/ranking';
 
 const props = defineProps<{
@@ -40,31 +45,74 @@ const props = defineProps<{
 
 // ------ Refs ------
 const isVisible = ref(false);
+const favorites = ref<number[]>([]);
 
 // ------ Initialization ------
 const rankingStore = useRankingStore();
+const activeProfileStore = useActiveProfileStore();
+const notificationStore = useNotificationStore();
+const favoritesService = new FavoritesService();
 
 // ------ Computed Properties  ------
-const ranking = computed(() => rankingStore.weeksRanking);
+const { roundsRanking: roundsRanking, seasonRanking: seasonRanking } = storeToRefs(rankingStore);
+const { activeProfile } = storeToRefs(activeProfileStore);
+
+const isFavorite = computed(() => {
+  if (!props.selectedUser) return false;
+  return favorites.value.includes(props.selectedUser.id);
+});
 
 // ------ Functions  ------
-function chartData() {
-  const userWeeklyRankings = ranking.value.map((week) => {
-    const userLine = week.ranking.find((rankingLine) => rankingLine.user.id === props.selectedUser?.id);
+function loadFavorites() {
+  if (!activeProfile.value) {
+    favorites.value = [];
+    return;
+  }
+  favorites.value = favoritesService.getFavorites(activeProfile.value.id);
+}
 
-    if (!userLine) return { bullseye: 0, percentage: 0 };
-    const bullseye = userLine.score.bullseye * (parseInt(userLine.score.percentage) / userLine.score.winner);
-    const winner = parseFloat(userLine.score.percentage) - bullseye;
+function toggleFavorite() {
+  if (!activeProfile.value) {
+    notificationStore.error('Only logged in users can favorite players', 'Login Required');
+    return;
+  }
 
+  if (!props.selectedUser) return;
+
+  if (props.selectedUser.id === activeProfile.value.id) {
+    notificationStore.error('You cannot favorite yourself', 'Invalid Action');
+    return;
+  }
+
+  const userId = props.selectedUser.id;
+  const isNowFavorited = favoritesService.toggleFavorite(activeProfile.value.id, userId);
+
+  if (isNowFavorited) {
+    notificationStore.success(`${props.selectedUser.nickname} agora é um favorito!`, 'Favorito Adicionado');
+  } else {
+    notificationStore.message(`${props.selectedUser.nickname} removido dos favoritos.`, 'Favorito Removido');
+  }
+
+  loadFavorites();
+}
+
+const chartData = computed(() => {
+  const userLine = seasonRanking.value.find((userRanking) => userRanking.user.id === props.selectedUser?.id);
+  const roundsRankingList = Array.isArray(roundsRanking.value) ? roundsRanking.value : [];
+  const userRoundsRanking = roundsRankingList.map((round) => {
     return {
-      accumulatedBullseye: userLine.score.accumulatedBullseye,
-      accumulatedPoints: userLine.score.accumulatedPoints,
-      accumulatedPosition: userLine.score.accumulatedPosition,
-      bullseye: bullseye.toFixed(1),
-      position: userLine.user.position,
-      winner: winner.toFixed(1),
+      ranking: round.ranking.find((userRanking) => userRanking.user.id === props.selectedUser?.id),
+      round: round.round,
     };
   });
+  console.log('userRoundsRanking', userRoundsRanking);
+
+  if (!userLine) {
+    return {
+      datasets: [],
+      labels: [],
+    };
+  }
 
   return {
     datasets: [
@@ -72,7 +120,7 @@ function chartData() {
         backgroundColor: '#f4b303',
         borderColor: '#f4b303',
         borderWidth: 2,
-        data: userWeeklyRankings.map((week) => week.position),
+        data: userRoundsRanking.map((round) => round.ranking?.score.position),
         label: 'Posição',
         tension: 0.4,
         type: 'line',
@@ -82,7 +130,7 @@ function chartData() {
         backgroundColor: '#de6135',
         borderColor: '#de6135',
         borderWidth: 2,
-        data: userWeeklyRankings.map((week) => week.accumulatedPosition),
+        data: userRoundsRanking.map((round) => round.ranking?.accumulatedScore.position),
         label: 'Posição Geral',
         tension: 0.4,
         type: 'line',
@@ -90,22 +138,22 @@ function chartData() {
       },
       {
         backgroundColor: '#29c84e50',
-        data: userWeeklyRankings.map((week) => week.bullseye),
-        label: '% Pontos na Mosca',
+        data: userRoundsRanking.map((round) => round.ranking?.score.percentage),
+        label: '% de Pontos na Rodada',
         type: 'bar',
         yAxisID: 'y',
       },
-      {
-        backgroundColor: '#03a9f450',
-        data: userWeeklyRankings.map((week) => week.winner),
-        label: '% Pontos Vencedores',
-        type: 'bar',
-        yAxisID: 'y',
-      },
+      // {
+      //   backgroundColor: '#03a9f450',
+      //   data: userRoundsRanking.map((round) => round.ranking?.score.winner),
+      //   label: '% Pontos Vencedores',
+      //   type: 'bar',
+      //   yAxisID: 'y',
+      // },
     ],
-    labels: ranking.value.map((week) => `Semana ${week.week}`),
+    labels: userRoundsRanking.map((round) => `Rodada ${round.round}`),
   };
-}
+});
 
 const chartOptions = {
   maintainAspectRatio: false,
@@ -117,7 +165,7 @@ const chartOptions = {
       stacked: true,
       title: {
         display: true,
-        text: 'Porcentagem de Pontos',
+        text: 'Pontos Acumulados',
       },
     },
     y1: {
@@ -126,7 +174,7 @@ const chartOptions = {
         color: '#f4b303',
         drawOnChartArea: false,
       },
-      max: 35,
+      max: 140,
       min: 1,
       position: 'right',
       reverse: true,
@@ -143,12 +191,19 @@ const chartOptions = {
     },
   },
 };
+
+// ------ Initialization ------
+onMounted(() => {
+  loadFavorites();
+});
+
 // ------ Watches ------
 watch(
   () => props.isOpen,
   async (newValue) => {
     if (newValue) {
       isVisible.value = true;
+      loadFavorites();
     }
   },
 );
@@ -163,5 +218,28 @@ watch(isVisible, async (newValue) => {
 .content-class {
   padding: 0 !important;
   overflow-x: hidden !important;
+}
+</style>
+<style scoped>
+.favorite-star {
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: var(--bolao-c-yellow, #f4b303);
+  transition:
+    transform 0.2s,
+    opacity 0.2s;
+}
+
+.favorite-star:hover {
+  transform: scale(1.2);
+  opacity: 0.8;
+}
+
+.pi-star {
+  opacity: 0.5;
+}
+
+.pi-star-fill {
+  opacity: 1;
 }
 </style>

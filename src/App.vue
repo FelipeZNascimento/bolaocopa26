@@ -1,5 +1,5 @@
 <template>
-  <NavbarTop />
+  <NavbarBottom />
   <PrimeToast />
   <div class="outer-view">
     <RouterView />
@@ -10,7 +10,8 @@
 import { computed, watch } from 'vue';
 import { RouterView } from 'vue-router';
 
-import NavbarTop from './components/NavbarTop/NavbarTop.vue';
+import NavbarBottom from './components/NavbarTop/NavbarBottom.vue';
+// import NavbarTop from './components/NavbarTop/NavbarTop.vue';
 import ExtraBetService from './services/extra_bet';
 import MatchService from './services/match';
 import RankingService from './services/ranking';
@@ -43,12 +44,12 @@ startupService.initialize(initializationCallback).then(() => {
 });
 
 // ------ Computed ------
-const selectedWeek = computed(() => configurationStore.selectedWeek);
+const selectedRound = computed(() => configurationStore.selectedRound);
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 
 // ------ Watches ------
-// Fetches week's matches and week's ranking when selectedWeek is changed
-watch(selectedWeek, async (newValue, oldValue) => {
+// Fetches week's matches and week's ranking when selectedRound is changed
+watch(selectedRound, async (newValue, oldValue) => {
   if (newValue && oldValue && newValue !== oldValue) {
     matchService.fetch();
   }
@@ -58,7 +59,7 @@ watch(selectedWeek, async (newValue, oldValue) => {
 // Fetches rankings and week's matches when user updates profile
 watch(activeProfile, async (newValue) => {
   console.log('Fetching matches for active profile change...');
-  rankingService.fetch();
+  // rankingService.fetch();
   matchService.fetch();
 
   // Fetches extra bets if user logged in, clears bets if user logged out
@@ -69,10 +70,10 @@ watch(activeProfile, async (newValue) => {
   }
 
   // Week is possibly zero (preseason)
-  if (!selectedWeek.value) {
+  if (!selectedRound.value) {
     return;
   }
-  rankingService.fetch();
+  // rankingService.fetch();
 });
 </script>
 

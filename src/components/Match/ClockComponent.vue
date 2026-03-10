@@ -1,15 +1,14 @@
 <template>
   <div
+    class="left-aligned"
     :class="{
       'outer-clock': !isGridMode,
       'outer-clock-grid': isGridMode,
-      'right-aligned': isMatchStarted,
-      'left-aligned': !isMatchStarted,
     }"
   >
-    <RibbonComponent v-if="activeProfile && ribbon" :ribbon="ribbon" />
+    <RibbonComponent v-if="activeProfile && hitLevel" :hitLevel="hitLevel" />
     <span v-if="isClockStopped">{{ MATCH_STATUS_LABELS[status] }}</span>
-    <span v-if="isMatchStarted && !isClockStopped">{{ clock }} {{ MATCH_STATUS_LABELS[status] }}</span>
+    <!-- <span v-if="isMatchStarted && !isClockStopped">{{ clock }} {{ MATCH_STATUS_LABELS[status] }}</span> -->
     <span
       v-if="!isMatchStarted"
       :style="isGridMode ? { flexDirection: 'row' } : { flexDirection: 'column' }"
@@ -18,14 +17,14 @@
     >
       <p style="font-weight: bold">{{ clockStore.formattedDate(timestamp) }}</p>
       <span v-if="isGridMode" style="padding: 0 var(--xs-spacing)"></span>
-      <p>{{ clockStore.formattedTime(timestamp) }}</p>
+      <p style="font-size: var(--s-font-size)">{{ clockStore.getFormattedTime(timestamp) }}</p>
     </span>
   </div>
 </template>
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import type { Ribbon } from '@/constants/bets';
+import type { HitLevel } from '@/constants/bets';
 
 import { MATCH_STATUS_LABELS, STOPPED_GAME, type TMatchStatus } from '@/constants/match_status';
 import { useActiveProfileStore } from '@/stores/activeProfile';
@@ -34,10 +33,9 @@ import { useClockStore } from '@/stores/clock';
 import RibbonComponent from './RibbonComponent.vue';
 
 const props = defineProps<{
-  clock: string;
+  hitLevel?: HitLevel | null;
   isGridMode?: boolean;
   isMatchStarted: boolean;
-  ribbon?: Ribbon;
   status: TMatchStatus;
   timestamp: number;
 }>();
@@ -67,9 +65,10 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
   align-items: center;
   font-size: var(--m-font-size);
   position: relative;
-  background-color: var(--bolao-c-navy-t2);
+  background-color: var(--bolao-c-blue3-t2);
   color: var(--bolao-c-grey1);
   min-height: 40px;
+  border-radius: var(--border-radius);
 
   span {
     display: -webkit-box;
@@ -93,7 +92,7 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
   }
 
   @media (min-width: 1440px) {
-    width: 200px;
+    width: 140px;
     font-size: var(--m-font-size);
     padding: 0 var(--xxl-spacing);
   }

@@ -9,12 +9,12 @@
     :breakpoints="{ '1280px': '75vw', '575px': '90vw' }"
   >
     <template #header>
-      <h2>{{ isSignupMode ? 'Cadastro' : 'Login' }}</h2>
+      <h2>{{ formMode === 'signup' ? 'Cadastro' : 'Login' }}</h2>
     </template>
     <Form
       noValidate
       :initialValues
-      :resolver="isSignupMode ? signupResolver : loginResolver"
+      :resolver="resolverDecider()"
       v-slot="$form"
       @submit="(formData) => onFormSubmit(formData)"
     >
@@ -25,26 +25,26 @@
         </PrimeMessage>
         <label for="email">Email</label>
       </PrimeFloatLabel>
-      <PrimeFloatLabel variant="in" class="input">
+      <PrimeFloatLabel v-if="formMode !== 'forgotPassword'" variant="in" class="input">
         <PrimePassword name="password" type="password" :feedback="false" toggleMask fluid />
         <PrimeMessage v-if="$form.password?.invalid" severity="error" size="small" variant="simple">
           {{ $form.password.error?.message }}
         </PrimeMessage>
         <label for="password">Senha</label>
       </PrimeFloatLabel>
-      <PrimeFloatLabel v-if="isSignupMode" variant="in" class="input">
+      <PrimeFloatLabel v-if="formMode === 'signup'" variant="in" class="input">
         <PrimeInputText name="name" type="text" fluid />
         <PrimeMessage v-if="$form.name?.invalid" severity="error" size="small" variant="simple">
           {{ $form.name.error?.message }}
         </PrimeMessage>
         <label for="name">Nome Completo</label>
       </PrimeFloatLabel>
-      <PrimeFloatLabel v-if="isSignupMode" variant="in" class="input">
+      <PrimeFloatLabel v-if="formMode === 'signup'" variant="in" class="input">
         <PrimeInputText name="username" type="text" fluid />
         <PrimeMessage v-if="$form.username?.invalid" severity="error" size="small" variant="simple">
           {{ $form.username.error?.message }}
         </PrimeMessage>
-        <label for="username">Usuário</label>
+        <label for="username">Apelido</label>
       </PrimeFloatLabel>
       <div class="buttons-container">
         <PrimeButton
@@ -53,7 +53,7 @@
           label="Esqueci a senha"
           variant="text"
           severity="secondary"
-          @click="$form.reset()"
+          @click="setFormMode('forgotPassword')"
         >
           Esqueci a senha
         </PrimeButton>
@@ -71,16 +71,27 @@
         <PrimeTag severity="contrast" icon="pi pi-exclamation-triangle" :value="loginError?.message" />
       </p>
     </Form>
-    <template v-if="!isSignupMode" #footer>
+    <template #footer>
       <PrimeButton
+        v-if="formMode !== 'login'"
         rounded
-        @click="toggleMode"
+        @click="setFormMode('login')"
+        class="signup-button"
+        type="submit"
+        label="Voltar para o login"
+        variant="link"
+        severity="secondary"
+        :disabled="isLoading"
+      />
+      <PrimeButton
+        v-else
+        rounded
+        @click="setFormMode('signup')"
         class="signup-button"
         type="submit"
         label="Faça aqui o seu cadastro"
-        variant="primary"
+        variant="link"
         severity="secondary"
-        icon="pi pi-check"
         :disabled="isLoading"
       />
     </template>
@@ -89,7 +100,7 @@
 <script setup lang="ts">
 import { Form, type FormSubmitEvent } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
-import { computed, ref, watch } from 'vue';
+import { computed, ref, type Ref, watch } from 'vue';
 import { z } from 'zod';
 
 import UserService from '@/services/user';
@@ -102,13 +113,32 @@ const props = defineProps<{
 
 // ------ Refs ------
 const isVisible = ref(false);
-const isSignupMode = ref(false);
+const formMode: Ref<'forgotPassword' | 'login' | 'signup'> = ref('login');
 const initialValues = ref({
   email: '',
   name: '',
   password: '',
   username: '',
 });
+const resolverDecider = () => {
+  if (formMode.value === 'signup') {
+    return signupResolver.value;
+  } else if (formMode.value === 'login') {
+    return loginResolver.value;
+  } else if (formMode.value === 'forgotPassword') {
+    return forgotPasswordResolver.value;
+  }
+  return loginResolver.value;
+};
+
+const forgotPasswordResolver = ref(
+  zodResolver(
+    z.object({
+      email: z.email({ error: 'Email inválido' }),
+    }),
+  ),
+);
+
 const loginResolver = ref(
   zodResolver(
     z.object({
@@ -126,8 +156,8 @@ const signupResolver = ref(
       password: z.string().min(1, { message: 'Senha está vazia' }),
       username: z
         .string()
-        .min(6, { message: 'Usuário tem que ter entre 6 e 12 caracteres' })
-        .max(12, { message: 'Usuário tem que ter entre 6 e 12 caracteres' }),
+        .min(4, { message: 'Apelido tem que ter entre 4 e 12 caracteres' })
+        .max(12, { message: 'Apelido tem que ter entre 4 e 12 caracteres' }),
     }),
   ),
 );
@@ -148,11 +178,23 @@ function loginCallback(isSuccess: boolean) {
 }
 
 // ------ Functions  ------
+function onForgotPasswordSubmit(formData: FormSubmitEvent<Record<string, string>>) {
+  activeProfileStore.setError(null);
+  if (!formData.values) {
+    return;
+  }
+
+  const { email } = formData.values;
+  userService.forgotPassword(email, loginCallback);
+}
+
 function onFormSubmit(formData: FormSubmitEvent<Record<string, string>>) {
-  if (isSignupMode.value) {
+  if (formMode.value === 'signup') {
     onSignupSubmit(formData);
-  } else {
+  } else if (formMode.value === 'login') {
     onLoginSubmit(formData);
+  } else if (formMode.value === 'forgotPassword') {
+    onForgotPasswordSubmit(formData);
   }
 }
 
@@ -176,12 +218,12 @@ function onSignupSubmit(formData: FormSubmitEvent<Record<string, string>>) {
 }
 
 function resetState() {
-  isSignupMode.value = false;
+  formMode.value = 'login';
   activeProfileStore.setError(null);
 }
 
-function toggleMode() {
-  isSignupMode.value = !isSignupMode.value;
+function setFormMode(mode: 'forgotPassword' | 'login' | 'signup') {
+  formMode.value = mode;
   activeProfileStore.setError(null);
 }
 

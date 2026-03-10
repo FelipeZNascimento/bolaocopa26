@@ -3,9 +3,6 @@
   <header>
     <nav>
       <PrimeMenubar :model="filteredRoutes">
-        <template #start>
-          <img class="logo-image" src="/src/img/logo.png" :alt="`Bolao NFL logo`" />
-        </template>
         <template #item="{ item }">
           <RouterLink
             v-if="item.url"
@@ -45,7 +42,7 @@
               variant="outlined"
               severity="secondary"
             >
-              <IconAndName :color="activeProfile.color" :icon="activeProfile.icon" :name="activeProfile.name" />
+              <IconAndName :name="activeProfile.name" />
             </PrimeButton>
             <PrimeButton
               v-else
@@ -56,41 +53,37 @@
             />
             <a @click="isConfigModalOpen = true"><i class="pi pi-cog"></i></a>
           </div>
-          <PrimePopover ref="profilePopover">
-            <div class="outer-profile-popover">
-              <PrimeButton
-                variant="text"
-                severity="secondary"
-                size="small"
-                label="Perfil"
-                @click="isProfileModalOpen = true"
-              />
-              <PrimeButton
-                variant="text"
-                severity="secondary"
-                size="small"
-                label="Preferências"
-                @click="isPreferencesModalOpen = true"
-              />
-              <PrimeButton
-                variant="text"
-                severity="danger"
-                size="small"
-                label="Senha"
-                @click="isPasswordModalOpen = true"
-              />
-              <PrimeButton size="small" label="Sair" @click="handleLogout" />
-            </div>
-          </PrimePopover>
         </template>
       </PrimeMenubar>
+      <PrimePopover ref="profilePopover">
+        <div class="outer-profile-popover">
+          <PrimeButton
+            variant="text"
+            severity="secondary"
+            size="small"
+            label="Perfil"
+            @click="isProfileModalOpen = true"
+          />
+          <PrimeButton
+            variant="text"
+            severity="danger"
+            size="small"
+            label="Senha"
+            @click="isPasswordModalOpen = true"
+          />
+          <PrimeButton size="small" label="Sair" @click="handleLogout" />
+        </div>
+      </PrimePopover>
     </nav>
   </header>
   <LoginModal :isOpen="isLoginModalOpen" :handleCloseModal="() => (isLoginModalOpen = false)" />
   <ProfileModal :isOpen="isProfileModalOpen" :handleCloseModal="() => (isProfileModalOpen = false)" />
   <PasswordModal :isOpen="isPasswordModalOpen" :handleCloseModal="() => (isPasswordModalOpen = false)" />
-  <PreferencesModal :isOpen="isPreferencesModalOpen" :handleCloseModal="() => (isPreferencesModalOpen = false)" />
-  <ConfigModal :isOpen="isConfigModalOpen" :handleCloseModal="() => (isConfigModalOpen = false)" />
+  <ConfigModal
+    :activeProfile="activeProfile"
+    :isOpen="isConfigModalOpen"
+    :handleCloseModal="() => (isConfigModalOpen = false)"
+  />
   <RankingModal :isOpen="isRankingModalOpen" :handleCloseModal="() => (isRankingModalOpen = false)" />
 </template>
 <script setup lang="ts">
@@ -106,7 +99,6 @@ import { useConfigurationStore } from '@/stores/configuration';
 import IconAndName from '../IconAndName.vue';
 import RankingModal from '../Ranking/RankingModal.vue';
 import PasswordModal from './PasswordModal.vue';
-import PreferencesModal from './PreferencesModal.vue';
 import ProfileModal from './ProfileModal.vue';
 import { ROUTE_ID, ROUTES, type TROUTE } from './routes';
 
@@ -115,7 +107,6 @@ const isDarkMode = ref(false);
 const isLoginModalOpen = ref(false);
 const isProfileModalOpen = ref(false);
 const isPasswordModalOpen = ref(false);
-const isPreferencesModalOpen = ref(false);
 const isRankingModalOpen = ref(false);
 const profilePopover = ref();
 const isConfigModalOpen = ref(false);
@@ -187,7 +178,7 @@ nav {
   .p-menubar {
     width: 100%;
     border: none;
-    background-color: var(--bolao-c-navbar);
+    // background-color: var(--bolao-c-navbar);
     box-shadow: 0 0 15px 1px #0006;
     height: 100%;
     border-radius: 0;

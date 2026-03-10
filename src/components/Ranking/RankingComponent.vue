@@ -1,21 +1,41 @@
 <template>
   <div :class="{ 'outer-ranking': !isModal }">
     <div class="ranking-header">
-      <span class="toggle" :class="{ activeToggle: !isWeeklyRanking }" @click="isWeeklyRanking = false">
-        Temporada</span
+      <span class="toggle" :class="{ activeToggle: !isRoundRanking }" @click="isRoundRanking = false">Geral</span>
+      <span class="toggle" :class="{ activeToggle: isRoundRanking }" @click="isRoundRanking = true">Rodada</span>
+      <PrimeDivider layout="vertical" />
+      <span class="toggle" :class="{ activeToggle: !showFavoritesOnly }" @click="showFavoritesOnly = false">
+        <i class="pi pi-list"></i> Todos
+      </span>
+      <span
+        class="toggle"
+        :class="{ activeToggle: showFavoritesOnly }"
+        :style="{ color: showFavoritesOnly ? 'var(--bolao-c-gold)' : 'var(--bolao-c-grey1-t2)' }"
+        @click="showFavoritesOnly = true"
       >
-      <PrimeToggleSwitch v-model="isWeeklyRanking" />
-      <span class="toggle" :class="{ activeToggle: isWeeklyRanking }" @click="isWeeklyRanking = true"> Semana </span>
+        <i :class="{ 'pi pi-star-fill': showFavoritesOnly, 'pi pi-star': !showFavoritesOnly }"></i> Favoritos
+      </span>
+      <PrimeDivider layout="vertical" />
+      <span
+        class="toggle"
+        @click="
+          isRoundRanking = false;
+          showFavoritesOnly = false;
+        "
+      >
+        <i class="pi pi-filter-slash"></i>
+      </span>
     </div>
     <div class="ranking-container">
       <RankingTable
-        :isWeekly="isWeeklyRanking"
-        :isLoading="isWeeklyRanking ? isLoadingWeek : isLoadingSeason"
-        :rankingData="isWeeklyRanking ? selectedWeekRanking : seasonRanking"
+        :isRound="isRoundRanking"
+        :isLoading="isRoundRanking ? isLoadingRounds : isLoadingSeason"
+        :rankingData="isRoundRanking ? selectedRoundRanking : seasonRanking"
         :columnConfig="columnsOption"
         :rowSpacingConfig="rowSpacing"
         :activeProfile="activeProfile"
-        :error="isWeeklyRanking ? errorSeason : errorWeek"
+        :error="isRoundRanking ? errorSeason : errorRounds"
+        v-model:showFavoritesOnly="showFavoritesOnly"
       />
     </div>
   </div>
@@ -39,7 +59,8 @@ withDefaults(
 );
 
 // ------ Refs ------
-const isWeeklyRanking = ref(false);
+const isRoundRanking = ref(false);
+const showFavoritesOnly = ref(false);
 
 // ------ Initialization ------
 const configurationStore = useConfigurationStore();
@@ -49,31 +70,36 @@ const activeProfileStore = useActiveProfileStore();
 // ------ Computed Properties  ------
 const columnsOption = computed(() => rankingStore.columnsOption);
 const rowSpacing = computed(() => rankingStore.rowSpacing);
-const errorWeek = computed(() => rankingStore.errorWeek);
+const errorRounds = computed(() => rankingStore.errorRounds);
 const errorSeason = computed(() => rankingStore.errorSeason);
-const isLoadingWeek = computed(() => configurationStore.isLoading || rankingStore.isLoadingWeek);
-const selectedWeek = computed(() => configurationStore.selectedWeek);
+const isLoadingRounds = computed(() => configurationStore.isLoading || rankingStore.isLoadingRounds);
+const selectedRound = computed(() => configurationStore.selectedRound);
 const isLoadingSeason = computed(() => configurationStore.isLoading || rankingStore.isLoadingSeason);
 const seasonRanking = computed(() => rankingStore.seasonRanking);
-const selectedWeekRanking = computed(
-  () => rankingStore.weeksRanking?.find((weekRanking) => weekRanking.week === selectedWeek.value)?.ranking || [],
+const selectedRoundRanking = computed(
+  () => rankingStore.roundsRanking?.find((roundRanking) => roundRanking.round === selectedRound.value)?.ranking || [],
 );
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 </script>
 <style scoped>
 .outer-ranking {
-  top: 80px;
+  top: 15vh;
   right: 0;
 
   position: sticky;
   border-left: 1px solid var(--color-background-mute);
   min-width: 310px;
-  max-height: calc(100vh - 80px);
+  max-height: calc(80vh);
+  box-shadow: var(--drop-shadow);
+  border-radius: var(--border-radius);
+  /* padding-bottom: var(--l-spacing); */
+  background-color: var(--bolao-c-blue3-t2);
 }
 
 .ranking-container {
   max-height: calc(100% - 50px);
   overflow-y: auto;
+  scrollbar-gutter: stable;
 }
 
 .outer-position {
@@ -87,8 +113,9 @@ const activeProfile = computed(() => activeProfileStore.activeProfile);
   justify-content: center;
   align-items: center;
   padding: var(--s-spacing) 0;
-  font-size: var(--m-font-size);
+  font-size: var(--s-font-size);
   height: 50px;
+  color: var(--bolao-c-grey1-t2);
 }
 
 .skeleton-ranking-line {
@@ -103,12 +130,11 @@ const activeProfile = computed(() => activeProfileStore.activeProfile);
 }
 
 .activeToggle {
-  color: var(--color-contrast);
-  text-decoration: underline;
+  color: var(--bolao-c-white);
 }
 
 .error-message {
-  width: 100%;
-  margin: var(--xl-spacing) 0;
+  width: 90%;
+  margin: var(--xl-spacing);
 }
 </style>

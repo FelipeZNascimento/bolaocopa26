@@ -31,14 +31,14 @@ import { useConfigurationStore } from '@/stores/configuration';
 const clockStore = useClockStore();
 const configurationStore = useConfigurationStore();
 
-const seasonStart = computed(() => configurationStore.seasonStart);
+const editionStart = computed(() => configurationStore.editionStart);
 
 function formatDate() {
-  if (!seasonStart.value) {
+  if (!editionStart.value) {
     return '';
   }
 
-  return `${clockStore.formattedDate(seasonStart.value)}, ${clockStore.formattedTime(seasonStart.value)}`;
+  return `${clockStore.formattedDate(editionStart.value)}, ${clockStore.getFormattedTime(editionStart.value)}`;
 }
 
 const tableScores = [

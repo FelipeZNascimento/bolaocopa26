@@ -1,9 +1,9 @@
 export type TColumn = { label: string; value: TColumnsValue };
 export type TColumnsValue = 'compact' | 'complete';
+export type TGamesView = { label: string; value: TGamesViewValue };
+export type TGamesViewValue = 'grid' | 'lines';
 export type TRankingPosition = { label: string; value: TRankingPositionValue };
 export type TRankingPositionValue = 'active' | 'modal';
-export type TResultsView = { label: string; value: TResultsViewValue };
-export type TResultsViewValue = 'grid' | 'lines';
 export type TRowSpacing = { label: string; value: TRowSpacingValue };
 export type TRowSpacingValue = 'normal' | 'small';
 export type TTheme = { label: string; value: TThemeValue };

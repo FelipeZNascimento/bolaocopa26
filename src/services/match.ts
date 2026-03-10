@@ -8,11 +8,12 @@ import { useRankingStore } from '@/stores/ranking';
 import ApiService from './api_request';
 import WebsocketService from './websocket';
 
-interface fetchMatch {
-  matches: IMatch[];
-  season: string;
-  week: string;
-}
+type fetchMatch = IMatch[];
+// interface fetchMatch {
+//   matches: IMatch[];
+//   season: string;
+//   week: string;
+// }
 
 export default class MatchService {
   public websocketInstance;
@@ -27,21 +28,21 @@ export default class MatchService {
     this.websocketInstance = new WebsocketService(this.onWebsocketUpdate);
   }
 
-  public async fetch(week?: null | number, season?: null | number) {
+  public async fetch(round?: null | number, edition?: null | number) {
     this.matchesStore.setLoading(true);
     // Week may be "0" so needs to be checked against null and undefined
-    if (week === undefined || week === null) {
-      week = this.configurationStore.selectedWeek;
+    if (round === undefined || round === null) {
+      round = this.configurationStore.selectedRound;
     }
 
     // Season may be "0" so needs to be checked against null and undefined
-    if (season === undefined || season === null) {
-      season = this.configurationStore.currentSeason;
+    if (edition === undefined || edition === null) {
+      edition = this.configurationStore.currentEdition;
     }
 
     try {
-      const response = await this.apiRequest.get<fetchMatch>(`match/${season}/${week}`);
-      this.matchesStore.setMatches(response.matches);
+      const response = await this.apiRequest.get<fetchMatch>(`match/${edition}/${round}`);
+      this.matchesStore.setMatches(response);
       this.matchesStore.setLoading(false);
       this.matchesStore.setError(null);
 
@@ -79,7 +80,7 @@ export default class MatchService {
 
   private onWebsocketUpdate(this: WebSocket, ev: MessageEvent<any>) {
     const configurationStore = useConfigurationStore();
-    const selectedWeek = configurationStore.selectedWeek;
+    const selectedRound = configurationStore.selectedRound;
 
     const { matches, ranking, week } = JSON.parse(ev.data) as {
       matches: IMatch[];
@@ -88,13 +89,13 @@ export default class MatchService {
     };
 
     // Update matches if the update is for the current week being viewed
-    if (selectedWeek === week) {
+    if (selectedRound === week) {
       const matchesStore = useMatchesStore();
       matchesStore.updateMatches(matches);
     }
 
     const rankingStore = useRankingStore();
     rankingStore.setSeason(ranking.seasonRanking);
-    rankingStore.setWeeks(ranking.weeklyRanking);
+    rankingStore.setRounds(ranking.weeklyRanking);
   }
 }

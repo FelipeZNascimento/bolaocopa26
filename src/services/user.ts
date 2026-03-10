@@ -29,6 +29,25 @@ export default class UserService {
     this.configurationStore = useConfigurationStore();
   }
 
+  public async forgotPassword(email: string, callback: (isSuccess: boolean) => void) {
+    this.activeProfileStore.setLoading(true);
+    const forgotPasswordObject = {
+      email,
+    };
+
+    try {
+      const response = await this.apiRequest.post<IUser>('user/forgot-password', forgotPasswordObject);
+      this.activeProfileStore.setLoading(false);
+      this.activeProfileStore.setActiveProfile(response);
+      this.activeProfileStore.setError(null);
+      return callback(true);
+    } catch (error: unknown) {
+      this.activeProfileStore.setLoading(false);
+      this.activeProfileStore.setError(error as Error);
+      return callback(false);
+    }
+  }
+
   public async login(email: string, password: string, callback: (isSuccess: boolean) => void) {
     this.activeProfileStore.setLoading(true);
     const encryptedPassword = sha1(password).toString();
@@ -121,6 +140,27 @@ export default class UserService {
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setError(error as Error);
       return callback(false);
+    }
+  }
+
+  public async updatePasswordFromToken(email: string, newPassword: string, token: string) {
+    this.activeProfileStore.setLoading(true);
+
+    const resetPasswordObject = {
+      email,
+      newPassword: sha1(newPassword).toString(),
+      token,
+    };
+
+    try {
+      const response = await this.apiRequest.post<IUser>('user/update-password', resetPasswordObject);
+      this.activeProfileStore.setLoading(false);
+      this.activeProfileStore.setError(null);
+      return response;
+    } catch (error: unknown) {
+      this.activeProfileStore.setLoading(false);
+      this.activeProfileStore.setError(error as Error);
+      throw error; // Re-throw the error so it can be caught by the caller
     }
   }
 

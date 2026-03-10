@@ -2,51 +2,87 @@
   <div
     class="bets-column"
     :class="{
-      'green-bg': isBullseyeColumn,
-      'blue-bg': isHalfBetColumn,
+      'green-bg': isExactColumn,
+      'blue-bg': isOneScoreColumn,
+      'orange-bg': isWinnerOnlyColumn,
       'red-bg': isMissColumn,
     }"
   >
-    <p class="bets-column-header">{{ BETS_LABELS[columnValue] }}</p>
+    <p class="bets-column-header">{{ HIT_LEVELS_LABELS[props.hitLevel] }}</p>
     <!-- Render active user bet first -->
-    <div class="bets-line" v-if="activeUserBet && activeUserBet?.value === columnValue" :key="activeUserBet.id">
-      <IconAndName
-        v-if="!isMobile"
-        isActive
-        :color="activeUserBet.user.color"
-        :name="activeUserBet.user.name"
-        :icon="activeUserBet.user.icon"
-      />
-      <span v-else>{{ activeUserBet.user.name }}</span>
+    <div class="bets-line active" v-for="bet in activeUserBet" :key="bet.id">
+      <div class="nickname">
+        {{ bet.user.nickname }}
+      </div>
+      <div class="scores">{{ bet.scoreHome }} x {{ bet.scoreAway }}</div>
     </div>
     <!-- Render remaining bets -->
-    <div class="bets-line" v-for="bet in bets.filter((bet) => bet.value === columnValue)" :key="bet.id">
-      <IconAndName v-if="!isMobile" :color="bet.user.color" :name="bet.user.name" :icon="bet.user.icon" />
-      <span v-else>{{ bet.user.name }}</span>
+    <div class="bets-line" v-for="bet in bets" :key="bet.id">
+      <div class="nickname">
+        <i v-if="isFavoriteUser(bet.user.id)" class="pi pi-star-fill favorite-badge" v-tooltip.top="'Favorito'"></i>
+        {{ bet.user.nickname }}
+      </div>
+      <div class="scores">{{ bet.scoreHome }} x {{ bet.scoreAway }}</div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { isMobile } from '@basitcodeenv/vue3-device-detect';
-import { computed } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 
 import type { IBet } from '@/stores/matches.types';
 
-import IconAndName from '@/components/IconAndName.vue';
-import { BETS_LABELS, type BetsValues } from '@/constants/bets';
-import { type CorrectBets, isBullseye, isHalfBet } from '@/util/betsCalculator';
+import { HIT_LEVELS_LABELS, type HitLevel } from '@/constants/bets';
+import FavoritesService from '@/services/favorites';
+import { useActiveProfileStore } from '@/stores/activeProfile';
 
 const props = defineProps<{
-  activeUserBet: IBet | null;
+  activeUserBet: IBet[];
   bets: IBet[];
-  columnValue: BetsValues;
-  correctBets: CorrectBets;
+  hitLevel: HitLevel;
 }>();
 
+// ------ Initialization ------
+const activeProfileStore = useActiveProfileStore();
+const favoritesService = new FavoritesService();
+const favorites = ref<number[]>([]);
+
+onMounted(() => {
+  loadFavorites();
+  window.addEventListener('favorites-cleared', loadFavorites);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('favorites-cleared', loadFavorites);
+});
+
 // ------ Computed Properties ------
-const isBullseyeColumn = computed(() => props.activeUserBet && isBullseye(props.correctBets, props.columnValue));
-const isHalfBetColumn = computed(() => props.activeUserBet && isHalfBet(props.correctBets, props.columnValue));
-const isMissColumn = computed(() => !isBullseyeColumn.value && !isHalfBetColumn.value);
+const isExactColumn = computed(() => props.hitLevel === 'exact');
+const isOneScoreColumn = computed(() => props.hitLevel === 'oneScore');
+const isWinnerOnlyColumn = computed(() => props.hitLevel === 'winnerOnly');
+const isMissColumn = computed(() => props.hitLevel === 'miss');
+
+// ------ Functions ------
+function isFavoriteUser(userId: number): boolean {
+  return favorites.value.includes(userId);
+}
+
+function loadFavorites() {
+  if (!activeProfileStore.activeProfile) {
+    favorites.value = [];
+    return;
+  }
+  favorites.value = favoritesService.getFavorites(activeProfileStore.activeProfile.id);
+}
+
+// ------ Watches ------
+watch(
+  () => activeProfileStore.activeProfile,
+  (newProfile) => {
+    if (newProfile) {
+      loadFavorites();
+    }
+  },
+);
 </script>
 
 <style lang="scss" scoped>
@@ -61,16 +97,36 @@ const isMissColumn = computed(() => !isBullseyeColumn.value && !isHalfBetColumn.
   padding: var(--xs-spacing);
 }
 
+.active {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-contrast) 20%, transparent) 0%,
+    color-mix(in srgb, var(--color-contrast) 10%, transparent) 75%,
+    transparent 100%
+  );
+  box-shadow: inset 3px 0 0 var(--color-contrast);
+
+  .nickname,
+  .scores {
+    font-weight: bold;
+    color: var(--color-contrast);
+  }
+}
+
 .green-bg {
-  background-color: var(--bolao-c-green-t1);
+  background-color: var(--bolao-c-green-t2);
 }
 
 .blue-bg {
-  background-color: var(--bolao-c-blue-t1);
+  background-color: var(--bolao-c-blue-t2);
+}
+
+.orange-bg {
+  background-color: var(--bolao-c-orange-t2);
 }
 
 .red-bg {
-  background-color: var(--bolao-c-red-t1);
+  background-color: var(--bolao-c-red-t2);
 }
 
 .bets-column-header {
@@ -82,10 +138,29 @@ const isMissColumn = computed(() => !isBullseyeColumn.value && !isHalfBetColumn.
 
 .bets-line {
   display: flex;
-  padding: var(--xxs-spacing) 0;
+  padding: var(--xxs-spacing) var(--s-spacing);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   width: 100%;
+}
+
+.nickname {
+  position: relative;
+  flex: 3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.favorite-badge {
+  font-size: 0.6rem;
+  color: var(--bolao-c-gold);
+  z-index: 1;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+.scores {
+  flex: 1;
+  text-align: right;
 }
 </style>

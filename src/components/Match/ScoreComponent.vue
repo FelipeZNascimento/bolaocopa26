@@ -10,53 +10,52 @@
       <TeamComponent
         isAlias
         :isGridMode="isGridMode"
-        :isHomeTeam="false"
-        :isWinning="match.away.score > match.home.score"
-        :team="match.away"
+        :isHomeTeam="true"
+        :isWinning="match.score.away < match.score.home"
+        :team="match.homeTeam"
         :matchStatus="match.status"
-        :odds="!isMatchStarted ? match.overUnder : ''"
+        :score="match.score"
       />
       <TeamComponent
         isAlias
         :isGridMode="isGridMode"
-        :isHomeTeam="true"
-        :isWinning="match.away.score < match.home.score"
-        :team="match.home"
+        :isHomeTeam="false"
+        :isWinning="match.score.away > match.score.home"
+        :team="match.awayTeam"
         :matchStatus="match.status"
-        :odds="!isMatchStarted ? match.homeTeamOdds : ''"
+        :score="match.score"
       />
     </span>
-    <BettingComponent
+    <!-- <BettingComponent
       v-if="isBetting && !isGridMode"
       :match="match"
       :activeUserBet="activeUserBet"
       :isMatchStarted="isMatchStarted"
-    />
+    /> -->
   </div>
   <div v-else :class="{ 'outer-score-line': !isGridMode || isBetting, 'outer-score-grid': isGridMode }">
     <TeamComponent
-      :isAlias="isBetting"
       :isGridMode="isGridMode"
-      :isHomeTeam="false"
-      :isWinning="match.away.score > match.home.score"
-      :team="match.away"
-      :odds="!isMatchStarted ? match.overUnder : ''"
+      :isHomeTeam="true"
+      :isWinning="match.score.away < match.score.home"
+      :team="match.homeTeam"
       :matchStatus="match.status"
+      :score="match.score"
     />
-    <BettingComponent
+
+    <!-- <BettingComponent
       v-if="isBetting && !isGridMode"
       :match="match"
       :activeUserBet="activeUserBet"
       :isMatchStarted="isMatchStarted"
-    />
+    /> -->
     <TeamComponent
-      :isAlias="isBetting"
       :isGridMode="isGridMode"
-      :isHomeTeam="true"
-      :isWinning="match.away.score < match.home.score"
-      :team="match.home"
-      :odds="!isMatchStarted ? match.homeTeamOdds : ''"
+      :isHomeTeam="false"
+      :isWinning="match.score.away > match.score.home"
+      :team="match.awayTeam"
       :matchStatus="match.status"
+      :score="match.score"
     />
   </div>
 </template>
@@ -66,7 +65,6 @@ import { isMobileOnly } from '@basitcodeenv/vue3-device-detect';
 import type { Ribbon } from '@/constants/bets';
 import type { IBet, IMatch } from '@/stores/matches.types';
 
-import BettingComponent from './BettingComponent.vue';
 import RibbonComponent from './RibbonComponent.vue';
 import TeamComponent from './TeamComponent.vue';
 withDefaults(
@@ -114,6 +112,7 @@ withDefaults(
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  gap: var(--m-spacing);
 }
 
 .outer-score-grid {

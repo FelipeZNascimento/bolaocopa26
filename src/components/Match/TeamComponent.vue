@@ -1,46 +1,49 @@
 <template>
   <div
     class="outer-team"
-    :class="isNameless ? 'outer-team-nameless' : ''"
-    :style="{ backgroundColor: team.background, color: team.foreground }"
+    :class="[isNameless ? 'outer-team-nameless' : '']"
+    :style="{
+      flexDirection: isHomeTeam ? 'row' : 'row-reverse',
+      // borderBottom: `2px solid ${team.colors[1]}`,
+      // color: team.colors[0],
+    }"
   >
+    <div class="overlay">&nbsp;</div>
+    <!-- :style="{ backgroundColor: team.colors[1], color: team.colors[0] }" -->
     <span
       :class="{
-        'team-shield-line': !isGridMode,
-        'team-shield-grid': isGridMode,
+        'team-shield--line': !isGridMode,
+        'team-shield--grid': isGridMode,
+        'team-shield--left': isHomeTeam,
+        'team-shield--right': !isHomeTeam,
       }"
-      class="team-shield"
     >
       <img
         :class="isScoreless ? 'team-shield-image-small' : 'team-shield-image'"
-        :src="`/team_logos/${props.team.id}.gif`"
+        :src="`https://assets.omegafox.me/copa/countries_crests/${team.abbreviationEn.toLowerCase()}_small.png`"
         :alt="`${props.team.name} Shield`"
       />
     </span>
     <div v-if="!isNameless" class="team-alias">
-      {{ isGridMode || isAlias ? team.code : team.alias }}
-      <p v-if="props.team.winLosses" style="padding: 0; margin: 0; font-size: var(--s-font-size); text-align: right">
-        {{ props.team.winLosses }}
-      </p>
+      {{ isGridMode || isAlias ? team.abbreviation : team.name }}
     </div>
-    <div v-if="!isScoreless && odds" class="team-odds">{{ odds }}</div>
-    <div v-if="!isScoreless && !odds" class="team-score" :style="{ fontWeight: isWinning ? 'bold' : 'normal' }">
-      {{ team.score }}
-      <img
-        v-if="team.possession && !isClockStopped"
-        src="/src/img/football.png"
-        style="position: absolute; top: 5%; left: 5%; height: 15px; width: 15px"
-        :alt="`Ball possession for ${team.name}`"
-      />
+    <div
+      v-if="!isScoreless"
+      class="team-score"
+      :style="{
+        fontWeight: isWinning ? 'bold' : 'normal',
+        backgroundColor: props.team.colors[1],
+        color: props.team.colors[0],
+      }"
+    >
+      {{ isHomeTeam ? score.home : score.away }}
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import { computed } from 'vue';
+import type { IScore, ITeam } from '@/stores/matches.types';
 
-import type { ITeam } from '@/stores/matches.types';
-
-import { STOPPED_GAME, type TMatchStatus } from '@/constants/match_status';
+import { type TMatchStatus } from '@/constants/match_status';
 
 const props = defineProps<{
   isAlias?: boolean;
@@ -50,11 +53,11 @@ const props = defineProps<{
   isScoreless?: boolean;
   isWinning?: boolean;
   matchStatus: TMatchStatus;
-  odds?: null | string;
-  team: Partial<ITeam>;
+  score: IScore;
+  team: ITeam;
 }>();
 
-const isClockStopped = computed(() => STOPPED_GAME.includes(props.matchStatus));
+// ------ Computed Properties ------
 </script>
 <style lang="scss" scoped>
 .outer-team {
@@ -63,60 +66,92 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.matchStatus));
   align-items: center;
   justify-content: flex-end;
   height: 60px;
+  position: relative;
   max-height: 60px;
-  background-image: url('/match_layer.png');
+  // background-image: url('/match_layer.png');
+  color: var(--color-contrast);
+  background-color: var(--bolao-c-blue5-t1);
+  padding: 0 var(--xs-spacing);
   position: relative;
   overflow: hidden;
+  border-radius: var(--border-radius);
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 22px;
+  background-color: color-mix(in srgb, var(--color-main) 40%, transparent);
 }
 
 .outer-team-nameless {
   min-width: 60px;
 }
+.team-shield {
+  &--line {
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
 
-.team-shield-grid {
-  position: absolute;
-  height: 60px;
-  left: 20px;
-  top: -50%;
-
-  @media (max-width: 1024px) {
-    top: 0%;
+    @media (max-width: 1024px) {
+      top: 0%;
+      transform: none;
+    }
   }
-}
 
-.team-shield-line {
-  position: absolute;
-  left: 5%;
-  top: 50%;
-  transform: translate(0, -50%);
-
-  @media (max-width: 1024px) {
+  &--left {
     left: 5%;
-    top: 0%;
-    transform: none;
+
+    @media (max-width: 1024px) {
+      left: 5%;
+    }
+  }
+
+  &--right {
+    right: 5%;
+    @media (max-width: 1024px) {
+      right: 5%;
+    }
+  }
+
+  &--grid {
+    position: absolute;
+    height: 60px;
+    left: 20px;
+    top: -50%;
+
+    @media (max-width: 1024px) {
+      top: 0%;
+    }
   }
 }
 
 .team-shield-image {
-  height: 100px;
+  height: 60px;
+  width: 60px;
+  object-fit: contain;
   z-index: -1;
 
   @media (max-width: 1024px) {
     height: 60px;
+    width: 60px;
   }
 }
 
 .team-shield-image-small {
   height: 60px;
+  width: 60px;
+  object-fit: contain;
   z-index: -1;
 }
 
 .team-alias {
   position: relative;
-  padding-right: var(--s-spacing);
-  font-weight: bold;
+  padding: var(--s-spacing);
+  // font-weight: bold;
   z-index: 99;
-  font-size: var(--l-font-size);
+  font-size: var(--m-font-size);
   line-height: var(--xl-spacing);
 
   @media (max-width: 1024px) {
@@ -140,14 +175,52 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.matchStatus));
 }
 
 .team-score {
-  min-width: 55px;
-  height: 100%;
+  min-width: 40px;
+  height: 80%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: var(--l-font-size);
   background-color: #0003;
   padding: 0 var(--m-spacing);
+  border-radius: var(--border-radius);
   position: relative;
+  // background-image: url('/match_layer.png');
+}
+
+// Group-based background colors for rounds 1, 2, and 3
+// TODO: Replace with actual CSS variables from base.scss
+.group-a {
+  background-color: var(--bolao-c-fifa-green1);
+  color: var(--bolao-c-black);
+}
+
+.group-b {
+  background-color: var(--bolao-c-fifa-red); // TODO: var(--group-b-color)
+  color: var(--bolao-c-white);
+}
+
+.group-c {
+  background-color: transparent; // TODO: var(--group-c-color)
+}
+
+.group-d {
+  background-color: transparent; // TODO: var(--group-d-color)
+}
+
+.group-e {
+  background-color: transparent; // TODO: var(--group-e-color)
+}
+
+.group-f {
+  background-color: transparent; // TODO: var(--group-f-color)
+}
+
+.group-g {
+  background-color: transparent; // TODO: var(--group-g-color)
+}
+
+.group-h {
+  background-color: transparent; // TODO: var(--group-h-color)
 }
 </style>

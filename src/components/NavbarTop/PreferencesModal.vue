@@ -5,59 +5,24 @@
     v-model:visible="isVisible"
     :draggable="false"
     position="top"
-    :style="{ width: '1024px' }"
+    :style="{ width: '768px' }"
     :breakpoints="{ '1280px': '75vw', '575px': '90vw' }"
   >
     <template #header>
       <h2>Preferências</h2>
     </template>
-    <div class="outer-color">
-      <h3>Escolha uma cor</h3>
-      <PrimeColorPicker v-model="newColor" class="buttons" />
-    </div>
-    <!-- <div class="preferences-group"> -->
-    <div>
-      <div class="outer-search-icons">
-        <PrimeFloatLabel variant="in" class="input">
-          <PrimeInputText name="iconSearch" type="search" v-model="iconSearch" fluid autofocus />
-          <label for="iconSearch">Busque um ícone</label>
-        </PrimeFloatLabel>
+    <div class="preferences-group">
+      <div class="label">
+        <h3>Favoritos</h3>
+        <p>Limpar todos os usuários favoritos ({{ favoritesCount }})</p>
       </div>
-      <div class="outer-pagination-icons">
-        <PrimePaginator
-          class="paginator"
-          :first="selectedPage && selectedPage - 1"
-          :rows="1"
-          :totalRecords="maxNumOfPages"
-          @page="(e: PageState) => (selectedPage = e.page + 1)"
-        />
-        <div class="outer-icons">
-          <p v-if="maxNumOfIconsCurrentPage === 0">Nenhum resultado encontrado</p>
-          <FontAwesomeIcon
-            v-else
-            v-for="index in maxNumOfIconsCurrentPage"
-            v-tooltip.top="filteredIcons[calculateIconIndex(index - 1)].value"
-            :key="calculateIconIndex(index - 1)"
-            class="icon"
-            :style="{ color: newColor }"
-            :class="{
-              selected: filteredIcons[calculateIconIndex(index - 1)].value === newIcon,
-            }"
-            :icon="filteredIcons[calculateIconIndex(index - 1)].value"
-            @click="newIcon = filteredIcons[calculateIconIndex(index - 1)].value"
-          />
-        </div>
+      <div class="buttons">
+        <PrimeButton label="Limpar Favoritos" severity="danger" icon="pi pi-trash" @click="handleClearFavorites" />
       </div>
     </div>
+
     <template #footer>
       <div class="buttons-container">
-        <IconAndName
-          v-if="activeProfile"
-          class="iconAndName"
-          :name="activeProfile?.name"
-          :color="newColor"
-          :icon="newIcon"
-        />
         <div>
           <PrimeButton
             rounded
@@ -92,11 +57,13 @@
 import type { PageState } from 'primevue';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { computed, ref, watch, watchEffect } from 'vue';
+import { computed, onMounted, ref, watch, watchEffect } from 'vue';
 
 import { faIconsListObj } from '@/constants/font-awesome';
+import FavoritesService from '@/services/favorites';
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
+import { useNotificationStore } from '@/stores/notification';
 
 import IconAndName from '../IconAndName.vue';
 
@@ -112,11 +79,18 @@ const newIcon = ref('');
 const iconSearch = ref('');
 const isUpdateSuccess = ref(false);
 const isVisible = ref(false);
+const favoritesCount = ref(0);
 
 // ------ Initializations ------
 const activeProfileStore = useActiveProfileStore();
+const notificationStore = useNotificationStore();
 const userService = new UserService();
+const favoritesService = new FavoritesService();
 const numOfIconsPerPage = 80;
+
+onMounted(() => {
+  loadFavoritesCount();
+});
 
 // ------ Computed Properties ------
 const filteredIcons = computed(() => {
@@ -151,6 +125,18 @@ function calculateIconIndex(index: number) {
   return iconIndex < filteredIcons.value.length ? iconIndex : filteredIcons.value.length - 1;
 }
 
+function handleClearFavorites() {
+  if (!activeProfile.value || favoritesCount.value === 0) {
+    return;
+  }
+
+  favoritesService.clearAllFavorites(activeProfile.value.id);
+  loadFavoritesCount();
+  // Dispatch custom event to notify other components
+  window.dispatchEvent(new CustomEvent('favorites-cleared'));
+  notificationStore.success('Todos os favoritos foram removidos');
+}
+
 function handleConfirm() {
   isUpdateSuccess.value = false;
   if (newColor.value === activeProfile.value?.color && newIcon.value === activeProfile.value?.icon) {
@@ -163,6 +149,14 @@ function handleConfirm() {
 function handleReset() {
   newColor.value = activeProfile.value?.color as string;
   newIcon.value = activeProfile.value?.icon as string;
+}
+
+function loadFavoritesCount() {
+  if (!activeProfile.value) {
+    favoritesCount.value = 0;
+    return;
+  }
+  favoritesCount.value = favoritesService.getFavoritesCount(activeProfile.value.id);
 }
 
 function resetState() {
@@ -184,6 +178,7 @@ watch(
   async (newValue) => {
     if (newValue) {
       isVisible.value = true;
+      loadFavoritesCount();
     }
   },
 );
@@ -208,19 +203,9 @@ watch(isVisible, async (newValue) => {
   }
 
   .buttons {
-    flex: 3;
-    justify-content: flex-start;
+    flex: 1;
+    justify-content: flex-end;
   }
-}
-
-.outer-color {
-  flex-direction: column;
-  display: flex;
-  gap: var(--s-spacing);
-  justify-content: center;
-  align-items: center;
-  padding: var(--s-spacing) 0;
-  font-size: var(--m-font-size);
 }
 
 .outer-search-icons {

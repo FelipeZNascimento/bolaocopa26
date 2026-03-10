@@ -30,7 +30,6 @@ import { BETS_LABELS, BETS_VALUES, type BetsValues } from '@/constants/bets';
 import MatchService from '@/services/match';
 
 const props = defineProps<{
-  activeUserBet: IBet | null;
   isMatchStarted: boolean;
   match: IMatch;
 }>();
@@ -45,8 +44,10 @@ const matchService = new MatchService();
 const toast = useToast();
 
 // ------ Watch Effect Properties ------
-watchEffect(() => (radioButton.value = props.activeUserBet ? props.activeUserBet.value : null));
-watchEffect(() => (radioButtonPrevValue.value = props.activeUserBet ? props.activeUserBet.value : null));
+watchEffect(() => (radioButton.value = props.match.loggedUserBets ? props.match.loggedUserBets.scoreHome : null));
+watchEffect(
+  () => (radioButtonPrevValue.value = props.match.loggedUserBets ? props.match.loggedUserBets.scoreHome : null),
+);
 
 function callback(isSuccess: boolean, error?: Error) {
   isLoading.value = false;

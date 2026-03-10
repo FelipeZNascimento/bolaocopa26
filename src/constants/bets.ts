@@ -6,11 +6,18 @@ export const BETS_VALUES = {
   HOME_EASY: 3,
 };
 
-export const BETS_LABELS = {
-  [BETS_VALUES.AWAY_EASY]: 'Fácil',
-  [BETS_VALUES.AWAY_HARD]: 'Difícil',
-  [BETS_VALUES.HOME_EASY]: 'Fácil',
-  [BETS_VALUES.HOME_HARD]: 'Difícil',
+export const HIT_LEVELS = {
+  exactScore: 'exact',
+  oneScore: 'oneScore',
+  winnerOnly: 'winnerOnly',
+  miss: 'miss',
+};
+
+export const HIT_LEVELS_LABELS = {
+  [HIT_LEVELS.exactScore]: 'Na Mosca [5]',
+  [HIT_LEVELS.oneScore]: 'Quase [3]',
+  [HIT_LEVELS.winnerOnly]: 'Vencedor [2]',
+  [HIT_LEVELS.miss]: 'Errrrou [0]',
 };
 
 export const EXTRA_BETS_VALUES = {
@@ -31,4 +38,5 @@ export const EXTRA_BETS_VALUES = {
 
 export type BetsValues = (typeof BETS_VALUES)[keyof typeof BETS_VALUES];
 export type ExtraBetsValues = (typeof EXTRA_BETS_VALUES)[keyof typeof EXTRA_BETS_VALUES];
+export type HitLevel = (typeof HIT_LEVELS)[keyof typeof HIT_LEVELS];
 export type Ribbon = 'BULLSEYE' | 'HALF' | 'MISS' | null;

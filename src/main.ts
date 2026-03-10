@@ -14,6 +14,7 @@ import PrimeAutocomplete from 'primevue/autocomplete';
 /* ---- PrimeVue ---- */
 import PrimeAvatar from 'primevue/avatar';
 import PrimeButton from 'primevue/button';
+import PrimeCard from 'primevue/card';
 import PrimeChart from 'primevue/chart';
 import PrimeColorPicker from 'primevue/colorpicker';
 import PrimeColumn from 'primevue/column';
@@ -110,6 +111,7 @@ app.component('PrimeKnob', PrimeKnob);
 app.component('PrimeOverlayBadge', PrimeOverlayBadge);
 app.component('PrimePanel', PrimePanel);
 app.component('PrimeChart', PrimeChart);
+app.component('PrimeCard', PrimeCard);
 
 app.directive('tooltip', PrimeTooltip);
 

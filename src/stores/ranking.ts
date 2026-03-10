@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 import type { TColumnsValue, TRowSpacingValue } from './configuration.types';
-import type { IRankingLine, IWeeklyRanking } from './ranking.types';
+import type { IRankingLine, IRoundRanking } from './ranking.types';
 
 const initialState = {
   columnsOption: 'complete' as TColumnsValue,
@@ -10,12 +10,12 @@ const initialState = {
 };
 
 export const useRankingStore = defineStore('ranking', () => {
-  const isLoadingWeek = ref(false);
+  const isLoadingRounds = ref(false);
   const isLoadingSeason = ref(false);
-  const errorWeek = ref<Error | null>(null);
+  const errorRounds = ref<Error | null>(null);
   const errorSeason = ref<Error | null>(null);
   const seasonRanking = ref<IRankingLine[]>([]);
-  const weeksRanking = ref<IWeeklyRanking[]>([]);
+  const roundsRanking = ref<IRoundRanking[]>([]);
   const columnsOption = ref<TColumnsValue>(initialState.columnsOption);
   const rowSpacing = ref<TRowSpacingValue>(initialState.rowSpacing);
 
@@ -28,23 +28,23 @@ export const useRankingStore = defineStore('ranking', () => {
   }
 
   function setSeason(newSeasonRanking: IRankingLine[]) {
-    seasonRanking.value = newSeasonRanking;
+    seasonRanking.value = Array.isArray(newSeasonRanking) ? newSeasonRanking : [];
   }
 
-  function setWeeks(newWeeksRanking: IWeeklyRanking[]) {
-    weeksRanking.value = newWeeksRanking;
+  function setRounds(newRoundsRanking: IRoundRanking[]) {
+    roundsRanking.value = Array.isArray(newRoundsRanking) ? newRoundsRanking : [];
   }
 
-  function setLoadingWeek(loadingState: boolean) {
-    isLoadingWeek.value = loadingState;
+  function setLoadingRounds(loadingState: boolean) {
+    isLoadingRounds.value = loadingState;
   }
 
   function setLoadingSeason(loadingState: boolean) {
     isLoadingSeason.value = loadingState;
   }
 
-  function setErrorWeek(newError: Error | null) {
-    errorWeek.value = newError;
+  function setErrorRounds(newError: Error | null) {
+    errorRounds.value = newError;
   }
 
   function setErrorSeason(newError: Error | null) {
@@ -63,21 +63,21 @@ export const useRankingStore = defineStore('ranking', () => {
 
   return {
     columnsOption,
+    errorRounds,
     errorSeason,
-    errorWeek,
+    isLoadingRounds,
     isLoadingSeason,
-    isLoadingWeek,
+    roundsRanking,
     rowSpacing,
     seasonRanking,
     setColumnsOption,
+    setErrorRounds,
     setErrorSeason,
-    setErrorWeek,
     setInitialState,
+    setLoadingRounds,
     setLoadingSeason,
-    setLoadingWeek,
+    setRounds,
     setRowSpacing,
     setSeason,
-    setWeeks,
-    weeksRanking,
   };
 });

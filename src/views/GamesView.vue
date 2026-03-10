@@ -5,7 +5,7 @@
       <ErrorChecker />
       <div :class="{ 'outer-line-mode': view === 'lines', 'outer-grid-mode': view === 'grid' }">
         <MatchesSkeleton v-if="isLoading" :isLoading="isLoading" :view="view" />
-        <GroupedMatches v-else :isBetting="true" :matches="matches" :view="view" :selectedRound="selectedRound" />
+        <GroupedMatches v-else :matches="matches" :view="view" :selectedRound="selectedRound" />
       </div>
     </div>
     <RankingComponent v-if="isDesktop && rankingPosition === 'active'" />
@@ -36,7 +36,7 @@ const rankingPosition = computed(() => configurationStore.rankingPosition);
 const view = computed(() => configurationStore.gamesView);
 const selectedRound = computed(() => configurationStore.selectedRound);
 </script>
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .outer-matches {
   display: flex;
   flex-direction: column;
@@ -57,8 +57,15 @@ const selectedRound = computed(() => configurationStore.selectedRound);
   z-index: 1;
 }
 
-.skeleton-match {
-  height: 60px !important;
-  margin: var(--s-spacing) 0;
+.outer-grid-mode {
+  /* padding: 0 var(--m-spacing); */
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--xl-spacing);
+  position: relative;
+  z-index: 1;
 }
 </style>

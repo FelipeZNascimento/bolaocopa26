@@ -27,14 +27,14 @@
         <PrimeMessage v-if="$form.name?.invalid" severity="error" size="small" variant="simple">
           {{ $form.name.error?.message }}
         </PrimeMessage>
-        <label for="name">Nome Completo</label>
+        <label for="name">Nome</label>
       </PrimeFloatLabel>
       <PrimeFloatLabel variant="in" class="input">
-        <PrimeInputText :disabled="isLoading" name="username" type="text" fluid />
-        <PrimeMessage v-if="$form.username?.invalid" severity="error" size="small" variant="simple">
-          {{ $form.username.error?.message }}
+        <PrimeInputText :disabled="isLoading" name="nickname" type="text" fluid />
+        <PrimeMessage v-if="$form.nickname?.invalid" severity="error" size="small" variant="simple">
+          {{ $form.nickname.error?.message }}
         </PrimeMessage>
-        <label for="username">Usuário</label>
+        <label for="nickname">Apelido</label>
       </PrimeFloatLabel>
       <div class="buttons-container">
         <PrimeButton
@@ -84,8 +84,8 @@ const activeProfile = computed(() => activeProfileStore.activeProfile);
 const initialValues = computed(() => {
   return {
     email: activeProfile.value?.email,
-    name: activeProfile.value?.fullName,
-    username: activeProfile.value?.name,
+    name: activeProfile.value?.name,
+    nickname: activeProfile.value?.nickname,
   };
 });
 
@@ -97,12 +97,12 @@ function onFormSubmit(formData: FormSubmitEvent<Record<string, string>>) {
 
   activeProfileStore.setError(null);
   isUpdateSuccess.value = false;
-  const { name, username } = formData.values;
-  if (name === activeProfile.value?.fullName && username === activeProfile.value.name) {
+  const { name, nickname } = formData.values;
+  if (name === activeProfile.value?.name && nickname === activeProfile.value?.nickname) {
     return updateCallback(true);
   }
 
-  userService.updateProfile(updateCallback, name, username);
+  userService.updateProfile(updateCallback, name, nickname);
 }
 
 function updateCallback(isSuccess: boolean) {

@@ -240,14 +240,6 @@ watch(activeProfile, () => {
     overflow-x: hidden !important;
   }
 
-  .p-datatable-header-cell {
-    padding: 0 !important;
-  }
-
-  .p-datatable-tbody > tr > td {
-    padding: 0 !important;
-  }
-
   .spacer {
     height: 40px;
     width: 40px;

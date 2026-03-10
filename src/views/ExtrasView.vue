@@ -19,7 +19,7 @@ const configurationStore = useConfigurationStore();
 // ------ Computed Properties ------
 const isLoadingConfig = computed(() => configurationStore.isLoading);
 const isSeasonStarted = computed(
-  () => configurationStore.seasonStart && clockStore.currentTimestamp >= configurationStore.seasonStart,
+  () => configurationStore.editionStart && clockStore.currentTimestamp >= configurationStore.editionStart,
 );
 </script>
 <style lang="scss" scoped>
