@@ -30,30 +30,13 @@ a {
   background: var(--p-radiobutton-icon-disabled-color) !important;
 }
 
-.p-datatable-header-cell {
-  background-color: var(--bolao-c-blue5-t1) !important;
-}
-
-.p-row-even,
-.p-row-odd {
-  color: var(--bolao-c-white) !important;
-}
-
-.p-row-even {
-  background-color: var(--bolao-c-blue5-t2) !important;
-}
-.p-row-odd {
-  background-color: var(--bolao-c-blue5-t3) !important;
-}
-
 .p-select {
-  background-color: var(--bolao-c-green-t3) !important;
   color: var(--bolao-c-white) !important;
 }
 
 .p-popover {
-  background-color: var(--bolao-c-blue3) !important;
-  border-color: transparent !important;
+  // background-color: var(--bolao-c-blue3) !important;
+  // border-color: transparent !important;
 
   &::after,
   &::before {
@@ -72,13 +55,23 @@ a {
 }
 
 .p-dialog {
-  background-color: var(--bolao-c-blue5) !important;
   color: var(--bolao-c-white) !important;
   border-color: transparent !important;
+
+  .p-inputtext:not(:disabled) {
+    background-color: var(--bolao-c-blue3-t1) !important;
+    color: var(--bolao-c-white) !important;
+  }
 }
 
 .p-divider-vertical:before,
 .p-divider-horizontal:before {
   border-inline-start: 1px solid var(--color-contrast) !important;
   border-block-start: 1px solid var(--color-contrast) !important;
+}
+
+.p-paginator {
+  .p-select-label {
+    color: var(--bolao-c-white) !important;
+  }
 }

@@ -136,7 +136,7 @@ import type {
 
 import TeamComponent from '@/components/Match/TeamComponent.vue';
 import { EXTRA_BETS_VALUES } from '@/constants/bets';
-import { MATCH_STATUS } from '@/constants/match_status';
+import { MATCH_STATUS } from '@/constants/match';
 import { useExtraBetStore } from '@/stores/extraBet';
 
 import ExtrasBetsModal from './ExtrasBetsModal.vue';

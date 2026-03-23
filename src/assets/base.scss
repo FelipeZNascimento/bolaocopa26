@@ -35,7 +35,6 @@ $colors: (
   'navy': #1b2f42,
 
   'white': #ffffff,
-
   'grey1': #eceff1,
   'grey2': #cfd8dc,
   'grey3': #9da4a7,
@@ -99,7 +98,7 @@ $colors: (
   --bolao-c-background-blue: #141c2c;
   // --bolao-c-background-blue: var(--bolao-c-blue5-t2);
 
-  --bolao-c-navbar: var(--bolao-c-blue3);
+  --bolao-c-navbar: var(--bolao-c-blue4);
   --nav-disabled: #545859;
   --nav-link: #9da4a7;
   --nav-link-hover: white;
@@ -136,11 +135,9 @@ $colors: (
 :root {
   --color-main: var(--vt-c-white);
   --color-contrast: var(--vt-c-black);
-  --p-paginator-background: var(--bolao-c-blue3) !important;
-  --p-paginator-nav-button-color: var(--vt-c-white) !important;
+  --color-match-overlay: var(--bolao-c-grey1);
 
-  // --color-background: var(--vt-c-white);
-  --color-background: var(--vt-c-white-soft);
+  --color-background: linear-gradient(135deg, #d4dce6 0%, #c8d5e0 50%, #bccdd9 100%);
   --color-background-soft: var(--vt-c-white-soft);
   --color-background-mute: var(--vt-c-white-mute);
 
@@ -151,16 +148,75 @@ $colors: (
   --color-text: var(--vt-c-text-light-1);
 
   --section-gap: 160px;
+  --navbar-height: 80px;
+  --match-list-height: 60px;
   --drop-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 8px 24px rgba(0, 0, 0, 0.1);
+
+  // PrimeVue component overrides
+  // Button
+  --p-button-secondary-background: var(--bolao-c-blue1-t2) !important;
+  --p-button-secondary-border-color: var(--bolao-c-blue1) !important;
+  --p-button-secondary-color: var(--bolao-c-white) !important;
+  --p-button-secondary-hover-background: var(--bolao-c-blue1) !important;
+  --p-button-secondary-hover-border-color: var(--bolao-c-blue1) !important;
+  --p-button-secondary-hover-color: var(--bolao-c-white) !important;
+
+  // Toggle Button
+  --p-togglebutton-background: var(--bolao-c-blue4-t2) !important;
+  --p-togglebutton-border-color: var(--bolao-c-blue1) !important;
+  --p-togglebutton-color: var(--bolao-c-white) !important;
+  --p-togglebutton-hover-background: var(--bolao-c-blue1) !important;
+  --p-togglebutton-hover-color: var(--bolao-c-white) !important;
+  --p-togglebutton-checked-background: var(--bolao-c-blue1-t3) !important;
+  --p-togglebutton-checked-border-color: var(--bolao-c-blue1) !important;
+  --p-togglebutton-checked-color: var(--bolao-c-white) !important;
+  --p-togglebutton-content-checked-background: var(--bolao-c-blue1-t2) !important;
+
+  // Select
+  --p-select-background: var(--bolao-c-green-t3) !important;
+  --p-select-overlay-background: var(--bolao-c-green-t3) !important;
+  --p-select-option-selected-background: var(--bolao-c-green) !important;
+  --p-select-option-focus-background: var(--bolao-c-blue3) !important;
+  --p-select-option-selected-color: var(--bolao-c-white) !important;
+  --p-select-option-color: var(--p-select-option-selected-color) !important;
+
+  // Dialog - Modal
+  --p-dialog-background: var(--bolao-c-blue4) !important;
+
+  // Popover
+  --p-popover-background: var(--bolao-c-blue3-t3) !important;
+  --p-popover-border-color: transparent !important;
+
+  // Paginator
+  --p-paginator-background: var(--bolao-c-navbar) !important;
+  --p-paginator-nav-button-color: var(--vt-c-white) !important;
+  --p-paginator-nav-button-selected-background: var(--bolao-c-gold) !important;
+  --p-paginator-nav-button-selected-color: var(--bolao-c-blue5) !important;
+
+  // Table
+  --p-datatable-header-cell-color: var(--bolao-c-grey1) !important;
+  --p-datatable-header-cell-hover-color: var(--bolao-c-white) !important;
+  --p-datatable-header-cell-hover-background: var(--bolao-c-blue1-t1) !important;
+  --p-datatable-header-cell-selected-background: var(--bolao-c-blue3-t3) !important;
+  --p-datatable-header-cell-selected-color: var(--bolao-c-gold) !important;
+  --p-datatable-header-cell-background: var(--bolao-c-blue3) !important;
+  --p-datatable-row-background: var(--bolao-c-blue3-t1) !important;
+  --p-datatable-row-striped-background: var(--bolao-c-blue3-t2) !important;
+  --p-datatable-row-color: var(--bolao-c-white) !important;
+  --p-datatable-row-hover-background: var(--bolao-c-blue5-t1) !important;
+  --p-datatable-row-hover-color: var(--bolao-c-white) !important;
+
+  // Chart
+  --surface-card: var(--bolao-c-white-t3) !important;
 }
 
 [data-theme='dark'] {
   --color-main: var(--vt-c-black);
   --color-contrast: var(--vt-c-white);
-  --p-paginator-background: var(--bolao-c-blue3-t2) !important;
+  --color-match-overlay: var(--vt-c-black);
 
   // --color-background: var(--vt-c-black-soft);
-  --color-background: var(--bolao-c-background-blue);
+  --color-background: linear-gradient(135deg, #0a0e14 0%, #141c2c 50%, #1a2738 100%);
   --color-background-soft: var(--vt-c-black-soft);
   --color-background-mute: var(--vt-c-black-mute);
 
@@ -169,6 +225,12 @@ $colors: (
 
   --color-heading: var(--vt-c-text-dark-1);
   --color-text: var(--vt-c-text-dark-2);
+
+  // PrimeVue component overrides
+  // --p-button-secondary-background: var(--bolao-c-fifa-green3) !important;
+  // --p-button-secondary-border-color: var(--bolao-c-fifa-green3) !important;
+  // --p-button-secondary-hover-background: var(--bolao-c-fifa-green1) !important;
+  // --p-button-secondary-hover-border-color: var(--bolao-c-fifa-green3) !important;
 }
 
 *,

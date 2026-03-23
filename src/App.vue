@@ -58,7 +58,6 @@ watch(selectedRound, async (newValue, oldValue) => {
 // Fetches rankings and week's matches when user logs in or out
 // Fetches rankings and week's matches when user updates profile
 watch(activeProfile, async (newValue) => {
-  console.log('Fetching matches for active profile change...');
   // rankingService.fetch();
   matchService.fetch();
 
@@ -80,5 +79,6 @@ watch(activeProfile, async (newValue) => {
 <style scoped>
 .outer-view {
   width: 100%;
+  margin-top: 10vh;
 }
 </style>

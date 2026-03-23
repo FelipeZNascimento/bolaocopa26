@@ -31,7 +31,6 @@ export default class RankingService {
   }
 
   public async initialize() {
-    console.log('FZN Initializing ranking service...');
     this.initializePreferences();
     this.fetch();
   }

@@ -1,7 +1,6 @@
 <template>
   <div class="outer-paginator">
     <PrimePaginator
-      class="paginator"
       :first="selectedRound && selectedRound - 1"
       :rows="1"
       :totalRecords="rounds.filter((round) => !round.hidden).length"
@@ -42,7 +41,6 @@ function handlePageChange(e: PageState) {
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding-top: var(--xxl-spacing);
   border-radius: var(--border-radius);
 
   @media (max-width: 1024px) {

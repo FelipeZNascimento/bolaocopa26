@@ -43,7 +43,7 @@ import type { ITeamWithExtrasBet, TConference, TExtrasTeam } from '@/stores/extr
 
 import TeamComponent from '@/components/Match/TeamComponent.vue';
 import { EXTRA_BETS_VALUES } from '@/constants/bets';
-import { MATCH_STATUS } from '@/constants/match_status';
+import { MATCH_STATUS } from '@/constants/match';
 import { useExtraBetStore } from '@/stores/extraBet';
 
 import ExtrasBetsModalColumn from './ExtrasBetsModalColumn.vue';
@@ -156,7 +156,7 @@ watch(isVisible, async (newValue) => {
   }
 });
 </script>
-<style>
+<style lang="scss" scoped>
 .teams-outer {
   display: flex;
   width: 100%;

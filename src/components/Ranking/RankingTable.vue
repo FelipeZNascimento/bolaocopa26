@@ -1,6 +1,6 @@
 <template>
-  <PrimeDataTable :value="filteredRankingData" :size="rowSpacingConfig" :loading="isLoading" stripedRows>
-    <PrimeColumn field="score.position" header="" sortable>
+  <PrimeDataTable :value="filteredRankingData" :size="rowSpacingConfig" :loading="isLoading" stripedRows rowHover>
+    <PrimeColumn field="score.position" header="Posição" sortable>
       <template #body="slotProps">
         <div
           class="row"
@@ -23,19 +23,19 @@
             <div
               class="position-variation"
               :class="{
-                'variation-up': slotProps.data.score.positionVariation > 0,
-                'variation-down': slotProps.data.score.positionVariation < 0,
-                'variation-same': slotProps.data.score.positionVariation === 0,
+                'variation-up': getPositionVariation(slotProps.data) > 0,
+                'variation-down': getPositionVariation(slotProps.data) < 0,
+                'variation-same': getPositionVariation(slotProps.data) === 0,
               }"
               v-tooltip.top="
-                `Variação de posição: ${slotProps.data.score.positionVariation > 0 ? '+' : ''}${slotProps.data.score.positionVariation}`
+                `Variação no ranking geral: ${getPositionVariation(slotProps.data) > 0 ? '+' : ''}${getPositionVariation(slotProps.data)}`
               "
             >
-              <i v-if="slotProps.data.score.positionVariation > 0" class="pi pi-arrow-up"></i>
-              <i v-else-if="slotProps.data.score.positionVariation < 0" class="pi pi-arrow-down"></i>
+              <i v-if="getPositionVariation(slotProps.data) > 0" class="pi pi-arrow-up"></i>
+              <i v-else-if="getPositionVariation(slotProps.data) < 0" class="pi pi-arrow-down"></i>
               <i v-else class="pi pi-minus"></i>
               <span class="variation-value">
-                {{ Math.abs(slotProps.data.score.positionVariation) }}
+                {{ Math.abs(getPositionVariation(slotProps.data)) }}
               </span>
             </div>
             <div class="name-container">
@@ -56,28 +56,33 @@
         </div>
       </template>
     </PrimeColumn>
-    <PrimeColumn field="score.points" header="Pts" style="text-align: center" sortable></PrimeColumn>
+    <PrimeColumn field="score.points" header="Pontos" style="text-align: center" sortable></PrimeColumn>
     <PrimeColumn field="score.exacts" sortable style="text-align: center">
       <template #header>
         <i v-tooltip.top="'Na mosca'" class="pi pi-bullseye"></i>
       </template>
     </PrimeColumn>
-    <PrimeColumn
-      v-if="isRound && columnConfig === 'complete'"
-      field="score.oneScores"
-      sortable
-      style="text-align: center"
-    >
+    <PrimeColumn v-if="columnConfig === 'complete'" field="score.oneScores" style="text-align: center" sortable>
       <template #header>
-        <i v-tooltip.top="'Vencedor correto'" class="pi pi-check"></i>
+        <i v-tooltip.top="'Acerto Parcial'" class="pi pi-star-half-fill"></i>
       </template>
     </PrimeColumn>
-    <PrimeColumn v-if="columnConfig === 'complete'" field="score.percentage" sortable>
+    <PrimeColumn v-if="columnConfig === 'complete'" field="score.winnersOnly" style="text-align: center" sortable>
+      <template #header>
+        <i v-tooltip.top="'Vencedor Correto'" class="pi pi-star-half"></i>
+      </template>
+    </PrimeColumn>
+    <PrimeColumn v-if="columnConfig === 'complete'" field="score.misses" style="text-align: center" sortable>
+      <template #header>
+        <i v-tooltip.top="'Erros'" class="pi pi-times"></i>
+      </template>
+    </PrimeColumn>
+    <PrimeColumn v-if="columnConfig === 'complete'" field="score.percentage" style="text-align: center" sortable>
       <template #header>
         <i v-tooltip.top="'Aproveitamento'" class="pi pi-percentage"></i>
       </template>
     </PrimeColumn>
-    <PrimeColumn v-if="!isRound && columnConfig === 'complete'" field="score.extras.points" sortable>
+    <PrimeColumn v-if="columnConfig === 'complete'" field="score.extras.points" style="text-align: center" sortable>
       <template #header> <i v-tooltip.top="'Extras'" class="pi pi-plus"></i> </template>
     </PrimeColumn>
   </PrimeDataTable>
@@ -156,6 +161,10 @@ const filteredRankingData = computed(() => {
 });
 
 // ------ Functions ------
+function getPositionVariation(data: IRankingLine): number {
+  return props.isRound ? data.accumulatedScore.positionVariation : data.score.positionVariation;
+}
+
 function handleUserClick(user: IUser) {
   isUserTrackingModalOpen.value = true;
   selectedUser.value = user;
@@ -225,21 +234,21 @@ watch(favorites, (newFavorites) => {
 .top-10-row {
   background: linear-gradient(
     90deg,
-    color-mix(in srgb, var(--color-contrast) 10%, transparent) 0%,
-    color-mix(in srgb, var(--color-contrast) 5%, transparent) 75%,
+    color-mix(in srgb, var(--bolao-c-white) 20%, transparent) 0%,
+    color-mix(in srgb, var(--bolao-c-white) 10%, transparent) 75%,
     transparent 100%
   );
-  box-shadow: inset 3px 0 0 var(--bolao-c-blue3-t3);
+  box-shadow: inset 3px 0 0 var(--bolao-c-white);
 }
 
 .active-user-row {
   background: linear-gradient(
     90deg,
-    color-mix(in srgb, var(--color-contrast) 20%, transparent) 0%,
-    color-mix(in srgb, var(--color-contrast) 10%, transparent) 75%,
+    color-mix(in srgb, var(--bolao-c-green) 60%, transparent) 0%,
+    color-mix(in srgb, var(--bolao-c-green) 30%, transparent) 75%,
     transparent 100%
   );
-  box-shadow: inset 3px 0 0 var(--bolao-c-mint);
+  box-shadow: inset 3px 0 0 var(--bolao-c-green);
   font-weight: bold;
 }
 
@@ -271,7 +280,7 @@ watch(favorites, (newFavorites) => {
   font-weight: 600;
   padding: 2px 4px;
   border-radius: 4px;
-  background-color: color-mix(in srgb, var(--color-contrast) 15%, transparent);
+  background-color: color-mix(in srgb, var(--bolao-c-black) 60%, transparent);
   width: 30px;
 
   i {
@@ -283,17 +292,17 @@ watch(favorites, (newFavorites) => {
   }
 
   &.variation-up {
-    color: var(--bolao-c-mint);
-    background-color: color-mix(in srgb, var(--bolao-c-mint) 20%, transparent);
+    color: var(--bolao-c-white);
+    background-color: color-mix(in srgb, var(--bolao-c-mint) 60%, transparent);
   }
 
   &.variation-down {
-    color: var(--bolao-c-red);
-    background-color: color-mix(in srgb, var(--bolao-c-red) 20%, transparent);
+    color: var(--bolao-c-white);
+    background-color: color-mix(in srgb, var(--bolao-c-red) 60%, transparent);
   }
 
   &.variation-same {
-    color: var(--color-text);
+    color: var(--bolao-c-white);
     opacity: 0.6;
   }
 }

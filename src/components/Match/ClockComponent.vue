@@ -26,7 +26,7 @@ import { computed } from 'vue';
 
 import type { HitLevel } from '@/constants/bets';
 
-import { MATCH_STATUS_LABELS, STOPPED_GAME, type TMatchStatus } from '@/constants/match_status';
+import { MATCH_STATUS_LABELS, STOPPED_GAME, type TMatchStatus } from '@/constants/match';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useClockStore } from '@/stores/clock';
 
@@ -65,9 +65,9 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
   align-items: center;
   font-size: var(--m-font-size);
   position: relative;
-  background-color: var(--bolao-c-blue3-t2);
-  color: var(--bolao-c-grey1);
-  min-height: 40px;
+  background-color: var(--bolao-c-white-t1);
+  color: var(--color-contrast);
+  height: var(--match-list-height);
   border-radius: var(--border-radius);
 
   span {

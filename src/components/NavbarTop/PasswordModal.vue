@@ -4,7 +4,7 @@
     modal
     v-model:visible="isVisible"
     :draggable="false"
-    position="top"
+    position="center"
     :style="{ width: '400px' }"
     :breakpoints="{ '1280px': '75vw', '575px': '90vw' }"
   >

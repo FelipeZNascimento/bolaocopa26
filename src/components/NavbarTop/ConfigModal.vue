@@ -4,7 +4,7 @@
     modal
     v-model:visible="isVisible"
     :draggable="false"
-    position="right"
+    position="center"
     :style="{ width: '500px' }"
     :breakpoints="{ '1280px': '75vw', '575px': '90vw' }"
   >
@@ -59,34 +59,6 @@
         @click="() => handleRankingPositionConfig(rankingPositionLocalObj.value)"
       />
     </div>
-    <div class="button-group">
-      <div class="label">Espaçamento</div>
-      <PrimeSelectButton
-        fluid
-        :allowEmpty="false"
-        class="buttons"
-        v-model="rowSpacingLocalObj"
-        :options="rowSpacingOptions"
-        optionLabel="label"
-        dataKey="label"
-        size="small"
-        @click="() => handleRowSpacingConfig(rowSpacingLocalObj.value)"
-      />
-    </div>
-    <div class="button-group">
-      <div class="label">Modo</div>
-      <PrimeSelectButton
-        fluid
-        :allowEmpty="false"
-        class="buttons"
-        v-model="columnLocalObj"
-        :options="columnOptions"
-        optionLabel="label"
-        dataKey="label"
-        size="small"
-        @click="() => handleColumnConfig(columnLocalObj.value)"
-      />
-    </div>
     <PrimeDivider />
     <h2>Preferências</h2>
     <div class="button-group">
@@ -110,14 +82,10 @@ import { computed, onMounted, ref, watch, watchEffect } from 'vue';
 
 import type { IUser } from '@/stores/activeProfile.types';
 import type {
-  TColumn,
-  TColumnsValue,
   TGamesView,
   TGamesViewValue,
   TRankingPosition,
   TRankingPositionValue,
-  TRowSpacing,
-  TRowSpacingValue,
   TTheme,
   TThemeValue,
 } from '@/stores/configuration.types';
@@ -125,7 +93,6 @@ import type {
 import FavoritesService from '@/services/favorites';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useNotificationStore } from '@/stores/notification';
-import { useRankingStore } from '@/stores/ranking';
 
 const props = defineProps<{
   activeProfile: IUser | null;
@@ -138,8 +105,6 @@ const isVisible = ref(false);
 const themeLocalObj = ref();
 const gamesViewLocalObj = ref();
 const rankingPositionLocalObj = ref();
-const rowSpacingLocalObj = ref();
-const columnLocalObj = ref();
 const favoritesCount = ref(0);
 
 const themeOptions = ref<TTheme[]>([
@@ -148,23 +113,14 @@ const themeOptions = ref<TTheme[]>([
 ]);
 const rankingPositionOptions = ref<TRankingPosition[]>([
   { label: 'Sempre ativo', value: 'active' },
-  { label: 'Modal (menu)', value: 'modal' },
+  { label: 'Escondido', value: 'modal' },
 ]);
 const gamesViewOptions = ref<TGamesView[]>([
   { label: 'Grid', value: 'grid' },
   { label: 'Linhas', value: 'lines' },
 ]);
-const rowSpacingOptions = ref<TRowSpacing[]>([
-  { label: 'Pequeno', value: 'small' },
-  { label: 'Grande', value: 'normal' },
-]);
-const columnOptions = ref<TColumn[]>([
-  { label: 'Compacto', value: 'compact' },
-  { label: 'Completo', value: 'complete' },
-]);
 
 // ------ Initialization ------
-const rankingStore = useRankingStore();
 const configurationStore = useConfigurationStore();
 const favoritesService = new FavoritesService();
 const notificationStore = useNotificationStore();
@@ -175,14 +131,11 @@ onMounted(() => {
 
 // ------ Computed Properties ------
 const rankingPosition = computed(() => configurationStore.rankingPosition);
-const columnConfig = computed(() => rankingStore.columnsOption);
-const rowSpacingConfig = computed(() => rankingStore.rowSpacing);
 const theme = computed(() => configurationStore.theme);
 const gamesView = computed(() => configurationStore.gamesView);
 
 // ------ Functions  ------
 function handleClearFavorites() {
-  console.log('Clearing all favorites, current count:', favoritesCount.value);
   if (favoritesCount.value > 0 && props.activeProfile) {
     favoritesService.clearAllFavorites(props.activeProfile.id);
     loadFavoritesCount();
@@ -192,20 +145,12 @@ function handleClearFavorites() {
   notificationStore.success('Todos os favoritos foram removidos');
 }
 
-function handleColumnConfig(newOption: TColumnsValue) {
-  rankingStore.setColumnsOption(newOption);
-}
-
 function handleGamesViewConfig(newOption: TGamesViewValue) {
   configurationStore.setGamesView(newOption);
 }
 
 function handleRankingPositionConfig(newOption: TRankingPositionValue) {
   configurationStore.setRankingPosition(newOption);
-}
-
-function handleRowSpacingConfig(newOption: TRowSpacingValue) {
-  rankingStore.setRowSpacing(newOption);
 }
 
 function handleThemeConfig(newOption: TThemeValue) {
@@ -232,12 +177,6 @@ watchEffect(
       (option) => option.value === rankingPosition.value,
     )),
 );
-
-watchEffect(
-  () => (rowSpacingLocalObj.value = rowSpacingOptions.value.find((option) => option.value === rowSpacingConfig.value)),
-);
-
-watchEffect(() => (columnLocalObj.value = columnOptions.value.find((option) => option.value === columnConfig.value)));
 
 // ------ Watches ------
 watch(

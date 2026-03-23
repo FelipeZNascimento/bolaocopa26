@@ -43,7 +43,7 @@ watch(isVisible, async (newValue) => {
   }
 });
 </script>
-<style>
+<style lang="scss" scoped>
 .input {
   padding-bottom: var(--m-spacing);
 }

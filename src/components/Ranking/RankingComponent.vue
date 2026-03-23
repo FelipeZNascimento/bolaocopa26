@@ -2,7 +2,9 @@
   <div :class="{ 'outer-ranking': !isModal }">
     <div class="ranking-header">
       <span class="toggle" :class="{ activeToggle: !isRoundRanking }" @click="isRoundRanking = false">Geral</span>
-      <span class="toggle" :class="{ activeToggle: isRoundRanking }" @click="isRoundRanking = true">Rodada</span>
+      <span class="toggle" :class="{ activeToggle: isRoundRanking }" @click="isRoundRanking = true"
+        >Rodada {{ selectedRound }}</span
+      >
       <PrimeDivider layout="vertical" />
       <span class="toggle" :class="{ activeToggle: !showFavoritesOnly }" @click="showFavoritesOnly = false">
         <i class="pi pi-list"></i> Todos
@@ -10,7 +12,7 @@
       <span
         class="toggle"
         :class="{ activeToggle: showFavoritesOnly }"
-        :style="{ color: showFavoritesOnly ? 'var(--bolao-c-gold)' : 'var(--bolao-c-grey1-t2)' }"
+        :style="{ color: showFavoritesOnly ? 'var(--bolao-c-gold)' : '' }"
         @click="showFavoritesOnly = true"
       >
         <i :class="{ 'pi pi-star-fill': showFavoritesOnly, 'pi pi-star': !showFavoritesOnly }"></i> Favoritos
@@ -31,13 +33,22 @@
         :isRound="isRoundRanking"
         :isLoading="isRoundRanking ? isLoadingRounds : isLoadingSeason"
         :rankingData="isRoundRanking ? selectedRoundRanking : seasonRanking"
-        :columnConfig="columnsOption"
-        :rowSpacingConfig="rowSpacing"
+        columnConfig="compact"
+        rowSpacingConfig="small"
         :activeProfile="activeProfile"
         :error="isRoundRanking ? errorSeason : errorRounds"
         v-model:showFavoritesOnly="showFavoritesOnly"
       />
     </div>
+    <RouterLink to="/ranking" class="see-full-ranking-link">
+      <PrimeButton
+        icon="pi pi-plus"
+        class="match-info-toggle"
+        label="Ranking completo"
+        severity="secondary"
+        aria-label="Ranking completo"
+      />
+    </RouterLink>
   </div>
 </template>
 <script lang="ts" setup>
@@ -68,8 +79,6 @@ const rankingStore = useRankingStore();
 const activeProfileStore = useActiveProfileStore();
 
 // ------ Computed Properties  ------
-const columnsOption = computed(() => rankingStore.columnsOption);
-const rowSpacing = computed(() => rankingStore.rowSpacing);
 const errorRounds = computed(() => rankingStore.errorRounds);
 const errorSeason = computed(() => rankingStore.errorSeason);
 const isLoadingRounds = computed(() => configurationStore.isLoading || rankingStore.isLoadingRounds);
@@ -83,8 +92,11 @@ const activeProfile = computed(() => activeProfileStore.activeProfile);
 </script>
 <style scoped>
 .outer-ranking {
-  top: 15vh;
+  top: 10vh;
   right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   position: sticky;
   border-left: 1px solid var(--color-background-mute);
@@ -92,14 +104,15 @@ const activeProfile = computed(() => activeProfileStore.activeProfile);
   max-height: calc(80vh);
   box-shadow: var(--drop-shadow);
   border-radius: var(--border-radius);
-  /* padding-bottom: var(--l-spacing); */
-  background-color: var(--bolao-c-blue3-t2);
+  background-color: var(--bolao-c-navbar);
 }
 
 .ranking-container {
   max-height: calc(100% - 50px);
   overflow-y: auto;
   scrollbar-gutter: stable;
+  width: 100%;
+  flex: 1;
 }
 
 .outer-position {
@@ -112,7 +125,7 @@ const activeProfile = computed(() => activeProfileStore.activeProfile);
   gap: var(--s-spacing);
   justify-content: center;
   align-items: center;
-  padding: var(--s-spacing) 0;
+  padding: var(--s-spacing) var(--xl-spacing);
   font-size: var(--s-font-size);
   height: 50px;
   color: var(--bolao-c-grey1-t2);
@@ -127,6 +140,9 @@ const activeProfile = computed(() => activeProfileStore.activeProfile);
 .toggle {
   cursor: pointer;
   transition: 0.2s;
+  &:hover {
+    color: var(--bolao-c-white);
+  }
 }
 
 .activeToggle {
@@ -136,5 +152,10 @@ const activeProfile = computed(() => activeProfileStore.activeProfile);
 .error-message {
   width: 90%;
   margin: var(--xl-spacing);
+}
+
+.see-full-ranking-link {
+  padding: var(--l-spacing) 0;
+  flex: 0;
 }
 </style>

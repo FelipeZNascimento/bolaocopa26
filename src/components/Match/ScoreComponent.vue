@@ -12,6 +12,7 @@
         :isGridMode="isGridMode"
         :isHomeTeam="true"
         :isWinning="match.score.away < match.score.home"
+        :events="sortedEvents"
         :team="match.homeTeam"
         :matchStatus="match.status"
         :score="match.score"
@@ -21,6 +22,7 @@
         :isGridMode="isGridMode"
         :isHomeTeam="false"
         :isWinning="match.score.away > match.score.home"
+        :events="sortedEvents"
         :team="match.awayTeam"
         :matchStatus="match.status"
         :score="match.score"
@@ -37,7 +39,9 @@
     <TeamComponent
       :isGridMode="isGridMode"
       :isHomeTeam="true"
+      :isScoreModalOpen="isScoreModalOpen"
       :isWinning="match.score.away < match.score.home"
+      :events="sortedEvents"
       :team="match.homeTeam"
       :matchStatus="match.status"
       :score="match.score"
@@ -52,35 +56,53 @@
     <TeamComponent
       :isGridMode="isGridMode"
       :isHomeTeam="false"
+      :isScoreModalOpen="isScoreModalOpen"
       :isWinning="match.score.away > match.score.home"
       :team="match.awayTeam"
       :matchStatus="match.status"
       :score="match.score"
+      :events="sortedEvents"
     />
   </div>
 </template>
 <script lang="ts" setup>
 import { isMobileOnly } from '@basitcodeenv/vue3-device-detect';
+import { computed } from 'vue';
 
 import type { Ribbon } from '@/constants/bets';
 import type { IBet, IMatch } from '@/stores/matches.types';
 
 import RibbonComponent from './RibbonComponent.vue';
 import TeamComponent from './TeamComponent.vue';
-withDefaults(
+const props = withDefaults(
   defineProps<{
     activeUserBet: IBet | null;
     isBetting?: boolean;
     isGridMode?: boolean;
     isMatchStarted: boolean;
+    isScoreModalOpen?: boolean;
     match: IMatch;
     ribbon?: Ribbon;
   }>(),
   {
     isBetting: false,
     isGridMode: false,
+    isScoreModalOpen: false,
   },
 );
+
+const sortedEvents = computed(() => {
+  return [...props.match.events].sort((a, b) => {
+    const parseGametime = (gametime: string) => {
+      const match = gametime.match(/^(\d+)(?:\+(\d+))?'/);
+      if (!match) return 0;
+      const minutes = parseInt(match[1], 10);
+      const added = match[2] ? parseInt(match[2], 10) / 100 : 0;
+      return minutes + added;
+    };
+    return parseGametime(a.event.gametime) - parseGametime(b.event.gametime);
+  });
+});
 </script>
 <style scoped>
 .outer-mobile-score-line {
@@ -110,7 +132,7 @@ withDefaults(
   display: flex;
   flex: 1;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   gap: var(--m-spacing);
 }

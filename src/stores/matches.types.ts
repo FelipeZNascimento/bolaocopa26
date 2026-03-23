@@ -1,4 +1,4 @@
-import type { TMatchStatus } from '@/constants/match_status';
+import type { TMatchStatus } from '@/constants/match';
 
 import type { IUser } from './activeProfile.types';
 
@@ -11,6 +11,11 @@ export interface IBet {
   user: Pick<IUser, 'id' | 'nickname'>;
 }
 
+export interface IClub {
+  country: ICountry;
+  id: number;
+  name: string;
+}
 export interface IConfederation {
   abbreviation: string;
   id: number;
@@ -18,9 +23,31 @@ export interface IConfederation {
   nameEn: string;
 }
 
+export interface ICountry {
+  abbreviation: string;
+  abbreviationEn: string;
+  id: number;
+  isoCode: string;
+  name: string;
+  nameEn: string;
+}
+
+export interface IEvent {
+  description: string;
+  descriptionEn: string;
+  gametime: string;
+  id: number;
+}
+
+export interface IFifaInfo {
+  id: number;
+  pictureId: string;
+}
+
 export interface IMatch {
   awayTeam: ITeam;
   bets: IBet[];
+  events: IMatchEvent[];
   homeTeam: ITeam;
   id: number;
   idFifa: number;
@@ -32,6 +59,34 @@ export interface IMatch {
   status: TMatchStatus;
   timestamp: number;
 }
+export interface IMatchEvent {
+  event: IEvent;
+  id: number;
+  matchId: number;
+  player: IPlayer;
+  playerAssist: IPlayer | null;
+}
+
+export interface IPlayer {
+  club: IClub;
+  dateOfBirth: string;
+  fifa: IFifaInfo;
+  height: number;
+  id: number;
+  name: string;
+  number: number;
+  position: IPosition;
+  team: ITeam;
+}
+
+export interface IPosition {
+  abbreviation: string;
+  abbreviationEn: string;
+  description: string;
+  descriptionEn: string;
+  id: number;
+}
+
 export interface IReferee {
   country: string;
   countryEn: string;

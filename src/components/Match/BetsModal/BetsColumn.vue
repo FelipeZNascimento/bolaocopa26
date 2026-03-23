@@ -100,16 +100,16 @@ watch(
 .active {
   background: linear-gradient(
     90deg,
-    color-mix(in srgb, var(--color-contrast) 20%, transparent) 0%,
-    color-mix(in srgb, var(--color-contrast) 10%, transparent) 75%,
+    color-mix(in srgb, var(--bolao-c-white) 20%, transparent) 0%,
+    color-mix(in srgb, var(--bolao-c-white) 10%, transparent) 75%,
     transparent 100%
   );
-  box-shadow: inset 3px 0 0 var(--color-contrast);
+  box-shadow: inset 3px 0 0 var(--bolao-c-white);
 
   .nickname,
   .scores {
     font-weight: bold;
-    color: var(--color-contrast);
+    color: var(--bolao-c-white);
   }
 }
 

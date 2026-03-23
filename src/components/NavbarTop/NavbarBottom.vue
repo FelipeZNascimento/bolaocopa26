@@ -70,9 +70,19 @@
             profilePopover.toggle();
           "
         />
+        <PrimeButton
+          variant="text"
+          severity="secondary"
+          size="small"
+          label="Configurações"
+          @click="
+            isConfigModalOpen = true;
+            profilePopover.toggle();
+          "
+        />
         <PrimeDivider />
         <!-- style="color: black" -->
-        <PrimeButton severity="contrast" size="small" label="Sair" @click="handleLogout" rounded />
+        <PrimeButton severity="secondary" size="small" label="Sair" @click="handleLogout" />
       </div>
     </PrimePopover>
   </header>
@@ -87,6 +97,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
 import ConfigModal from '@/components/NavbarTop/ConfigModal.vue';
 import LoginModal from '@/components/NavbarTop/LoginModal.vue';
@@ -129,16 +140,17 @@ const profileRoute: ExtendedRoute = {
   url: '',
 };
 
-const configRoute: ExtendedRoute = {
-  id: 998,
-  label: 'Config',
-  needCredentials: false,
-  url: '',
-};
+// const configRoute: ExtendedRoute = {
+//   id: 998,
+//   label: 'Config',
+//   needCredentials: false,
+//   url: '',
+// };
 
 // ------ Initializations ------
 const activeProfileStore = useActiveProfileStore();
 const userService = new UserService();
+const route = useRoute();
 
 onMounted(() => {
   const currentPath = window.location.pathname;
@@ -171,7 +183,7 @@ const allRoutes = computed(() => {
     routes.push(profileRoute);
   }
 
-  routes.push(configRoute);
+  // routes.push(configRoute);
 
   return routes;
 });
@@ -227,6 +239,22 @@ watch(allRoutes, () => {
   // Update ball position after DOM has updated with new routes
   setTimeout(() => updateBallPosition(), 0);
 });
+
+// Watch for actual route path changes (from RouterLink navigation)
+watch(
+  () => route.path,
+  (newPath) => {
+    const matchingRoute = ROUTES.find((r) => r.url === newPath);
+    if (matchingRoute) {
+      const index = allRoutes.value.findIndex((r) => r.id === matchingRoute.id);
+      if (index >= 0 && activeRoute.value !== matchingRoute.id) {
+        activeRoute.value = matchingRoute.id;
+        activeItemIndex.value = index;
+        setTimeout(() => animateWave(index), 50);
+      }
+    }
+  },
+);
 
 // ------ Functions ------
 function animateWave(targetIndex: number) {
@@ -417,12 +445,12 @@ function updateBallPosition() {
 
 <style scoped lang="scss">
 .navbar {
-  position: sticky;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
-  height: 80px;
+  height: var(--navbar-height);
   width: 100%;
   background-color: var(--bolao-c-navbar);
 }
@@ -496,6 +524,7 @@ function updateBallPosition() {
   z-index: 2;
 
   &.elevated {
+    color: var(--bolao-c-gold);
     transform: translateX(15px);
   }
 }
@@ -521,7 +550,7 @@ function updateBallPosition() {
   z-index: 1;
 
   .elevated & {
-    color: white;
+    color: var(--bolao-c-gold);
     font-size: 24px;
   }
 }

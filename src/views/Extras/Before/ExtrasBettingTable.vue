@@ -105,7 +105,7 @@ import type { TExtrasTeam } from '@/stores/extraBet.types';
 import type { TConference, TDivision } from '@/stores/matches.types';
 
 import TeamComponent from '@/components/Match/TeamComponent.vue';
-import { MATCH_STATUS } from '@/constants/match_status';
+import { MATCH_STATUS } from '@/constants/match';
 import { useExtraBetStore } from '@/stores/extraBet';
 
 defineProps<{

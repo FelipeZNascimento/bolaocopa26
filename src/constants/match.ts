@@ -99,5 +99,16 @@ export const STOPPED_GAME = [
   MATCH_STATUS.NOT_STARTED,
 ];
 
+export enum MATCH_EVENT {
+  GOAL,
+  PENALTY_GOAL,
+  PENALTY_MISS,
+  OWN_GOAL,
+  CARD_YELLOW,
+  CARD_RED,
+  CARD_YELLOW_RED,
+  SUB,
+}
+
 export type MatchStatus = (typeof MATCH_STATUS)[keyof typeof MATCH_STATUS];
 export type TMatchStatus = MatchStatus;

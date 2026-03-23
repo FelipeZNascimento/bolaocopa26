@@ -87,7 +87,7 @@ import type { ITeam, TConference } from '@/stores/matches.types';
 
 import TeamComponent from '@/components/Match/TeamComponent.vue';
 import { EXTRA_BETS_VALUES } from '@/constants/bets';
-import { MATCH_STATUS } from '@/constants/match_status';
+import { MATCH_STATUS } from '@/constants/match';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useExtraBetStore } from '@/stores/extraBet';
 

@@ -5,14 +5,19 @@
     :class="{
       'green-bg': hitLevel === HIT_LEVELS.exactScore,
       'blue-bg': hitLevel === HIT_LEVELS.oneScore,
-      'orange-bg': hitLevel === HIT_LEVELS.winnerOnly,
+      'white-bg': hitLevel === HIT_LEVELS.winnerOnly,
       'red-bg': hitLevel === HIT_LEVELS.miss,
       'grey-bg': hitLevel === null,
     }"
   >
-    <i v-show="hitLevel === HIT_LEVELS.exactScore" v-tooltip.top="'Na mosca'" class="pi pi-bullseye"></i>
-    <i v-show="hitLevel === HIT_LEVELS.oneScore" v-tooltip.top="'Vencedor e 1/2 placar'" class="pi pi-check"></i>
-    <i v-show="hitLevel === HIT_LEVELS.winnerOnly" v-tooltip.top="'Vencedor'" class="pi pi-check"></i>
+    <!-- <i v-show="hitLevel === HIT_LEVELS.exactScore" v-tooltip.top="'Na mosca'" class="pi pi-bullseye"></i> -->
+    <i v-show="hitLevel === HIT_LEVELS.exactScore" v-tooltip.top="'Na mosca'" class="pi pi-star-fill"></i>
+    <i
+      v-show="hitLevel === HIT_LEVELS.oneScore"
+      v-tooltip.top="'Vencedor e 1/2 placar'"
+      class="pi pi-star-half-fill"
+    ></i>
+    <i v-show="hitLevel === HIT_LEVELS.winnerOnly" v-tooltip.top="'Vencedor'" class="pi pi-star-half"></i>
     <i v-show="hitLevel === HIT_LEVELS.miss" v-tooltip.top="'Erroooou!'" class="pi pi-times"></i>
     <i v-show="hitLevel === null" v-tooltip.top="'Sem apostas'" class="pi pi-times"></i>
   </div>
@@ -84,6 +89,15 @@ const activeProfile = computed(() => {
   background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0 / calc(2 * var(--f)) var(--f) no-repeat
     border-box;
   background-color: var(--c);
+  color: var(--bolao-c-gold);
+}
+
+.orange-bg {
+  --c: var(--bolao-c-orange);
+
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0 / calc(2 * var(--f)) var(--f) no-repeat
+    border-box;
+  background-color: var(--c);
 }
 
 .blue-bg {
@@ -92,6 +106,16 @@ const activeProfile = computed(() => {
   background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0 / calc(2 * var(--f)) var(--f) no-repeat
     border-box;
   background-color: var(--c);
+  color: var(--bolao-c-gold);
+}
+
+.white-bg {
+  --c: var(--bolao-c-blue);
+
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0 / calc(2 * var(--f)) var(--f) no-repeat
+    border-box;
+  background-color: var(--c);
+  color: var(--bolao-c-white);
 }
 
 .red-bg {

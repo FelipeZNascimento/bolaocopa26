@@ -10,7 +10,7 @@
     style="width: 60%; padding: var(--s-spacing)"
   >
     <template #header>
-      <p style="display: flex; align-items: center; gap: var(--s-spacing)">
+      <p style="font-size: var(--l-font-size); display: flex; align-items: center; gap: var(--s-spacing)">
         <i
           v-if="!isUserActive"
           :class="isFavorite ? 'pi pi-star-fill' : 'pi pi-star'"
@@ -18,10 +18,15 @@
           @click="toggleFavorite"
           v-tooltip.top="isFavorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'"
         ></i>
-        <IconAndName v-if="selectedUser" :name="selectedUser.nickname" :isActive="isUserActive" />
+        {{ selectedUser?.nickname }}
       </p>
     </template>
-    <PrimeChart type="bar" :data="chartData" :style="{ height: '300px' }" :options="chartOptions"></PrimeChart>
+    <PrimeChart
+      type="bar"
+      :data="chartData"
+      :style="{ height: '300px', backgroundColor: 'var(--surface-card)', borderRadius: 'var(--border-radius)' }"
+      :options="chartOptions"
+    ></PrimeChart>
   </PrimeDialog>
 </template>
 <script setup lang="ts">
@@ -214,13 +219,11 @@ watch(isVisible, async (newValue) => {
   }
 });
 </script>
-<style>
+<style lang="scss" scoped>
 .content-class {
   padding: 0 !important;
   overflow-x: hidden !important;
 }
-</style>
-<style scoped>
 .favorite-star {
   cursor: pointer;
   font-size: 1.2rem;

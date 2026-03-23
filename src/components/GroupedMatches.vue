@@ -110,22 +110,6 @@ const groupedMatches = computed(() => {
   color: var(--color-contrast);
 }
 
-.group-section::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 150px;
-  height: 150px;
-  z-index: 0;
-  opacity: 0.8;
-  transition: opacity 0.3s ease;
-}
-
-.group-section:hover::after {
-  opacity: 1;
-}
-
 .group-section::before {
   content: '';
   position: absolute;
