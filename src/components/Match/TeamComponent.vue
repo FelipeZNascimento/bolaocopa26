@@ -115,7 +115,7 @@ withDefaults(
     isScoreless: false,
     isScoreModalOpen: false,
     isWinning: false,
-    score: null
+    score: null,
   },
 );
 

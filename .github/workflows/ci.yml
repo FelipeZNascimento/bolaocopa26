@@ -29,11 +29,8 @@ jobs:
       - name: Run ESLint and fix
         run: npm run lint
 
-      - name: Format with Prettier
+      - name: Format with Prettier (it runs lint after formatting to ensure that any linting issues are also fixed)
         run: npm run format
-
-      - name: Check for remaining ESLint errors
-        run: npm run lint
 
       - name: Check for remaining formatting issues
         run: npm run format:check

@@ -60,7 +60,9 @@
             <span
               class="nav-label"
               :class="{ 'active-label': routeItem.id === activeRoute }"
-            >{{ routeItem.label }}</span>
+            >
+              {{ routeItem.label }}
+            </span>
           </a>
         </RouterLink>
       </div>
