@@ -1,6 +1,7 @@
 import type { TMatchStatus } from '@/constants/match';
 
 import type { IUser } from './activeProfile.types';
+import type { IPlayer, ITeam } from './teams.types';
 
 export interface IBet {
   id: number;
@@ -11,37 +12,11 @@ export interface IBet {
   user: Pick<IUser, 'id' | 'nickname'>;
 }
 
-export interface IClub {
-  country: ICountry;
-  id: number;
-  name: string;
-}
-export interface IConfederation {
-  abbreviation: string;
-  id: number;
-  name: string;
-  nameEn: string;
-}
-
-export interface ICountry {
-  abbreviation: string;
-  abbreviationEn: string;
-  id: number;
-  isoCode: string;
-  name: string;
-  nameEn: string;
-}
-
 export interface IEvent {
   description: string;
   descriptionEn: string;
   gametime: string;
   id: number;
-}
-
-export interface IFifaInfo {
-  id: number;
-  pictureId: string;
 }
 
 export interface IMatch {
@@ -65,26 +40,6 @@ export interface IMatchEvent {
   matchId: number;
   player: IPlayer;
   playerAssist: IPlayer | null;
-}
-
-export interface IPlayer {
-  club: IClub;
-  dateOfBirth: string;
-  fifa: IFifaInfo;
-  height: number;
-  id: number;
-  name: string;
-  number: number;
-  position: IPosition;
-  team: ITeam;
-}
-
-export interface IPosition {
-  abbreviation: string;
-  abbreviationEn: string;
-  description: string;
-  descriptionEn: string;
-  id: number;
 }
 
 export interface IReferee {
@@ -113,20 +68,6 @@ export interface IStadium {
   id: number;
   idCountry: number;
   name: string;
-}
-
-export interface ITeam {
-  abbreviation: string;
-  abbreviationEn: string;
-  colors: string;
-  confederation: IConfederation;
-  group: string;
-  id: number;
-  idConfederation: number;
-  idFifa: number;
-  isoCode: string;
-  name: string;
-  nameEn: string;
 }
 
 export type TConference = 'AFC' | 'NFC';

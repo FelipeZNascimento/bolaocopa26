@@ -6,27 +6,15 @@
       :class="`group-section group-${group.groupName.toLowerCase().split(' ')[1]}`"
     >
       <h2 class="group-header">{{ group.groupName }}</h2>
-      <div :class="{ 'outer-line-mode': view === 'lines', 'outer-grid-mode': view === 'grid' }">
-        <MatchComponent
-          v-for="match in group.matches"
-          :isBetting="isBetting"
-          :isGridMode="view === 'grid'"
-          :match="match"
-          :key="match.id"
-        />
+      <div class="outer-line-mode">
+        <MatchComponent v-for="match in group.matches" :isBetting="isBetting" :match="match" :key="match.id" />
       </div>
     </div>
   </template>
   <div v-else :class="`group-section round-${selectedRound}`">
     <h2 class="group-header">{{ roundLabel }}</h2>
-    <div :class="{ 'outer-line-mode': view === 'lines', 'outer-grid-mode': view === 'grid' }">
-      <MatchComponent
-        v-for="match in matches"
-        :isBetting="isBetting"
-        :isGridMode="view === 'grid'"
-        :match="match"
-        :key="match.id"
-      />
+    <div class="outer-line-mode">
+      <MatchComponent v-for="match in matches" :isBetting="isBetting" :match="match" :key="match.id" />
     </div>
   </div>
 </template>
@@ -42,7 +30,6 @@ const props = withDefaults(
     isBetting?: boolean;
     matches: IMatch[];
     selectedRound: null | number;
-    view: 'grid' | 'lines';
   }>(),
   {
     isBetting: false,

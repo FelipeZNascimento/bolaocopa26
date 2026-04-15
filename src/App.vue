@@ -1,8 +1,9 @@
 <template>
-  <NavbarBottom />
+  <NavbarTop />
   <PrimeToast />
-  <div class="outer-view">
-    <RouterView />
+  <div class="outer-view"><RouterView /></div>
+  <div class="not-active" v-if="!activeProfile?.isActive">
+    Clique <a href="">aqui</a> para saber como ativar seu perfil e participar do bolão!
   </div>
 </template>
 
@@ -10,8 +11,7 @@
 import { computed, watch } from 'vue';
 import { RouterView } from 'vue-router';
 
-import NavbarBottom from './components/NavbarTop/NavbarBottom.vue';
-// import NavbarTop from './components/NavbarTop/NavbarTop.vue';
+import NavbarTop from './components/NavbarTop/NavbarTop.vue';
 import ExtraBetService from './services/extra_bet';
 import MatchService from './services/match';
 import RankingService from './services/ranking';
@@ -58,14 +58,14 @@ watch(selectedRound, async (newValue, oldValue) => {
 // Fetches rankings and week's matches when user logs in or out
 // Fetches rankings and week's matches when user updates profile
 watch(activeProfile, async (newValue) => {
-  // rankingService.fetch();
+  rankingService.fetch();
   matchService.fetch();
 
   // Fetches extra bets if user logged in, clears bets if user logged out
   if (newValue) {
     extraBetService.fetch();
   } else {
-    extraBetStore.setLoggedUserBets(null);
+    extraBetStore.setLoggedUserBets([]);
   }
 
   // Week is possibly zero (preseason)
@@ -79,6 +79,19 @@ watch(activeProfile, async (newValue) => {
 <style scoped>
 .outer-view {
   width: 100%;
-  margin-top: 10vh;
+  margin-top: 100px;
+}
+
+.not-active {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  font-size: var(--l-font-size);
+  color: black;
+  z-index: 1000;
+  background-color: rgba(255, 255, 255, 0.7);
+  width: 100vw;
+  text-align: center;
+  padding: var(--m-spacing) 0;
 }
 </style>

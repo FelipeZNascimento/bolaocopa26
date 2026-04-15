@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 /* ------------------- */
 /* ---- VARIABLES ---- */
 /* ------------------- */
@@ -74,6 +76,14 @@ $colors: (
   }
 
   @each $key_name, $color in $colors {
+    --bolao-c-#{$key_name}-l1: #{color.adjust($color, $lightness: 10%)};
+    --bolao-c-#{$key_name}-l2: #{color.adjust($color, $lightness: 20%)};
+    --bolao-c-#{$key_name}-l3: #{color.adjust($color, $lightness: 30%)};
+
+    --bolao-c-#{$key_name}-d1: #{color.adjust($color, $lightness: -10%)};
+    --bolao-c-#{$key_name}-d2: #{color.adjust($color, $lightness: -20%)};
+    --bolao-c-#{$key_name}-d3: #{color.adjust($color, $lightness: -30%)};
+
     --bolao-c-#{$key_name}: #{$color};
     --bolao-c-#{$key_name}-t1: #{$color}44;
     --bolao-c-#{$key_name}-t2: #{$color}88;
@@ -136,6 +146,7 @@ $colors: (
   --color-main: var(--vt-c-white);
   --color-contrast: var(--vt-c-black);
   --color-match-overlay: var(--bolao-c-grey1);
+  --color-anchor: var(--bolao-c-blue1);
 
   --color-background: linear-gradient(135deg, #d4dce6 0%, #c8d5e0 50%, #bccdd9 100%);
   --color-background-soft: var(--vt-c-white-soft);

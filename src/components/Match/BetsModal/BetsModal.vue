@@ -8,7 +8,6 @@
     :breakpoints="{ '1280px': '75vw', '575px': '90vw' }"
     contentClass="content-class"
   >
-    <!-- <template #header> </template> -->
     <template #default>
       <div class="teams-outer">
         <ScoreComponent
@@ -34,16 +33,9 @@
           aria-label="Search"
           @click="toggleMatchInfo"
         />
-
-        <!-- <div class="match-info-toggle">
-          <button class="toggle-button" @click="toggleMatchInfo">
-            <i :class="showMatchInfo ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"></i>
-            {{ showMatchInfo ? 'Ver menos' : 'Ver mais' }}
-          </button>
-        </div> -->
       </div>
-      <PrimeTabView>
-        <PrimeTabPanel header="Informações">
+      <div>
+        <div header="Informações">
           <Transition name="expand">
             <div v-show="showMatchInfo" class="match-info-wrapper">
               <div class="match-info">
@@ -73,9 +65,9 @@
               </div>
             </div>
           </Transition>
-        </PrimeTabPanel>
+        </div>
 
-        <PrimeTabPanel header="Apostas">
+        <div header="Apostas">
           <div v-if="activeProfileStore.activeProfile" class="favorites-filter">
             <span class="toggle" :class="{ activeToggle: !showFavoritesOnly }" @click="showFavoritesOnly = false">
               <i class="pi pi-list"></i> Todos
@@ -115,8 +107,8 @@
               :hitLevel="HIT_LEVELS.miss"
             />
           </div>
-        </PrimeTabPanel>
-      </PrimeTabView>
+        </div>
+      </div>
     </template>
 
     <!-- <template #footer>a</template> -->

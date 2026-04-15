@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <PrimePanel style="width: 100%" header="Premiação" toggleable>
     <p>
       Do valor total recolhido das inscrições, <span style="font-weight: bold">10%</span> será revertido ao pagamento de
@@ -45,4 +45,4 @@ const tableScores = [
   },
 ];
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped></style> -->

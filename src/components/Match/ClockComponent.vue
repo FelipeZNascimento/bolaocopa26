@@ -1,22 +1,14 @@
 <template>
-  <div
-    class="left-aligned"
-    :class="{
-      'outer-clock': !isGridMode,
-      'outer-clock-grid': isGridMode,
-    }"
-  >
+  <div class="left-aligned outer-clock">
     <RibbonComponent v-if="activeProfile && hitLevel" :hitLevel="hitLevel" />
     <span v-if="isClockStopped">{{ MATCH_STATUS_LABELS[status] }}</span>
     <!-- <span v-if="isMatchStarted && !isClockStopped">{{ clock }} {{ MATCH_STATUS_LABELS[status] }}</span> -->
     <span
       v-if="!isMatchStarted"
-      :style="isGridMode ? { flexDirection: 'row' } : { flexDirection: 'column' }"
-      style="display: flex; align-items: flex-end; flex-wrap: wrap"
+      style="display: flex; align-items: flex-end; flex-wrap: wrap; flex-direction: column"
       class="clock-time"
     >
       <p style="font-weight: bold">{{ clockStore.formattedDate(timestamp) }}</p>
-      <span v-if="isGridMode" style="padding: 0 var(--xs-spacing)"></span>
       <p style="font-size: var(--s-font-size)">{{ clockStore.getFormattedTime(timestamp) }}</p>
     </span>
   </div>
@@ -34,7 +26,6 @@ import RibbonComponent from './RibbonComponent.vue';
 
 const props = defineProps<{
   hitLevel?: HitLevel | null;
-  isGridMode?: boolean;
   isMatchStarted: boolean;
   status: TMatchStatus;
   timestamp: number;
@@ -96,17 +87,6 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
     font-size: var(--m-font-size);
     padding: 0 var(--xxl-spacing);
   }
-}
-
-.outer-clock-grid {
-  background-color: var(--bolao-c-navy-t2);
-  color: var(--bolao-c-grey1);
-  min-height: 40px;
-  display: flex;
-  align-items: center;
-  position: relative;
-  padding: 0 var(--m-spacing);
-  font-size: var(--m-font-size);
 }
 
 .clock-date {

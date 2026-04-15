@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <PrimePanel style="width: 100%" header="Apostas Extras" toggleable>
     <p>
       Apostas específicas sobre o campeão de cada divisão, de cada conferência e o vencedor do Super Bowl. Essas apostas
@@ -60,4 +60,4 @@ const tableScores = [
   },
 ];
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped></style> -->

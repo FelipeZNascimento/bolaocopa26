@@ -1,5 +1,5 @@
 import type { TColumnsValue, TRowSpacingValue } from '@/stores/configuration.types';
-import type { IRankingLine, IRankingResponse } from '@/stores/ranking.types';
+import type { IRankingResponse } from '@/stores/ranking.types';
 
 import { useRankingStore } from '@/stores/ranking';
 
@@ -20,7 +20,6 @@ export default class RankingService {
     try {
       const rankingResponse = await this.apiRequest.get<IRankingResponse>(`ranking/edition/`);
       this.rankingStore.setLoadingSeason(false);
-      console.log('Ranking response:', rankingResponse);
       this.rankingStore.setSeason(rankingResponse.season);
       this.rankingStore.setRounds(rankingResponse.round);
       this.rankingStore.setErrorSeason(null);

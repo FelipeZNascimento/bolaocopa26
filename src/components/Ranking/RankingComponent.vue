@@ -52,7 +52,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
@@ -89,6 +89,13 @@ const selectedRoundRanking = computed(
   () => rankingStore.roundsRanking?.find((roundRanking) => roundRanking.round === selectedRound.value)?.ranking || [],
 );
 const activeProfile = computed(() => activeProfileStore.activeProfile);
+
+// if activeProfile becomes empty, showFavoritesOnly should be set to false to avoid showing empty ranking
+watch(activeProfile, (newValue) => {
+  if (!newValue) {
+    showFavoritesOnly.value = false;
+  }
+});
 </script>
 <style scoped>
 .outer-ranking {

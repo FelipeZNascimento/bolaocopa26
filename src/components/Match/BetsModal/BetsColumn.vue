@@ -11,29 +11,23 @@
     <p class="bets-column-header">{{ HIT_LEVELS_LABELS[props.hitLevel] }}</p>
     <!-- Render active user bet first -->
     <div class="bets-line active" v-for="bet in activeUserBet" :key="bet.id">
-      <div class="nickname">
-        {{ bet.user.nickname }}
-      </div>
+      <NameTag :isClickable="true" :user="bet.user" />
       <div class="scores">{{ bet.scoreHome }} x {{ bet.scoreAway }}</div>
     </div>
     <!-- Render remaining bets -->
     <div class="bets-line" v-for="bet in bets" :key="bet.id">
-      <div class="nickname">
-        <i v-if="isFavoriteUser(bet.user.id)" class="pi pi-star-fill favorite-badge" v-tooltip.top="'Favorito'"></i>
-        {{ bet.user.nickname }}
-      </div>
+      <NameTag :isClickable="true" :user="bet.user" />
       <div class="scores">{{ bet.scoreHome }} x {{ bet.scoreAway }}</div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { computed } from 'vue';
 
 import type { IBet } from '@/stores/matches.types';
 
+import NameTag from '@/components/NameTag.vue';
 import { HIT_LEVELS_LABELS, type HitLevel } from '@/constants/bets';
-import FavoritesService from '@/services/favorites';
-import { useActiveProfileStore } from '@/stores/activeProfile';
 
 const props = defineProps<{
   activeUserBet: IBet[];
@@ -41,48 +35,11 @@ const props = defineProps<{
   hitLevel: HitLevel;
 }>();
 
-// ------ Initialization ------
-const activeProfileStore = useActiveProfileStore();
-const favoritesService = new FavoritesService();
-const favorites = ref<number[]>([]);
-
-onMounted(() => {
-  loadFavorites();
-  window.addEventListener('favorites-cleared', loadFavorites);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('favorites-cleared', loadFavorites);
-});
-
 // ------ Computed Properties ------
 const isExactColumn = computed(() => props.hitLevel === 'exact');
 const isOneScoreColumn = computed(() => props.hitLevel === 'oneScore');
 const isWinnerOnlyColumn = computed(() => props.hitLevel === 'winnerOnly');
 const isMissColumn = computed(() => props.hitLevel === 'miss');
-
-// ------ Functions ------
-function isFavoriteUser(userId: number): boolean {
-  return favorites.value.includes(userId);
-}
-
-function loadFavorites() {
-  if (!activeProfileStore.activeProfile) {
-    favorites.value = [];
-    return;
-  }
-  favorites.value = favoritesService.getFavorites(activeProfileStore.activeProfile.id);
-}
-
-// ------ Watches ------
-watch(
-  () => activeProfileStore.activeProfile,
-  (newProfile) => {
-    if (newProfile) {
-      loadFavorites();
-    }
-  },
-);
 </script>
 
 <style lang="scss" scoped>
@@ -143,20 +100,6 @@ watch(
   white-space: nowrap;
   text-overflow: ellipsis;
   width: 100%;
-}
-
-.nickname {
-  position: relative;
-  flex: 3;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.favorite-badge {
-  font-size: 0.6rem;
-  color: var(--bolao-c-gold);
-  z-index: 1;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
 }
 
 .scores {

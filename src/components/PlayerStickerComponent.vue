@@ -15,11 +15,20 @@
       </div>
     </div>
     <div class="sticker-photo">
+      <div v-if="isLoadingImage && player.fifa.pictureId" class="loading-spinner">
+        <i class="pi pi-spin pi-spinner" style="font-size: var(--xl-font-size)"></i>
+      </div>
       <img
+        v-if="player.fifa.pictureId"
         :src="`https://digitalhub.fifa.com/transform/${player.fifa.pictureId.toLowerCase()}/`"
         :alt="player.name"
-        @error="(e) => ((e.target as HTMLImageElement).src = 'https://via.placeholder.com/200x250?text=No+Photo')"
+        @load="isLoadingImage = false"
+        @error="handleImageError"
       />
+      <div v-else class="placeholder-photo">
+        <i class="pi pi-user"></i>
+        <span>Sem Foto</span>
+      </div>
     </div>
     <div class="sticker-info">
       <div class="sticker-number" :style="{ color: player.team.colors[0], backgroundColor: player.team.colors[1] }">
@@ -46,17 +55,28 @@
 </template>
 
 <script lang="ts" setup>
-import type { IPlayer } from '@/stores/matches.types';
+import { ref } from 'vue';
+
+import type { IPlayer } from '@/stores/teams.types';
 
 defineProps<{
   player: IPlayer | null;
 }>();
+
+// ------ Refs ------
+const isLoadingImage = ref(true);
 
 // ------ Functions ------
 function formatBirthDate(dateString: string): string {
   const date = new Date(dateString);
   const age = new Date().getFullYear() - date.getFullYear();
   return `${age} anos`;
+}
+
+function handleImageError(e: Event) {
+  isLoadingImage.value = false;
+  const target = e.target as HTMLImageElement;
+  target.style.display = 'none';
 }
 </script>
 
@@ -169,6 +189,37 @@ function formatBirthDate(dateString: string): string {
     object-fit: cover;
     object-position: top;
     filter: contrast(1.05) saturate(1.1);
+  }
+}
+
+.loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--bolao-c-grey4);
+  z-index: 10;
+}
+
+.placeholder-photo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-spacing);
+  width: 100%;
+  height: 100%;
+  color: var(--bolao-c-grey4);
+
+  i {
+    font-size: 48px;
+  }
+
+  span {
+    font-size: var(--s-font-size);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
 }
 

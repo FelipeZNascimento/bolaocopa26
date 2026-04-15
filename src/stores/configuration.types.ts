@@ -1,7 +1,5 @@
 export type TColumn = { label: string; value: TColumnsValue };
 export type TColumnsValue = 'compact' | 'complete';
-export type TGamesView = { label: string; value: TGamesViewValue };
-export type TGamesViewValue = 'grid' | 'lines';
 export type TRankingPosition = { label: string; value: TRankingPositionValue };
 export type TRankingPositionValue = 'active' | 'modal';
 export type TRowSpacing = { label: string; value: TRowSpacingValue };

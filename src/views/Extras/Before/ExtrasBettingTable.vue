@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="outer-extras-betting-table">
     <PrimeDataTable tableClass="extras-table" :value="teams" dataKey="id" size="small" showGridlines>
       <template #header>
@@ -12,7 +12,6 @@
             class="team-component"
             isScoreless
             :isAlias="true"
-            :isGridMode="false"
             :team="slotProps.data"
             :matchStatus="MATCH_STATUS.FINAL"
           />
@@ -252,4 +251,4 @@ const isUpdating = computed(() => extraBetStore.isUpdating);
     color: var(--bolao-c-sky);
   }
 }
-</style>
+</style> -->

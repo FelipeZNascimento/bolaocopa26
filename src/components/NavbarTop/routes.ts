@@ -6,6 +6,9 @@ export enum ROUTE_ID {
   RECORDS,
   RANKING,
   RULES,
+  PROFILE,
+  LOGIN,
+  TEAMS,
 }
 
 export interface TROUTE {
@@ -37,4 +40,5 @@ export const ROUTES = [
   { id: ROUTE_ID.EXTRAS, label: 'Extras', needCredentials: true, url: '/extras' },
   { id: ROUTE_ID.RANKING, label: 'Ranking', needCredentials: false, url: '/ranking' },
   { id: ROUTE_ID.RULES, label: 'Regras', needCredentials: false, url: '/regras' },
+  { id: ROUTE_ID.TEAMS, label: 'Equipes', needCredentials: false, url: '/equipes' },
 ];

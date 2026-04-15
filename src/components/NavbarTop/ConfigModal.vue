@@ -27,23 +27,6 @@
       />
     </div>
     <PrimeDivider />
-    <h2>Resultados</h2>
-    <div class="button-group">
-      <div class="label">Mostrar</div>
-      <PrimeSelectButton
-        fluid
-        :allowEmpty="false"
-        class="buttons"
-        v-model="gamesViewLocalObj"
-        :options="gamesViewOptions"
-        optionLabel="label"
-        dataKey="label"
-        size="small"
-        @click="() => handleGamesViewConfig(gamesViewLocalObj.value)"
-      />
-    </div>
-    <PrimeDivider />
-
     <h2>Ranking</h2>
     <div class="button-group" v-if="!isMobile">
       <div class="label">Posição</div>
@@ -81,14 +64,7 @@ import { isMobile } from '@basitcodeenv/vue3-device-detect';
 import { computed, onMounted, ref, watch, watchEffect } from 'vue';
 
 import type { IUser } from '@/stores/activeProfile.types';
-import type {
-  TGamesView,
-  TGamesViewValue,
-  TRankingPosition,
-  TRankingPositionValue,
-  TTheme,
-  TThemeValue,
-} from '@/stores/configuration.types';
+import type { TRankingPosition, TRankingPositionValue, TTheme, TThemeValue } from '@/stores/configuration.types';
 
 import FavoritesService from '@/services/favorites';
 import { useConfigurationStore } from '@/stores/configuration';
@@ -103,7 +79,6 @@ const props = defineProps<{
 // ------ Refs ------
 const isVisible = ref(false);
 const themeLocalObj = ref();
-const gamesViewLocalObj = ref();
 const rankingPositionLocalObj = ref();
 const favoritesCount = ref(0);
 
@@ -114,10 +89,6 @@ const themeOptions = ref<TTheme[]>([
 const rankingPositionOptions = ref<TRankingPosition[]>([
   { label: 'Sempre ativo', value: 'active' },
   { label: 'Escondido', value: 'modal' },
-]);
-const gamesViewOptions = ref<TGamesView[]>([
-  { label: 'Grid', value: 'grid' },
-  { label: 'Linhas', value: 'lines' },
 ]);
 
 // ------ Initialization ------
@@ -132,7 +103,6 @@ onMounted(() => {
 // ------ Computed Properties ------
 const rankingPosition = computed(() => configurationStore.rankingPosition);
 const theme = computed(() => configurationStore.theme);
-const gamesView = computed(() => configurationStore.gamesView);
 
 // ------ Functions  ------
 function handleClearFavorites() {
@@ -143,10 +113,6 @@ function handleClearFavorites() {
     window.dispatchEvent(new CustomEvent('favorites-cleared'));
   }
   notificationStore.success('Todos os favoritos foram removidos');
-}
-
-function handleGamesViewConfig(newOption: TGamesViewValue) {
-  configurationStore.setGamesView(newOption);
 }
 
 function handleRankingPositionConfig(newOption: TRankingPositionValue) {
@@ -165,10 +131,6 @@ function loadFavoritesCount() {
 }
 
 // ------ Watch Effect Properties ------
-watchEffect(
-  () => (gamesViewLocalObj.value = gamesViewOptions.value.find((option) => option.value === gamesView.value)),
-);
-
 watchEffect(() => (themeLocalObj.value = themeOptions.value.find((option) => option.value === theme.value)));
 
 watchEffect(

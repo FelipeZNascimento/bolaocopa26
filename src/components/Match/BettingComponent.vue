@@ -7,16 +7,14 @@
       class="betting-radio-button-container"
     >
       <PrimeRadioButton
-        :name="BETS_LABELS[BET_VALUE]"
         :disabled="isLoading || isMatchStarted"
         :value="BET_VALUE"
         v-model="radioButton"
         class="betting-radio-button"
         size="large"
         @change="(e: any) => handleNewBet(e, BET_VALUE)"
-        v-tooltip.top="renderTootlip(BET_VALUE)"
       />
-      <span class="betting-label">{{ BETS_LABELS[BET_VALUE] }}</span>
+      <!-- <span class="betting-label">{{ BETS_LABELS[BET_VALUE] }}</span> -->
     </span>
   </div>
 </template>
@@ -24,9 +22,9 @@
 import { useToast } from 'primevue/usetoast';
 import { ref, watchEffect } from 'vue';
 
-import type { IBet, IMatch } from '@/stores/matches.types';
+import type { IMatch } from '@/stores/matches.types';
 
-import { BETS_LABELS, BETS_VALUES, type BetsValues } from '@/constants/bets';
+import { BETS_VALUES, type BetsValues } from '@/constants/bets';
 import MatchService from '@/services/match';
 
 const props = defineProps<{
@@ -54,7 +52,7 @@ function callback(isSuccess: boolean, error?: Error) {
   if (isSuccess) {
     radioButtonPrevValue.value = radioButton.value; // Update previous value to current
     toast.add({
-      detail: `Aposta ${props.match.away.code} @ ${props.match.home.code} atualizada com sucesso`,
+      detail: `Aposta ${props.match.awayTeam.name} @ ${props.match.homeTeam.name} atualizada com sucesso`,
       life: 3000,
       severity: 'success',
       summary: 'Aposta atualizada',
@@ -80,15 +78,6 @@ function handleNewBet(e: Event, newBet: BetsValues) {
   }
 
   matchService.updateBet(props.match.id, newBet, callback);
-}
-
-// ------ Functions ------
-function renderTootlip(value: BetsValues) {
-  if (value === BETS_VALUES.AWAY_EASY || value === BETS_VALUES.AWAY_HARD) {
-    return `${BETS_LABELS[value]} pros ${props.match.away.alias}`;
-  } else {
-    return `${BETS_LABELS[value]} pros ${props.match.home.alias}`;
-  }
 }
 </script>
 <style lang="scss" scoped>

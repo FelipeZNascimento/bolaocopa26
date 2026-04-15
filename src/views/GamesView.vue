@@ -3,9 +3,9 @@
     <div class="outer-matches">
       <PaginatorComponent />
       <ErrorChecker />
-      <div :class="{ 'outer-line-mode': view === 'lines', 'outer-grid-mode': view === 'grid' }">
-        <MatchesSkeleton v-if="isLoading" :isLoading="isLoading" :view="view" />
-        <GroupedMatches v-else :matches="matches" :view="view" :selectedRound="selectedRound" />
+      <div class="outer-line-mode">
+        <MatchesSkeleton v-if="isLoading" :isLoading="isLoading" />
+        <GroupedMatches v-else :matches="matches" :selectedRound="selectedRound" />
       </div>
     </div>
     <RankingComponent v-if="isDesktop && rankingPosition === 'active'" />
@@ -33,7 +33,6 @@ const isMatchesLoading = computed(() => matchesStore.isLoading);
 const matches = computed(() => matchesStore.matches);
 const isLoading = computed(() => isConfigurationLoading.value || isMatchesLoading.value);
 const rankingPosition = computed(() => configurationStore.rankingPosition);
-const view = computed(() => configurationStore.gamesView);
 const selectedRound = computed(() => configurationStore.selectedRound);
 </script>
 <style scoped lang="scss">
@@ -53,18 +52,6 @@ const selectedRound = computed(() => configurationStore.selectedRound);
   align-items: flex-start;
   gap: var(--l-spacing);
   width: 100%;
-  position: relative;
-  z-index: 1;
-}
-
-.outer-grid-mode {
-  /* padding: 0 var(--m-spacing); */
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: center;
-  gap: var(--xl-spacing);
   position: relative;
   z-index: 1;
 }

@@ -39,18 +39,7 @@
               </span>
             </div>
             <div class="name-container">
-              <i
-                v-if="isFavoriteUser(slotProps.data.user.id)"
-                class="pi pi-star-fill favorite-badge"
-                v-tooltip.top="'Favorito'"
-              ></i>
-              <IconAndName
-                class="clickable"
-                :isShort="columnConfig === 'complete'"
-                :name="slotProps.data.user.nickname"
-                :isActive="activeProfile?.id === slotProps.data.user.id"
-                @click="() => handleUserClick(slotProps.data.user)"
-              />
+              <NameTag :isShort="columnConfig === 'complete'" :user="slotProps.data.user" :isClickable="true" />
             </div>
           </div>
         </div>
@@ -108,10 +97,10 @@ import type { IUser } from '@/stores/activeProfile.types';
 import type { TColumnsValue, TRowSpacingValue } from '@/stores/configuration.types';
 import type { IRankingLine } from '@/stores/ranking.types';
 
-import IconAndName from '@/components/IconAndName.vue';
+import NameTag from '@/components/NameTag.vue';
 import FavoritesService from '@/services/favorites';
 
-import UserTrackingModal from './UserTrackingModal.vue';
+import UserTrackingModal from '../UserTrackingModal.vue';
 
 const props = defineProps<{
   activeProfile: IUser | null;
@@ -165,17 +154,8 @@ function getPositionVariation(data: IRankingLine): number {
   return props.isRound ? data.accumulatedScore.positionVariation : data.score.positionVariation;
 }
 
-function handleUserClick(user: IUser) {
-  isUserTrackingModalOpen.value = true;
-  selectedUser.value = user;
-}
-
 function isActiveProfile(userId: number): boolean {
   return props.activeProfile?.id === userId;
-}
-
-function isFavoriteUser(userId: number): boolean {
-  return favorites.value.includes(userId);
 }
 
 function loadFavorites() {
@@ -345,25 +325,5 @@ watch(favorites, (newFavorites) => {
 
 .name-container {
   position: relative;
-}
-
-.favorite-badge {
-  position: absolute;
-  top: -4px;
-  left: -2px;
-  font-size: 0.6rem;
-  color: var(--bolao-c-gold);
-  z-index: 1;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
-}
-
-.clickable {
-  cursor: pointer;
-  transition: 0.2s;
-
-  &:hover {
-    opacity: 0.8;
-    text-decoration: underline;
-  }
 }
 </style>

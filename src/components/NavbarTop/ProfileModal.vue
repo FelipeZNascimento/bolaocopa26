@@ -19,7 +19,7 @@
       @submit="(formData) => onFormSubmit(formData)"
     >
       <PrimeFloatLabel variant="in" class="input">
-        <PrimeInputText disabled name="email" v-model="initialValues.email" type="email" fluid autofocus />
+        <PrimeInputText disabled name="email" type="email" fluid autofocus />
         <label for="email">Email</label>
       </PrimeFloatLabel>
       <PrimeFloatLabel variant="in" class="input">
@@ -81,12 +81,10 @@ const activeProfileStore = useActiveProfileStore();
 const isLoading = computed(() => activeProfileStore.isLoading);
 const error = computed(() => activeProfileStore.error);
 const activeProfile = computed(() => activeProfileStore.activeProfile);
-const initialValues = computed(() => {
-  return {
-    email: activeProfile.value?.email,
-    name: activeProfile.value?.name,
-    nickname: activeProfile.value?.nickname,
-  };
+const initialValues = ref({
+  email: activeProfile.value?.email || '',
+  name: activeProfile.value?.name || '',
+  nickname: activeProfile.value?.nickname || '',
 });
 
 // ------ Functions ------
@@ -117,6 +115,12 @@ watch(
   async (newValue) => {
     if (newValue) {
       isVisible.value = true;
+      // Update initialValues when modal opens
+      initialValues.value = {
+        email: activeProfile.value?.email || '',
+        name: activeProfile.value?.name || '',
+        nickname: activeProfile.value?.nickname || '',
+      };
     }
   },
 );

@@ -7,6 +7,11 @@
 a {
   text-decoration: none;
   cursor: pointer;
+  color: var(--color-anchor);
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 #app {

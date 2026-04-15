@@ -16,22 +16,22 @@ export default defineConfig({
       includeAssets: ['favicon.svg', 'robots.txt'],
       manifest: {
         background_color: '#1b2f42',
-        description: 'Um bolão para acompanhar a temporada completa da NFL em tempo real!',
+        description: 'Um bolão para acompanhar a Copa do Mundo 2026 em tempo real!',
         display: 'standalone',
         icons: [
           {
             sizes: '192x192',
-            src: '192x192.png',
+            src: 'android-chrome-192x192.png',
             type: 'image/png',
           },
           {
             sizes: '512x512',
-            src: '512x512.png',
+            src: 'android-chrome-512x512.png',
             type: 'image/png',
           },
         ],
-        name: 'BolaoNFL',
-        short_name: 'BolaoNFL',
+        name: 'Bolao Copa 2026',
+        short_name: 'BolaoCopa2026',
         start_url: '/',
         theme_color: '#1b2f42',
       },

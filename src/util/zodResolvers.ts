@@ -29,7 +29,7 @@ export const updateProfileResolver = ref(
   zodResolver(
     z.object({
       name: z.string().min(1, { message: 'Nome está vazio' }),
-      username: z
+      nickname: z
         .string()
         .min(4, { message: 'Apelido tem que ter entre 4 e 12 caracteres' })
         .max(12, { message: 'Apelido tem que ter entre 4 e 12 caracteres' }),

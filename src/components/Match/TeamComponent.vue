@@ -8,10 +8,9 @@
       }"
     >
       <div class="overlay">&nbsp;</div>
-      <span
+      <div
+        class="team-shield--line"
         :class="{
-          'team-shield--line': !isGridMode,
-          'team-shield--grid': isGridMode,
           'team-shield--left': isHomeTeam,
           'team-shield--right': !isHomeTeam,
         }"
@@ -19,22 +18,25 @@
         <img
           :class="isScoreless ? 'team-shield-image-small' : 'team-shield-image'"
           :src="`https://assets.omegafox.me/copa/countries_flags/${team.isoCode.toLowerCase()}.png`"
-          :alt="`${props.team.name} Shield`"
+          :alt="`${team.name} Shield`"
         />
-      </span>
-      <div v-if="!isNameless" class="team-alias">
-        {{ isGridMode || isAlias ? team.abbreviation : team.name }}
+      </div>
+      <div
+        v-if="!isNameless"
+        class="team-alias"
+        :class="{ clickable: isBetting }"
+        @click="isBetting && openTeamModal(team)"
+      >
+        {{ isAlias ? team.abbreviation : team.name }}
       </div>
       <div
         v-if="!isScoreless"
         class="team-score"
         :style="{
           fontWeight: isWinning ? 'bold' : 'normal',
-          // backgroundColor: props.team.colors[1],
-          // color: props.team.colors[0],
         }"
       >
-        {{ isHomeTeam ? score.home : score.away }}
+        {{ isHomeTeam ? score?.home : score?.away }}
       </div>
     </div>
     <div
@@ -59,51 +61,42 @@
       >
         <img style="height: 20px" :src="getEventIconUrl(event.event.id, isHomeTeam)" :alt="event.event.description" />
         <span>{{ event.event.gametime }}</span>
-        <span
-          class="player-name-hover"
-          @mouseenter="(e) => showPlayerSticker(e, event.player)"
-          @mouseleave="hidePlayerSticker"
-        >
-          {{ event.player.name }}
-        </span>
+        <HoverablePlayerName v-if="event.player" :player="event.player" />
       </p>
     </div>
   </div>
 
-  <!-- Panini Sticker Popover -->
-  <PrimePopover
-    ref="playerPopover"
-    class="player-sticker-popover"
-    @mouseenter="onPopoverMouseEnter"
-    @mouseleave="onPopoverMouseLeave"
-  >
-    <PlayerStickerComponent :player="selectedPlayer" />
-  </PrimePopover>
+  <!-- Team Details Modal -->
+  <TeamDetailsModal :isOpen="isTeamModalOpen" :team="selectedTeam" :handleCloseModal="closeTeamModal" />
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-import type { IMatchEvent, IPlayer, IScore, ITeam } from '@/stores/matches.types';
+import type { IMatchEvent, IScore } from '@/stores/matches.types';
+import type { ITeam } from '@/stores/teams.types';
 
-import PlayerStickerComponent from '@/components/PlayerStickerComponent.vue';
+import TeamDetailsModal from '@/components/TeamDetailsModal.vue';
 import { MATCH_EVENT, type TMatchStatus } from '@/constants/match';
 
-const props = withDefaults(
+import HoverablePlayerName from '../HoverablePlayerName.vue';
+
+withDefaults(
   defineProps<{
     events: IMatchEvent[];
     isAlias?: boolean;
-    isGridMode: boolean;
+    isBetting?: boolean;
     isHomeTeam?: boolean;
     isNameless?: boolean;
     isScoreless?: boolean;
     isScoreModalOpen?: boolean;
     isWinning?: boolean;
     matchStatus: TMatchStatus;
-    score: IScore;
+    score?: IScore;
     team: ITeam;
   }>(),
   {
     isAlias: false,
+    isBetting: false,
     isHomeTeam: false,
     isNameless: false,
     isScoreless: false,
@@ -113,19 +106,15 @@ const props = withDefaults(
 );
 
 // ------ Refs ------
-const playerPopover = ref();
-const selectedPlayer = ref<IPlayer | null>(null);
-const hideTimeout = ref<null | number>(null);
-const isPopoverHovered = ref(false);
-
-function clearHideTimeout() {
-  if (hideTimeout.value !== null) {
-    clearTimeout(hideTimeout.value);
-    hideTimeout.value = null;
-  }
-}
+const selectedTeam = ref<ITeam | null>(null);
+const isTeamModalOpen = ref(false);
 
 // ------ Functions ------
+function closeTeamModal() {
+  selectedTeam.value = null;
+  isTeamModalOpen.value = false;
+}
+
 function getEventIconUrl(eventType: number, isHome: boolean) {
   switch (eventType) {
     case MATCH_EVENT.GOAL: {
@@ -146,37 +135,9 @@ function getEventIconUrl(eventType: number, isHome: boolean) {
   }
 }
 
-function hidePlayerSticker() {
-  scheduleHidePlayerSticker();
-}
-
-function onPopoverMouseEnter() {
-  isPopoverHovered.value = true;
-  clearHideTimeout();
-}
-
-function onPopoverMouseLeave() {
-  isPopoverHovered.value = false;
-  scheduleHidePlayerSticker();
-}
-
-function scheduleHidePlayerSticker() {
-  clearHideTimeout();
-  hideTimeout.value = window.setTimeout(() => {
-    playerPopover.value?.hide();
-    selectedPlayer.value = null;
-    hideTimeout.value = null;
-  }, 200);
-}
-
-function showPlayerSticker(event: MouseEvent, player: IPlayer) {
-  clearHideTimeout();
-  // Don't update if user is actively hovering over the popover
-  if (isPopoverHovered.value) {
-    return;
-  }
-  selectedPlayer.value = player;
-  playerPopover.value?.show(event);
+function openTeamModal(team: ITeam) {
+  selectedTeam.value = team;
+  isTeamModalOpen.value = true;
 }
 </script>
 <style lang="scss" scoped>
@@ -206,11 +167,14 @@ function showPlayerSticker(event: MouseEvent, player: IPlayer) {
 .outer-team-nameless {
   min-width: 60px;
 }
+
 .team-shield {
   &--line {
     position: absolute;
     top: 50%;
     transform: translate(0, -50%);
+    height: 100%;
+    max-width: 90px;
 
     @media (max-width: 1024px) {
       top: 0%;
@@ -219,7 +183,9 @@ function showPlayerSticker(event: MouseEvent, player: IPlayer) {
   }
 
   &--left {
-    left: 5%;
+    left: 0;
+    display: flex;
+    justify-content: flex-end;
 
     @media (max-width: 1024px) {
       left: 5%;
@@ -227,29 +193,19 @@ function showPlayerSticker(event: MouseEvent, player: IPlayer) {
   }
 
   &--right {
-    right: 5%;
+    right: 0;
+    display: flex;
+    justify-content: flex-start;
+
     @media (max-width: 1024px) {
       right: 5%;
-    }
-  }
-
-  &--grid {
-    position: absolute;
-    height: 60px;
-    left: 20px;
-    top: -50%;
-
-    @media (max-width: 1024px) {
-      top: 0%;
     }
   }
 }
 
 .team-shield-image {
-  height: 60px;
-  width: 60px;
-  object-fit: contain;
-  z-index: -1;
+  width: 100px;
+  object-fit: cover;
 
   @media (max-width: 1024px) {
     height: 60px;
@@ -260,8 +216,7 @@ function showPlayerSticker(event: MouseEvent, player: IPlayer) {
 .team-shield-image-small {
   height: 60px;
   width: 60px;
-  object-fit: contain;
-  z-index: -1;
+  object-fit: cover;
 }
 
 .team-alias {
@@ -311,19 +266,6 @@ function showPlayerSticker(event: MouseEvent, player: IPlayer) {
   flex-direction: column;
 }
 
-.player-name-hover {
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: underline;
-  text-decoration-style: dotted;
-  text-underline-offset: 2px;
-
-  &:hover {
-    color: var(--bolao-c-gold);
-    text-decoration-style: solid;
-  }
-}
-
 :deep(.player-sticker-popover) {
   .p-popover {
     padding: 0;
@@ -331,5 +273,11 @@ function showPlayerSticker(event: MouseEvent, player: IPlayer) {
     border: none;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   }
+}
+
+.clickable {
+  cursor: pointer;
+  text-decoration: dotted underline;
+  text-underline-offset: 2px;
 }
 </style>

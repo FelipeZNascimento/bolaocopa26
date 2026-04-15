@@ -1,12 +1,7 @@
 <template>
-  <div
-    class="outer-match"
-    :class="{ line: !isGridMode, grid: isGridMode, clickable: !isBetting }"
-    @click="handleMatchClick"
-  >
+  <div class="outer-match line" :class="{ clickable: !isBetting }" @click="handleMatchClick">
     <ScoreComponent
       :isBetting="isBetting"
-      :isGridMode="isGridMode"
       :match="match"
       :activeUserBet="match.loggedUserBets ?? null"
       :isMatchStarted="isMatchStarted"
@@ -17,7 +12,6 @@
       :hitLevel="hitLevel"
       :timestamp="match.timestamp"
       :status="match.status"
-      :isGridMode="isGridMode"
       :isMatchStarted="isMatchStarted"
     />
   </div>
@@ -40,13 +34,11 @@ const props = withDefaults(
   defineProps<{
     isBetting?: boolean;
     isDemo?: boolean;
-    isGridMode?: boolean;
     match: IMatch;
   }>(),
   {
     isBetting: false,
     isDemo: false,
-    isGridMode: false,
   },
 );
 
@@ -126,19 +118,5 @@ function handleMatchClick() {
 .line {
   min-height: 60px;
   width: 100%;
-}
-
-.grid {
-  flex-direction: column;
-
-  @media (max-width: 1023px) {
-    height: 120px;
-    width: 170px;
-  }
-
-  @media (min-width: 1024px) {
-    height: 150px;
-    width: 250px;
-  }
 }
 </style>

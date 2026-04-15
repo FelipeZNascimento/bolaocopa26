@@ -5,12 +5,11 @@
     :breakpoints="{ '1024': '75vw', '575px': '95vw' }"
     v-model:visible="isVisible"
     :draggable="false"
-    position="top"
     contentClass="content-class"
     style="width: 60%; padding: var(--s-spacing)"
   >
     <template #header>
-      <p style="font-size: var(--l-font-size); display: flex; align-items: center; gap: var(--s-spacing)">
+      <p class="modal-title">
         <i
           v-if="!isUserActive"
           :class="isFavorite ? 'pi pi-star-fill' : 'pi pi-star'"
@@ -27,6 +26,12 @@
       :style="{ height: '300px', backgroundColor: 'var(--surface-card)', borderRadius: 'var(--border-radius)' }"
       :options="chartOptions"
     ></PrimeChart>
+    <PrimeDivider />
+    <h2 style="text-align: center">Apostas Extras</h2>
+    <div style="display: flex; justify-content: center; padding: var(--s-spacing)">
+      <PrimeSkeleton v-if="isLoadingExtras" class="skeleton-outer" />
+      <ExtraBetsTeamCard v-else :extraBets="selectedUserExtraBets" />
+    </div>
   </PrimeDialog>
 </template>
 <script setup lang="ts">
@@ -35,17 +40,18 @@ import { computed, onMounted, ref, watch } from 'vue';
 
 import type { IUser } from '@/stores/activeProfile.types';
 
-import IconAndName from '@/components/IconAndName.vue';
 import FavoritesService from '@/services/favorites';
 import { useActiveProfileStore } from '@/stores/activeProfile';
+import { useExtraBetStore } from '@/stores/extraBet';
 import { useNotificationStore } from '@/stores/notification';
 import { useRankingStore } from '@/stores/ranking';
+import ExtraBetsTeamCard from '@/views/Extras/After/ExtraBetsTeamCard.vue';
 
 const props = defineProps<{
   handleCloseModal: () => void;
   isOpen: boolean;
   isUserActive: boolean;
-  selectedUser: IUser | null;
+  selectedUser: null | Pick<IUser, 'id' | 'nickname'>;
 }>();
 
 // ------ Refs ------
@@ -57,15 +63,21 @@ const rankingStore = useRankingStore();
 const activeProfileStore = useActiveProfileStore();
 const notificationStore = useNotificationStore();
 const favoritesService = new FavoritesService();
+const extraBetStore = useExtraBetStore();
 
 // ------ Computed Properties  ------
-const { roundsRanking: roundsRanking, seasonRanking: seasonRanking } = storeToRefs(rankingStore);
-const { activeProfile } = storeToRefs(activeProfileStore);
+const isLoadingExtras = computed(() => extraBetStore.isLoading);
+const selectedUserExtraBets = computed(
+  () => extraBetStore.extraBetsByUser.find((u) => u.user.id === props.selectedUser?.id)?.bets || [],
+);
 
 const isFavorite = computed(() => {
   if (!props.selectedUser) return false;
   return favorites.value.includes(props.selectedUser.id);
 });
+
+const { roundsRanking, seasonRanking } = storeToRefs(rankingStore);
+const { activeProfile } = storeToRefs(activeProfileStore);
 
 // ------ Functions  ------
 function loadFavorites() {
@@ -220,6 +232,13 @@ watch(isVisible, async (newValue) => {
 });
 </script>
 <style lang="scss" scoped>
+.modal-title {
+  font-size: var(--l-font-size);
+  display: flex;
+  align-items: center;
+  gap: var(--s-spacing);
+}
+
 .content-class {
   padding: 0 !important;
   overflow-x: hidden !important;

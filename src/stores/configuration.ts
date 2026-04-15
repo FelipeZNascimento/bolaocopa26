@@ -1,11 +1,10 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-import type { TRankingPositionValue, TGamesViewValue, TThemeValue } from './configuration.types';
+import type { TRankingPositionValue, TThemeValue } from './configuration.types';
 
 const initialState = {
   rankingPosition: 'active' as TRankingPositionValue,
-  gamesView: 'grid' as TGamesViewValue,
   theme: 'dark' as TThemeValue,
 };
 
@@ -17,12 +16,10 @@ export const useConfigurationStore = defineStore('configuration', () => {
   const isLoading = ref<boolean>(true);
   const error = ref<Error | null>(null);
   const theme = ref<TThemeValue>(initialState.theme);
-  const gamesView = ref<TGamesViewValue>(initialState.gamesView);
   const rankingPosition = ref<TRankingPositionValue>(initialState.rankingPosition);
 
   function setInitialState() {
     theme.value = initialState.theme;
-    gamesView.value = initialState.gamesView;
     rankingPosition.value = initialState.rankingPosition;
     localStorage.removeItem('ranking-columns');
     localStorage.removeItem('theme-preference');
@@ -54,11 +51,6 @@ export const useConfigurationStore = defineStore('configuration', () => {
     localStorage.setItem('ranking-position', newValue);
   }
 
-  function setGamesView(view: TGamesViewValue) {
-    gamesView.value = view;
-    localStorage.setItem('results-view', view);
-  }
-
   function setCurrentEdition(season: number) {
     currentEdition.value = season;
   }
@@ -87,7 +79,6 @@ export const useConfigurationStore = defineStore('configuration', () => {
     isDarkMode,
     isLoading,
     rankingPosition,
-    gamesView,
     selectedRound,
     setCurrentEdition,
     setCurrentRound,
@@ -96,7 +87,6 @@ export const useConfigurationStore = defineStore('configuration', () => {
     setInitialState,
     setLoading,
     setRankingPosition,
-    setGamesView,
     setSelectedRound,
     setTheme,
     theme,

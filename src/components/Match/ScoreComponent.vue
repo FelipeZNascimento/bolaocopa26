@@ -1,15 +1,10 @@
 <template>
   <div v-if="isMobileOnly" class="outer-mobile-score-line">
-    <span
-      :class="{
-        'outer-mobile-teams-line': !isGridMode || isBetting,
-        'outer-mobile-teams-grid': isGridMode,
-      }"
-    >
+    <span class="outer-mobile-teams-line">
       <RibbonComponent v-if="ribbon" :ribbon="ribbon" />
       <TeamComponent
         isAlias
-        :isGridMode="isGridMode"
+        :isBetting="isBetting"
         :isHomeTeam="true"
         :isWinning="match.score.away < match.score.home"
         :events="sortedEvents"
@@ -19,7 +14,7 @@
       />
       <TeamComponent
         isAlias
-        :isGridMode="isGridMode"
+        :isBetting="isBetting"
         :isHomeTeam="false"
         :isWinning="match.score.away > match.score.home"
         :events="sortedEvents"
@@ -28,16 +23,10 @@
         :score="match.score"
       />
     </span>
-    <!-- <BettingComponent
-      v-if="isBetting && !isGridMode"
-      :match="match"
-      :activeUserBet="activeUserBet"
-      :isMatchStarted="isMatchStarted"
-    /> -->
   </div>
-  <div v-else :class="{ 'outer-score-line': !isGridMode || isBetting, 'outer-score-grid': isGridMode }">
+  <div v-else class="outer-score-line">
     <TeamComponent
-      :isGridMode="isGridMode"
+      :isBetting="isBetting"
       :isHomeTeam="true"
       :isScoreModalOpen="isScoreModalOpen"
       :isWinning="match.score.away < match.score.home"
@@ -46,15 +35,8 @@
       :matchStatus="match.status"
       :score="match.score"
     />
-
-    <!-- <BettingComponent
-      v-if="isBetting && !isGridMode"
-      :match="match"
-      :activeUserBet="activeUserBet"
-      :isMatchStarted="isMatchStarted"
-    /> -->
     <TeamComponent
-      :isGridMode="isGridMode"
+      :isBetting="isBetting"
       :isHomeTeam="false"
       :isScoreModalOpen="isScoreModalOpen"
       :isWinning="match.score.away > match.score.home"
@@ -78,7 +60,6 @@ const props = withDefaults(
   defineProps<{
     activeUserBet: IBet | null;
     isBetting?: boolean;
-    isGridMode?: boolean;
     isMatchStarted: boolean;
     isScoreModalOpen?: boolean;
     match: IMatch;
@@ -86,7 +67,6 @@ const props = withDefaults(
   }>(),
   {
     isBetting: false,
-    isGridMode: false,
     isScoreModalOpen: false,
   },
 );
@@ -114,13 +94,6 @@ const sortedEvents = computed(() => {
   position: relative;
 }
 
-.outer-mobile-teams-grid {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  width: 100%;
-}
-
 .outer-mobile-teams-line {
   display: flex;
   flex: 1;
@@ -135,11 +108,5 @@ const sortedEvents = computed(() => {
   align-items: flex-start;
   justify-content: center;
   gap: var(--m-spacing);
-}
-
-.outer-score-grid {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
 }
 </style>

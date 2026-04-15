@@ -18,21 +18,21 @@ export const useMatchesStore = defineStore('matches', () => {
     matches.value = newMatches;
   }
 
-  function updateMatches(updatedMatches: IMatch[]) {
-    updatedMatches.forEach((updatedMatch) => {
-      const index = matches.value.findIndex((m) => m.id === updatedMatch.id);
-      if (index !== -1) {
-        matches.value[index].away.possession = updatedMatch.away.possession;
-        matches.value[index].away.score = updatedMatch.away.score;
-        matches.value[index].home.possession = updatedMatch.home.possession;
-        matches.value[index].home.score = updatedMatch.home.score;
-        matches.value[index].status = updatedMatch.status;
-        matches.value[index].overUnder = updatedMatch.overUnder;
-        matches.value[index].homeTeamOdds = updatedMatch.homeTeamOdds;
-        matches.value[index].bets = updatedMatch.bets;
-      }
-    });
-  }
+  // function updateMatches(updatedMatches: IMatch[]) {
+  //   updatedMatches.forEach((updatedMatch) => {
+  //     const index = matches.value.findIndex((m) => m.id === updatedMatch.id);
+  //     if (index !== -1) {
+  //       matches.value[index].away.possession = updatedMatch.away.possession;
+  //       matches.value[index].away.score = updatedMatch.away.score;
+  //       matches.value[index].home.possession = updatedMatch.home.possession;
+  //       matches.value[index].home.score = updatedMatch.home.score;
+  //       matches.value[index].status = updatedMatch.status;
+  //       matches.value[index].overUnder = updatedMatch.overUnder;
+  //       matches.value[index].homeTeamOdds = updatedMatch.homeTeamOdds;
+  //       matches.value[index].bets = updatedMatch.bets;
+  //     }
+  //   });
+  // }
 
   function setLoading(loadingState: boolean) {
     isLoading.value = loadingState;
@@ -42,5 +42,5 @@ export const useMatchesStore = defineStore('matches', () => {
     error.value = newError;
   }
 
-  return { error, isLoading, matches, resetLoggedUserBets, setError, setLoading, setMatches, updateMatches };
+  return { error, isLoading, matches, resetLoggedUserBets, setError, setLoading, setMatches };
 });

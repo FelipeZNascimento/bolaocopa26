@@ -1,241 +1,640 @@
-<!-- eslint-disable vue/no-deprecated-slot-attribute -->
 <template>
-  <header>
-    <nav>
-      <PrimeMenubar :model="filteredRoutes">
-        <template #item="{ item }">
-          <RouterLink
-            v-if="item.url"
-            :to="item.url"
-            :class="{
-              disabled: item.needCredentials && !activeProfile,
-              enabled: !item.needCredentials || activeProfile,
-              active: item.id === activeRoute,
-            }"
-            v-slot="{ navigate }"
-            @click="activeRoute = item.id"
-            custom
+  <header class="navbar">
+    <nav class="nav-container">
+      <div class="wave-background">
+        <svg class="wave-svg" viewBox="0 0 1400 100" preserveAspectRatio="none">
+          <path :d="wavePath" fill="var(--bolao-c-green-t3)" />
+        </svg>
+      </div>
+
+      <!-- All Navigation Items -->
+      <div class="nav-links-wrapper" ref="navWrapper">
+        <!-- Soccer ball that moves between items -->
+        <div
+          class="telstar-ball"
+          :style="{
+            left: ballPosition,
+            transform: `translate(-50%, -20px) rotate(${ballRotation}deg)`,
+          }"
+        ></div>
+
+        <RouterLink
+          v-for="(route, index) in allRoutes"
+          :key="route.id"
+          :to="route.url || ''"
+          :class="{
+            'nav-link': true,
+            disabled: route.needCredentials && !activeProfile,
+            active: route.id === activeRoute,
+          }"
+          :style="{ '--item-index': index }"
+          custom
+          v-slot="{ navigate }"
+        >
+          <a
+            @click="
+              route.id === ROUTE_ID.PROFILE || route.id === ROUTE_ID.LOGIN
+                ? handleNavigate($event, index, navigate, route)
+                : handleRouteClick(route, index, navigate)
+            "
           >
-            <a @click="navigate()">
-              <span>{{ item.label }}</span>
-            </a>
-          </RouterLink>
-          <RouterLink
-            v-else-if="isMobile || rankingPosition === 'modal'"
-            to=""
-            @click="isRankingModalOpen = true"
-            custom
-          >
-            <a>
-              <span>{{ item.label }}</span>
-            </a>
-          </RouterLink>
-        </template>
-        <template #end>
-          <div class="outer-right">
-            <PrimeButton
-              icon="pi pi-user"
-              :loading="isProfileLoading"
-              v-if="activeProfile"
-              @click="togglePopover"
-              :label="activeProfile.name"
-              variant="outlined"
-              severity="secondary"
-            >
-              <IconAndName :name="activeProfile.name" />
-            </PrimeButton>
-            <PrimeButton
-              v-else
-              icon="pi pi-user"
-              :loading="isProfileLoading"
-              label="Login"
-              @click="isLoginModalOpen = true"
-            />
-            <a @click="isConfigModalOpen = true"><i class="pi pi-cog"></i></a>
-          </div>
-        </template>
-      </PrimeMenubar>
-      <PrimePopover ref="profilePopover">
-        <div class="outer-profile-popover">
-          <PrimeButton
-            variant="text"
-            severity="secondary"
-            size="small"
-            label="Perfil"
-            @click="isProfileModalOpen = true"
-          />
-          <PrimeButton
-            variant="text"
-            severity="danger"
-            size="small"
-            label="Senha"
-            @click="isPasswordModalOpen = true"
-          />
-          <PrimeButton size="small" label="Sair" @click="handleLogout" />
-        </div>
-      </PrimePopover>
+            <div class="icon-wrapper" :class="{ elevated: route.id === activeRoute }">
+              <i :class="getIconClass(route.id)" class="nav-icon"></i>
+            </div>
+            <span class="nav-label" :class="{ 'active-label': route.id === activeRoute }">{{ route.label }}</span>
+          </a>
+        </RouterLink>
+      </div>
     </nav>
+
+    <!-- Profile Popover -->
+    <PrimePopover ref="profilePopover" @hide="syncActiveRouteWithPath">
+      <div class="outer-profile-popover">
+        <PrimeButton
+          variant="text"
+          severity="secondary"
+          size="small"
+          label="Perfil"
+          @click="
+            isProfileModalOpen = true;
+            profilePopover.toggle();
+          "
+        />
+        <PrimeButton
+          variant="text"
+          severity="secondary"
+          size="small"
+          label="Senha"
+          @click="
+            isPasswordModalOpen = true;
+            profilePopover.toggle();
+          "
+        />
+        <PrimeButton
+          variant="text"
+          severity="secondary"
+          size="small"
+          label="Configurações"
+          @click="
+            isConfigModalOpen = true;
+            profilePopover.toggle();
+          "
+        />
+        <PrimeDivider />
+        <!-- style="color: black" -->
+        <PrimeButton severity="secondary" size="small" label="Sair" @click="handleLogout" />
+      </div>
+    </PrimePopover>
   </header>
-  <LoginModal :isOpen="isLoginModalOpen" :handleCloseModal="() => (isLoginModalOpen = false)" />
-  <ProfileModal :isOpen="isProfileModalOpen" :handleCloseModal="() => (isProfileModalOpen = false)" />
-  <PasswordModal :isOpen="isPasswordModalOpen" :handleCloseModal="() => (isPasswordModalOpen = false)" />
-  <ConfigModal
-    :activeProfile="activeProfile"
-    :isOpen="isConfigModalOpen"
-    :handleCloseModal="() => (isConfigModalOpen = false)"
-  />
-  <RankingModal :isOpen="isRankingModalOpen" :handleCloseModal="() => (isRankingModalOpen = false)" />
+
+  <!-- Modals -->
+  <LoginModal :isOpen="isLoginModalOpen" :handleCloseModal="handleCloseLoginModal" />
+  <ProfileModal :isOpen="isProfileModalOpen" :handleCloseModal="handleCloseProfileModal" />
+  <PasswordModal :isOpen="isPasswordModalOpen" :handleCloseModal="handleClosePasswordModal" />
+  <ConfigModal :activeProfile="activeProfile" :isOpen="isConfigModalOpen" :handleCloseModal="handleCloseConfigModal" />
+  <RankingModal :isOpen="isRankingModalOpen" :handleCloseModal="handleCloseRankingModal" />
 </template>
+
 <script setup lang="ts">
-import { isMobile } from '@basitcodeenv/vue3-device-detect';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
 import ConfigModal from '@/components/NavbarTop/ConfigModal.vue';
 import LoginModal from '@/components/NavbarTop/LoginModal.vue';
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
-import { useConfigurationStore } from '@/stores/configuration';
 
-import IconAndName from '../IconAndName.vue';
 import RankingModal from '../Ranking/RankingModal.vue';
-import PasswordModal from './PasswordModal.vue';
+import PasswordModal from './ChangePasswordModal.vue';
 import ProfileModal from './ProfileModal.vue';
 import { ROUTE_ID, ROUTES, type TROUTE } from './routes';
 
+type ExtendedRoute = TROUTE | { id: number; label: string; needCredentials: boolean; url: string };
+
 // ------ Refs ------
-const isDarkMode = ref(false);
 const isLoginModalOpen = ref(false);
 const isProfileModalOpen = ref(false);
 const isPasswordModalOpen = ref(false);
 const isRankingModalOpen = ref(false);
 const profilePopover = ref();
 const isConfigModalOpen = ref(false);
-const activeRoute = ref(ROUTES[0].id);
-const rankingRoute = {
-  id: ROUTE_ID.RANKING,
-  label: 'Ranking',
+const activeRoute = ref<number>(ROUTES[0].id);
+const activeItemIndex = ref(0);
+const animatedItemIndex = ref(0);
+const ballRotation = ref(0);
+const ballPositionPx = ref(0);
+const navWrapper = ref<HTMLElement | null>(null);
+let animationFrame: null | number = null;
+
+const profileRoute = computed(() => ({
+  id: ROUTE_ID.PROFILE,
+  label: activeProfile.value ? activeProfile.value.name : 'Perfil',
   needCredentials: true,
+  url: '',
+}));
+
+const loginRoute: ExtendedRoute = {
+  id: ROUTE_ID.LOGIN,
+  label: 'Login',
+  needCredentials: false,
+  url: '',
 };
 
 // ------ Initializations ------
-const configurationStore = useConfigurationStore();
 const activeProfileStore = useActiveProfileStore();
-isDarkMode.value = configurationStore.isDarkMode();
 const userService = new UserService();
+const route = useRoute();
+
 onMounted(() => {
   const currentPath = window.location.pathname;
   const matchingRoute = ROUTES.find((route) => route.url === currentPath);
   if (matchingRoute) {
+    const index = allRoutes.value.findIndex((r) => r.id === matchingRoute.id);
     activeRoute.value = matchingRoute.id;
+    activeItemIndex.value = index >= 0 ? index : 0;
+    animatedItemIndex.value = index >= 0 ? index : 0;
+  }
+
+  // Initial ball position after DOM is ready
+  setTimeout(() => updateBallPosition(), 0);
+});
+
+onUnmounted(() => {
+  if (animationFrame !== null) {
+    cancelAnimationFrame(animationFrame);
   }
 });
 
 // ------ Computed Properties ------
 const activeProfile = computed(() => activeProfileStore.activeProfile);
-const isProfileLoading = computed(() => activeProfileStore.isLoading);
-const rankingPosition = computed(() => configurationStore.rankingPosition);
-const filteredRoutes = computed(() => {
-  const filtered: TROUTE[] = ROUTES.filter((route) => (route.needCredentials ? activeProfile.value !== null : true));
-  filtered.push(rankingRoute);
 
-  return filtered;
+const allRoutes = computed(() => {
+  const routes: ExtendedRoute[] = [...ROUTES];
+
+  if (activeProfile.value) {
+    routes.push(profileRoute.value);
+  } else {
+    routes.push(loginRoute);
+  }
+
+  // routes.push(configRoute);
+
+  return routes;
 });
 
+const ballPosition = computed(() => {
+  return `${ballPositionPx.value}px`;
+});
+
+const wavePath = computed(() => {
+  const width = 1400;
+  const height = 100;
+  const items = allRoutes.value.length;
+  const activeIndex = animatedItemIndex.value; // Use animated index instead of actual
+
+  // Calculate position for dip
+  const itemWidth = width / items;
+  const centerX = (activeIndex + 0.5) * itemWidth;
+  const dipDepth = 60;
+  const dipWidth = itemWidth * 1.5;
+
+  let path = `M 0,${height * 0.3}`;
+
+  const points = 50;
+  for (let i = 0; i <= points; i++) {
+    const x = (width / points) * i;
+    let y = height * 0.3;
+
+    const distanceFromCenter = Math.abs(x - centerX);
+    if (distanceFromCenter < dipWidth) {
+      const dipFactor = Math.cos((distanceFromCenter / dipWidth) * Math.PI) * 0.5 + 0.5;
+      y = height * 0.3 + dipDepth * dipFactor;
+    }
+
+    y += Math.sin((x / width) * Math.PI * 3) * 5;
+
+    path += ` L ${x},${y}`;
+  }
+
+  path += ` L ${width},${height} L 0,${height} Z`;
+
+  return path;
+});
+
+// Watch for route changes (e.g., when user logs in and new routes are added)
+watch(allRoutes, () => {
+  // Recalculate active item index in case route positions changed
+  const index = allRoutes.value.findIndex((r) => r.id === activeRoute.value);
+  if (index >= 0) {
+    activeItemIndex.value = index;
+    animatedItemIndex.value = index;
+  }
+
+  // Update ball position after DOM has updated with new routes
+  setTimeout(() => updateBallPosition(), 0);
+});
+
+// Watch for actual route path changes (from RouterLink navigation)
+watch(
+  () => route.path,
+  (newPath) => {
+    const matchingRoute = ROUTES.find((r) => r.url === newPath);
+    if (matchingRoute) {
+      const index = allRoutes.value.findIndex((r) => r.id === matchingRoute.id);
+      if (index >= 0 && activeRoute.value !== matchingRoute.id) {
+        activeRoute.value = matchingRoute.id;
+        activeItemIndex.value = index;
+        setTimeout(() => animateWave(index), 50);
+      }
+    }
+  },
+);
+
 // ------ Functions ------
+function animateWave(targetIndex: number) {
+  const startIndex = animatedItemIndex.value;
+  const distance = targetIndex - startIndex;
+  const duration = 600; // ms
+  const startTime = performance.now();
+  const startRotation = ballRotation.value;
+
+  // Calculate rotation based on distance (simulate rolling)
+  // Each index = ~360 degrees of rotation
+  const rotationDistance = distance * 360;
+
+  // Get start and end positions from DOM
+  if (!navWrapper.value) return;
+  const navItems = navWrapper.value.querySelectorAll('.nav-link');
+  if (navItems.length === 0) return;
+
+  const startItem = navItems[Math.round(startIndex)] as HTMLElement;
+  const endItem = navItems[targetIndex] as HTMLElement;
+
+  if (!startItem || !endItem) return;
+
+  const navRect = navWrapper.value.getBoundingClientRect();
+  const startRect = startItem.getBoundingClientRect();
+  const endRect = endItem.getBoundingClientRect();
+
+  const startPos = startRect.left + startRect.width / 2 - navRect.left;
+  const endPos = endRect.left + endRect.width / 2 - navRect.left;
+
+  const animate = (currentTime: number) => {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+
+    // Ease-in-ease-out function
+    const easeProgress = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+    animatedItemIndex.value = startIndex + distance * easeProgress;
+    ballRotation.value = startRotation + rotationDistance * easeProgress;
+
+    // Interpolate ball position smoothly
+    ballPositionPx.value = startPos + (endPos - startPos) * easeProgress;
+    ballPositionPx.value = ballPositionPx.value - 15;
+
+    if (progress < 1) {
+      animationFrame = requestAnimationFrame(animate);
+    } else {
+      animatedItemIndex.value = targetIndex;
+      ballRotation.value = startRotation + rotationDistance;
+      ballPositionPx.value = endPos - 15;
+      animationFrame = null;
+    }
+  };
+
+  if (animationFrame !== null) {
+    cancelAnimationFrame(animationFrame);
+  }
+
+  animationFrame = requestAnimationFrame(animate);
+}
+
+function getIconClass(routeId: number): string {
+  const iconMap: Record<number, string> = {
+    [ROUTE_ID.BET]: 'pi pi-money-bill',
+    [ROUTE_ID.EXTRAS]: 'pi pi-star',
+    [ROUTE_ID.GAMES]: 'pi pi-list',
+    [ROUTE_ID.HOME]: 'pi pi-home',
+    [ROUTE_ID.LOGIN]: 'pi pi-user',
+    [ROUTE_ID.PROFILE]: 'pi pi-user',
+    [ROUTE_ID.RANKING]: 'pi pi-trophy',
+    [ROUTE_ID.RECORDS]: 'pi pi-chart-bar',
+    [ROUTE_ID.RULES]: 'pi pi-book',
+    [ROUTE_ID.TEAMS]: 'pi pi-globe',
+  };
+  return iconMap[routeId] || 'pi pi-circle';
+}
+
+function handleCloseConfigModal() {
+  isConfigModalOpen.value = false;
+  syncActiveRouteWithPath();
+}
+
+function handleCloseLoginModal() {
+  isLoginModalOpen.value = false;
+  syncActiveRouteWithPath();
+}
+
+function handleClosePasswordModal() {
+  isPasswordModalOpen.value = false;
+  syncActiveRouteWithPath();
+}
+
+function handleCloseProfileModal() {
+  isProfileModalOpen.value = false;
+  syncActiveRouteWithPath();
+}
+
+function handleCloseRankingModal() {
+  isRankingModalOpen.value = false;
+  syncActiveRouteWithPath();
+}
+
 function handleLogout() {
   userService.logout();
   profilePopover.value.toggle();
 }
 
+function handleNavigate(event: Event, index: number, navigate: () => void, route: ExtendedRoute) {
+  if (route.needCredentials && !activeProfile.value) {
+    return;
+  }
+
+  // Update state before animating
+  activeRoute.value = route.id;
+  activeItemIndex.value = index;
+  animateWave(index);
+
+  if (route.id === ROUTE_ID.PROFILE) {
+    togglePopover(event);
+    return;
+  } else if (route.id === ROUTE_ID.LOGIN) {
+    isLoginModalOpen.value = true;
+    return;
+  }
+
+  if (route.url) {
+    navigate();
+  }
+}
+
+function handleRouteClick(route: ExtendedRoute, index: number, navigate: () => void) {
+  console.log('Route clicked in handleRouteClick:', route);
+  if (route.id === ROUTE_ID.PROFILE) {
+    activeRoute.value = route.id;
+    activeItemIndex.value = index;
+    animateWave(index);
+    return;
+  }
+  activeRoute.value = route.id;
+  activeItemIndex.value = index;
+  animateWave(index);
+  if (route.url) {
+    navigate();
+  }
+}
+
+function syncActiveRouteWithPath() {
+  const currentPath = window.location.pathname;
+  const matchingRoute = ROUTES.find((route) => route.url === currentPath);
+  if (matchingRoute) {
+    const index = allRoutes.value.findIndex((r) => r.id === matchingRoute.id);
+    if (index >= 0 && activeRoute.value !== matchingRoute.id) {
+      activeRoute.value = matchingRoute.id;
+      activeItemIndex.value = index;
+      // Add a small delay to ensure DOM is updated after popover closes
+      setTimeout(() => animateWave(index), 50);
+    }
+  }
+}
+
 function togglePopover(event: Event) {
   profilePopover.value.toggle(event);
 }
+
+function updateBallPosition() {
+  if (!navWrapper.value) return;
+
+  const navItems = navWrapper.value.querySelectorAll('.nav-link');
+  if (navItems.length === 0) return;
+
+  const targetIndex = Math.round(animatedItemIndex.value);
+  const targetItem = navItems[targetIndex] as HTMLElement;
+
+  if (targetItem) {
+    const navRect = navWrapper.value.getBoundingClientRect();
+    const itemRect = targetItem.getBoundingClientRect();
+
+    // Calculate the center of the item relative to the nav wrapper
+    const itemCenter = itemRect.left + itemRect.width / 2 - navRect.left;
+    ballPositionPx.value = itemCenter - 15;
+  }
+}
 </script>
-<style lang="scss" scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-  position: sticky;
+
+<style scoped lang="scss">
+.navbar {
+  position: absolute;
   top: 0;
-  z-index: 999;
-
-  @media (min-width: 1024px) {
-    display: flex;
-    place-items: center;
-  }
-}
-
-nav {
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: var(--navbar-height);
   width: 100%;
-  font-size: 24px;
-  text-align: center;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  position: sticky;
+  background-color: var(--bolao-c-navbar);
+}
+
+.nav-container {
+  position: relative;
+  // max-width: 1400px;
+  margin: 0 auto;
+  height: 100%;
+}
+
+.wave-background {
+  position: absolute;
   top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  overflow: visible;
+}
 
-  .p-menubar {
-    width: 100%;
-    border: none;
-    // background-color: var(--bolao-c-navbar);
-    box-shadow: 0 0 15px 1px #0006;
-    height: 100%;
-    border-radius: 0;
-  }
+.wave-svg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  // filter: drop-shadow(0/ -2px 10px rgba(0, 0, 0, 0.9));
+}
 
-  i {
-    transition: all 0.2s;
-    font-size: var(--m-font-size);
+.nav-links-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  height: 100%;
+  padding: 0 var(--l-spacing);
+  z-index: 10;
+  gap: var(--l-spacing);
+}
 
-    &:hover {
-      color: var(--color-contrast);
-    }
-  }
+.nav-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--xs-spacing);
+  text-decoration: none;
+  color: var(--color-text);
+  transition: all 0.3s ease;
+  position: relative;
+  padding: var(--xs-spacing);
+  // flex: 1;
+  justify-content: center;
+  cursor: pointer;
 
-  .logo-image {
-    max-height: 60px;
-  }
-
-  a {
-    display: inline-block;
-    padding: 0 12px;
-    transition: 0.2s;
-    color: var(--nav-link);
+  &.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
   }
 }
 
-.outer-right {
+.icon-wrapper {
+  position: relative;
+  width: 10px;
+  height: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--m-spacing);
-}
+  transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  z-index: 2;
 
-.active {
-  color: var(--bolao-c-gold);
-}
-
-.enabled {
-  &:hover {
-    color: var(--nav-link-hover);
-    background-color: transparent !important;
+  &.elevated {
+    color: var(--bolao-c-gold);
+    transform: translateX(15px);
   }
 }
 
-.disabled {
-  cursor: default;
+.telstar-ball {
+  position: absolute;
+  bottom: 10px;
+  width: 25px;
+  height: 25px;
+  background: url('/soccer_ball.svg') center center / cover no-repeat;
+  border-radius: 50%;
+  z-index: 3;
+  box-shadow:
+    0 8px 16px rgba(0, 0, 0, 0.3),
+    0 4px 8px rgba(0, 0, 0, 0.15);
   pointer-events: none;
-  color: var(--nav-disabled);
 }
 
-.prime-dialog {
-  width: 400px;
+.nav-icon {
+  font-size: var(--l-font-size);
+  color: var(--bolao-c-white);
+  transition: all 0.3s ease;
+  z-index: 1;
+
+  .elevated & {
+    color: var(--bolao-c-gold);
+    font-size: 24px;
+  }
+}
+
+.nav-label {
+  font-size: var(--s-font-size);
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--bolao-c-white);
+  transition: all 0.3s ease;
+  opacity: 0.7;
+
+  &.active-label {
+    color: var(--bolao-c-white);
+    font-weight: 700;
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.15) rotate(-90deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
 }
 
 .outer-profile-popover {
   display: flex;
   flex-direction: column;
-  gap: var(--s-spacing);
+  gap: var(--xs-spacing);
+  padding: var(--s-spacing);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar {
+    height: 70px;
+  }
+
+  .nav-links-wrapper {
+    padding: 0 var(--s-spacing);
+  }
+
+  .icon-wrapper {
+    width: 30px;
+    height: 30px;
+
+    &.elevated {
+      transform: translateX(-15px);
+    }
+  }
+
+  .telstar-ball {
+    width: 55px;
+    height: 55px;
+  }
+
+  .nav-icon {
+    font-size: var(--l-font-size);
+
+    .elevated & {
+      font-size: 20px;
+    }
+  }
+
+  .nav-label {
+    font-size: 10px;
+    max-width: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-links-wrapper {
+    padding: 0 var(--xs-spacing);
+  }
+
+  .nav-label {
+    display: none;
+  }
+
+  .nav-link.active .nav-label.active-label {
+    display: block;
+  }
 }
 </style>

@@ -40,11 +40,11 @@
         <label for="name">Nome Completo</label>
       </PrimeFloatLabel>
       <PrimeFloatLabel v-if="formMode === 'signup'" variant="in" class="input">
-        <PrimeInputText name="username" type="text" fluid />
-        <PrimeMessage v-if="$form.username?.invalid" severity="error" size="small" variant="simple">
-          {{ $form.username.error?.message }}
+        <PrimeInputText name="nickname" type="text" fluid />
+        <PrimeMessage v-if="$form.nickname?.invalid" severity="error" size="small" variant="simple">
+          {{ $form.nickname.error?.message }}
         </PrimeMessage>
-        <label for="username">Apelido</label>
+        <label for="nickname">Apelido</label>
       </PrimeFloatLabel>
       <div class="buttons-container">
         <PrimeButton
@@ -117,8 +117,8 @@ const formMode: Ref<'forgotPassword' | 'login' | 'signup'> = ref('login');
 const initialValues = ref({
   email: '',
   name: '',
+  nickname: '',
   password: '',
-  username: '',
 });
 const resolverDecider = () => {
   if (formMode.value === 'signup') {
@@ -153,11 +153,11 @@ const signupResolver = ref(
     z.object({
       email: z.email({ error: 'Email inválido' }),
       name: z.string().min(1, { message: 'Nome está vazio' }),
-      password: z.string().min(1, { message: 'Senha está vazia' }),
-      username: z
+      nickname: z
         .string()
         .min(4, { message: 'Apelido tem que ter entre 4 e 12 caracteres' })
         .max(12, { message: 'Apelido tem que ter entre 4 e 12 caracteres' }),
+      password: z.string().min(1, { message: 'Senha está vazia' }),
     }),
   ),
 );
@@ -213,8 +213,8 @@ function onSignupSubmit(formData: FormSubmitEvent<Record<string, string>>) {
     return;
   }
 
-  const { email, name, password, username } = formData.values;
-  userService.signup(email, password, name, username, loginCallback);
+  const { email, name, nickname, password } = formData.values;
+  userService.signup(email, password, name, nickname, loginCallback);
 }
 
 function resetState() {
