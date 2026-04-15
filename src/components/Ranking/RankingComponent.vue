@@ -1,27 +1,71 @@
 <template>
   <div :class="{ 'outer-ranking': !isModal }">
     <div class="ranking-header">
-      <span class="toggle" :class="{ activeToggle: !isWeeklyRanking }" @click="isWeeklyRanking = false">
-        Temporada</span
+      <span
+        class="toggle"
+        :class="{ activeToggle: !isRoundRanking }"
+        @click="isRoundRanking = false"
+      >Geral</span>
+      <span
+        class="toggle"
+        :class="{ activeToggle: isRoundRanking }"
+        @click="isRoundRanking = true"
+      >Rodada {{ selectedRound }}</span>
+      <PrimeDivider layout="vertical" />
+      <span
+        class="toggle"
+        :class="{ activeToggle: !showFavoritesOnly }"
+        @click="showFavoritesOnly = false"
       >
-      <PrimeToggleSwitch v-model="isWeeklyRanking" />
-      <span class="toggle" :class="{ activeToggle: isWeeklyRanking }" @click="isWeeklyRanking = true"> Semana </span>
+        <i class="pi pi-list" /> Todos
+      </span>
+      <span
+        class="toggle"
+        :class="{ activeToggle: showFavoritesOnly }"
+        :style="{ color: showFavoritesOnly ? 'var(--bolao-c-gold)' : '' }"
+        @click="showFavoritesOnly = true"
+      >
+        <i :class="{ 'pi pi-star-fill': showFavoritesOnly, 'pi pi-star': !showFavoritesOnly }" /> Favoritos
+      </span>
+      <PrimeDivider layout="vertical" />
+      <span
+        class="toggle"
+        @click="
+          isRoundRanking = false;
+          showFavoritesOnly = false;
+        "
+      >
+        <i class="pi pi-filter-slash" />
+      </span>
     </div>
     <div class="ranking-container">
       <RankingTable
-        :isWeekly="isWeeklyRanking"
-        :isLoading="isWeeklyRanking ? isLoadingWeek : isLoadingSeason"
-        :rankingData="isWeeklyRanking ? selectedWeekRanking : seasonRanking"
-        :columnConfig="columnsOption"
-        :rowSpacingConfig="rowSpacing"
-        :activeProfile="activeProfile"
-        :error="isWeeklyRanking ? errorSeason : errorWeek"
+        v-model:show-favorites-only="showFavoritesOnly"
+        :is-round="isRoundRanking"
+        :is-loading="isRoundRanking ? isLoadingRounds : isLoadingSeason"
+        :ranking-data="isRoundRanking ? selectedRoundRanking : seasonRanking"
+        column-config="compact"
+        row-spacing-config="small"
+        :active-profile="activeProfile"
+        :error="isRoundRanking ? errorSeason : errorRounds"
       />
     </div>
+    <RouterLink
+      to="/ranking"
+      class="see-full-ranking-link"
+    >
+      <PrimeButton
+        icon="pi pi-plus"
+        class="match-info-toggle"
+        label="Ranking completo"
+        severity="secondary"
+        aria-label="Ranking completo"
+      />
+    </RouterLink>
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
@@ -39,7 +83,8 @@ withDefaults(
 );
 
 // ------ Refs ------
-const isWeeklyRanking = ref(false);
+const isRoundRanking = ref(false);
+const showFavoritesOnly = ref(false);
 
 // ------ Initialization ------
 const configurationStore = useConfigurationStore();
@@ -47,33 +92,47 @@ const rankingStore = useRankingStore();
 const activeProfileStore = useActiveProfileStore();
 
 // ------ Computed Properties  ------
-const columnsOption = computed(() => rankingStore.columnsOption);
-const rowSpacing = computed(() => rankingStore.rowSpacing);
-const errorWeek = computed(() => rankingStore.errorWeek);
+const errorRounds = computed(() => rankingStore.errorRounds);
 const errorSeason = computed(() => rankingStore.errorSeason);
-const isLoadingWeek = computed(() => configurationStore.isLoading || rankingStore.isLoadingWeek);
-const selectedWeek = computed(() => configurationStore.selectedWeek);
+const isLoadingRounds = computed(() => configurationStore.isLoading || rankingStore.isLoadingRounds);
+const selectedRound = computed(() => configurationStore.selectedRound);
 const isLoadingSeason = computed(() => configurationStore.isLoading || rankingStore.isLoadingSeason);
 const seasonRanking = computed(() => rankingStore.seasonRanking);
-const selectedWeekRanking = computed(
-  () => rankingStore.weeksRanking?.find((weekRanking) => weekRanking.week === selectedWeek.value)?.ranking || [],
+const selectedRoundRanking = computed(
+  () => rankingStore.roundsRanking?.find((roundRanking) => roundRanking.round === selectedRound.value)?.ranking || [],
 );
 const activeProfile = computed(() => activeProfileStore.activeProfile);
+
+// if activeProfile becomes empty, showFavoritesOnly should be set to false to avoid showing empty ranking
+watch(activeProfile, (newValue) => {
+  if (!newValue) {
+    showFavoritesOnly.value = false;
+  }
+});
 </script>
 <style scoped>
 .outer-ranking {
-  top: 80px;
+  top: 10vh;
   right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   position: sticky;
   border-left: 1px solid var(--color-background-mute);
   min-width: 310px;
-  max-height: calc(100vh - 80px);
+  max-height: calc(80vh);
+  box-shadow: var(--drop-shadow);
+  border-radius: var(--border-radius);
+  background-color: var(--bolao-c-navbar);
 }
 
 .ranking-container {
   max-height: calc(100% - 50px);
   overflow-y: auto;
+  scrollbar-gutter: stable;
+  width: 100%;
+  flex: 1;
 }
 
 .outer-position {
@@ -86,9 +145,10 @@ const activeProfile = computed(() => activeProfileStore.activeProfile);
   gap: var(--s-spacing);
   justify-content: center;
   align-items: center;
-  padding: var(--s-spacing) 0;
-  font-size: var(--m-font-size);
+  padding: var(--s-spacing) var(--xl-spacing);
+  font-size: var(--s-font-size);
   height: 50px;
+  color: var(--bolao-c-grey1-t2);
 }
 
 .skeleton-ranking-line {
@@ -100,15 +160,22 @@ const activeProfile = computed(() => activeProfileStore.activeProfile);
 .toggle {
   cursor: pointer;
   transition: 0.2s;
+  &:hover {
+    color: var(--bolao-c-white);
+  }
 }
 
 .activeToggle {
-  color: var(--color-contrast);
-  text-decoration: underline;
+  color: var(--bolao-c-white);
 }
 
 .error-message {
-  width: 100%;
-  margin: var(--xl-spacing) 0;
+  width: 90%;
+  margin: var(--xl-spacing);
+}
+
+.see-full-ranking-link {
+  padding: var(--l-spacing) 0;
+  flex: 0;
 }
 </style>

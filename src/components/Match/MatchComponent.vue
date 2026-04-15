@@ -1,34 +1,29 @@
 <template>
   <div
-    class="outer-match"
-    :class="{ line: !isGridMode, grid: isGridMode, clickable: !isBetting }"
+    class="outer-match line"
+    :class="{ clickable: !isBetting }"
     @click="handleMatchClick"
   >
+    <ScoreComponent
+      :is-betting="isBetting"
+      :match="match"
+      :active-user-bet="match.loggedUserBets ?? null"
+      :is-match-started="isMatchStarted"
+      :hit-level="hitLevel"
+    />
     <ClockComponent
       v-if="isDesktop && !isDemo"
-      :ribbon="ribbon"
+      :hit-level="hitLevel"
       :timestamp="match.timestamp"
       :status="match.status"
-      :clock="match.clock"
-      :isGridMode="isGridMode"
-      :isMatchStarted="isMatchStarted"
-    />
-    <ScoreComponent
-      :isBetting="isBetting"
-      :isGridMode="isGridMode"
-      :match="match"
-      :activeUserBet="match.loggedUserBets ?? null"
-      :isMatchStarted="isMatchStarted"
-      :ribbon="ribbon"
+      :is-match-started="isMatchStarted"
     />
   </div>
   <BetsModal
     :match="match"
-    :activeUserBet="match.loggedUserBets ?? null"
-    :correctBets="correctBets"
-    :isOpen="isBetsModalOpen"
-    :ribbon="ribbon"
-    :handleCloseModal="handleCloseModal"
+    :is-open="isBetsModalOpen"
+    :hit-level="hitLevel"
+    :handle-close-modal="handleCloseModal"
   />
 </template>
 <script lang="ts" setup>
@@ -37,8 +32,8 @@ import { computed, ref } from 'vue';
 
 import type { IMatch } from '@/stores/matches.types';
 
+import { HIT_LEVELS } from '@/constants/bets';
 import { useClockStore } from '@/stores/clock';
-import { calculateCorrectBets, isBullseye, isHalfBet } from '@/util/betsCalculator';
 
 import BetsModal from './BetsModal/BetsModal.vue';
 import ClockComponent from './ClockComponent.vue';
@@ -48,13 +43,11 @@ const props = withDefaults(
   defineProps<{
     isBetting?: boolean;
     isDemo?: boolean;
-    isGridMode?: boolean;
     match: IMatch;
   }>(),
   {
     isBetting: false,
     isDemo: false,
-    isGridMode: false,
   },
 );
 
@@ -65,23 +58,42 @@ const isBetsModalOpen = ref(false);
 const clockStore = useClockStore();
 
 // ------ Computed Properties ------
-const correctBets = computed(() => calculateCorrectBets(props.match.away.score, props.match.home.score));
+// const correctBets = { bullseye: [], half: [] };
+// const correctBets = computed(() => calculateCorrectBets(props.match.away.score, props.match.home.score));
 const isMatchStarted = computed(() => {
   return clockStore.currentTimestamp >= props.match.timestamp;
 });
 
-const ribbon = computed(() => {
+const hitLevel = computed(() => {
   if (!props.match.loggedUserBets || !isMatchStarted.value) {
     return null;
   }
 
-  if (isBullseye(correctBets.value, props.match.loggedUserBets.value)) {
-    return 'BULLSEYE';
-  } else if (isHalfBet(correctBets.value, props.match.loggedUserBets.value)) {
-    return 'HALF';
+  const homeScoreMatch = props.match.loggedUserBets.scoreHome === props.match.score.home;
+  const awayScoreMatch = props.match.loggedUserBets.scoreAway === props.match.score.away;
+
+  if (homeScoreMatch && awayScoreMatch) {
+    return HIT_LEVELS.exactScore;
   }
 
-  return 'MISS';
+  // Determine the winner/outcome of the bet and actual match
+  const betHomeWon = props.match.loggedUserBets.scoreHome > props.match.loggedUserBets.scoreAway;
+  const betAwayWon = props.match.loggedUserBets.scoreAway > props.match.loggedUserBets.scoreHome;
+  const betDraw = props.match.loggedUserBets.scoreHome === props.match.loggedUserBets.scoreAway;
+
+  const actualHomeWon = props.match.score.home > props.match.score.away;
+  const actualAwayWon = props.match.score.away > props.match.score.home;
+  const actualDraw = props.match.score.home === props.match.score.away;
+
+  const gotWinnerRight = (betHomeWon && actualHomeWon) || (betAwayWon && actualAwayWon) || (betDraw && actualDraw);
+  if (gotWinnerRight) {
+    if ((homeScoreMatch && !awayScoreMatch) || (!homeScoreMatch && awayScoreMatch)) {
+      return HIT_LEVELS.oneScore;
+    }
+    return HIT_LEVELS.winnerOnly;
+  }
+
+  return HIT_LEVELS.miss;
 });
 
 function handleCloseModal() {
@@ -100,6 +112,7 @@ function handleMatchClick() {
 .outer-match {
   display: flex;
   opacity: 1;
+  gap: var(--m-spacing);
 }
 
 .clickable {
@@ -107,26 +120,12 @@ function handleMatchClick() {
   transition: 0.2s;
 
   &:hover {
-    opacity: 0.8;
+    opacity: 0.6;
   }
 }
 
 .line {
   min-height: 60px;
   width: 100%;
-}
-
-.grid {
-  flex-direction: column;
-
-  @media (max-width: 1023px) {
-    height: 120px;
-    width: 170px;
-  }
-
-  @media (min-width: 1024px) {
-    height: 150px;
-    width: 250px;
-  }
 }
 </style>

@@ -1,10 +1,10 @@
 <template>
   <PrimeDialog
-    dismissableMask
-    modal
     v-model:visible="isVisible"
+    dismissable-mask
+    modal
     :draggable="false"
-    position="right"
+    position="center"
     :style="{ width: '500px' }"
     :breakpoints="{ '1280px': '75vw', '575px': '90vw' }"
   >
@@ -13,104 +13,74 @@
     </template>
     <h2>Tema</h2>
     <div class="button-group">
-      <div class="label">Tema</div>
+      <div class="label">
+        Tema
+      </div>
       <PrimeSelectButton
-        fluid
-        :allowEmpty="false"
-        class="buttons"
         v-model="themeLocalObj"
+        fluid
+        :allow-empty="false"
+        class="buttons"
         :options="themeOptions"
-        optionLabel="label"
-        dataKey="label"
+        option-label="label"
+        data-key="label"
         size="small"
         @click="() => handleThemeConfig(themeLocalObj.value)"
       />
     </div>
     <PrimeDivider />
-    <h2>Resultados</h2>
-    <div class="button-group">
-      <div class="label">Mostrar</div>
-      <PrimeSelectButton
-        fluid
-        :allowEmpty="false"
-        class="buttons"
-        v-model="resultsViewLocalObj"
-        :options="resultsViewOptions"
-        optionLabel="label"
-        dataKey="label"
-        size="small"
-        @click="() => handleResultsViewConfig(resultsViewLocalObj.value)"
-      />
-    </div>
-    <PrimeDivider />
-
     <h2>Ranking</h2>
-    <div class="button-group" v-if="!isMobile">
-      <div class="label">Posição</div>
+    <div
+      v-if="!isMobile"
+      class="button-group"
+    >
+      <div class="label">
+        Posição
+      </div>
       <PrimeSelectButton
-        fluid
-        :allowEmpty="false"
-        class="buttons"
         v-model="rankingPositionLocalObj"
+        fluid
+        :allow-empty="false"
+        class="buttons"
         :options="rankingPositionOptions"
-        optionLabel="label"
-        dataKey="label"
+        option-label="label"
+        data-key="label"
         size="small"
         @click="() => handleRankingPositionConfig(rankingPositionLocalObj.value)"
       />
     </div>
+    <PrimeDivider />
+    <h2>Preferências</h2>
     <div class="button-group">
-      <div class="label">Espaçamento</div>
-      <PrimeSelectButton
-        fluid
-        :allowEmpty="false"
-        class="buttons"
-        v-model="rowSpacingLocalObj"
-        :options="rowSpacingOptions"
-        optionLabel="label"
-        dataKey="label"
-        size="small"
-        @click="() => handleRowSpacingConfig(rowSpacingLocalObj.value)"
-      />
+      <div class="label">
+        Favoritos ({{ favoritesCount }})
+      </div>
+      <div>
+        <PrimeButton
+          class="buttons"
+          label="Remover Todos"
+          severity="danger"
+          icon="pi pi-trash"
+          @click="handleClearFavorites"
+        />
+      </div>
     </div>
-    <div class="button-group">
-      <div class="label">Modo</div>
-      <PrimeSelectButton
-        fluid
-        :allowEmpty="false"
-        class="buttons"
-        v-model="columnLocalObj"
-        :options="columnOptions"
-        optionLabel="label"
-        dataKey="label"
-        size="small"
-        @click="() => handleColumnConfig(columnLocalObj.value)"
-      />
-    </div>
-    <template #footer> </template>
+    <template #footer />
   </PrimeDialog>
 </template>
 <script setup lang="ts">
 import { isMobile } from '@basitcodeenv/vue3-device-detect';
-import { computed, ref, watch, watchEffect } from 'vue';
+import { computed, onMounted, ref, watch, watchEffect } from 'vue';
 
-import type {
-  TColumn,
-  TColumnsValue,
-  TRankingPosition,
-  TRankingPositionValue,
-  TResultsView,
-  TResultsViewValue,
-  TRowSpacing,
-  TRowSpacingValue,
-  TTheme,
-  TThemeValue,
-} from '@/stores/configuration.types';
+import type { IUser } from '@/stores/activeProfile.types';
+import type { TRankingPosition, TRankingPositionValue, TTheme, TThemeValue } from '@/stores/configuration.types';
 
+import FavoritesService from '@/services/favorites';
 import { useConfigurationStore } from '@/stores/configuration';
-import { useRankingStore } from '@/stores/ranking';
+import { useNotificationStore } from '@/stores/notification';
 
 const props = defineProps<{
+  activeProfile: IUser | null;
   handleCloseModal: () => void;
   isOpen: boolean;
 }>();
@@ -118,68 +88,58 @@ const props = defineProps<{
 // ------ Refs ------
 const isVisible = ref(false);
 const themeLocalObj = ref();
-const resultsViewLocalObj = ref();
 const rankingPositionLocalObj = ref();
-const rowSpacingLocalObj = ref();
-const columnLocalObj = ref();
+const favoritesCount = ref(0);
+
 const themeOptions = ref<TTheme[]>([
   { label: 'Claro', value: 'light' },
   { label: 'Escuro', value: 'dark' },
 ]);
 const rankingPositionOptions = ref<TRankingPosition[]>([
   { label: 'Sempre ativo', value: 'active' },
-  { label: 'Modal (menu)', value: 'modal' },
-]);
-const resultsViewOptions = ref<TResultsView[]>([
-  { label: 'Grid', value: 'grid' },
-  { label: 'Linhas', value: 'lines' },
-]);
-const rowSpacingOptions = ref<TRowSpacing[]>([
-  { label: 'Pequeno', value: 'small' },
-  { label: 'Grande', value: 'normal' },
-]);
-const columnOptions = ref<TColumn[]>([
-  { label: 'Compacto', value: 'compact' },
-  { label: 'Completo', value: 'complete' },
+  { label: 'Escondido', value: 'modal' },
 ]);
 
 // ------ Initialization ------
-const rankingStore = useRankingStore();
 const configurationStore = useConfigurationStore();
+const favoritesService = new FavoritesService();
+const notificationStore = useNotificationStore();
+
+onMounted(() => {
+  loadFavoritesCount();
+});
 
 // ------ Computed Properties ------
 const rankingPosition = computed(() => configurationStore.rankingPosition);
-const columnConfig = computed(() => rankingStore.columnsOption);
-const rowSpacingConfig = computed(() => rankingStore.rowSpacing);
 const theme = computed(() => configurationStore.theme);
-const resultsView = computed(() => configurationStore.resultsView);
 
 // ------ Functions  ------
-function handleColumnConfig(newOption: TColumnsValue) {
-  rankingStore.setColumnsOption(newOption);
+function handleClearFavorites() {
+  if (favoritesCount.value > 0 && props.activeProfile) {
+    favoritesService.clearAllFavorites(props.activeProfile.id);
+    loadFavoritesCount();
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new CustomEvent('favorites-cleared'));
+  }
+  notificationStore.success('Todos os favoritos foram removidos');
 }
 
 function handleRankingPositionConfig(newOption: TRankingPositionValue) {
   configurationStore.setRankingPosition(newOption);
 }
 
-function handleResultsViewConfig(newOption: TResultsViewValue) {
-  configurationStore.setResultsView(newOption);
-}
-
-function handleRowSpacingConfig(newOption: TRowSpacingValue) {
-  rankingStore.setRowSpacing(newOption);
-}
-
 function handleThemeConfig(newOption: TThemeValue) {
   configurationStore.setTheme(newOption);
 }
+function loadFavoritesCount() {
+  if (props.activeProfile) {
+    favoritesCount.value = favoritesService.getFavoritesCount(props.activeProfile.id);
+  } else {
+    favoritesCount.value = 0;
+  }
+}
 
 // ------ Watch Effect Properties ------
-watchEffect(
-  () => (resultsViewLocalObj.value = resultsViewOptions.value.find((option) => option.value === resultsView.value)),
-);
-
 watchEffect(() => (themeLocalObj.value = themeOptions.value.find((option) => option.value === theme.value)));
 
 watchEffect(
@@ -189,18 +149,13 @@ watchEffect(
     )),
 );
 
-watchEffect(
-  () => (rowSpacingLocalObj.value = rowSpacingOptions.value.find((option) => option.value === rowSpacingConfig.value)),
-);
-
-watchEffect(() => (columnLocalObj.value = columnOptions.value.find((option) => option.value === columnConfig.value)));
-
 // ------ Watches ------
 watch(
   () => props.isOpen,
   async (newValue) => {
     if (newValue) {
       isVisible.value = true;
+      loadFavoritesCount();
     }
   },
 );

@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="outer-extras-betting-table">
     <PrimeDataTable tableClass="extras-table" :value="teams" dataKey="id" size="small" showGridlines>
       <template #header>
@@ -12,7 +12,6 @@
             class="team-component"
             isScoreless
             :isAlias="true"
-            :isGridMode="false"
             :team="slotProps.data"
             :matchStatus="MATCH_STATUS.FINAL"
           />
@@ -105,7 +104,7 @@ import type { TExtrasTeam } from '@/stores/extraBet.types';
 import type { TConference, TDivision } from '@/stores/matches.types';
 
 import TeamComponent from '@/components/Match/TeamComponent.vue';
-import { MATCH_STATUS } from '@/constants/match_status';
+import { MATCH_STATUS } from '@/constants/match';
 import { useExtraBetStore } from '@/stores/extraBet';
 
 defineProps<{
@@ -252,4 +251,4 @@ const isUpdating = computed(() => extraBetStore.isUpdating);
     color: var(--bolao-c-sky);
   }
 }
-</style>
+</style> -->

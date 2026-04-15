@@ -4,6 +4,12 @@
   <div class="outer-view">
     <RouterView />
   </div>
+  <div
+    v-if="!activeProfile?.isActive"
+    class="not-active"
+  >
+    Clique <a href="">aqui</a> para saber como ativar seu perfil e participar do bolão!
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -43,12 +49,12 @@ startupService.initialize(initializationCallback).then(() => {
 });
 
 // ------ Computed ------
-const selectedWeek = computed(() => configurationStore.selectedWeek);
+const selectedRound = computed(() => configurationStore.selectedRound);
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 
 // ------ Watches ------
-// Fetches week's matches and week's ranking when selectedWeek is changed
-watch(selectedWeek, async (newValue, oldValue) => {
+// Fetches week's matches and week's ranking when selectedRound is changed
+watch(selectedRound, async (newValue, oldValue) => {
   if (newValue && oldValue && newValue !== oldValue) {
     matchService.fetch();
   }
@@ -57,7 +63,6 @@ watch(selectedWeek, async (newValue, oldValue) => {
 // Fetches rankings and week's matches when user logs in or out
 // Fetches rankings and week's matches when user updates profile
 watch(activeProfile, async (newValue) => {
-  console.log('Fetching matches for active profile change...');
   rankingService.fetch();
   matchService.fetch();
 
@@ -65,19 +70,33 @@ watch(activeProfile, async (newValue) => {
   if (newValue) {
     extraBetService.fetch();
   } else {
-    extraBetStore.setLoggedUserBets(null);
+    extraBetStore.setLoggedUserBets([]);
   }
 
   // Week is possibly zero (preseason)
-  if (!selectedWeek.value) {
+  if (!selectedRound.value) {
     return;
   }
-  rankingService.fetch();
+  // rankingService.fetch();
 });
 </script>
 
 <style scoped>
 .outer-view {
   width: 100%;
+  margin-top: 100px;
+}
+
+.not-active {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  font-size: var(--l-font-size);
+  color: black;
+  z-index: 1000;
+  background-color: rgba(255, 255, 255, 0.7);
+  width: 100vw;
+  text-align: center;
+  padding: var(--m-spacing) 0;
 }
 </style>

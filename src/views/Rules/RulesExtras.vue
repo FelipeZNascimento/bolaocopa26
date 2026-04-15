@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <PrimePanel style="width: 100%" header="Apostas Extras" toggleable>
     <p>
       Apostas específicas sobre o campeão de cada divisão, de cada conferência e o vencedor do Super Bowl. Essas apostas
@@ -31,14 +31,14 @@ import { useConfigurationStore } from '@/stores/configuration';
 const clockStore = useClockStore();
 const configurationStore = useConfigurationStore();
 
-const seasonStart = computed(() => configurationStore.seasonStart);
+const editionStart = computed(() => configurationStore.editionStart);
 
 function formatDate() {
-  if (!seasonStart.value) {
+  if (!editionStart.value) {
     return '';
   }
 
-  return `${clockStore.formattedDate(seasonStart.value)}, ${clockStore.formattedTime(seasonStart.value)}`;
+  return `${clockStore.formattedDate(editionStart.value)}, ${clockStore.getFormattedTime(editionStart.value)}`;
 }
 
 const tableScores = [
@@ -60,4 +60,4 @@ const tableScores = [
   },
 ];
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped></style> -->

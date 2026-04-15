@@ -1,7 +1,10 @@
 <template>
-  <PrimeSkeleton class="skeleton-outer" v-if="isLoadingConfig" />
-  <ExtrasBefore v-else-if="!isSeasonStarted" />
-  <ExtrasAfter />
+  <PrimeSkeleton
+    v-if="isLoadingConfig"
+    class="skeleton-outer"
+  />
+  <!-- <ExtrasBefore v-else-if="!isLoadingConfig && !isSeasonStarted" /> -->
+  <ExtrasAfter v-else-if="!isLoadingConfig && isSeasonStarted" />
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
@@ -10,7 +13,7 @@ import { useClockStore } from '@/stores/clock';
 import { useConfigurationStore } from '@/stores/configuration';
 
 import ExtrasAfter from './Extras/ExtrasAfter.vue';
-import ExtrasBefore from './Extras/ExtrasBefore.vue';
+// import ExtrasBefore from './Extras/ExtrasBefore.vue';
 
 // ------ Initialization ------
 const clockStore = useClockStore();
@@ -19,7 +22,7 @@ const configurationStore = useConfigurationStore();
 // ------ Computed Properties ------
 const isLoadingConfig = computed(() => configurationStore.isLoading);
 const isSeasonStarted = computed(
-  () => configurationStore.seasonStart && clockStore.currentTimestamp >= configurationStore.seasonStart,
+  () => configurationStore.editionStart && clockStore.currentTimestamp >= configurationStore.editionStart,
 );
 </script>
 <style lang="scss" scoped>

@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <ExtrasBettingTable
     title="AFC"
     :teams="sortedTeams.AFC"
@@ -53,4 +53,4 @@ const sortedTeams = computed(() => {
 
   return { AFC, NFC };
 });
-</script>
+</script> -->

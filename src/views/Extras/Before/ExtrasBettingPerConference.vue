@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <ExtrasBettingTable
     v-for="(division, index) in divisionsObj"
     :key="index"
@@ -48,4 +48,4 @@ const conferenceTeams = computed(() => {
     };
   }
 });
-</script>
+</script> -->

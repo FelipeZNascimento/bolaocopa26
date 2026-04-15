@@ -1,88 +1,90 @@
 <template>
-  <div v-if="isMobileOnly" class="outer-mobile-score-line">
-    <span
-      :class="{
-        'outer-mobile-teams-line': !isGridMode || isBetting,
-        'outer-mobile-teams-grid': isGridMode,
-      }"
-    >
-      <RibbonComponent v-if="ribbon" :ribbon="ribbon" />
+  <div
+    v-if="isMobileOnly"
+    class="outer-mobile-score-line"
+  >
+    <span class="outer-mobile-teams-line">
       <TeamComponent
-        isAlias
-        :isGridMode="isGridMode"
-        :isHomeTeam="false"
-        :isWinning="match.away.score > match.home.score"
-        :team="match.away"
-        :matchStatus="match.status"
-        :odds="!isMatchStarted ? match.overUnder : ''"
+        is-alias
+        :is-betting="isBetting"
+        :is-home-team="true"
+        :is-winning="match.score.away < match.score.home"
+        :events="sortedEvents"
+        :team="match.homeTeam"
+        :match-status="match.status"
+        :score="match.score"
       />
       <TeamComponent
-        isAlias
-        :isGridMode="isGridMode"
-        :isHomeTeam="true"
-        :isWinning="match.away.score < match.home.score"
-        :team="match.home"
-        :matchStatus="match.status"
-        :odds="!isMatchStarted ? match.homeTeamOdds : ''"
+        is-alias
+        :is-betting="isBetting"
+        :is-home-team="false"
+        :is-winning="match.score.away > match.score.home"
+        :events="sortedEvents"
+        :team="match.awayTeam"
+        :match-status="match.status"
+        :score="match.score"
       />
     </span>
-    <BettingComponent
-      v-if="isBetting && !isGridMode"
-      :match="match"
-      :activeUserBet="activeUserBet"
-      :isMatchStarted="isMatchStarted"
-    />
   </div>
-  <div v-else :class="{ 'outer-score-line': !isGridMode || isBetting, 'outer-score-grid': isGridMode }">
+  <div
+    v-else
+    class="outer-score-line"
+  >
     <TeamComponent
-      :isAlias="isBetting"
-      :isGridMode="isGridMode"
-      :isHomeTeam="false"
-      :isWinning="match.away.score > match.home.score"
-      :team="match.away"
-      :odds="!isMatchStarted ? match.overUnder : ''"
-      :matchStatus="match.status"
-    />
-    <BettingComponent
-      v-if="isBetting && !isGridMode"
-      :match="match"
-      :activeUserBet="activeUserBet"
-      :isMatchStarted="isMatchStarted"
+      :is-betting="isBetting"
+      :is-home-team="true"
+      :is-score-modal-open="isScoreModalOpen"
+      :is-winning="match.score.away < match.score.home"
+      :events="sortedEvents"
+      :team="match.homeTeam"
+      :match-status="match.status"
+      :score="match.score"
     />
     <TeamComponent
-      :isAlias="isBetting"
-      :isGridMode="isGridMode"
-      :isHomeTeam="true"
-      :isWinning="match.away.score < match.home.score"
-      :team="match.home"
-      :odds="!isMatchStarted ? match.homeTeamOdds : ''"
-      :matchStatus="match.status"
+      :is-betting="isBetting"
+      :is-home-team="false"
+      :is-score-modal-open="isScoreModalOpen"
+      :is-winning="match.score.away > match.score.home"
+      :team="match.awayTeam"
+      :match-status="match.status"
+      :score="match.score"
+      :events="sortedEvents"
     />
   </div>
 </template>
 <script lang="ts" setup>
 import { isMobileOnly } from '@basitcodeenv/vue3-device-detect';
+import { computed } from 'vue';
 
-import type { Ribbon } from '@/constants/bets';
 import type { IBet, IMatch } from '@/stores/matches.types';
 
-import BettingComponent from './BettingComponent.vue';
-import RibbonComponent from './RibbonComponent.vue';
 import TeamComponent from './TeamComponent.vue';
-withDefaults(
+const props = withDefaults(
   defineProps<{
     activeUserBet: IBet | null;
     isBetting?: boolean;
-    isGridMode?: boolean;
     isMatchStarted: boolean;
+    isScoreModalOpen?: boolean;
     match: IMatch;
-    ribbon?: Ribbon;
   }>(),
   {
     isBetting: false,
-    isGridMode: false,
+    isScoreModalOpen: false,
   },
 );
+
+const sortedEvents = computed(() => {
+  return [...props.match.events].sort((a, b) => {
+    const parseGametime = (gametime: string) => {
+      const match = gametime.match(/^(\d+)(?:\+(\d+))?'/);
+      if (!match) return 0;
+      const minutes = parseInt(match[1], 10);
+      const added = match[2] ? parseInt(match[2], 10) / 100 : 0;
+      return minutes + added;
+    };
+    return parseGametime(a.event.gametime) - parseGametime(b.event.gametime);
+  });
+});
 </script>
 <style scoped>
 .outer-mobile-score-line {
@@ -92,13 +94,6 @@ withDefaults(
   align-items: center;
   gap: var(--m-spacing);
   position: relative;
-}
-
-.outer-mobile-teams-grid {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  width: 100%;
 }
 
 .outer-mobile-teams-line {
@@ -112,13 +107,8 @@ withDefaults(
   display: flex;
   flex: 1;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-}
-
-.outer-score-grid {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
+  gap: var(--m-spacing);
 }
 </style>

@@ -1,23 +1,29 @@
 import type { IUser } from './activeProfile.types';
 
 export interface IRankingLine {
-  betsCount: number;
-  matchesCount: number;
-  score: {
-    accumulatedBullseye: number;
-    accumulatedPoints: number;
-    accumulatedPosition: number;
-    bullseye: number;
-    extra: number;
-    percentage: string;
-    total: number;
-    winner: number;
-  };
-  user: IRankingUser;
+  accumulatedScore: IRankingScore;
+  isFinished: boolean;
+  round: number;
+  score: IRankingScore;
+  user: Pick<IUser, 'id' | 'isActive' | 'name' | 'nickname'>;
 }
+
 export interface IRankingResponse {
-  seasonRanking: IRankingLine[];
-  weeklyRanking: IWeeklyRanking[];
+  round: IRoundRanking[];
+  season: IRankingLine[];
+}
+
+export interface IRankingScore {
+  betCount: number;
+  exacts: number;
+  gameCount: number;
+  misses: number;
+  oneScores: number;
+  percentage: number;
+  points: number;
+  position: number;
+  positionVariation: number;
+  winnersOnly: number;
 }
 
 export interface IRankingUser extends IUser {
@@ -33,8 +39,7 @@ export interface IRankingUser extends IUser {
   totalWinners: number;
 }
 
-export interface IWeeklyRanking {
-  isLocked: boolean;
+export interface IRoundRanking {
   ranking: IRankingLine[];
-  week: number;
+  round: number;
 }

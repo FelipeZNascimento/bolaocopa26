@@ -1,60 +1,158 @@
 <template>
-  <div
-    class="outer-team"
-    :class="isNameless ? 'outer-team-nameless' : ''"
-    :style="{ backgroundColor: team.background, color: team.foreground }"
-  >
-    <span
-      :class="{
-        'team-shield-line': !isGridMode,
-        'team-shield-grid': isGridMode,
+  <div style="width: 100%">
+    <div
+      class="outer-team"
+      :class="[isNameless ? 'outer-team-nameless' : '']"
+      :style="{
+        flexDirection: isHomeTeam ? 'row' : 'row-reverse',
       }"
-      class="team-shield"
     >
-      <img
-        :class="isScoreless ? 'team-shield-image-small' : 'team-shield-image'"
-        :src="`/team_logos/${props.team.id}.gif`"
-        :alt="`${props.team.name} Shield`"
-      />
-    </span>
-    <div v-if="!isNameless" class="team-alias">
-      {{ isGridMode || isAlias ? team.code : team.alias }}
-      <p v-if="props.team.winLosses" style="padding: 0; margin: 0; font-size: var(--s-font-size); text-align: right">
-        {{ props.team.winLosses }}
+      <div class="overlay">
+&nbsp;
+      </div>
+      <div
+        class="team-shield--line"
+        :class="{
+          'team-shield--left': isHomeTeam,
+          'team-shield--right': !isHomeTeam,
+        }"
+      >
+        <img
+          :class="isScoreless ? 'team-shield-image-small' : 'team-shield-image'"
+          :src="`https://assets.omegafox.me/copa/countries_flags/${team.isoCode.toLowerCase()}.png`"
+          :alt="`${team.name} Shield`"
+        >
+      </div>
+      <div
+        v-if="!isNameless"
+        class="team-alias"
+        :class="{ clickable: isBetting }"
+        @click="isBetting && openTeamModal(team)"
+      >
+        {{ isAlias ? team.abbreviation : team.name }}
+      </div>
+      <div
+        v-if="!isScoreless"
+        class="team-score"
+        :style="{
+          fontWeight: isWinning ? 'bold' : 'normal',
+        }"
+      >
+        {{ isHomeTeam ? score?.home : score?.away }}
+      </div>
+    </div>
+    <div
+      v-if="isScoreModalOpen"
+      class="events-container"
+      :style="{ alignItems: isHomeTeam ? 'flex-start' : 'flex-end' }"
+    >
+      <p
+        v-for="event in events"
+        :key="event.id"
+        style="
+          display: flex;
+          align-items: center;
+          gap: var(--s-spacing);
+          padding: var(--xxs-spacing) 0;
+          min-height: 20px;
+        "
+        :style="{
+          flexDirection: isHomeTeam ? 'row' : 'row-reverse',
+          visibility: event.player.team.id === team.id ? 'visible' : 'hidden',
+        }"
+      >
+        <img
+          style="height: 20px"
+          :src="getEventIconUrl(event.event.id, isHomeTeam)"
+          :alt="event.event.description"
+        >
+        <span>{{ event.event.gametime }}</span>
+        <HoverablePlayerName
+          v-if="event.player"
+          :player="event.player"
+        />
       </p>
     </div>
-    <div v-if="!isScoreless && odds" class="team-odds">{{ odds }}</div>
-    <div v-if="!isScoreless && !odds" class="team-score" :style="{ fontWeight: isWinning ? 'bold' : 'normal' }">
-      {{ team.score }}
-      <img
-        v-if="team.possession && !isClockStopped"
-        src="/src/img/football.png"
-        style="position: absolute; top: 5%; left: 5%; height: 15px; width: 15px"
-        :alt="`Ball possession for ${team.name}`"
-      />
-    </div>
   </div>
+
+  <!-- Team Details Modal -->
+  <TeamDetailsModal
+    :is-open="isTeamModalOpen"
+    :team="selectedTeam"
+    :handle-close-modal="closeTeamModal"
+  />
 </template>
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { ref } from 'vue';
 
-import type { ITeam } from '@/stores/matches.types';
+import type { IMatchEvent, IScore } from '@/stores/matches.types';
+import type { ITeam } from '@/stores/teams.types';
 
-import { STOPPED_GAME, type TMatchStatus } from '@/constants/match_status';
+import TeamDetailsModal from '@/components/TeamDetailsModal.vue';
+import { MATCH_EVENT, type TMatchStatus } from '@/constants/match';
 
-const props = defineProps<{
-  isAlias?: boolean;
-  isGridMode: boolean;
-  isHomeTeam?: boolean;
-  isNameless?: boolean;
-  isScoreless?: boolean;
-  isWinning?: boolean;
-  matchStatus: TMatchStatus;
-  odds?: null | string;
-  team: Partial<ITeam>;
-}>();
+import HoverablePlayerName from '../HoverablePlayerName.vue';
 
-const isClockStopped = computed(() => STOPPED_GAME.includes(props.matchStatus));
+withDefaults(
+  defineProps<{
+    events: IMatchEvent[];
+    isAlias?: boolean;
+    isBetting?: boolean;
+    isHomeTeam?: boolean;
+    isNameless?: boolean;
+    isScoreless?: boolean;
+    isScoreModalOpen?: boolean;
+    isWinning?: boolean;
+    matchStatus: TMatchStatus;
+    score?: IScore | null;
+    team: ITeam;
+  }>(),
+  {
+    isAlias: false,
+    isBetting: false,
+    isHomeTeam: false,
+    isNameless: false,
+    isScoreless: false,
+    isScoreModalOpen: false,
+    isWinning: false,
+    score: null,
+  },
+);
+
+// ------ Refs ------
+const selectedTeam = ref<ITeam | null>(null);
+const isTeamModalOpen = ref(false);
+
+// ------ Functions ------
+function closeTeamModal() {
+  selectedTeam.value = null;
+  isTeamModalOpen.value = false;
+}
+
+function getEventIconUrl(eventType: number, isHome: boolean) {
+  switch (eventType) {
+    case MATCH_EVENT.GOAL: {
+      return isHome
+        ? 'https://assets.omegafox.me/copa/icons/goal.png'
+        : 'https://assets.omegafox.me/copa/icons/goal_a.png';
+    }
+    case MATCH_EVENT.OWN_GOAL: {
+      return isHome
+        ? 'https://assets.omegafox.me/copa/icons/own_goal.png'
+        : 'https://assets.omegafox.me/copa/icons/own_goal_a.png';
+    }
+    case MATCH_EVENT.PENALTY_GOAL: {
+      return isHome
+        ? 'https://assets.omegafox.me/copa/icons/penalty_goal.png'
+        : 'https://assets.omegafox.me/copa/icons/penalty_goal_a.png';
+    }
+  }
+}
+
+function openTeamModal(team: ITeam) {
+  selectedTeam.value = team;
+  isTeamModalOpen.value = true;
+}
 </script>
 <style lang="scss" scoped>
 .outer-team {
@@ -62,61 +160,85 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.matchStatus));
   flex: 1;
   align-items: center;
   justify-content: flex-end;
-  height: 60px;
-  max-height: 60px;
-  background-image: url('/match_layer.png');
+  height: var(--match-list-height);
+  position: relative;
+  color: var(--color-contrast);
+  background-color: var(--bolao-c-white-t1);
+  padding: 0 var(--xs-spacing);
   position: relative;
   overflow: hidden;
+  border-radius: var(--border-radius);
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 22px;
+  background-color: color-mix(in srgb, var(--color-match-overlay) 40%, transparent);
 }
 
 .outer-team-nameless {
   min-width: 60px;
 }
 
-.team-shield-grid {
-  position: absolute;
-  height: 60px;
-  left: 20px;
-  top: -50%;
+.team-shield {
+  &--line {
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    height: 100%;
+    max-width: 90px;
 
-  @media (max-width: 1024px) {
-    top: 0%;
+    @media (max-width: 1024px) {
+      top: 0%;
+      transform: none;
+    }
   }
-}
 
-.team-shield-line {
-  position: absolute;
-  left: 5%;
-  top: 50%;
-  transform: translate(0, -50%);
+  &--left {
+    left: 0;
+    display: flex;
+    justify-content: flex-end;
 
-  @media (max-width: 1024px) {
-    left: 5%;
-    top: 0%;
-    transform: none;
+    @media (max-width: 1024px) {
+      left: 5%;
+    }
+  }
+
+  &--right {
+    right: 0;
+    display: flex;
+    justify-content: flex-start;
+
+    @media (max-width: 1024px) {
+      right: 5%;
+    }
   }
 }
 
 .team-shield-image {
-  height: 100px;
-  z-index: -1;
+  width: 100px;
+  object-fit: cover;
 
   @media (max-width: 1024px) {
     height: 60px;
+    width: 60px;
   }
 }
 
 .team-shield-image-small {
   height: 60px;
-  z-index: -1;
+  width: 60px;
+  object-fit: cover;
 }
 
 .team-alias {
   position: relative;
-  padding-right: var(--s-spacing);
-  font-weight: bold;
+  padding: var(--s-spacing);
+  // font-weight: bold;
   z-index: 99;
-  font-size: var(--l-font-size);
+  font-size: var(--m-font-size);
   line-height: var(--xl-spacing);
 
   @media (max-width: 1024px) {
@@ -140,14 +262,36 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.matchStatus));
 }
 
 .team-score {
-  min-width: 55px;
-  height: 100%;
+  min-width: 48px;
+  height: 80%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--l-font-size);
-  background-color: #0003;
+  font-size: var(--xl-font-size);
+  background-color: color-mix(in srgb, var(--color-main), transparent 50%);
+  color: var(--color-contrast);
   padding: 0 var(--m-spacing);
+  border-radius: var(--border-radius);
   position: relative;
+}
+.events-container {
+  padding-top: var(--m-spacing);
+  display: flex;
+  flex-direction: column;
+}
+
+:deep(.player-sticker-popover) {
+  .p-popover {
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.clickable {
+  cursor: pointer;
+  text-decoration: dotted underline;
+  text-underline-offset: 2px;
 }
 </style>

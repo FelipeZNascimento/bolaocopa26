@@ -1,17 +1,17 @@
 <template>
   <PrimeDialog
-    dismissableMask
+    v-model:visible="isVisible"
+    dismissable-mask
     modal
     :breakpoints="{ '1024': '75vw', '575px': '95vw' }"
-    v-model:visible="isVisible"
     :draggable="false"
     position="top"
-    contentClass="content-class"
+    content-class="content-class"
   >
     <template #header>
       <h2>Ranking</h2>
     </template>
-    <RankingComponent isModal />
+    <RankingComponent is-modal />
   </PrimeDialog>
 </template>
 <script setup lang="ts">
@@ -43,7 +43,7 @@ watch(isVisible, async (newValue) => {
   }
 });
 </script>
-<style>
+<style lang="scss" scoped>
 .input {
   padding-bottom: var(--m-spacing);
 }

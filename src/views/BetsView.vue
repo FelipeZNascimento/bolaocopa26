@@ -2,27 +2,18 @@
   <div style="display: flex">
     <div class="outer-matches">
       <PaginatorComponent />
-      <PrimeMessage v-show="errorConfiguration" class="error-message" severity="error" variant="outlined">
-        Ops, houve um problema de comunicação com o servidor.
-        <p>
-          Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir, entre em contato com os
-          administradores do Bolão.
-        </p>
-        <p>{{ errorConfiguration }}</p>
-      </PrimeMessage>
-      <div v-if="isLoading" style="width: 100%">
-        <PrimeSkeleton v-for="index in 16" :key="index" class="skeleton-match" />
-      </div>
-      <PrimeMessage v-else-if="errorMatches" class="error-message" severity="error" variant="outlined">
-        Ops, houve um problema de comunicação com o servidor para buscar as partidas.
-        <p>
-          Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir, entre em contato com os
-          administradores do Bolão.
-        </p>
-        <p>{{ errorMatches }}</p>
-      </PrimeMessage>
+      <ErrorChecker />
       <div class="outer-line-mode">
-        <MatchComponent :isBetting="true" v-for="match in matches" :match="match" :key="match.id" />
+        <MatchesSkeleton
+          v-if="isLoading"
+          :is-loading="isLoading"
+        />
+        <GroupedMatches
+          v-else
+          :is-betting="true"
+          :matches="matches"
+          :selected-round="selectedRound"
+        />
       </div>
     </div>
     <RankingComponent v-if="isDesktop && rankingPosition === 'active'" />
@@ -32,7 +23,9 @@
 import { isDesktop } from '@basitcodeenv/vue3-device-detect';
 import { computed } from 'vue';
 
-import MatchComponent from '@/components/Match/MatchComponent.vue';
+import ErrorChecker from '@/components/ErrorChecker.vue';
+import GroupedMatches from '@/components/GroupedMatches.vue';
+import MatchesSkeleton from '@/components/MatchesSkeleton.vue';
 import PaginatorComponent from '@/components/PaginatorComponent.vue';
 import RankingComponent from '@/components/Ranking/RankingComponent.vue';
 import { useConfigurationStore } from '@/stores/configuration';
@@ -48,25 +41,27 @@ const isMatchesLoading = computed(() => matchesStore.isLoading);
 const matches = computed(() => matchesStore.matches);
 const isLoading = computed(() => isConfigurationLoading.value || isMatchesLoading.value);
 const rankingPosition = computed(() => configurationStore.rankingPosition);
-const errorConfiguration = computed(() => configurationStore.error);
-const errorMatches = computed(() => matchesStore.error);
+const selectedRound = computed(() => configurationStore.selectedRound);
 </script>
 <style lang="scss" scoped>
 .outer-matches {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: flex-start;
   gap: var(--m-spacing);
   flex: 1;
 }
 
 .outer-line-mode {
+  padding: var(--xl-spacing);
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: var(--m-spacing);
+  gap: var(--l-spacing);
+  width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
 .skeleton-match {

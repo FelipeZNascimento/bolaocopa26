@@ -18,10 +18,10 @@ export default class RankingService {
     this.rankingStore.setLoadingSeason(true);
 
     try {
-      const rankingResponse = await this.apiRequest.get<IRankingResponse>(`ranking/season/`);
+      const rankingResponse = await this.apiRequest.get<IRankingResponse>(`ranking/edition/`);
       this.rankingStore.setLoadingSeason(false);
-      this.rankingStore.setSeason(rankingResponse.seasonRanking);
-      this.rankingStore.setWeeks(rankingResponse.weeklyRanking);
+      this.rankingStore.setSeason(rankingResponse.season);
+      this.rankingStore.setRounds(rankingResponse.round);
       this.rankingStore.setErrorSeason(null);
     } catch (error: any) {
       this.rankingStore.setLoadingSeason(false);

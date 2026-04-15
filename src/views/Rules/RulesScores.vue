@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <PrimePanel style="width: 100%" header="Resultado da Aposta" toggleable>
     <p>
       <span style="color: var(--bolao-c-mint); font-weight: bold">Na Mosca</span>: acertar o vencedor e a margem de
@@ -37,7 +37,7 @@
     <p style="padding-bottom: var(--l-spacing)">
       No exemplo abaixo, os Packers tem 20 pontos de vantagem. Ou seja, uma vitória fácil.
     </p>
-    <MatchComponent :match="easyMatch" isDemo :isGridMode="false" />
+    <MatchComponent :match="easyMatch" isDemo />
     <p style="padding-top: var(--l-spacing)">
       <span style="font-weight: bold">Difícil</span>: quando o time vencedor tem
       <span style="font-weight: bold">7 pontos ou menos</span>
@@ -46,7 +46,7 @@
     <p style="padding-bottom: var(--l-spacing)">
       No exemplo abaixo, os Packers tem apenas 4 pontos de vantagem sobre os Bears. Ou seja, uma vitória difícil.
     </p>
-    <MatchComponent :match="hardMatch" isDemo :isGridMode="false" />
+    <MatchComponent :match="hardMatch" isDemo />
   </PrimePanel>
 </template>
 <script setup lang="ts">
@@ -115,7 +115,7 @@ const easyMatch: IMatch = {
 };
 
 const hardMatch: IMatch = {
-  away: {
+  awayTeam: {
     alias: 'Bears',
     background: '#00123f',
     code: 'CHI',
@@ -130,7 +130,7 @@ const hardMatch: IMatch = {
   },
   bets: [],
   clock: '00:00',
-  home: {
+  homeTeam: {
     alias: 'Packers',
     background: '#1e3630',
     code: 'GB',
@@ -151,4 +151,4 @@ const hardMatch: IMatch = {
   timestamp: 1757276700,
 };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped></style> -->

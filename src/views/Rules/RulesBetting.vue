@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <PrimePanel style="width: 100%" header="Apostas">
     <p>As apostas poderão ser feitas até o kickoff de cada jogo. O bloqueio será automático.</p>
     <p>
@@ -12,4 +12,4 @@
   </PrimePanel>
 </template>
 <script setup lang="ts"></script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped></style> -->

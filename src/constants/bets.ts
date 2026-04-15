@@ -6,29 +6,45 @@ export const BETS_VALUES = {
   HOME_EASY: 3,
 };
 
-export const BETS_LABELS = {
-  [BETS_VALUES.AWAY_EASY]: 'Fácil',
-  [BETS_VALUES.AWAY_HARD]: 'Difícil',
-  [BETS_VALUES.HOME_EASY]: 'Fácil',
-  [BETS_VALUES.HOME_HARD]: 'Difícil',
+export const HIT_LEVELS = {
+  exactScore: 'exact',
+  oneScore: 'oneScore',
+  winnerOnly: 'winnerOnly',
+  miss: 'miss',
+};
+
+export const HIT_LEVELS_POINTS = {
+  [HIT_LEVELS.exactScore]: '5',
+  [HIT_LEVELS.oneScore]: '3',
+  [HIT_LEVELS.winnerOnly]: '2',
+  [HIT_LEVELS.miss]: '0',
+};
+
+export const HIT_LEVELS_LABELS = {
+  [HIT_LEVELS.exactScore]: `Na Mosca [${HIT_LEVELS_POINTS[HIT_LEVELS.exactScore]}]`,
+  [HIT_LEVELS.oneScore]: `Acerto Parcial [${HIT_LEVELS_POINTS[HIT_LEVELS.oneScore]}]`,
+  [HIT_LEVELS.winnerOnly]: `Acerto Mínimo [${HIT_LEVELS_POINTS[HIT_LEVELS.winnerOnly]}]`,
+  [HIT_LEVELS.miss]: `Errrrou [${HIT_LEVELS_POINTS[HIT_LEVELS.miss]}]`,
 };
 
 export const EXTRA_BETS_VALUES = {
-  SUPERBOWL: 1,
-  AFC: 2,
-  AFC_NORTH: 3,
-  AFC_SOUTH: 4,
-  AFC_EAST: 5,
-  AFC_WEST: 6,
-  NFC: 7,
-  NFC_NORTH: 8,
-  NFC_SOUTH: 9,
-  NFC_EAST: 10,
-  NFC_WEST: 11,
-  AFC_WILDCARD: 12,
-  NFC_WILDCARD: 13,
+  CHAMPION: 0,
+  TOP_SCORER: 1,
+  OFFENSE: 2,
+  DEFENSE: 3,
+  BEST_PLAYER: 4,
+};
+
+export const EXTRA_BETS_LABELS: Record<TEXTRA_BETS_VALUES, string> = {
+  [EXTRA_BETS_VALUES.CHAMPION]: 'Campeão',
+  [EXTRA_BETS_VALUES.TOP_SCORER]: 'Artilheiro',
+  [EXTRA_BETS_VALUES.OFFENSE]: 'Melhor Ataque',
+  [EXTRA_BETS_VALUES.DEFENSE]: 'Melhor Defesa',
+  [EXTRA_BETS_VALUES.BEST_PLAYER]: 'Melhor Jogador',
 };
 
 export type BetsValues = (typeof BETS_VALUES)[keyof typeof BETS_VALUES];
-export type ExtraBetsValues = (typeof EXTRA_BETS_VALUES)[keyof typeof EXTRA_BETS_VALUES];
+export type HitLevel = (typeof HIT_LEVELS)[keyof typeof HIT_LEVELS];
 export type Ribbon = 'BULLSEYE' | 'HALF' | 'MISS' | null;
+export type TEXTRA_BETS_LABELS = (typeof EXTRA_BETS_LABELS)[keyof typeof EXTRA_BETS_LABELS];
+export type TEXTRA_BETS_VALUES = (typeof EXTRA_BETS_VALUES)[keyof typeof EXTRA_BETS_VALUES];

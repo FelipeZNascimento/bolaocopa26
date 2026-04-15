@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 // import HomeView from '../views/HomeView.vue';
-import ResultsView from '@/views/ResultsView.vue';
+import GamesView from '@/views/GamesView.vue';
 
 import BetsView from '../views/BetsView.vue';
 
@@ -15,9 +15,9 @@ const router = createRouter({
     //   alias: '/home',
     // },
     {
-      alias: '/resultados',
-      component: ResultsView,
-      name: 'results',
+      alias: '/jogos',
+      component: GamesView,
+      name: 'jogos',
       path: '/',
     },
     {
@@ -44,6 +44,30 @@ const router = createRouter({
       component: () => import('../views/RulesView.vue'),
       name: 'regras',
       path: '/regras',
+    },
+    {
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/RankingView.vue'),
+      name: 'ranking',
+      path: '/ranking',
+    },
+    {
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/TeamsView.vue'),
+      name: 'equipes',
+      path: '/equipes',
+    },
+    {
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/ResetPassword.vue'),
+      name: 'reset-password',
+      path: '/reset-password',
     },
   ],
 });

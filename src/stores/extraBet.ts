@@ -1,49 +1,46 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-import type { IConferenceTeams, IExtraBet, IExtraBetBet, ITeamWithExtras } from './extraBet.types';
+import type { IExtraBet, IExtraResults, IPlayerWithExtras, ITeamWithExtras, IUserWithExtras } from './extraBet.types';
 
-const emptyConferenceObj = { East: [], North: [], South: [], West: [] };
 export const useExtraBetStore = defineStore('extras', () => {
-  const afcTeams = ref<IConferenceTeams>(emptyConferenceObj);
-  const nfcTeams = ref<IConferenceTeams>(emptyConferenceObj);
-
-  const allUsersBets = ref<IExtraBet[]>([]);
-  const extraBetsResults = ref<IExtraBetBet[] | null>(null);
-  const loggedUserBets = ref<IExtraBet | null>(null);
-
-  const allUsersBetsByTeam = ref<ITeamWithExtras[]>([]);
+  const extraBets = ref<IExtraBet[]>([]);
+  const extraBetsByTeam = ref<ITeamWithExtras[]>([]);
+  const results = ref<IExtraResults[]>([]);
+  const loggedUserBets = ref<IExtraBet[]>([]);
+  const topScorerBetsByPlayer = ref<IPlayerWithExtras[]>([]);
+  const extraBetsByUser = ref<IUserWithExtras[]>([]);
 
   const isUpdating = ref<boolean>(false);
   const isLoading = ref<boolean>(false);
   const error = ref<Error | null>(null);
 
-  function setAllUsersBetsByTeam(newValue: ITeamWithExtras[]) {
-    allUsersBetsByTeam.value = newValue;
+  function setExtraBetsByTeam(newValue: ITeamWithExtras[]) {
+    extraBetsByTeam.value = newValue;
   }
 
-  function setLoggedUserBets(newExtras: IExtraBet | null) {
+  function setTopScorerBetsByPlayer(newExtras: IPlayerWithExtras[]) {
+    topScorerBetsByPlayer.value = newExtras;
+  }
+
+  function setExtraBetsByUser(newExtras: IUserWithExtras[]) {
+    extraBetsByUser.value = newExtras;
+  }
+
+  function setLoggedUserBets(newExtras: IExtraBet[]) {
     loggedUserBets.value = newExtras;
   }
 
-  function setExtraBetsResults(newExtras: IExtraBetBet[] | null) {
-    extraBetsResults.value = newExtras;
+  function setResults(newExtras: IExtraResults[]) {
+    results.value = newExtras;
   }
 
   function resetLoggedUserBets() {
-    loggedUserBets.value = null;
+    loggedUserBets.value = [];
   }
 
-  function setAllUsersBets(newExtras: IExtraBet[]) {
-    allUsersBets.value = newExtras;
-  }
-
-  function setAfcTeams(newTeams: IConferenceTeams) {
-    afcTeams.value = newTeams;
-  }
-
-  function setNfcTeams(newTeams: IConferenceTeams) {
-    nfcTeams.value = newTeams;
+  function setExtraBets(newExtras: IExtraBet[]) {
+    extraBets.value = newExtras;
   }
 
   function setUpdating(loadingState: boolean) {
@@ -59,24 +56,24 @@ export const useExtraBetStore = defineStore('extras', () => {
   }
 
   return {
-    afcTeams,
-    allUsersBets,
-    allUsersBetsByTeam,
     error,
-    extraBetsResults,
+    extraBets,
+    extraBetsByTeam,
+    extraBetsByUser,
     isLoading,
     isUpdating,
     loggedUserBets,
-    nfcTeams,
     resetLoggedUserBets,
-    setAfcTeams,
-    setAllUsersBets,
-    setAllUsersBetsByTeam,
+    results,
     setError,
-    setExtraBetsResults,
+    setExtraBets,
+    setExtraBetsByTeam,
+    setExtraBetsByUser,
     setLoading,
     setLoggedUserBets,
-    setNfcTeams,
+    setResults,
+    setTopScorerBetsByPlayer,
     setUpdating,
+    topScorerBetsByPlayer,
   };
 });

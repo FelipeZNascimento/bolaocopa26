@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div
     v-if="!isMobileOnly"
     class="outer-extras-counter"
@@ -200,4 +200,4 @@ const progressPercentage = computed(() => {
   background-color: var(--vt-c-indigo);
   padding: var(--s-spacing);
 }
-</style>
+</style> -->

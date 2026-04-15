@@ -6,25 +6,25 @@
         v-for="(button, index) in buttonOptions"
         :key="index"
         :label="button"
-        @click="selectedButton = button"
         severity="contrast"
+        @click="selectedButton = button"
       />
     </div>
-    <RulesSubscription v-if="selectedButton === 'Inscrição'" />
+    <!-- <RulesSubscription v-if="selectedButton === 'Inscrição'" />
     <RulesScores v-else-if="selectedButton === 'Pontuação'" />
     <RulesBetting v-else-if="selectedButton === 'Apostas'" />
     <RulesExtras v-else-if="selectedButton === 'Extras'" />
-    <RulesPrize v-else />
+    <RulesPrize v-else /> -->
   </div>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import RulesBetting from './Rules/RulesBetting.vue';
-import RulesExtras from './Rules/RulesExtras.vue';
-import RulesPrize from './Rules/RulesPrize.vue';
-import RulesScores from './Rules/RulesScores.vue';
-import RulesSubscription from './Rules/RulesSubscription.vue';
+// import RulesBetting from './Rules/RulesBetting.vue';
+// import RulesExtras from './Rules/RulesExtras.vue';
+// import RulesPrize from './Rules/RulesPrize.vue';
+// import RulesScores from './Rules/RulesScores.vue';
+// import RulesSubscription from './Rules/RulesSubscription.vue';
 
 type RulesToggle = 'Apostas' | 'Extras' | 'Inscrição' | 'Pontuação' | 'Premiação';
 // ------ Refs ------

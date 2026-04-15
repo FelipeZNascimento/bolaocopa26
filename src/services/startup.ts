@@ -1,6 +1,6 @@
 import type { IUser } from '@/stores/activeProfile.types';
-import type { TRankingPositionValue, TResultsViewValue } from '@/stores/configuration.types';
-import type { IConferenceTeams } from '@/stores/extraBet.types';
+import type { TRankingPositionValue } from '@/stores/configuration.types';
+import type { ITeam } from '@/stores/teams.types';
 
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
@@ -10,15 +10,15 @@ import { isFulfilled, isRejected } from '@/util/promiseCheck';
 import ApiService from './api_request';
 
 export interface InitializeObj {
-  currentSeason: number;
-  currentWeek: number;
-  seasonStart: string;
+  currentEdition: number;
+  currentRound: number;
+  editionStart: string;
 }
 
-export interface TeamByConferenceAndDivision {
-  AFC: IConferenceTeams;
-  NFC: IConferenceTeams;
-}
+// export interface TeamByConferenceAndDivision {
+//   AFC: IConferenceTeams;
+//   NFC: IConferenceTeams;
+// }
 
 export default class StartupService {
   private activeProfileStore;
@@ -42,7 +42,7 @@ export default class StartupService {
       const [activeProfileResponse, seasonResponse, teamResponse] = await Promise.allSettled([
         this.apiRequest.get<IUser>('user/activeProfile'),
         this.apiRequest.get<InitializeObj>('season/current'),
-        this.apiRequest.get<TeamByConferenceAndDivision>('team/conferenceAndDivision'),
+        this.apiRequest.get<ITeam[]>('team/all/'),
       ]);
 
       if (isRejected(activeProfileResponse) || isRejected(seasonResponse) || isRejected(teamResponse)) {
@@ -51,7 +51,6 @@ export default class StartupService {
 
       const loggedUser = isFulfilled(activeProfileResponse) ? activeProfileResponse.value : null;
       const seasonData = isFulfilled(seasonResponse) ? seasonResponse.value : null;
-      const teamByConferenceAndDivision = isFulfilled(teamResponse) ? teamResponse.value : null;
 
       // Set Active Profile store properties
       this.activeProfileStore.setLoading(false);
@@ -60,19 +59,16 @@ export default class StartupService {
       // Set Configuration store properties
       this.configurationStore.setLoading(false);
       if (seasonData) {
-        this.configurationStore.setCurrentSeason(seasonData.currentSeason);
-        this.configurationStore.setCurrentWeek(seasonData.currentWeek);
-        this.configurationStore.setSelectedWeek(seasonData.currentWeek);
-        this.configurationStore.setSeasonStart(parseInt(seasonData.seasonStart));
+        this.configurationStore.setCurrentEdition(seasonData.currentEdition);
+        // this.configurationStore.setCurrentRound(seasonData.currentRound);
+        this.configurationStore.setCurrentRound(1);
+        this.configurationStore.setSelectedRound(1);
+        this.configurationStore.setEditionStart(parseInt(seasonData.editionStart));
         this.configurationStore.setError(null);
       }
 
       // Set Extras store properties
       this.extraBetStore.setLoading(false);
-      if (teamByConferenceAndDivision) {
-        this.extraBetStore.setAfcTeams(teamByConferenceAndDivision.AFC);
-        this.extraBetStore.setNfcTeams(teamByConferenceAndDivision.NFC);
-      }
 
       return callback(true);
     } catch (error: any) {
@@ -86,19 +82,12 @@ export default class StartupService {
 
   initializeLocalStoragePreferences() {
     const themePreference = localStorage.getItem('theme-preference');
-    const resultsViewPreference = localStorage.getItem('results-view') as TResultsViewValue;
     const rankingPositionPreference = localStorage.getItem('ranking-position') as TRankingPositionValue;
 
     if (rankingPositionPreference) {
       this.configurationStore.setRankingPosition(rankingPositionPreference);
     } else {
       localStorage.setItem('ranking-position', 'active');
-    }
-
-    if (resultsViewPreference) {
-      this.configurationStore.setResultsView(resultsViewPreference);
-    } else {
-      localStorage.setItem('results-view', 'grid');
     }
 
     if (themePreference) {

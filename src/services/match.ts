@@ -1,5 +1,5 @@
 import type { IMatch } from '@/stores/matches.types';
-import type { IRankingLine, IWeeklyRanking } from '@/stores/ranking.types';
+import type { IRankingLine, IRoundRanking } from '@/stores/ranking.types';
 
 import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
@@ -7,12 +7,6 @@ import { useRankingStore } from '@/stores/ranking';
 
 import ApiService from './api_request';
 import WebsocketService from './websocket';
-
-interface fetchMatch {
-  matches: IMatch[];
-  season: string;
-  week: string;
-}
 
 export default class MatchService {
   public websocketInstance;
@@ -27,21 +21,21 @@ export default class MatchService {
     this.websocketInstance = new WebsocketService(this.onWebsocketUpdate);
   }
 
-  public async fetch(week?: null | number, season?: null | number) {
+  public async fetch(round?: null | number, edition?: null | number) {
     this.matchesStore.setLoading(true);
     // Week may be "0" so needs to be checked against null and undefined
-    if (week === undefined || week === null) {
-      week = this.configurationStore.selectedWeek;
+    if (round === undefined || round === null) {
+      round = this.configurationStore.selectedRound;
     }
 
     // Season may be "0" so needs to be checked against null and undefined
-    if (season === undefined || season === null) {
-      season = this.configurationStore.currentSeason;
+    if (edition === undefined || edition === null) {
+      edition = this.configurationStore.currentEdition;
     }
 
     try {
-      const response = await this.apiRequest.get<fetchMatch>(`match/${season}/${week}`);
-      this.matchesStore.setMatches(response.matches);
+      const response = await this.apiRequest.get<IMatch[]>(`match/${edition}/${round}`);
+      this.matchesStore.setMatches(response);
       this.matchesStore.setLoading(false);
       this.matchesStore.setError(null);
 
@@ -78,23 +72,26 @@ export default class MatchService {
   }
 
   private onWebsocketUpdate(this: WebSocket, ev: MessageEvent<any>) {
-    const configurationStore = useConfigurationStore();
-    const selectedWeek = configurationStore.selectedWeek;
+    // const configurationStore = useConfigurationStore();
+    // const selectedRound = configurationStore.selectedRound;
 
-    const { matches, ranking, week } = JSON.parse(ev.data) as {
-      matches: IMatch[];
-      ranking: { seasonRanking: IRankingLine[]; weeklyRanking: IWeeklyRanking[] };
-      week: number;
+    // const { _matches, ranking, week } = JSON.parse(ev.data) as {
+    //   _matches: IMatch[];
+    //   ranking: { seasonRanking: IRankingLine[]; weeklyRanking: IRoundRanking[] };
+    //   week: number;
+    // };
+    const { ranking } = JSON.parse(ev.data) as {
+      ranking: { seasonRanking: IRankingLine[]; weeklyRanking: IRoundRanking[] };
     };
 
     // Update matches if the update is for the current week being viewed
-    if (selectedWeek === week) {
-      const matchesStore = useMatchesStore();
-      matchesStore.updateMatches(matches);
-    }
+    // if (selectedRound === week) {
+    //   const _matchesStore = useMatchesStore();
+    //   _matchesStore.updateMatches(_matches);
+    // }
 
     const rankingStore = useRankingStore();
     rankingStore.setSeason(ranking.seasonRanking);
-    rankingStore.setWeeks(ranking.weeklyRanking);
+    rankingStore.setRounds(ranking.weeklyRanking);
   }
 }

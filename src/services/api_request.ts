@@ -6,6 +6,7 @@ export default class ApiService {
   }
 
   public async get<T>(endpoint: string, headers?: Record<string, string>): Promise<T> {
+    console.log('endpoint: ', endpoint);
     const requestOptions: RequestInit = {
       credentials: 'include',
       headers: { 'Content-Type': 'application/json', ...headers },
@@ -15,16 +16,21 @@ export default class ApiService {
 
     const response = await fetch(url, requestOptions);
     if (!response.ok) {
-      const error = await response.json();
-      // get error message from body or default to response status
-      throw new Error(error);
+      let errorMessage = `HTTP Error ${response.status}: ${response.statusText}`;
+      try {
+        const errorObject = await response.json();
+        errorMessage = errorObject.message || errorObject.error || errorMessage;
+      } catch {
+        // If JSON parsing fails, use the default error message
+      }
+      throw new Error(errorMessage);
     }
 
     const jsonResponse: { data: T } = await response.json();
     return jsonResponse.data;
   }
 
-  public async post<T>(endpoint: string, data?: any, headers?: Record<string, string>): Promise<T> {
+  public async post<T>(endpoint: string, data?: unknown, headers?: Record<string, string>): Promise<T> {
     const requestOptions: RequestInit = {
       body: JSON.stringify(data),
       credentials: 'include',
@@ -35,8 +41,14 @@ export default class ApiService {
 
     const response = await fetch(url, requestOptions);
     if (!response.ok) {
-      const errrorObject = await response.json();
-      throw new Error(errrorObject.message);
+      let errorMessage = `HTTP Error ${response.status}: ${response.statusText}`;
+      try {
+        const errorObject = await response.json();
+        errorMessage = errorObject.message || errorObject.error || errorMessage;
+      } catch {
+        // If JSON parsing fails, use the default error message
+      }
+      throw new Error(errorMessage);
     }
     const jsonResponse: { data: T } = await response.json();
     return jsonResponse.data;

@@ -1,10 +1,9 @@
 export interface IUser {
-  color: string;
-  email: string;
-  fullName: string;
-  icon: string;
+  email?: string;
   id: number;
+  isActive: boolean;
   isOnline: boolean;
   name: string;
-  status: number;
+  nickname: string;
+  timestamp: number;
 }
