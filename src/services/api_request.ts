@@ -1,12 +1,15 @@
 export default class ApiService {
   private baseUrl: string;
 
-  constructor(baseUrl: string = import.meta.env.VITE_BOLAO_BASE_URL || '') {
-    this.baseUrl = baseUrl;
+  constructor() {
+    this.baseUrl = import.meta.env.PROD
+      ? 'https://apicopa.omegafox.me/'
+      : 'http://localhost:63768/';
   }
 
   public async get<T>(endpoint: string, headers?: Record<string, string>): Promise<T> {
     console.log('endpoint: ', endpoint);
+    console.log('baseUrl: ', this.baseUrl);
     const requestOptions: RequestInit = {
       credentials: 'include',
       headers: { 'Content-Type': 'application/json', ...headers },
