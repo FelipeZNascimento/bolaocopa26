@@ -4,7 +4,9 @@ export default class WebsocketService {
   private onMessage: (this: WebSocket, ev: MessageEvent<unknown>) => void;
 
   constructor(onWebsocketUpdate: (this: WebSocket, ev: MessageEvent<unknown>) => void) {
-    this.baseUrl = import.meta.env.VITE_BOLAO_WS_BASE_URL;
+    this.baseUrl = import.meta.env.PROD
+      ? 'wss://apicopa.omegafox.me/'
+      : 'ws://localhost:63768/';
     this.onMessage = onWebsocketUpdate;
     this.websocketInstance = null;
   }

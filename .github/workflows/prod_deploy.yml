@@ -28,7 +28,7 @@ jobs:
       - name: 🔨 Build Project
         run: npm run build
 
-      - name: 📂 Sync files to prod folder (NEW)
+      - name: 📂 Sync files to prod folder
         uses: Dylan700/sftp-upload-action@latest
         with:
           server: ${{ secrets.server }}
