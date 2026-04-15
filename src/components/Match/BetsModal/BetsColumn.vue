@@ -8,16 +8,36 @@
       'red-bg': isMissColumn,
     }"
   >
-    <p class="bets-column-header">{{ HIT_LEVELS_LABELS[props.hitLevel] }}</p>
+    <p class="bets-column-header">
+      {{ HIT_LEVELS_LABELS[props.hitLevel] }}
+    </p>
     <!-- Render active user bet first -->
-    <div class="bets-line active" v-for="bet in activeUserBet" :key="bet.id">
-      <NameTag :isClickable="true" :user="bet.user" />
-      <div class="scores">{{ bet.scoreHome }} x {{ bet.scoreAway }}</div>
+    <div
+      v-for="bet in activeUserBet"
+      :key="bet.id"
+      class="bets-line active"
+    >
+      <NameTag
+        :is-clickable="true"
+        :user="bet.user"
+      />
+      <div class="scores">
+        {{ bet.scoreHome }} x {{ bet.scoreAway }}
+      </div>
     </div>
     <!-- Render remaining bets -->
-    <div class="bets-line" v-for="bet in bets" :key="bet.id">
-      <NameTag :isClickable="true" :user="bet.user" />
-      <div class="scores">{{ bet.scoreHome }} x {{ bet.scoreAway }}</div>
+    <div
+      v-for="bet in bets"
+      :key="bet.id"
+      class="bets-line"
+    >
+      <NameTag
+        :is-clickable="true"
+        :user="bet.user"
+      />
+      <div class="scores">
+        {{ bet.scoreHome }} x {{ bet.scoreAway }}
+      </div>
     </div>
   </div>
 </template>

@@ -1,8 +1,8 @@
 <template>
   <PrimeDialog
-    dismissableMask
-    modal
     v-model:visible="isVisible"
+    dismissable-mask
+    modal
     :draggable="false"
     position="center"
     :style="{ width: '400px' }"
@@ -12,26 +12,61 @@
       <h2>Perfil</h2>
     </template>
     <Form
-      noValidate
-      :initialValues
-      :resolver="updateProfileResolver"
       v-slot="$form"
+      no-validate
+      :initial-values
+      :resolver="updateProfileResolver"
       @submit="(formData) => onFormSubmit(formData)"
     >
-      <PrimeFloatLabel variant="in" class="input">
-        <PrimeInputText disabled name="email" type="email" fluid autofocus />
+      <PrimeFloatLabel
+        variant="in"
+        class="input"
+      >
+        <PrimeInputText
+          disabled
+          name="email"
+          type="email"
+          fluid
+          autofocus
+        />
         <label for="email">Email</label>
       </PrimeFloatLabel>
-      <PrimeFloatLabel variant="in" class="input">
-        <PrimeInputText :disabled="isLoading" name="name" type="text" fluid />
-        <PrimeMessage v-if="$form.name?.invalid" severity="error" size="small" variant="simple">
+      <PrimeFloatLabel
+        variant="in"
+        class="input"
+      >
+        <PrimeInputText
+          :disabled="isLoading"
+          name="name"
+          type="text"
+          fluid
+        />
+        <PrimeMessage
+          v-if="$form.name?.invalid"
+          severity="error"
+          size="small"
+          variant="simple"
+        >
           {{ $form.name.error?.message }}
         </PrimeMessage>
         <label for="name">Nome</label>
       </PrimeFloatLabel>
-      <PrimeFloatLabel variant="in" class="input">
-        <PrimeInputText :disabled="isLoading" name="nickname" type="text" fluid />
-        <PrimeMessage v-if="$form.nickname?.invalid" severity="error" size="small" variant="simple">
+      <PrimeFloatLabel
+        variant="in"
+        class="input"
+      >
+        <PrimeInputText
+          :disabled="isLoading"
+          name="nickname"
+          type="text"
+          fluid
+        />
+        <PrimeMessage
+          v-if="$form.nickname?.invalid"
+          severity="error"
+          size="small"
+          variant="simple"
+        >
           {{ $form.nickname.error?.message }}
         </PrimeMessage>
         <label for="nickname">Apelido</label>
@@ -47,10 +82,21 @@
           :loading="isLoading"
         />
         <p v-show="isUpdateSuccess">
-          <PrimeTag severity="success" icon="pi pi-check" value="Alterações salvas com sucesso"></PrimeTag>
+          <PrimeTag
+            severity="success"
+            icon="pi pi-check"
+            value="Alterações salvas com sucesso"
+          />
         </p>
-        <p style="text-align: center; padding-top: var(--l-spacing)" v-show="error">
-          <PrimeTag severity="contrast" icon="pi pi-exclamation-triangle" :value="error?.message" />
+        <p
+          v-show="error"
+          style="text-align: center; padding-top: var(--l-spacing)"
+        >
+          <PrimeTag
+            severity="contrast"
+            icon="pi pi-exclamation-triangle"
+            :value="error?.message"
+          />
         </p>
       </div>
     </Form>

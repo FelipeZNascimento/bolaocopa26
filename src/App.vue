@@ -1,8 +1,13 @@
 <template>
   <NavbarTop />
   <PrimeToast />
-  <div class="outer-view"><RouterView /></div>
-  <div class="not-active" v-if="!activeProfile?.isActive">
+  <div class="outer-view">
+    <RouterView />
+  </div>
+  <div
+    v-if="!activeProfile?.isActive"
+    class="not-active"
+  >
     Clique <a href="">aqui</a> para saber como ativar seu perfil e participar do bolão!
   </div>
 </template>

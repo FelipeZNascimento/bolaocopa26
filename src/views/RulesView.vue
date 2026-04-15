@@ -6,8 +6,8 @@
         v-for="(button, index) in buttonOptions"
         :key="index"
         :label="button"
-        @click="selectedButton = button"
         severity="contrast"
+        @click="selectedButton = button"
       />
     </div>
     <!-- <RulesSubscription v-if="selectedButton === 'Inscrição'" />

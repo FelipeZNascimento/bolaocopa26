@@ -1,13 +1,23 @@
 <template>
   <div :class="{ 'outer-ranking': !isModal }">
     <div class="ranking-header">
-      <span class="toggle" :class="{ activeToggle: !isRoundRanking }" @click="isRoundRanking = false">Geral</span>
-      <span class="toggle" :class="{ activeToggle: isRoundRanking }" @click="isRoundRanking = true"
-        >Rodada {{ selectedRound }}</span
-      >
+      <span
+        class="toggle"
+        :class="{ activeToggle: !isRoundRanking }"
+        @click="isRoundRanking = false"
+      >Geral</span>
+      <span
+        class="toggle"
+        :class="{ activeToggle: isRoundRanking }"
+        @click="isRoundRanking = true"
+      >Rodada {{ selectedRound }}</span>
       <PrimeDivider layout="vertical" />
-      <span class="toggle" :class="{ activeToggle: !showFavoritesOnly }" @click="showFavoritesOnly = false">
-        <i class="pi pi-list"></i> Todos
+      <span
+        class="toggle"
+        :class="{ activeToggle: !showFavoritesOnly }"
+        @click="showFavoritesOnly = false"
+      >
+        <i class="pi pi-list" /> Todos
       </span>
       <span
         class="toggle"
@@ -15,7 +25,7 @@
         :style="{ color: showFavoritesOnly ? 'var(--bolao-c-gold)' : '' }"
         @click="showFavoritesOnly = true"
       >
-        <i :class="{ 'pi pi-star-fill': showFavoritesOnly, 'pi pi-star': !showFavoritesOnly }"></i> Favoritos
+        <i :class="{ 'pi pi-star-fill': showFavoritesOnly, 'pi pi-star': !showFavoritesOnly }" /> Favoritos
       </span>
       <PrimeDivider layout="vertical" />
       <span
@@ -25,22 +35,25 @@
           showFavoritesOnly = false;
         "
       >
-        <i class="pi pi-filter-slash"></i>
+        <i class="pi pi-filter-slash" />
       </span>
     </div>
     <div class="ranking-container">
       <RankingTable
-        :isRound="isRoundRanking"
-        :isLoading="isRoundRanking ? isLoadingRounds : isLoadingSeason"
-        :rankingData="isRoundRanking ? selectedRoundRanking : seasonRanking"
-        columnConfig="compact"
-        rowSpacingConfig="small"
-        :activeProfile="activeProfile"
+        v-model:show-favorites-only="showFavoritesOnly"
+        :is-round="isRoundRanking"
+        :is-loading="isRoundRanking ? isLoadingRounds : isLoadingSeason"
+        :ranking-data="isRoundRanking ? selectedRoundRanking : seasonRanking"
+        column-config="compact"
+        row-spacing-config="small"
+        :active-profile="activeProfile"
         :error="isRoundRanking ? errorSeason : errorRounds"
-        v-model:showFavoritesOnly="showFavoritesOnly"
       />
     </div>
-    <RouterLink to="/ranking" class="see-full-ranking-link">
+    <RouterLink
+      to="/ranking"
+      class="see-full-ranking-link"
+    >
       <PrimeButton
         icon="pi pi-plus"
         class="match-info-toggle"

@@ -1,28 +1,47 @@
 <template>
   <div class="outer-teams">
     <h1>Equipes</h1>
-    <PrimeSkeleton v-if="isLoading" class="skeleton-outer" />
-    <div v-else class="groups-container">
+    <PrimeSkeleton
+      v-if="isLoading"
+      class="skeleton-outer"
+    />
+    <div
+      v-else
+      class="groups-container"
+    >
       <div
         v-for="group in groupedTeams"
         :key="group.groupName"
         :class="`group-section group-${group.groupName.toLowerCase().split(' ')[1]}`"
       >
-        <h2 class="group-header">{{ group.groupName }}</h2>
+        <h2 class="group-header">
+          {{ group.groupName }}
+        </h2>
         <div class="teams-grid">
-          <div v-for="team in group.teams" :key="team.id" class="team-card" @click="openTeamModal(team)">
+          <div
+            v-for="team in group.teams"
+            :key="team.id"
+            class="team-card"
+            @click="openTeamModal(team)"
+          >
             <img
               :src="`https://assets.omegafox.me/copa/countries_flags/${team.isoCode.toLowerCase()}.png`"
               :alt="`${team.name} Flag`"
-            />
-            <div class="team-name">{{ team.name }}</div>
+            >
+            <div class="team-name">
+              {{ team.name }}
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
   <!-- Team Details Modal -->
-  <TeamDetailsModal :isOpen="isModalOpen" :team="selectedTeam" :handleCloseModal="closeTeamModal" />
+  <TeamDetailsModal
+    :is-open="isModalOpen"
+    :team="selectedTeam"
+    :handle-close-modal="closeTeamModal"
+  />
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';
@@ -43,7 +62,7 @@ const isModalOpen = ref(false);
 
 // ------ Computed Properties ------
 const isLoading = computed(() => teamsStore.isLoading);
-const error = computed(() => teamsStore.error);
+// const error = computed(() => teamsStore.error);
 const teams = computed(() => teamsStore.teams);
 
 const groupedTeams = computed(() => {

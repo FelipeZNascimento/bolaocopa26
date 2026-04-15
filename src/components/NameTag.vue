@@ -1,15 +1,26 @@
 <template>
-  <div class="outer" :class="{ 'outer-short': isShort }" @click="handleUserClick">
-    <i v-if="isFavorite()" class="pi pi-star-fill favorite-badge" v-tooltip.top="'Favorito'"></i>
-    <span class="username" :class="{ active: activeProfile?.id === user.id, clickable: isClickable }">
+  <div
+    class="outer"
+    :class="{ 'outer-short': isShort }"
+    @click="handleUserClick"
+  >
+    <i
+      v-if="isFavorite()"
+      v-tooltip.top="'Favorito'"
+      class="pi pi-star-fill favorite-badge"
+    />
+    <span
+      class="username"
+      :class="{ active: activeProfile?.id === user.id, clickable: isClickable }"
+    >
       {{ user.nickname }}
     </span>
   </div>
   <UserTrackingModal
-    :isOpen="isUserTrackingModalOpen"
-    :isUserActive="activeProfile?.id === user?.id"
-    :selectedUser="user"
-    :handleCloseModal="() => (isUserTrackingModalOpen = false)"
+    :is-open="isUserTrackingModalOpen"
+    :is-user-active="activeProfile?.id === user?.id"
+    :selected-user="user"
+    :handle-close-modal="() => (isUserTrackingModalOpen = false)"
   />
 </template>
 <script lang="ts" setup>

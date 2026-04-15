@@ -4,19 +4,28 @@
     class="panini-sticker"
     :style="{ '--team-gradient': `linear-gradient(90deg, ${player.team.colors || '#FFD700'})` }"
   >
-    <div class="sticker-header" :style="{ background: `linear-gradient(90deg, ${player.team.colors || '#FFD700'})` }">
+    <div
+      class="sticker-header"
+      :style="{ background: `linear-gradient(90deg, ${player.team.colors || '#FFD700'})` }"
+    >
       <div class="sticker-country">
         <img
           class="sticker-flag"
           :src="`https://assets.omegafox.me/copa/countries_flags/${player.team.isoCode.toLowerCase()}.png`"
           :alt="player.team.name"
-        />
+        >
         {{ player.team.name }}
       </div>
     </div>
     <div class="sticker-photo">
-      <div v-if="isLoadingImage && player.fifa.pictureId" class="loading-spinner">
-        <i class="pi pi-spin pi-spinner" style="font-size: var(--xl-font-size)"></i>
+      <div
+        v-if="isLoadingImage && player.fifa.pictureId"
+        class="loading-spinner"
+      >
+        <i
+          class="pi pi-spin pi-spinner"
+          style="font-size: var(--xl-font-size)"
+        />
       </div>
       <img
         v-if="player.fifa.pictureId"
@@ -24,29 +33,39 @@
         :alt="player.name"
         @load="isLoadingImage = false"
         @error="handleImageError"
-      />
-      <div v-else class="placeholder-photo">
-        <i class="pi pi-user"></i>
+      >
+      <div
+        v-else
+        class="placeholder-photo"
+      >
+        <i class="pi pi-user" />
         <span>Sem Foto</span>
       </div>
     </div>
     <div class="sticker-info">
-      <div class="sticker-number" :style="{ color: player.team.colors[0], backgroundColor: player.team.colors[1] }">
+      <div
+        class="sticker-number"
+        :style="{ color: player.team.colors[0], backgroundColor: player.team.colors[1] }"
+      >
         {{ player.number }}
       </div>
-      <div class="sticker-name">{{ player.name }}</div>
-      <div class="sticker-position">{{ player.position.description }}</div>
+      <div class="sticker-name">
+        {{ player.name }}
+      </div>
+      <div class="sticker-position">
+        {{ player.position.description }}
+      </div>
       <div class="sticker-details">
         <div class="detail-item">
-          <i class="pi pi-calendar"></i>
+          <i class="pi pi-calendar" />
           <span>{{ formatBirthDate(player.dateOfBirth) }}</span>
         </div>
         <div class="detail-item">
-          <i class="pi pi-arrows-v"></i>
+          <i class="pi pi-arrows-v" />
           <span>{{ player.height }} cm</span>
         </div>
         <div class="detail-item">
-          <i class="pi pi-shield"></i>
+          <i class="pi pi-shield" />
           <span>{{ player.club.name }}</span>
         </div>
       </div>

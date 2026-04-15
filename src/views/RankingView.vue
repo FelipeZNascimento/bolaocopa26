@@ -3,13 +3,23 @@
   <div class="outer">
     <div class="ranking-outer">
       <div class="ranking-header">
-        <span class="toggle" :class="{ activeToggle: !isRoundRanking }" @click="isRoundRanking = false">Geral</span>
-        <span class="toggle" :class="{ activeToggle: isRoundRanking }" @click="isRoundRanking = true"
-          >Rodada {{ selectedRound }}</span
-        >
+        <span
+          class="toggle"
+          :class="{ activeToggle: !isRoundRanking }"
+          @click="isRoundRanking = false"
+        >Geral</span>
+        <span
+          class="toggle"
+          :class="{ activeToggle: isRoundRanking }"
+          @click="isRoundRanking = true"
+        >Rodada {{ selectedRound }}</span>
         <PrimeDivider layout="vertical" />
-        <span class="toggle" :class="{ activeToggle: !showFavoritesOnly }" @click="showFavoritesOnly = false">
-          <i class="pi pi-list"></i> Todos
+        <span
+          class="toggle"
+          :class="{ activeToggle: !showFavoritesOnly }"
+          @click="showFavoritesOnly = false"
+        >
+          <i class="pi pi-list" /> Todos
         </span>
         <span
           class="toggle"
@@ -17,7 +27,7 @@
           :style="{ color: showFavoritesOnly ? 'var(--bolao-c-gold)' : '' }"
           @click="showFavoritesOnly = true"
         >
-          <i :class="{ 'pi pi-star-fill': showFavoritesOnly, 'pi pi-star': !showFavoritesOnly }"></i> Favoritos
+          <i :class="{ 'pi pi-star-fill': showFavoritesOnly, 'pi pi-star': !showFavoritesOnly }" /> Favoritos
         </span>
         <PrimeDivider layout="vertical" />
         <span
@@ -27,38 +37,52 @@
             showFavoritesOnly = false;
           "
         >
-          <i class="pi pi-filter-slash"></i>
+          <i class="pi pi-filter-slash" />
         </span>
       </div>
       <RankingTable
-        :isRound="isRoundRanking"
-        :isLoading="isRoundRanking ? isLoadingRounds : isLoadingSeason"
-        :rankingData="isRoundRanking ? selectedRoundRanking : seasonRanking"
-        columnConfig="complete"
-        rowSpacingConfig="normal"
-        :activeProfile="activeProfile"
+        v-model:show-favorites-only="showFavoritesOnly"
+        :is-round="isRoundRanking"
+        :is-loading="isRoundRanking ? isLoadingRounds : isLoadingSeason"
+        :ranking-data="isRoundRanking ? selectedRoundRanking : seasonRanking"
+        column-config="complete"
+        row-spacing-config="normal"
+        :active-profile="activeProfile"
         :error="isRoundRanking ? errorSeason : errorRounds"
-        v-model:showFavoritesOnly="showFavoritesOnly"
       />
     </div>
     <div class="favorites-outer">
       <div class="favorites-panel">
         <h3 class="favorites-title">
-          <i class="pi pi-star-fill"></i>
+          <i class="pi pi-star-fill" />
           Favoritos
         </h3>
         <div v-if="isLoadingActiveProfile || isLoadingRounds || isLoadingSeason">
           <PrimeSkeleton style="width: 100%; height: 200px" />
         </div>
-        <div v-else-if="favoriteUsers.length === 0" class="favorites-empty">
-          <i class="pi pi-info-circle"></i>
+        <div
+          v-else-if="favoriteUsers.length === 0"
+          class="favorites-empty"
+        >
+          <i class="pi pi-info-circle" />
           <p>Nenhum favorito adicionado</p>
           <p>Para adicionar alguém aos seus favoritos, clique no usuário e ative a estrela no topo das estatísticas.</p>
         </div>
-        <div v-else class="favorites-list">
-          <div v-for="user in favoriteUsers" :key="user.id" class="favorite-item">
+        <div
+          v-else
+          class="favorites-list"
+        >
+          <div
+            v-for="user in favoriteUsers"
+            :key="user.id"
+            class="favorite-item"
+          >
             <span class="favorite-name">{{ user.nickname }}</span>
-            <i class="pi pi-trash delete-icon" @click="removeFavorite(user.id)" title="Remover favorito"></i>
+            <i
+              class="pi pi-trash delete-icon"
+              title="Remover favorito"
+              @click="removeFavorite(user.id)"
+            />
           </div>
         </div>
         <PrimeButton

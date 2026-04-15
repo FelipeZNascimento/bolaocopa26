@@ -2,43 +2,67 @@
   <div class="outer-extras">
     <h1>Extras</h1>
     <h2>Minhas Apostas</h2>
-    <PrimeSkeleton v-if="isLoadingConfig || isLoadingExtras" class="skeleton-outer" />
-    <ExtraBetsTeamCard v-else :extraBets="activeProfileExtraBets" />
+    <PrimeSkeleton
+      v-if="isLoadingConfig || isLoadingExtras"
+      class="skeleton-outer"
+    />
+    <ExtraBetsTeamCard
+      v-else
+      :extra-bets="activeProfileExtraBets"
+    />
     <PrimeDivider />
     <h2>Resultados</h2>
-    <PrimeSkeleton v-if="isLoadingConfig || isLoadingExtras" class="skeleton-outer" />
-    <ExtraBetsTeamCard v-else :results="extraBetsResults" />
+    <PrimeSkeleton
+      v-if="isLoadingConfig || isLoadingExtras"
+      class="skeleton-outer"
+    />
+    <ExtraBetsTeamCard
+      v-else
+      :results="extraBetsResults"
+    />
     <PrimeDivider />
 
     <h2>Apostas Gerais</h2>
     <PrimeSelectButton
-      :allowEmpty="false"
-      size="large"
       v-model="selectedToggle"
+      :allow-empty="false"
+      size="large"
       :options="buttonOptions"
-      dataKey="value"
+      data-key="value"
       style="margin-bottom: var(--m-spacing)"
     >
       <template #option="slotProps">
         <span>{{ slotProps.option.label }}</span>
       </template>
     </PrimeSelectButton>
-    <PrimeSkeleton v-if="isLoadingConfig || isLoadingExtras" class="skeleton-outer" />
-    <div v-else style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 20px; justify-content: center">
-      <PrimeCard v-for="(item, index) in selectedExtras" :key="index" class="all-bets-card">
+    <PrimeSkeleton
+      v-if="isLoadingConfig || isLoadingExtras"
+      class="skeleton-outer"
+    />
+    <div
+      v-else
+      style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 20px; justify-content: center"
+    >
+      <PrimeCard
+        v-for="(item, index) in selectedExtras"
+        :key="index"
+        class="all-bets-card"
+      >
         <template #header>
           <div class="header-container">
             <img
               :src="`https://assets.omegafox.me/copa/countries_flags/${item.team.isoCode.toLowerCase()}.png`"
               :alt="`${item.team.name} Shield`"
-            />
+            >
             <div class="header-overlay">
               {{ isPlayerWithExtras(item) ? item.player.name : item.team.name }}
             </div>
           </div>
         </template>
         <template #title>
-          <p style="text-align: center">{{ filterBetsByType(item.bets, selectedToggle.value).length }} Apostas</p>
+          <p style="text-align: center">
+            {{ filterBetsByType(item.bets, selectedToggle.value).length }} Apostas
+          </p>
         </template>
         <template #footer>
           <div style="display: flex; justify-content: center">
@@ -57,11 +81,11 @@
   </div>
   <!-- Modals -->
   <ExtraBetsModal
-    :isOpen="isModalOpen"
+    :is-open="isModalOpen"
     :player="selectedPlayer"
     :team="selectedTeam"
-    :handleCloseModal="handleCloseExtraBetsModal"
-    :selectedBetType="selectedToggle.value"
+    :handle-close-modal="handleCloseExtraBetsModal"
+    :selected-bet-type="selectedToggle.value"
   />
 </template>
 <script setup lang="ts">

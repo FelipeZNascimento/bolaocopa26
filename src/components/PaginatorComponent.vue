@@ -3,7 +3,7 @@
     <PrimePaginator
       :first="selectedRound && selectedRound - 1"
       :rows="1"
-      :totalRecords="rounds.filter((round) => !round.hidden).length"
+      :total-records="rounds.filter((round) => !round.hidden).length"
       :template="{
         default: 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink JumpToPageDropdown',
       }"

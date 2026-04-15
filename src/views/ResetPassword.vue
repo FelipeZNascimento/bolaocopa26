@@ -2,38 +2,101 @@
   <div class="reset-password-container">
     <PrimeCard class="reset-password-card">
       <template #header>
-        <h1 style="text-align: center">Redefinir Senha</h1>
+        <h1 style="text-align: center">
+          Redefinir Senha
+        </h1>
       </template>
 
       <template #content>
-        <Form noValidate :initialValues :resolver="resetPasswordResolver" v-slot="$form" @submit="handleResetPassword">
-          <PrimeFloatLabel variant="in" class="input">
-            <PrimeInputText name="email" type="email" fluid disabled />
-            <PrimeMessage v-if="$form.email?.invalid" severity="error" size="small" variant="simple">
+        <Form
+          v-slot="$form"
+          no-validate
+          :initial-values
+          :resolver="resetPasswordResolver"
+          @submit="handleResetPassword"
+        >
+          <PrimeFloatLabel
+            variant="in"
+            class="input"
+          >
+            <PrimeInputText
+              name="email"
+              type="email"
+              fluid
+              disabled
+            />
+            <PrimeMessage
+              v-if="$form.email?.invalid"
+              severity="error"
+              size="small"
+              variant="simple"
+            >
               {{ $form.email.error?.message }}
             </PrimeMessage>
             <label for="email">Email</label>
           </PrimeFloatLabel>
 
-          <PrimeFloatLabel variant="in" class="input">
-            <PrimeInputText name="token" type="text" fluid disabled />
-            <PrimeMessage v-if="$form.token?.invalid" severity="error" size="small" variant="simple">
+          <PrimeFloatLabel
+            variant="in"
+            class="input"
+          >
+            <PrimeInputText
+              name="token"
+              type="text"
+              fluid
+              disabled
+            />
+            <PrimeMessage
+              v-if="$form.token?.invalid"
+              severity="error"
+              size="small"
+              variant="simple"
+            >
               {{ $form.token.error?.message }}
             </PrimeMessage>
             <label for="token">Token</label>
           </PrimeFloatLabel>
 
-          <PrimeFloatLabel variant="in" class="input">
-            <PrimePassword name="password" type="password" :feedback="false" toggleMask fluid autofocus />
-            <PrimeMessage v-if="$form.password?.invalid" severity="error" size="small" variant="simple">
+          <PrimeFloatLabel
+            variant="in"
+            class="input"
+          >
+            <PrimePassword
+              name="password"
+              type="password"
+              :feedback="false"
+              toggle-mask
+              fluid
+              autofocus
+            />
+            <PrimeMessage
+              v-if="$form.password?.invalid"
+              severity="error"
+              size="small"
+              variant="simple"
+            >
               {{ $form.password.error?.message }}
             </PrimeMessage>
             <label for="password">Nova Senha</label>
           </PrimeFloatLabel>
 
-          <PrimeFloatLabel variant="in" class="input">
-            <PrimePassword name="confirmPassword" type="password" :feedback="false" toggleMask fluid />
-            <PrimeMessage v-if="$form.confirmPassword?.invalid" severity="error" size="small" variant="simple">
+          <PrimeFloatLabel
+            variant="in"
+            class="input"
+          >
+            <PrimePassword
+              name="confirmPassword"
+              type="password"
+              :feedback="false"
+              toggle-mask
+              fluid
+            />
+            <PrimeMessage
+              v-if="$form.confirmPassword?.invalid"
+              severity="error"
+              size="small"
+              variant="simple"
+            >
               {{ $form.confirmPassword.error?.message }}
             </PrimeMessage>
             <label for="confirmPassword">Confirme a Senha</label>

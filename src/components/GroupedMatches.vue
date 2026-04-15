@@ -5,16 +5,33 @@
       :key="group.groupName"
       :class="`group-section group-${group.groupName.toLowerCase().split(' ')[1]}`"
     >
-      <h2 class="group-header">{{ group.groupName }}</h2>
+      <h2 class="group-header">
+        {{ group.groupName }}
+      </h2>
       <div class="outer-line-mode">
-        <MatchComponent v-for="match in group.matches" :isBetting="isBetting" :match="match" :key="match.id" />
+        <MatchComponent
+          v-for="match in group.matches"
+          :key="match.id"
+          :is-betting="isBetting"
+          :match="match"
+        />
       </div>
     </div>
   </template>
-  <div v-else :class="`group-section round-${selectedRound}`">
-    <h2 class="group-header">{{ roundLabel }}</h2>
+  <div
+    v-else
+    :class="`group-section round-${selectedRound}`"
+  >
+    <h2 class="group-header">
+      {{ roundLabel }}
+    </h2>
     <div class="outer-line-mode">
-      <MatchComponent v-for="match in matches" :isBetting="isBetting" :match="match" :key="match.id" />
+      <MatchComponent
+        v-for="match in matches"
+        :key="match.id"
+        :is-betting="isBetting"
+        :match="match"
+      />
     </div>
   </div>
 </template>

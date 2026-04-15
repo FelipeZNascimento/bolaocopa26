@@ -1,8 +1,8 @@
 <template>
   <PrimeDialog
-    dismissableMask
-    modal
     v-model:visible="isVisible"
+    dismissable-mask
+    modal
     :draggable="false"
     position="center"
     :style="{ width: '500px' }"
@@ -13,31 +13,38 @@
     </template>
     <h2>Tema</h2>
     <div class="button-group">
-      <div class="label">Tema</div>
+      <div class="label">
+        Tema
+      </div>
       <PrimeSelectButton
-        fluid
-        :allowEmpty="false"
-        class="buttons"
         v-model="themeLocalObj"
+        fluid
+        :allow-empty="false"
+        class="buttons"
         :options="themeOptions"
-        optionLabel="label"
-        dataKey="label"
+        option-label="label"
+        data-key="label"
         size="small"
         @click="() => handleThemeConfig(themeLocalObj.value)"
       />
     </div>
     <PrimeDivider />
     <h2>Ranking</h2>
-    <div class="button-group" v-if="!isMobile">
-      <div class="label">Posição</div>
+    <div
+      v-if="!isMobile"
+      class="button-group"
+    >
+      <div class="label">
+        Posição
+      </div>
       <PrimeSelectButton
-        fluid
-        :allowEmpty="false"
-        class="buttons"
         v-model="rankingPositionLocalObj"
+        fluid
+        :allow-empty="false"
+        class="buttons"
         :options="rankingPositionOptions"
-        optionLabel="label"
-        dataKey="label"
+        option-label="label"
+        data-key="label"
         size="small"
         @click="() => handleRankingPositionConfig(rankingPositionLocalObj.value)"
       />
@@ -45,7 +52,9 @@
     <PrimeDivider />
     <h2>Preferências</h2>
     <div class="button-group">
-      <div class="label">Favoritos ({{ favoritesCount }})</div>
+      <div class="label">
+        Favoritos ({{ favoritesCount }})
+      </div>
       <div>
         <PrimeButton
           class="buttons"
@@ -56,7 +65,7 @@
         />
       </div>
     </div>
-    <template #footer> </template>
+    <template #footer />
   </PrimeDialog>
 </template>
 <script setup lang="ts">

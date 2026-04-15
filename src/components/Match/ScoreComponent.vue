@@ -1,47 +1,52 @@
 <template>
-  <div v-if="isMobileOnly" class="outer-mobile-score-line">
+  <div
+    v-if="isMobileOnly"
+    class="outer-mobile-score-line"
+  >
     <span class="outer-mobile-teams-line">
-      <RibbonComponent v-if="ribbon" :ribbon="ribbon" />
       <TeamComponent
-        isAlias
-        :isBetting="isBetting"
-        :isHomeTeam="true"
-        :isWinning="match.score.away < match.score.home"
+        is-alias
+        :is-betting="isBetting"
+        :is-home-team="true"
+        :is-winning="match.score.away < match.score.home"
         :events="sortedEvents"
         :team="match.homeTeam"
-        :matchStatus="match.status"
+        :match-status="match.status"
         :score="match.score"
       />
       <TeamComponent
-        isAlias
-        :isBetting="isBetting"
-        :isHomeTeam="false"
-        :isWinning="match.score.away > match.score.home"
+        is-alias
+        :is-betting="isBetting"
+        :is-home-team="false"
+        :is-winning="match.score.away > match.score.home"
         :events="sortedEvents"
         :team="match.awayTeam"
-        :matchStatus="match.status"
+        :match-status="match.status"
         :score="match.score"
       />
     </span>
   </div>
-  <div v-else class="outer-score-line">
+  <div
+    v-else
+    class="outer-score-line"
+  >
     <TeamComponent
-      :isBetting="isBetting"
-      :isHomeTeam="true"
-      :isScoreModalOpen="isScoreModalOpen"
-      :isWinning="match.score.away < match.score.home"
+      :is-betting="isBetting"
+      :is-home-team="true"
+      :is-score-modal-open="isScoreModalOpen"
+      :is-winning="match.score.away < match.score.home"
       :events="sortedEvents"
       :team="match.homeTeam"
-      :matchStatus="match.status"
+      :match-status="match.status"
       :score="match.score"
     />
     <TeamComponent
-      :isBetting="isBetting"
-      :isHomeTeam="false"
-      :isScoreModalOpen="isScoreModalOpen"
-      :isWinning="match.score.away > match.score.home"
+      :is-betting="isBetting"
+      :is-home-team="false"
+      :is-score-modal-open="isScoreModalOpen"
+      :is-winning="match.score.away > match.score.home"
       :team="match.awayTeam"
-      :matchStatus="match.status"
+      :match-status="match.status"
       :score="match.score"
       :events="sortedEvents"
     />
@@ -51,10 +56,8 @@
 import { isMobileOnly } from '@basitcodeenv/vue3-device-detect';
 import { computed } from 'vue';
 
-import type { Ribbon } from '@/constants/bets';
 import type { IBet, IMatch } from '@/stores/matches.types';
 
-import RibbonComponent from './RibbonComponent.vue';
 import TeamComponent from './TeamComponent.vue';
 const props = withDefaults(
   defineProps<{
@@ -63,7 +66,6 @@ const props = withDefaults(
     isMatchStarted: boolean;
     isScoreModalOpen?: boolean;
     match: IMatch;
-    ribbon?: Ribbon;
   }>(),
   {
     isBetting: false,

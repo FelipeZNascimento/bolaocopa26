@@ -1,20 +1,20 @@
 <template>
   <PrimeDialog
-    dismissableMask
-    modal
     v-model:visible="isVisible"
+    dismissable-mask
+    modal
     :draggable="false"
     :style="{ width: '1024px', height: '70vh', backgroundColor: 'var(--bolao-c-blue4)' }"
     :breakpoints="{ '1280px': '75vw', '575px': '90vw' }"
-    contentClass="content-class"
+    content-class="content-class"
   >
     <template #default>
       <div class="teams-outer">
         <ScoreComponent
-          :isScoreModalOpen="true"
+          :is-score-modal-open="true"
           :match="match"
-          :activeUserBet="match.loggedUserBets"
-          :isMatchStarted="isMatchStarted"
+          :active-user-bet="match.loggedUserBets"
+          :is-match-started="isMatchStarted"
         />
 
         <ClockComponent
@@ -22,8 +22,8 @@
           :timestamp="match.timestamp"
           :status="match.status"
           :clock="match.timestamp ? clockStore.getFormattedTime(match.timestamp) : null"
-          :hitLevel="hitLevel"
-          :isMatchStarted="isMatchStarted"
+          :hit-level="hitLevel"
+          :is-match-started="isMatchStarted"
         />
         <PrimeButton
           :icon="showMatchInfo ? 'pi pi-minus' : 'pi pi-plus'"
@@ -37,30 +37,49 @@
       <div>
         <div header="Informações">
           <Transition name="expand">
-            <div v-show="showMatchInfo" class="match-info-wrapper">
+            <div
+              v-show="showMatchInfo"
+              class="match-info-wrapper"
+            >
               <div class="match-info">
                 <div class="info-section">
-                  <h3><i class="pi pi-building"></i> Estádio</h3>
-                  <p class="info-title">{{ match.stadium.name }}</p>
-                  <p class="info-detail">{{ match.stadium.city }}, {{ match.stadium.country }}</p>
-                  <p class="info-detail">Capacidade: {{ match.stadium.capacity.toLocaleString('pt-BR') }} pessoas</p>
+                  <h3><i class="pi pi-building" /> Estádio</h3>
+                  <p class="info-title">
+                    {{ match.stadium.name }}
+                  </p>
+                  <p class="info-detail">
+                    {{ match.stadium.city }}, {{ match.stadium.country }}
+                  </p>
+                  <p class="info-detail">
+                    Capacidade: {{ match.stadium.capacity.toLocaleString('pt-BR') }} pessoas
+                  </p>
                 </div>
 
                 <div class="info-section">
-                  <h3><i class="pi pi-user"></i> Árbitro</h3>
-                  <p class="info-title">{{ match.referee.name }}</p>
-                  <p class="info-detail">{{ match.referee.country }}</p>
+                  <h3><i class="pi pi-user" /> Árbitro</h3>
+                  <p class="info-title">
+                    {{ match.referee.name }}
+                  </p>
+                  <p class="info-detail">
+                    {{ match.referee.country }}
+                  </p>
                 </div>
 
                 <div class="info-section">
-                  <h3><i class="pi pi-calendar"></i> Data e Hora</h3>
-                  <p class="info-title">{{ formatDate(match.timestamp) }}</p>
-                  <p class="info-detail">{{ formatTime(match.timestamp) }}</p>
+                  <h3><i class="pi pi-calendar" /> Data e Hora</h3>
+                  <p class="info-title">
+                    {{ formatDate(match.timestamp) }}
+                  </p>
+                  <p class="info-detail">
+                    {{ formatTime(match.timestamp) }}
+                  </p>
                 </div>
 
                 <div class="info-section">
-                  <h3><i class="pi pi-flag"></i> Rodada</h3>
-                  <p class="info-title">{{ getRoundName(match.round) }}</p>
+                  <h3><i class="pi pi-flag" /> Rodada</h3>
+                  <p class="info-title">
+                    {{ getRoundName(match.round) }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -68,9 +87,16 @@
         </div>
 
         <div header="Apostas">
-          <div v-if="activeProfileStore.activeProfile" class="favorites-filter">
-            <span class="toggle" :class="{ activeToggle: !showFavoritesOnly }" @click="showFavoritesOnly = false">
-              <i class="pi pi-list"></i> Todos
+          <div
+            v-if="activeProfileStore.activeProfile"
+            class="favorites-filter"
+          >
+            <span
+              class="toggle"
+              :class="{ activeToggle: !showFavoritesOnly }"
+              @click="showFavoritesOnly = false"
+            >
+              <i class="pi pi-list" /> Todos
             </span>
             <span
               class="toggle"
@@ -78,33 +104,33 @@
               :style="{ color: showFavoritesOnly ? 'var(--bolao-c-gold)' : 'var(--bolao-c-grey1-t2)' }"
               @click="showFavoritesOnly = true"
             >
-              <i :class="{ 'pi pi-star-fill': showFavoritesOnly, 'pi pi-star': !showFavoritesOnly }"></i> Favoritos
+              <i :class="{ 'pi pi-star-fill': showFavoritesOnly, 'pi pi-star': !showFavoritesOnly }" /> Favoritos
             </span>
           </div>
           <div class="bets-outer">
             <BetsColumn
               :bets="filterBets(match.bets, 'exact')"
-              :columnValue="BETS_VALUES.AWAY_EASY"
-              :activeUserBet="filterBets(match.loggedUserBets ? [match.loggedUserBets] : null, 'exact')"
-              :hitLevel="HIT_LEVELS.exactScore"
+              :column-value="BETS_VALUES.AWAY_EASY"
+              :active-user-bet="filterBets(match.loggedUserBets ? [match.loggedUserBets] : null, 'exact')"
+              :hit-level="HIT_LEVELS.exactScore"
             />
             <BetsColumn
               :bets="filterBets(match.bets, 'oneScore')"
-              :columnValue="BETS_VALUES.AWAY_EASY"
-              :activeUserBet="filterBets(match.loggedUserBets ? [match.loggedUserBets] : null, 'oneScore')"
-              :hitLevel="HIT_LEVELS.oneScore"
+              :column-value="BETS_VALUES.AWAY_EASY"
+              :active-user-bet="filterBets(match.loggedUserBets ? [match.loggedUserBets] : null, 'oneScore')"
+              :hit-level="HIT_LEVELS.oneScore"
             />
             <BetsColumn
               :bets="filterBets(match.bets, 'winnerOnly')"
-              :columnValue="BETS_VALUES.AWAY_EASY"
-              :activeUserBet="filterBets(match.loggedUserBets ? [match.loggedUserBets] : null, 'winnerOnly')"
-              :hitLevel="HIT_LEVELS.winnerOnly"
+              :column-value="BETS_VALUES.AWAY_EASY"
+              :active-user-bet="filterBets(match.loggedUserBets ? [match.loggedUserBets] : null, 'winnerOnly')"
+              :hit-level="HIT_LEVELS.winnerOnly"
             />
             <BetsColumn
               :bets="filterBets(match.bets, 'miss')"
-              :columnValue="BETS_VALUES.AWAY_EASY"
-              :activeUserBet="filterBets(match.loggedUserBets ? [match.loggedUserBets] : null, 'miss')"
-              :hitLevel="HIT_LEVELS.miss"
+              :column-value="BETS_VALUES.AWAY_EASY"
+              :active-user-bet="filterBets(match.loggedUserBets ? [match.loggedUserBets] : null, 'miss')"
+              :hit-level="HIT_LEVELS.miss"
             />
           </div>
         </div>

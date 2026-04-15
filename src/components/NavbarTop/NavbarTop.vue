@@ -2,13 +2,23 @@
   <header class="navbar">
     <nav class="nav-container">
       <div class="wave-background">
-        <svg class="wave-svg" viewBox="0 0 1400 100" preserveAspectRatio="none">
-          <path :d="wavePath" fill="var(--bolao-c-green-t3)" />
+        <svg
+          class="wave-svg"
+          viewBox="0 0 1400 100"
+          preserveAspectRatio="none"
+        >
+          <path
+            :d="wavePath"
+            fill="var(--bolao-c-green-t3)"
+          />
         </svg>
       </div>
 
       <!-- All Navigation Items -->
-      <div class="nav-links-wrapper" ref="navWrapper">
+      <div
+        ref="navWrapper"
+        class="nav-links-wrapper"
+      >
         <!-- Soccer ball that moves between items -->
         <div
           class="telstar-ball"
@@ -16,39 +26,51 @@
             left: ballPosition,
             transform: `translate(-50%, -20px) rotate(${ballRotation}deg)`,
           }"
-        ></div>
+        />
 
         <RouterLink
-          v-for="(route, index) in allRoutes"
-          :key="route.id"
-          :to="route.url || ''"
+          v-for="(routeItem, index) in allRoutes"
+          :key="routeItem.id"
+          v-slot="{ navigate }"
+          :to="routeItem.url || ''"
           :class="{
             'nav-link': true,
-            disabled: route.needCredentials && !activeProfile,
-            active: route.id === activeRoute,
+            disabled: routeItem.needCredentials && !activeProfile,
+            active: routeItem.id === activeRoute,
           }"
           :style="{ '--item-index': index }"
           custom
-          v-slot="{ navigate }"
         >
           <a
             @click="
-              route.id === ROUTE_ID.PROFILE || route.id === ROUTE_ID.LOGIN
-                ? handleNavigate($event, index, navigate, route)
-                : handleRouteClick(route, index, navigate)
+              routeItem.id === ROUTE_ID.PROFILE || routeItem.id === ROUTE_ID.LOGIN
+                ? handleNavigate($event, index, navigate, routeItem)
+                : handleRouteClick(routeItem, index, navigate)
             "
           >
-            <div class="icon-wrapper" :class="{ elevated: route.id === activeRoute }">
-              <i :class="getIconClass(route.id)" class="nav-icon"></i>
+            <div
+              class="icon-wrapper"
+              :class="{ elevated: routeItem.id === activeRoute }"
+            >
+              <i
+                :class="getIconClass(routeItem.id)"
+                class="nav-icon"
+              />
             </div>
-            <span class="nav-label" :class="{ 'active-label': route.id === activeRoute }">{{ route.label }}</span>
+            <span
+              class="nav-label"
+              :class="{ 'active-label': routeItem.id === activeRoute }"
+            >{{ routeItem.label }}</span>
           </a>
         </RouterLink>
       </div>
     </nav>
 
     <!-- Profile Popover -->
-    <PrimePopover ref="profilePopover" @hide="syncActiveRouteWithPath">
+    <PrimePopover
+      ref="profilePopover"
+      @hide="syncActiveRouteWithPath"
+    >
       <div class="outer-profile-popover">
         <PrimeButton
           variant="text"
@@ -82,17 +104,38 @@
         />
         <PrimeDivider />
         <!-- style="color: black" -->
-        <PrimeButton severity="secondary" size="small" label="Sair" @click="handleLogout" />
+        <PrimeButton
+          severity="secondary"
+          size="small"
+          label="Sair"
+          @click="handleLogout"
+        />
       </div>
     </PrimePopover>
   </header>
 
   <!-- Modals -->
-  <LoginModal :isOpen="isLoginModalOpen" :handleCloseModal="handleCloseLoginModal" />
-  <ProfileModal :isOpen="isProfileModalOpen" :handleCloseModal="handleCloseProfileModal" />
-  <PasswordModal :isOpen="isPasswordModalOpen" :handleCloseModal="handleClosePasswordModal" />
-  <ConfigModal :activeProfile="activeProfile" :isOpen="isConfigModalOpen" :handleCloseModal="handleCloseConfigModal" />
-  <RankingModal :isOpen="isRankingModalOpen" :handleCloseModal="handleCloseRankingModal" />
+  <LoginModal
+    :is-open="isLoginModalOpen"
+    :handle-close-modal="handleCloseLoginModal"
+  />
+  <ProfileModal
+    :is-open="isProfileModalOpen"
+    :handle-close-modal="handleCloseProfileModal"
+  />
+  <PasswordModal
+    :is-open="isPasswordModalOpen"
+    :handle-close-modal="handleClosePasswordModal"
+  />
+  <ConfigModal
+    :active-profile="activeProfile"
+    :is-open="isConfigModalOpen"
+    :handle-close-modal="handleCloseConfigModal"
+  />
+  <RankingModal
+    :is-open="isRankingModalOpen"
+    :handle-close-modal="handleCloseRankingModal"
+  />
 </template>
 
 <script setup lang="ts">

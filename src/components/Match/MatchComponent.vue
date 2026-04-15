@@ -1,21 +1,30 @@
 <template>
-  <div class="outer-match line" :class="{ clickable: !isBetting }" @click="handleMatchClick">
+  <div
+    class="outer-match line"
+    :class="{ clickable: !isBetting }"
+    @click="handleMatchClick"
+  >
     <ScoreComponent
-      :isBetting="isBetting"
+      :is-betting="isBetting"
       :match="match"
-      :activeUserBet="match.loggedUserBets ?? null"
-      :isMatchStarted="isMatchStarted"
-      :hitLevel="hitLevel"
+      :active-user-bet="match.loggedUserBets ?? null"
+      :is-match-started="isMatchStarted"
+      :hit-level="hitLevel"
     />
     <ClockComponent
       v-if="isDesktop && !isDemo"
-      :hitLevel="hitLevel"
+      :hit-level="hitLevel"
       :timestamp="match.timestamp"
       :status="match.status"
-      :isMatchStarted="isMatchStarted"
+      :is-match-started="isMatchStarted"
     />
   </div>
-  <BetsModal :match="match" :isOpen="isBetsModalOpen" :hitLevel="hitLevel" :handleCloseModal="handleCloseModal" />
+  <BetsModal
+    :match="match"
+    :is-open="isBetsModalOpen"
+    :hit-level="hitLevel"
+    :handle-close-modal="handleCloseModal"
+  />
 </template>
 <script lang="ts" setup>
 import { isDesktop } from '@basitcodeenv/vue3-device-detect';

@@ -1,10 +1,17 @@
 <template>
-  <span class="player-name-hover" @click="openTeamModal()">
+  <span
+    class="player-name-hover"
+    @click="openTeamModal()"
+  >
     {{ team.name }}
   </span>
 
   <!-- Team Details Modal -->
-  <TeamDetailsModal :isOpen="isTeamModalOpen" :team="team" :handleCloseModal="closeTeamModal" />
+  <TeamDetailsModal
+    :is-open="isTeamModalOpen"
+    :team="team"
+    :handle-close-modal="closeTeamModal"
+  />
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';

@@ -1,5 +1,10 @@
 <template>
-  <PrimeMessage v-show="errorConfiguration" class="error-message" severity="error" variant="outlined">
+  <PrimeMessage
+    v-show="errorConfiguration"
+    class="error-message"
+    severity="error"
+    variant="outlined"
+  >
     Ops, houve um problema de comunicação com o servidor.
     <p>
       Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir, entre em contato com os
@@ -7,7 +12,12 @@
     </p>
     <p>{{ errorConfiguration }}</p>
   </PrimeMessage>
-  <PrimeMessage v-show="errorMatches" class="error-message" severity="error" variant="outlined">
+  <PrimeMessage
+    v-show="errorMatches"
+    class="error-message"
+    severity="error"
+    variant="outlined"
+  >
     Ops, houve um problema de comunicação com o servidor para buscar as partidas.
     <p>
       Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir, entre em contato com os

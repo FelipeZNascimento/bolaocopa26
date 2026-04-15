@@ -117,5 +117,5 @@ app.directive('tooltip', PrimeTooltip);
 
 /* ---- PrimeVue ---- */
 
-app.component('font-awesome-icon', FontAwesomeIcon);
+app.component('FontAwesomeIcon', FontAwesomeIcon);
 app.mount('#app');

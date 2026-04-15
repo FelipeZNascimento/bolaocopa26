@@ -1,11 +1,10 @@
 // @ts-check
 
 import eslint from '@eslint/js';
-import perfectionist from 'eslint-plugin-perfectionist';
-import pluginVue from 'eslint-plugin-vue';
 import vitest from '@vitest/eslint-plugin';
 import vueTsEslintConfig from '@vue/eslint-config-typescript';
-import oxlint from 'eslint-plugin-oxlint';
+import perfectionist from 'eslint-plugin-perfectionist';
+import pluginVue from 'eslint-plugin-vue';
 import globals from 'globals';
 
 export default [
@@ -32,7 +31,6 @@ export default [
       ...vitest.configs.recommended.rules,
     },
   },
-  oxlint.configs['flat/recommended'],
   {
     rules: {
       // Customize rules here

@@ -1,6 +1,10 @@
 <template>
   <span class="outer-skeleton-line">
-    <PrimeSkeleton v-for="index in 16" :key="index" class="skeleton-match-line" />
+    <PrimeSkeleton
+      v-for="index in 16"
+      :key="index"
+      class="skeleton-match-line"
+    />
   </span>
 </template>
 <script lang="ts" setup></script>

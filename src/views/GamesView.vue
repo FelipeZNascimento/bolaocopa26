@@ -4,8 +4,15 @@
       <PaginatorComponent />
       <ErrorChecker />
       <div class="outer-line-mode">
-        <MatchesSkeleton v-if="isLoading" :isLoading="isLoading" />
-        <GroupedMatches v-else :matches="matches" :selectedRound="selectedRound" />
+        <MatchesSkeleton
+          v-if="isLoading"
+          :is-loading="isLoading"
+        />
+        <GroupedMatches
+          v-else
+          :matches="matches"
+          :selected-round="selectedRound"
+        />
       </div>
     </div>
     <RankingComponent v-if="isDesktop && rankingPosition === 'active'" />

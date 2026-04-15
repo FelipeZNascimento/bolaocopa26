@@ -1,5 +1,8 @@
 <template>
-  <PrimeSkeleton class="skeleton-outer" v-if="isLoadingConfig" />
+  <PrimeSkeleton
+    v-if="isLoadingConfig"
+    class="skeleton-outer"
+  />
   <!-- <ExtrasBefore v-else-if="!isLoadingConfig && !isSeasonStarted" /> -->
   <ExtrasAfter v-else-if="!isLoadingConfig && isSeasonStarted" />
 </template>

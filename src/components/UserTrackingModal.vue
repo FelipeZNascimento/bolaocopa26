@@ -1,22 +1,22 @@
 <template>
   <PrimeDialog
-    dismissableMask
+    v-model:visible="isVisible"
+    dismissable-mask
     modal
     :breakpoints="{ '1024': '75vw', '575px': '95vw' }"
-    v-model:visible="isVisible"
     :draggable="false"
-    contentClass="content-class"
+    content-class="content-class"
     style="width: 60%; padding: var(--s-spacing)"
   >
     <template #header>
       <p class="modal-title">
         <i
           v-if="!isUserActive"
+          v-tooltip.top="isFavorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'"
           :class="isFavorite ? 'pi pi-star-fill' : 'pi pi-star'"
           class="favorite-star"
           @click="toggleFavorite"
-          v-tooltip.top="isFavorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'"
-        ></i>
+        />
         {{ selectedUser?.nickname }}
       </p>
     </template>
@@ -25,12 +25,20 @@
       :data="chartData"
       :style="{ height: '300px', backgroundColor: 'var(--surface-card)', borderRadius: 'var(--border-radius)' }"
       :options="chartOptions"
-    ></PrimeChart>
+    />
     <PrimeDivider />
-    <h2 style="text-align: center">Apostas Extras</h2>
+    <h2 style="text-align: center">
+      Apostas Extras
+    </h2>
     <div style="display: flex; justify-content: center; padding: var(--s-spacing)">
-      <PrimeSkeleton v-if="isLoadingExtras" class="skeleton-outer" />
-      <ExtraBetsTeamCard v-else :extraBets="selectedUserExtraBets" />
+      <PrimeSkeleton
+        v-if="isLoadingExtras"
+        class="skeleton-outer"
+      />
+      <ExtraBetsTeamCard
+        v-else
+        :extra-bets="selectedUserExtraBets"
+      />
     </div>
   </PrimeDialog>
 </template>

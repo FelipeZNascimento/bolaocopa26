@@ -7,7 +7,9 @@
         flexDirection: isHomeTeam ? 'row' : 'row-reverse',
       }"
     >
-      <div class="overlay">&nbsp;</div>
+      <div class="overlay">
+&nbsp;
+      </div>
       <div
         class="team-shield--line"
         :class="{
@@ -19,7 +21,7 @@
           :class="isScoreless ? 'team-shield-image-small' : 'team-shield-image'"
           :src="`https://assets.omegafox.me/copa/countries_flags/${team.isoCode.toLowerCase()}.png`"
           :alt="`${team.name} Shield`"
-        />
+        >
       </div>
       <div
         v-if="!isNameless"
@@ -45,6 +47,8 @@
       :style="{ alignItems: isHomeTeam ? 'flex-start' : 'flex-end' }"
     >
       <p
+        v-for="event in events"
+        :key="event.id"
         style="
           display: flex;
           align-items: center;
@@ -56,18 +60,27 @@
           flexDirection: isHomeTeam ? 'row' : 'row-reverse',
           visibility: event.player.team.id === team.id ? 'visible' : 'hidden',
         }"
-        v-for="event in events"
-        :key="event.id"
       >
-        <img style="height: 20px" :src="getEventIconUrl(event.event.id, isHomeTeam)" :alt="event.event.description" />
+        <img
+          style="height: 20px"
+          :src="getEventIconUrl(event.event.id, isHomeTeam)"
+          :alt="event.event.description"
+        >
         <span>{{ event.event.gametime }}</span>
-        <HoverablePlayerName v-if="event.player" :player="event.player" />
+        <HoverablePlayerName
+          v-if="event.player"
+          :player="event.player"
+        />
       </p>
     </div>
   </div>
 
   <!-- Team Details Modal -->
-  <TeamDetailsModal :isOpen="isTeamModalOpen" :team="selectedTeam" :handleCloseModal="closeTeamModal" />
+  <TeamDetailsModal
+    :is-open="isTeamModalOpen"
+    :team="selectedTeam"
+    :handle-close-modal="closeTeamModal"
+  />
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
@@ -91,7 +104,7 @@ withDefaults(
     isScoreModalOpen?: boolean;
     isWinning?: boolean;
     matchStatus: TMatchStatus;
-    score?: IScore;
+    score?: IScore | null;
     team: ITeam;
   }>(),
   {
@@ -102,6 +115,7 @@ withDefaults(
     isScoreless: false,
     isScoreModalOpen: false,
     isWinning: false,
+    score: null
   },
 );
 

@@ -1,5 +1,9 @@
 <template>
-  <span class="player-name-hover" @mouseenter="(e) => showPlayerSticker(e, player)" @mouseleave="hidePlayerSticker">
+  <span
+    class="player-name-hover"
+    @mouseenter="(e) => showPlayerSticker(e, player)"
+    @mouseleave="hidePlayerSticker"
+  >
     {{ player.name }}
   </span>
   <!-- Panini Sticker Popover -->

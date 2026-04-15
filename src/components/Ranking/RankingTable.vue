@@ -1,6 +1,16 @@
 <template>
-  <PrimeDataTable :value="filteredRankingData" :size="rowSpacingConfig" :loading="isLoading" stripedRows rowHover>
-    <PrimeColumn field="score.position" header="Posição" sortable>
+  <PrimeDataTable
+    :value="filteredRankingData"
+    :size="rowSpacingConfig"
+    :loading="isLoading"
+    striped-rows
+    row-hover
+  >
+    <PrimeColumn
+      field="score.position"
+      header="Posição"
+      sortable
+    >
       <template #body="slotProps">
         <div
           class="row"
@@ -14,68 +24,140 @@
               v-if="!isActiveProfile(slotProps.data.user.id)"
               class="badge"
               :class="slotProps.data.user.isOnline ? 'badgeOnline' : 'badgeOffline'"
-            ></div>
+            />
             <div class="position-number">
               {{
                 slotProps.data.score.position < 10 ? `0${slotProps.data.score.position}` : slotProps.data.score.position
               }}
             </div>
             <div
+              v-tooltip.top="
+                `Variação no ranking geral: ${getPositionVariation(slotProps.data) > 0 ? '+' : ''}${getPositionVariation(slotProps.data)}`
+              "
               class="position-variation"
               :class="{
                 'variation-up': getPositionVariation(slotProps.data) > 0,
                 'variation-down': getPositionVariation(slotProps.data) < 0,
                 'variation-same': getPositionVariation(slotProps.data) === 0,
               }"
-              v-tooltip.top="
-                `Variação no ranking geral: ${getPositionVariation(slotProps.data) > 0 ? '+' : ''}${getPositionVariation(slotProps.data)}`
-              "
             >
-              <i v-if="getPositionVariation(slotProps.data) > 0" class="pi pi-arrow-up"></i>
-              <i v-else-if="getPositionVariation(slotProps.data) < 0" class="pi pi-arrow-down"></i>
-              <i v-else class="pi pi-minus"></i>
+              <i
+                v-if="getPositionVariation(slotProps.data) > 0"
+                class="pi pi-arrow-up"
+              />
+              <i
+                v-else-if="getPositionVariation(slotProps.data) < 0"
+                class="pi pi-arrow-down"
+              />
+              <i
+                v-else
+                class="pi pi-minus"
+              />
               <span class="variation-value">
                 {{ Math.abs(getPositionVariation(slotProps.data)) }}
               </span>
             </div>
             <div class="name-container">
-              <NameTag :isShort="columnConfig === 'complete'" :user="slotProps.data.user" :isClickable="true" />
+              <NameTag
+                :is-short="columnConfig === 'complete'"
+                :user="slotProps.data.user"
+                :is-clickable="true"
+              />
             </div>
           </div>
         </div>
       </template>
     </PrimeColumn>
-    <PrimeColumn field="score.points" header="Pontos" style="text-align: center" sortable></PrimeColumn>
-    <PrimeColumn field="score.exacts" sortable style="text-align: center">
+    <PrimeColumn
+      field="score.points"
+      header="Pontos"
+      style="text-align: center"
+      sortable
+    />
+    <PrimeColumn
+      field="score.exacts"
+      sortable
+      style="text-align: center"
+    >
       <template #header>
-        <i v-tooltip.top="'Na mosca'" class="pi pi-bullseye"></i>
+        <i
+          v-tooltip.top="'Na mosca'"
+          class="pi pi-bullseye"
+        />
       </template>
     </PrimeColumn>
-    <PrimeColumn v-if="columnConfig === 'complete'" field="score.oneScores" style="text-align: center" sortable>
+    <PrimeColumn
+      v-if="columnConfig === 'complete'"
+      field="score.oneScores"
+      style="text-align: center"
+      sortable
+    >
       <template #header>
-        <i v-tooltip.top="'Acerto Parcial'" class="pi pi-star-half-fill"></i>
+        <i
+          v-tooltip.top="'Acerto Parcial'"
+          class="pi pi-star-half-fill"
+        />
       </template>
     </PrimeColumn>
-    <PrimeColumn v-if="columnConfig === 'complete'" field="score.winnersOnly" style="text-align: center" sortable>
+    <PrimeColumn
+      v-if="columnConfig === 'complete'"
+      field="score.winnersOnly"
+      style="text-align: center"
+      sortable
+    >
       <template #header>
-        <i v-tooltip.top="'Vencedor Correto'" class="pi pi-star-half"></i>
+        <i
+          v-tooltip.top="'Vencedor Correto'"
+          class="pi pi-star-half"
+        />
       </template>
     </PrimeColumn>
-    <PrimeColumn v-if="columnConfig === 'complete'" field="score.misses" style="text-align: center" sortable>
+    <PrimeColumn
+      v-if="columnConfig === 'complete'"
+      field="score.misses"
+      style="text-align: center"
+      sortable
+    >
       <template #header>
-        <i v-tooltip.top="'Erros'" class="pi pi-times"></i>
+        <i
+          v-tooltip.top="'Erros'"
+          class="pi pi-times"
+        />
       </template>
     </PrimeColumn>
-    <PrimeColumn v-if="columnConfig === 'complete'" field="score.percentage" style="text-align: center" sortable>
+    <PrimeColumn
+      v-if="columnConfig === 'complete'"
+      field="score.percentage"
+      style="text-align: center"
+      sortable
+    >
       <template #header>
-        <i v-tooltip.top="'Aproveitamento'" class="pi pi-percentage"></i>
+        <i
+          v-tooltip.top="'Aproveitamento'"
+          class="pi pi-percentage"
+        />
       </template>
     </PrimeColumn>
-    <PrimeColumn v-if="columnConfig === 'complete'" field="score.extras.points" style="text-align: center" sortable>
-      <template #header> <i v-tooltip.top="'Extras'" class="pi pi-plus"></i> </template>
+    <PrimeColumn
+      v-if="columnConfig === 'complete'"
+      field="score.extras.points"
+      style="text-align: center"
+      sortable
+    >
+      <template #header>
+        <i
+          v-tooltip.top="'Extras'"
+          class="pi pi-plus"
+        />
+      </template>
     </PrimeColumn>
   </PrimeDataTable>
-  <PrimeMessage v-if="error" class="error-message" severity="error" variant="outlined">
+  <PrimeMessage
+    v-if="error"
+    class="error-message"
+    severity="error"
+    variant="outlined"
+  >
     Ops, houve um problema de comunicação com o servidor para buscar o ranking.
     <p>
       Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir, entre em contato com os
@@ -84,10 +166,10 @@
     <p>{{ error }}</p>
   </PrimeMessage>
   <UserTrackingModal
-    :isOpen="isUserTrackingModalOpen"
-    :isUserActive="activeProfile?.id === selectedUser?.id"
-    :selectedUser="selectedUser"
-    :handleCloseModal="() => ((isUserTrackingModalOpen = false), (selectedUser = null))"
+    :is-open="isUserTrackingModalOpen"
+    :is-user-active="activeProfile?.id === selectedUser?.id"
+    :selected-user="selectedUser"
+    :handle-close-modal="() => ((isUserTrackingModalOpen = false), (selectedUser = null))"
   />
 </template>
 <script setup lang="ts">

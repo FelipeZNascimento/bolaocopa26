@@ -7,9 +7,9 @@
       class="betting-radio-button-container"
     >
       <PrimeRadioButton
+        v-model="radioButton"
         :disabled="isLoading || isMatchStarted"
         :value="BET_VALUE"
-        v-model="radioButton"
         class="betting-radio-button"
         size="large"
         @change="(e: any) => handleNewBet(e, BET_VALUE)"

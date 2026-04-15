@@ -1,8 +1,8 @@
 <template>
   <PrimeDialog
-    dismissableMask
-    modal
     v-model:visible="isVisible"
+    dismissable-mask
+    modal
     :draggable="false"
     position="top"
     :style="{ width: '400px' }"
@@ -12,36 +12,90 @@
       <h2>{{ formMode === 'signup' ? 'Cadastro' : 'Login' }}</h2>
     </template>
     <Form
-      noValidate
-      :initialValues
-      :resolver="resolverDecider()"
       v-slot="$form"
+      no-validate
+      :initial-values
+      :resolver="resolverDecider()"
       @submit="(formData) => onFormSubmit(formData)"
     >
-      <PrimeFloatLabel variant="in" class="input">
-        <PrimeInputText name="email" type="email" fluid autofocus />
-        <PrimeMessage v-if="$form.email?.invalid" severity="error" size="small" variant="simple">
+      <PrimeFloatLabel
+        variant="in"
+        class="input"
+      >
+        <PrimeInputText
+          name="email"
+          type="email"
+          fluid
+          autofocus
+        />
+        <PrimeMessage
+          v-if="$form.email?.invalid"
+          severity="error"
+          size="small"
+          variant="simple"
+        >
           {{ $form.email.error?.message }}
         </PrimeMessage>
         <label for="email">Email</label>
       </PrimeFloatLabel>
-      <PrimeFloatLabel v-if="formMode !== 'forgotPassword'" variant="in" class="input">
-        <PrimePassword name="password" type="password" :feedback="false" toggleMask fluid />
-        <PrimeMessage v-if="$form.password?.invalid" severity="error" size="small" variant="simple">
+      <PrimeFloatLabel
+        v-if="formMode !== 'forgotPassword'"
+        variant="in"
+        class="input"
+      >
+        <PrimePassword
+          name="password"
+          type="password"
+          :feedback="false"
+          toggle-mask
+          fluid
+        />
+        <PrimeMessage
+          v-if="$form.password?.invalid"
+          severity="error"
+          size="small"
+          variant="simple"
+        >
           {{ $form.password.error?.message }}
         </PrimeMessage>
         <label for="password">Senha</label>
       </PrimeFloatLabel>
-      <PrimeFloatLabel v-if="formMode === 'signup'" variant="in" class="input">
-        <PrimeInputText name="name" type="text" fluid />
-        <PrimeMessage v-if="$form.name?.invalid" severity="error" size="small" variant="simple">
+      <PrimeFloatLabel
+        v-if="formMode === 'signup'"
+        variant="in"
+        class="input"
+      >
+        <PrimeInputText
+          name="name"
+          type="text"
+          fluid
+        />
+        <PrimeMessage
+          v-if="$form.name?.invalid"
+          severity="error"
+          size="small"
+          variant="simple"
+        >
           {{ $form.name.error?.message }}
         </PrimeMessage>
         <label for="name">Nome Completo</label>
       </PrimeFloatLabel>
-      <PrimeFloatLabel v-if="formMode === 'signup'" variant="in" class="input">
-        <PrimeInputText name="nickname" type="text" fluid />
-        <PrimeMessage v-if="$form.nickname?.invalid" severity="error" size="small" variant="simple">
+      <PrimeFloatLabel
+        v-if="formMode === 'signup'"
+        variant="in"
+        class="input"
+      >
+        <PrimeInputText
+          name="nickname"
+          type="text"
+          fluid
+        />
+        <PrimeMessage
+          v-if="$form.nickname?.invalid"
+          severity="error"
+          size="small"
+          variant="simple"
+        >
           {{ $form.nickname.error?.message }}
         </PrimeMessage>
         <label for="nickname">Apelido</label>
@@ -67,32 +121,39 @@
           :loading="isLoading"
         />
       </div>
-      <p style="text-align: center; padding-top: var(--l-spacing)" v-show="loginError">
-        <PrimeTag severity="contrast" icon="pi pi-exclamation-triangle" :value="loginError?.message" />
+      <p
+        v-show="loginError"
+        style="text-align: center; padding-top: var(--l-spacing)"
+      >
+        <PrimeTag
+          severity="contrast"
+          icon="pi pi-exclamation-triangle"
+          :value="loginError?.message"
+        />
       </p>
     </Form>
     <template #footer>
       <PrimeButton
         v-if="formMode !== 'login'"
         rounded
-        @click="setFormMode('login')"
         class="signup-button"
         type="submit"
         label="Voltar para o login"
         variant="link"
         severity="secondary"
         :disabled="isLoading"
+        @click="setFormMode('login')"
       />
       <PrimeButton
         v-else
         rounded
-        @click="setFormMode('signup')"
         class="signup-button"
         type="submit"
         label="Faça aqui o seu cadastro"
         variant="link"
         severity="secondary"
         :disabled="isLoading"
+        @click="setFormMode('signup')"
       />
     </template>
   </PrimeDialog>

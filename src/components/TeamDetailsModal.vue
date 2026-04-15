@@ -2,26 +2,35 @@
   <PrimeDialog
     v-if="team"
     v-model:visible="isVisible"
-    dismissableMask
+    dismissable-mask
     modal
     :draggable="false"
     :style="{ width: '900px' }"
     :breakpoints="{ '1280px': '75vw', '575px': '90vw' }"
   >
     <template #header>
-      <div class="header-container" :style="{ '--team-color-1': team.colors[0], '--team-color-2': team.colors[1] }">
-        <div class="header-background"></div>
+      <div
+        class="header-container"
+        :style="{ '--team-color-1': team.colors[0], '--team-color-2': team.colors[1] }"
+      >
+        <div class="header-background" />
         <div class="header-content-wrapper">
           <div class="header-left">
             <img
               :src="`https://assets.omegafox.me/copa/countries_crests/${team.abbreviationEn.toLowerCase()}.png`"
               :alt="`${team.name} Crest`"
               class="team-crest"
-            />
+            >
             <div class="team-info">
-              <h2 class="team-name">{{ team.name }}</h2>
-              <p class="team-name-en">{{ team.nameEn }}</p>
-              <p class="team-name-en">{{ team.confederation.abbreviation }}</p>
+              <h2 class="team-name">
+                {{ team.name }}
+              </h2>
+              <p class="team-name-en">
+                {{ team.nameEn }}
+              </p>
+              <p class="team-name-en">
+                {{ team.confederation.abbreviation }}
+              </p>
             </div>
           </div>
           <div class="header-right">
@@ -29,20 +38,38 @@
               :src="`https://assets.omegafox.me/copa/countries_flags/${team.isoCode.toLowerCase()}.png`"
               :alt="`${team.name} Flag`"
               class="team-flag"
-            />
+            >
           </div>
         </div>
       </div>
     </template>
 
     <div class="players-container">
-      <p>Técnico: <HoverablePlayerName v-if="coach" :player="coach" /></p>
-      <h3 class="players-title">Jogadores ({{ sortedPlayers.length }})</h3>
+      <p>
+        Técnico: <HoverablePlayerName
+          v-if="coach"
+          :player="coach"
+        />
+      </p>
+      <h3 class="players-title">
+        Jogadores ({{ sortedPlayers.length }})
+      </h3>
       <div class="players-grid">
-        <div v-for="player in sortedPlayers" :key="player.id" class="player-card">
-          <div class="player-number">{{ player.number }}</div>
+        <div
+          v-for="player in sortedPlayers"
+          :key="player.id"
+          class="player-card"
+        >
+          <div class="player-number">
+            {{ player.number }}
+          </div>
           <div class="player-info">
-            <div class="player-name"><HoverablePlayerName v-if="player" :player="player" /></div>
+            <div class="player-name">
+              <HoverablePlayerName
+                v-if="player"
+                :player="player"
+              />
+            </div>
             <div class="player-details">
               <span class="player-position">{{ player.position.abbreviation }}</span>
               <span class="player-club">{{ player.club.name }}</span>

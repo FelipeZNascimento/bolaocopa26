@@ -1,6 +1,9 @@
 <template>
   <div class="left-aligned outer-clock">
-    <RibbonComponent v-if="activeProfile && hitLevel" :hitLevel="hitLevel" />
+    <RibbonComponent
+      v-if="activeProfile && hitLevel"
+      :hit-level="hitLevel"
+    />
     <span v-if="isClockStopped">{{ MATCH_STATUS_LABELS[status] }}</span>
     <!-- <span v-if="isMatchStarted && !isClockStopped">{{ clock }} {{ MATCH_STATUS_LABELS[status] }}</span> -->
     <span

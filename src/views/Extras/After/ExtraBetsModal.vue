@@ -2,19 +2,22 @@
   <PrimeDialog
     v-if="team || player"
     v-model:visible="isVisible"
-    dismissableMask
+    dismissable-mask
     modal
     :draggable="false"
     :style="{ width: '1024px' }"
     :breakpoints="{ '1280px': '75vw', '575px': '90vw' }"
-    contentClass="content-class"
+    content-class="content-class"
   >
     <template #header>
-      <div v-if="team" class="teams-outer">
+      <div
+        v-if="team"
+        class="teams-outer"
+      >
         <img
           :src="`https://assets.omegafox.me/copa/countries_flags/${team.team.isoCode.toLowerCase()}.png`"
           :alt="`${team.team.name} Shield`"
-        />
+        >
         <p>{{ player ? player.name : team.team.name }}</p>
       </div>
     </template>
@@ -24,7 +27,10 @@
         :key="bet.id"
         class="bet-item"
       >
-        <NameTag :isClickable="true" :user="bet.user" />
+        <NameTag
+          :is-clickable="true"
+          :user="bet.user"
+        />
       </div>
     </div>
   </PrimeDialog>

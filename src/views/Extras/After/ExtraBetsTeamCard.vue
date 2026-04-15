@@ -1,7 +1,14 @@
 <template>
   <!-- Render of extra bets -->
-  <div v-if="extraBets && extraBets.length > 0" style="display: flex; gap: 20px; flex-wrap: wrap">
-    <div class="bets-card" v-for="extraBet in extraBets" :key="extraBet.id">
+  <div
+    v-if="extraBets && extraBets.length > 0"
+    style="display: flex; gap: 20px; flex-wrap: wrap"
+  >
+    <div
+      v-for="extraBet in extraBets"
+      :key="extraBet.id"
+      class="bets-card"
+    >
       <div class="top-text">
         {{ EXTRA_BETS_LABELS[extraBet.extraType] }}
       </div>
@@ -9,22 +16,35 @@
         <img
           :src="`https://assets.omegafox.me/copa/countries_flags/${extraBet.team.isoCode.toLowerCase()}.png`"
           :alt="`${extraBet.team.name} Shield`"
-        />
+        >
       </div>
       <div class="bottom-text">
-        <HoverablePlayerName v-if="extraBet.player" :player="extraBet.player" />
-        <ClickableTeamName v-else :team="extraBet.team" />
+        <HoverablePlayerName
+          v-if="extraBet.player"
+          :player="extraBet.player"
+        />
+        <ClickableTeamName
+          v-else
+          :team="extraBet.team"
+        />
       </div>
     </div>
   </div>
   <!-- Render of results for extra bets -->
-  <div v-else-if="results && results.length > 0" style="display: flex; gap: 20px; flex-wrap: wrap">
+  <div
+    v-else-if="results && results.length > 0"
+    style="display: flex; gap: 20px; flex-wrap: wrap"
+  >
     <div
-      style="display: flex; flex-direction: column; gap: var(--m-spacing)"
       v-for="(extraBetType, index) in results"
       :key="index"
+      style="display: flex; flex-direction: column; gap: var(--m-spacing)"
     >
-      <div class="bets-card" v-for="value in extraBetType.results" :key="value.extraType">
+      <div
+        v-for="value in extraBetType.results"
+        :key="value.extraType"
+        class="bets-card"
+      >
         <div class="top-text">
           {{ EXTRA_BETS_LABELS[value.extraType] }}
         </div>
@@ -32,11 +52,17 @@
           <img
             :src="`https://assets.omegafox.me/copa/countries_flags/${value.team.isoCode.toLowerCase()}.png`"
             :alt="`${value.team.name} Shield`"
-          />
+          >
         </div>
         <div class="bottom-text">
-          <HoverablePlayerName v-if="value.player" :player="value.player" />
-          <ClickableTeamName v-else :team="value.team" />
+          <HoverablePlayerName
+            v-if="value.player"
+            :player="value.player"
+          />
+          <ClickableTeamName
+            v-else
+            :team="value.team"
+          />
         </div>
       </div>
     </div>

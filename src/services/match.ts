@@ -72,20 +72,23 @@ export default class MatchService {
   }
 
   private onWebsocketUpdate(this: WebSocket, ev: MessageEvent<any>) {
-    const configurationStore = useConfigurationStore();
-    const selectedRound = configurationStore.selectedRound;
+    // const configurationStore = useConfigurationStore();
+    // const selectedRound = configurationStore.selectedRound;
 
-    const { _matches, ranking, week } = JSON.parse(ev.data) as {
-      _matches: IMatch[];
+    // const { _matches, ranking, week } = JSON.parse(ev.data) as {
+    //   _matches: IMatch[];
+    //   ranking: { seasonRanking: IRankingLine[]; weeklyRanking: IRoundRanking[] };
+    //   week: number;
+    // };
+    const { ranking } = JSON.parse(ev.data) as {
       ranking: { seasonRanking: IRankingLine[]; weeklyRanking: IRoundRanking[] };
-      week: number;
     };
 
     // Update matches if the update is for the current week being viewed
-    if (selectedRound === week) {
-      const _matchesStore = useMatchesStore();
-      // _matchesStore.updateMatches(_matches);
-    }
+    // if (selectedRound === week) {
+    //   const _matchesStore = useMatchesStore();
+    //   _matchesStore.updateMatches(_matches);
+    // }
 
     const rankingStore = useRankingStore();
     rankingStore.setSeason(ranking.seasonRanking);

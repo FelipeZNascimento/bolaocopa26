@@ -10,8 +10,15 @@
       'grey-bg': hitLevel === null,
     }"
   >
-    <div v-if="hitLevel === null" v-tooltip.top="'Sem aposta'" style="width: 100%; text-align: center">
-      <i v-show="hitLevel === null" class="pi pi-circle"></i>
+    <div
+      v-if="hitLevel === null"
+      v-tooltip.top="'Sem aposta'"
+      style="width: 100%; text-align: center"
+    >
+      <i
+        v-show="hitLevel === null"
+        class="pi pi-circle"
+      />
     </div>
     <!-- <div v-else v-tooltip.top="HIT_LEVELS_LABELS[hitLevel]" style="width: 100%; text-align: center">
       {{ HIT_LEVELS_POINTS[hitLevel] }}
@@ -21,23 +28,27 @@
         v-show="hitLevel === HIT_LEVELS.exactScore"
         v-tooltip.top="HIT_LEVELS_LABELS[hitLevel]"
         class="pi pi-trophy"
-      ></i>
+      />
       <i
-        v-tooltip.top="HIT_LEVELS_LABELS[hitLevel]"
         v-show="hitLevel === HIT_LEVELS.oneScore"
+        v-tooltip.top="HIT_LEVELS_LABELS[hitLevel]"
         class="pi pi-verified"
-      ></i>
+      />
       <i
         v-show="hitLevel === HIT_LEVELS.winnerOnly"
         v-tooltip.top="HIT_LEVELS_LABELS[hitLevel]"
         class="pi pi-check-circle"
-      ></i>
+      />
       <i
         v-show="hitLevel === HIT_LEVELS.miss"
         v-tooltip.top="HIT_LEVELS_LABELS[hitLevel]"
         class="pi pi-times-circle"
-      ></i>
-      <i v-show="hitLevel === null" v-tooltip.top="HIT_LEVELS_LABELS[hitLevel]" class="pi pi-circle"></i>
+      />
+      <i
+        v-show="hitLevel === null"
+        v-tooltip.top="HIT_LEVELS_LABELS[hitLevel]"
+        class="pi pi-circle"
+      />
     </div>
   </div>
 </template>
