@@ -7,9 +7,7 @@
         flexDirection: isHomeTeam ? 'row' : 'row-reverse',
       }"
     >
-      <div class="overlay">
-&nbsp;
-      </div>
+      <div class="overlay">&nbsp;</div>
       <div
         class="team-shield--line"
         :class="{
@@ -18,21 +16,21 @@
         }"
       >
         <img
-          :class="isScoreless ? 'team-shield-image-small' : 'team-shield-image'"
+          class="team-shield-image"
           :src="`https://assets.omegafox.me/copa/countries_flags/${team.isoCode.toLowerCase()}.png`"
           :alt="`${team.name} Shield`"
-        >
+        />
       </div>
       <div
         v-if="!isNameless"
         class="team-alias"
-        :class="{ clickable: isBetting }"
-        @click="isBetting && openTeamModal(team)"
+        :class="{ clickable: isClickable }"
+        @click="isClickable && openTeamModal(team)"
+        :style="{ textAlign: isHomeTeam ? 'right' : 'left' }"
       >
         {{ isAlias ? team.abbreviation : team.name }}
       </div>
       <div
-        v-if="!isScoreless"
         class="team-score"
         :style="{
           fontWeight: isWinning ? 'bold' : 'normal',
@@ -42,36 +40,52 @@
       </div>
     </div>
     <div
-      v-if="isScoreModalOpen"
+      v-if="showEvents"
       class="events-container"
       :style="{ alignItems: isHomeTeam ? 'flex-start' : 'flex-end' }"
     >
-      <p
+      <div
         v-for="event in events"
         :key="event.id"
         style="
           display: flex;
           align-items: center;
-          gap: var(--s-spacing);
+          min-height: 40px;
           padding: var(--xxs-spacing) 0;
-          min-height: 20px;
+          border-bottom: 1px dotted var(--bolao-c-grey3-t1);
+          width: 100%;
         "
         :style="{
           flexDirection: isHomeTeam ? 'row' : 'row-reverse',
           visibility: event.player.team.id === team.id ? 'visible' : 'hidden',
         }"
       >
-        <img
-          style="height: 20px"
-          :src="getEventIconUrl(event.event.id, isHomeTeam)"
-          :alt="event.event.description"
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            line-height: 1;
+            justify-content: center;
+            align-items: center;
+            width: 60px;
+            min-width: 60px;
+            font-size: var(--xs-font-size);
+          "
         >
-        <span>{{ event.event.gametime }}</span>
+          <img
+            style="height: 20px; width: 20px"
+            :src="getEventIconUrl(event.event.id, isHomeTeam)"
+            :alt="event.event.description"
+          />
+          <span>{{ event.event.gametime }}</span>
+        </div>
         <HoverablePlayerName
           v-if="event.player"
           :player="event.player"
+          :text-align="isHomeTeam ? 'right' : 'left'"
         />
-      </p>
+      </div>
     </div>
   </div>
 
@@ -83,39 +97,37 @@
   />
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref } from "vue";
 
-import type { IMatchEvent, IScore } from '@/stores/matches.types';
-import type { ITeam } from '@/stores/teams.types';
+import type { IMatchEvent, IScore } from "@/stores/matches.types";
+import type { ITeam } from "@/stores/teams.types";
 
-import TeamDetailsModal from '@/components/TeamDetailsModal.vue';
-import { MATCH_EVENT, type TMatchStatus } from '@/constants/match';
+import TeamDetailsModal from "@/components/TeamDetailsModal.vue";
+import { MATCH_EVENT, type TMatchStatus } from "@/constants/match";
 
-import HoverablePlayerName from '../HoverablePlayerName.vue';
+import HoverablePlayerName from "../HoverablePlayerName.vue";
 
 withDefaults(
   defineProps<{
     events: IMatchEvent[];
     isAlias?: boolean;
-    isBetting?: boolean;
+    isClickable?: boolean;
     isHomeTeam?: boolean;
     isNameless?: boolean;
-    isScoreless?: boolean;
-    isScoreModalOpen?: boolean;
     isWinning?: boolean;
     matchStatus: TMatchStatus;
     score?: IScore | null;
+    showEvents?: boolean;
     team: ITeam;
   }>(),
   {
     isAlias: false,
-    isBetting: false,
+    isClickable: false,
     isHomeTeam: false,
     isNameless: false,
-    isScoreless: false,
-    isScoreModalOpen: false,
     isWinning: false,
     score: null,
+    showEvents: false,
   },
 );
 
@@ -133,18 +145,18 @@ function getEventIconUrl(eventType: number, isHome: boolean) {
   switch (eventType) {
     case MATCH_EVENT.GOAL: {
       return isHome
-        ? 'https://assets.omegafox.me/copa/icons/goal.png'
-        : 'https://assets.omegafox.me/copa/icons/goal_a.png';
+        ? "https://assets.omegafox.me/copa/icons/goal.png"
+        : "https://assets.omegafox.me/copa/icons/goal_a.png";
     }
     case MATCH_EVENT.OWN_GOAL: {
       return isHome
-        ? 'https://assets.omegafox.me/copa/icons/own_goal.png'
-        : 'https://assets.omegafox.me/copa/icons/own_goal_a.png';
+        ? "https://assets.omegafox.me/copa/icons/own_goal.png"
+        : "https://assets.omegafox.me/copa/icons/own_goal_a.png";
     }
     case MATCH_EVENT.PENALTY_GOAL: {
       return isHome
-        ? 'https://assets.omegafox.me/copa/icons/penalty_goal.png'
-        : 'https://assets.omegafox.me/copa/icons/penalty_goal_a.png';
+        ? "https://assets.omegafox.me/copa/icons/penalty_goal.png"
+        : "https://assets.omegafox.me/copa/icons/penalty_goal_a.png";
     }
   }
 }
@@ -156,17 +168,16 @@ function openTeamModal(team: ITeam) {
 </script>
 <style lang="scss" scoped>
 .outer-team {
+  position: relative;
   display: flex;
   flex: 1;
   align-items: center;
   justify-content: flex-end;
   height: var(--match-list-height);
-  position: relative;
+  padding: 0 var(--xs-spacing);
+  overflow: hidden;
   color: var(--color-contrast);
   background-color: var(--bolao-c-white-t1);
-  padding: 0 var(--xs-spacing);
-  position: relative;
-  overflow: hidden;
   border-radius: var(--border-radius);
 }
 
@@ -175,7 +186,11 @@ function openTeamModal(team: ITeam) {
   bottom: 0;
   width: 100%;
   height: 22px;
-  background-color: color-mix(in srgb, var(--color-match-overlay) 40%, transparent);
+  background-color: color-mix(
+    in srgb,
+    var(--color-match-overlay) 40%,
+    transparent
+  );
 }
 
 .outer-team-nameless {
@@ -186,9 +201,9 @@ function openTeamModal(team: ITeam) {
   &--line {
     position: absolute;
     top: 50%;
-    transform: translate(0, -50%);
-    height: 100%;
     max-width: 90px;
+    height: 100%;
+    transform: translate(0, -50%);
 
     @media (max-width: 1024px) {
       top: 0%;
@@ -200,20 +215,12 @@ function openTeamModal(team: ITeam) {
     left: 0;
     display: flex;
     justify-content: flex-end;
-
-    @media (max-width: 1024px) {
-      left: 5%;
-    }
   }
 
   &--right {
     right: 0;
     display: flex;
     justify-content: flex-start;
-
-    @media (max-width: 1024px) {
-      right: 5%;
-    }
   }
 }
 
@@ -221,63 +228,67 @@ function openTeamModal(team: ITeam) {
   width: 100px;
   object-fit: cover;
 
-  @media (max-width: 1024px) {
-    height: 60px;
-    width: 60px;
+  @media (max-width: 768px) {
+    margin: 0 var(--s-spacing);
+    width: 36px;
+    object-fit: contain;
   }
-}
-
-.team-shield-image-small {
-  height: 60px;
-  width: 60px;
-  object-fit: cover;
 }
 
 .team-alias {
   position: relative;
-  padding: var(--s-spacing);
+
   // font-weight: bold;
   z-index: 99;
+  padding: var(--s-spacing);
   font-size: var(--m-font-size);
   line-height: var(--xl-spacing);
-
-  @media (max-width: 1024px) {
-    font-size: var(--s-font-size);
-  }
 
   @media (max-width: 1444px) {
     font-size: var(--m-font-size);
   }
-}
 
-.team-odds {
-  width: 55px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--s-font-size);
-  background-color: #0003;
-  padding: 0 var(--s-spacing);
+  @media (max-width: 1024px) {
+    font-size: var(--m-font-size);
+  }
+
+  @media (max-width: 768px) {
+    font-size: var(--s-font-size);
+    max-width: 60%;
+    padding: var(--xs-spacing);
+  }
+
+  @media (max-width: 360px) {
+    font-size: var(--xs-font-size);
+    max-width: 60%;
+    padding: var(--xs-spacing);
+  }
 }
 
 .team-score {
-  min-width: 48px;
-  height: 80%;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--xl-font-size);
-  background-color: color-mix(in srgb, var(--color-main), transparent 50%);
-  color: var(--color-contrast);
+  min-width: 48px;
+  height: 80%;
   padding: 0 var(--m-spacing);
+  font-size: var(--xl-font-size);
+  color: var(--color-contrast);
+  background-color: color-mix(in srgb, var(--color-main), transparent 50%);
   border-radius: var(--border-radius);
-  position: relative;
+
+  @media (max-width: 768px) {
+    font-size: var(--m-font-size);
+    min-width: 28px;
+    padding: 0 var(--xs-spacing);
+  }
 }
+
 .events-container {
-  padding-top: var(--m-spacing);
   display: flex;
   flex-direction: column;
+  padding-top: var(--m-spacing);
 }
 
 :deep(.player-sticker-popover) {
@@ -285,13 +296,13 @@ function openTeamModal(team: ITeam) {
     padding: 0;
     background: transparent;
     border: none;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 40px rgb(0 0 0 / 50%);
   }
 }
 
 .clickable {
-  cursor: pointer;
   text-decoration: dotted underline;
   text-underline-offset: 2px;
+  cursor: pointer;
 }
 </style>

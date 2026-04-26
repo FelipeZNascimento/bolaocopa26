@@ -15,10 +15,7 @@
       v-tooltip.top="'Sem aposta'"
       style="width: 100%; text-align: center"
     >
-      <i
-        v-show="hitLevel === null"
-        class="pi pi-circle"
-      />
+      <i v-show="hitLevel === null" class="pi pi-circle" />
     </div>
     <!-- <div v-else v-tooltip.top="HIT_LEVELS_LABELS[hitLevel]" style="width: 100%; text-align: center">
       {{ HIT_LEVELS_POINTS[hitLevel] }}
@@ -53,10 +50,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed } from "vue";
 
-import { HIT_LEVELS, HIT_LEVELS_LABELS, type HitLevel } from '@/constants/bets';
-import { useActiveProfileStore } from '@/stores/activeProfile';
+import { HIT_LEVELS, HIT_LEVELS_LABELS, type HitLevel } from "@/constants/bets";
+import { useActiveProfileStore } from "@/stores/activeProfile";
 
 withDefaults(
   defineProps<{
@@ -90,8 +87,8 @@ const activeProfile = computed(() => {
   padding-top: var(--s-spacing);
   border: solid #0000;
   border-width: 0 calc(2 * var(--f)) var(--r) 0;
-  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0 / calc(2 * var(--f)) var(--f) no-repeat
-    border-box;
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100%
+    0 / calc(2 * var(--f)) var(--f) no-repeat border-box;
   background-color: #bf4d28;
   border-radius: var(--f) var(--f) 0 0;
   clip-path: polygon(
@@ -114,9 +111,7 @@ const activeProfile = computed(() => {
   }
 
   @media (max-width: 1023px) {
-    height: 30px;
-    right: 0px;
-    padding: 0 0.2em;
+    height: 40px;
 
     i {
       font-size: var(--xs-font-size);
@@ -127,19 +122,24 @@ const activeProfile = computed(() => {
 .gold-bg {
   --c: var(--bolao-c-gold-l2);
 
-  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0 / calc(2 * var(--f)) var(--f) no-repeat
-    border-box;
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100%
+    0 / calc(2 * var(--f)) var(--f) no-repeat border-box;
   background-color: var(--c);
   color: var(--bolao-c-gold-d2);
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(90deg, transparent 20%, rgba(255, 255, 255, 0.6) 50%, transparent 80%);
+    background: linear-gradient(
+      90deg,
+      transparent 20%,
+      rgba(255, 255, 255, 0.6) 50%,
+      transparent 80%
+    );
     animation: gold-shine 3s ease-in-out infinite;
     pointer-events: none;
     clip-path: inherit;
@@ -158,8 +158,8 @@ const activeProfile = computed(() => {
 .green-bg {
   --c: var(--bolao-c-green-l3);
 
-  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0 / calc(2 * var(--f)) var(--f) no-repeat
-    border-box;
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100%
+    0 / calc(2 * var(--f)) var(--f) no-repeat border-box;
   background-color: var(--c);
   color: var(--bolao-c-green-d1);
 }
@@ -167,16 +167,16 @@ const activeProfile = computed(() => {
 .orange-bg {
   --c: var(--bolao-c-orange);
 
-  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0 / calc(2 * var(--f)) var(--f) no-repeat
-    border-box;
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100%
+    0 / calc(2 * var(--f)) var(--f) no-repeat border-box;
   background-color: var(--c);
 }
 
 .blue-bg {
   --c: var(--bolao-c-blue-l2);
 
-  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0 / calc(2 * var(--f)) var(--f) no-repeat
-    border-box;
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100%
+    0 / calc(2 * var(--f)) var(--f) no-repeat border-box;
   background-color: var(--c);
   color: var(--bolao-c-blue-d2);
 }
@@ -184,8 +184,8 @@ const activeProfile = computed(() => {
 .white-bg {
   --c: var(--bolao-c-white);
 
-  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0 / calc(2 * var(--f)) var(--f) no-repeat
-    border-box;
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100%
+    0 / calc(2 * var(--f)) var(--f) no-repeat border-box;
   background-color: var(--c);
   color: var(--bolao-c-black);
 }
@@ -193,8 +193,8 @@ const activeProfile = computed(() => {
 .red-bg {
   --c: var(--bolao-c-red);
 
-  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0 / calc(2 * var(--f)) var(--f) no-repeat
-    border-box;
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100%
+    0 / calc(2 * var(--f)) var(--f) no-repeat border-box;
   background-color: var(--c);
   color: var(--bolao-c-red-l3);
 }
@@ -202,8 +202,8 @@ const activeProfile = computed(() => {
 .grey-bg {
   --c: var(--bolao-c-grey4);
 
-  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0 / calc(2 * var(--f)) var(--f) no-repeat
-    border-box;
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100%
+    0 / calc(2 * var(--f)) var(--f) no-repeat border-box;
   background-color: var(--c);
 }
 </style>

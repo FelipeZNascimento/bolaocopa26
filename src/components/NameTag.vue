@@ -24,19 +24,19 @@
   />
 </template>
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed, ref } from "vue";
 
-import type { IUser } from '@/stores/activeProfile.types';
+import type { IUser } from "@/stores/activeProfile.types";
 
-import UserTrackingModal from '@/components/UserTrackingModal.vue';
-import FavoritesService from '@/services/favorites';
-import { useActiveProfileStore } from '@/stores/activeProfile';
+import UserTrackingModal from "@/components/UserTrackingModal.vue";
+import FavoritesService from "@/services/favorites";
+import { useActiveProfileStore } from "@/stores/activeProfile";
 
 const props = withDefaults(
   defineProps<{
     isClickable?: boolean;
     isShort?: boolean;
-    user: Pick<IUser, 'id' | 'nickname'>;
+    user: Pick<IUser, "id" | "nickname">;
   }>(),
   {
     isClickable: false,
@@ -72,18 +72,22 @@ function isFavorite(): boolean {
 </script>
 <style lang="scss" scoped>
 .outer-short {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  width: 120px;
+  max-width: 100%;
+  min-width: 0;
+
+  .username {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
 .outer {
   position: relative;
   display: flex;
-  align-items: center;
   flex-direction: row;
-  padding: 0 var(--s-spacing);
+  align-items: center;
+  max-width: 100%;
 }
 
 .usericon {
@@ -95,23 +99,30 @@ function isFavorite(): boolean {
 }
 
 .favorite-badge {
-  // position: absolute;
-  // top: -4px;
-  // left: -2px;
+  z-index: 1;
+  padding-right: var(--xs-spacing);
   font-size: var(--xs-font-size);
   color: var(--bolao-c-gold);
-  padding-right: var(--xs-spacing);
-  z-index: 1;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+  cursor: pointer;
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 30%));
+}
+
+.username {
+  font-size: var(--s-font-size);
+
+  @media (width <= 768px) {
+    font-size: var(--xs-font-size);
+  }
 }
 
 .clickable {
   cursor: pointer;
   transition: 0.2s;
+  text-decoration: underline dotted;
 
   &:hover {
-    opacity: 0.8;
     text-decoration: underline;
+    opacity: 0.8;
   }
 }
 </style>

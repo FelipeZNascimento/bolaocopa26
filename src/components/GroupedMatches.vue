@@ -12,16 +12,14 @@
         <MatchComponent
           v-for="match in group.matches"
           :key="match.id"
-          :is-betting="isBetting"
+          :is-match-clickable="!isTeamClickable"
+          :is-team-clickable="isTeamClickable"
           :match="match"
         />
       </div>
     </div>
   </template>
-  <div
-    v-else
-    :class="`group-section round-${selectedRound}`"
-  >
+  <div v-else :class="`group-section round-${selectedRound}`">
     <h2 class="group-header">
       {{ roundLabel }}
     </h2>
@@ -29,27 +27,28 @@
       <MatchComponent
         v-for="match in matches"
         :key="match.id"
-        :is-betting="isBetting"
+        :is-match-clickable="!isTeamClickable"
+        :is-team-clickable="isTeamClickable"
         :match="match"
       />
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed } from "vue";
 
-import type { IMatch } from '@/stores/matches.types';
+import type { IMatch } from "@/stores/matches.types";
 
-import MatchComponent from '@/components/Match/MatchComponent.vue';
+import MatchComponent from "@/components/Match/MatchComponent.vue";
 
 const props = withDefaults(
   defineProps<{
-    isBetting?: boolean;
+    isTeamClickable?: boolean;
     matches: IMatch[];
     selectedRound: null | number;
   }>(),
   {
-    isBetting: false,
+    isTeamClickable: false,
   },
 );
 
@@ -61,18 +60,18 @@ const shouldGroupByGroup = computed(() => {
 const roundLabel = computed(() => {
   const round = props.selectedRound;
   if (round === null) {
-    return '';
+    return "";
   }
 
   const labels: Record<number, string> = {
-    1: 'Fase de Grupos - Rodada 1',
-    2: 'Fase de Grupos - Rodada 2',
-    3: 'Fase de Grupos - Rodada 3',
-    4: '16 Avos',
-    5: 'Oitavas',
-    6: 'Quartas',
-    7: 'Semi Finais',
-    8: 'Final',
+    1: "Fase de Grupos - Rodada 1",
+    2: "Fase de Grupos - Rodada 2",
+    3: "Fase de Grupos - Rodada 3",
+    4: "16 Avos",
+    5: "Oitavas",
+    6: "Quartas",
+    7: "Semi Finais",
+    8: "Final",
   };
   return labels[round] || `Rodada ${round}`;
 });
@@ -103,6 +102,10 @@ const groupedMatches = computed(() => {
   flex-direction: column;
   padding: var(--m-spacing);
   gap: var(--m-spacing);
+
+  @media (max-width: 768px) {
+    padding: var(--xs-spacing);
+  }
 }
 
 .group-section {
@@ -115,7 +118,7 @@ const groupedMatches = computed(() => {
 }
 
 .group-section::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -126,7 +129,7 @@ const groupedMatches = computed(() => {
 }
 
 .group-section:hover .group-header::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -200px;
@@ -196,12 +199,20 @@ const groupedMatches = computed(() => {
 
 .group-b {
   border-color: var(--bolao-c-fifa-red);
-  background: linear-gradient(90deg, color-mix(in srgb, var(--bolao-c-fifa-red) 15%, transparent) 0%, transparent 100%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-red) 15%, transparent) 0%,
+    transparent 100%
+  );
 }
 
 .group-b .group-header {
   border-left: 4px solid var(--bolao-c-fifa-red);
-  background: linear-gradient(90deg, color-mix(in srgb, var(--bolao-c-fifa-red) 15%, transparent) 0%, transparent 100%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-red) 15%, transparent) 0%,
+    transparent 100%
+  );
 }
 
 .group-c {
@@ -242,12 +253,20 @@ const groupedMatches = computed(() => {
 
 .group-e {
   border-color: var(--bolao-c-orange);
-  background: linear-gradient(90deg, color-mix(in srgb, var(--bolao-c-orange) 15%, transparent) 0%, transparent 100%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-orange) 15%, transparent) 0%,
+    transparent 100%
+  );
 }
 
 .group-e .group-header {
   border-left: 4px solid var(--bolao-c-orange);
-  background: linear-gradient(90deg, color-mix(in srgb, var(--bolao-c-orange) 15%, transparent) 0%, transparent 100%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-orange) 15%, transparent) 0%,
+    transparent 100%
+  );
 }
 
 .group-f {

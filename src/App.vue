@@ -1,30 +1,34 @@
 <template>
-  <NavbarTop />
+  <NavbarMobile v-if="isMobile" />
+  <NavbarTop v-else />
   <PrimeToast />
   <div class="outer-view">
     <RouterView />
   </div>
   <div
-    v-if="!activeProfile?.isActive"
+    v-if="!isLoading && activeProfile && !activeProfile.isActive"
     class="not-active"
   >
-    Clique <a href="">aqui</a> para saber como ativar seu perfil e participar do bolão!
+    Clique <a href="">aqui</a> para saber como ativar seu perfil e participar do
+    bolão!
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from 'vue';
-import { RouterView } from 'vue-router';
+import { computed, watch } from "vue";
+import { RouterView } from "vue-router";
 
-import NavbarTop from './components/NavbarTop/NavbarTop.vue';
-import ExtraBetService from './services/extra_bet';
-import MatchService from './services/match';
-import RankingService from './services/ranking';
-import StartupService from './services/startup';
-import { useActiveProfileStore } from './stores/activeProfile';
-import { useClockStore } from './stores/clock';
-import { useConfigurationStore } from './stores/configuration';
-import { useExtraBetStore } from './stores/extraBet';
+import NavbarMobile from "./components/NavbarTop/NavbarMobile.vue";
+import NavbarTop from "./components/NavbarTop/NavbarTop.vue";
+import ExtraBetService from "./services/extra_bet";
+import MatchService from "./services/match";
+import RankingService from "./services/ranking";
+import StartupService from "./services/startup";
+import { useViewport } from "./services/viewport";
+import { useActiveProfileStore } from "./stores/activeProfile";
+import { useClockStore } from "./stores/clock";
+import { useConfigurationStore } from "./stores/configuration";
+import { useExtraBetStore } from "./stores/extraBet";
 
 const startupService = new StartupService();
 const matchService = new MatchService();
@@ -34,10 +38,11 @@ const clockStore = useClockStore();
 const configurationStore = useConfigurationStore();
 const activeProfileStore = useActiveProfileStore();
 const extraBetStore = useExtraBetStore();
+const { isMobile } = useViewport();
 
 function initializationCallback(isSuccess: boolean) {
   if (isSuccess) {
-    console.log('Fetching initial matches and rankings...');
+    console.log("Fetching initial matches and rankings...");
     matchService.fetch();
   }
 }
@@ -51,6 +56,7 @@ startupService.initialize(initializationCallback).then(() => {
 // ------ Computed ------
 const selectedRound = computed(() => configurationStore.selectedRound);
 const activeProfile = computed(() => activeProfileStore.activeProfile);
+const isLoading = computed(() => activeProfileStore.isLoading);
 
 // ------ Watches ------
 // Fetches week's matches and week's ranking when selectedRound is changed
@@ -81,10 +87,14 @@ watch(activeProfile, async (newValue) => {
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .outer-view {
   width: 100%;
-  margin-top: 100px;
+  margin-top: var(--navbar-height);
+
+  @media (max-width: 1024px) {
+    margin-top: var(--navbar-height-mobile);
+  }
 }
 
 .not-active {

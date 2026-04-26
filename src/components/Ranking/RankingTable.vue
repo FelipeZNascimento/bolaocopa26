@@ -1,16 +1,54 @@
 <template>
+  <div class="ranking-header">
+    <div class="button-container">
+      <PrimeButtonGroup>
+        <PrimeButton
+          label="Geral"
+          class="toggle"
+          :class="{ activeToggle: !isRound }"
+          @click="isRound = false"
+          :size="isMobile ? 'small' : 'normal'"
+        />
+        <PrimeButton
+          :label="`Rodada ${selectedRound}`"
+          class="toggle"
+          :class="{ activeToggle: isRound }"
+          @click="isRound = true"
+          :size="isMobile ? 'small' : 'normal'"
+        />
+      </PrimeButtonGroup>
+      <PrimeButtonGroup>
+        <PrimeButton
+          label="Todos"
+          class="toggle"
+          icon="pi pi-list"
+          :class="{ activeToggle: !showFavoritesOnly }"
+          @click="showFavoritesOnly = false"
+          :size="isMobile ? 'small' : 'normal'"
+        />
+        <PrimeButton
+          label="Favoritos"
+          :icon="showFavoritesOnly ? 'pi pi-star-fill' : 'pi pi-star'"
+          class="toggle"
+          :class="{ activeToggle: showFavoritesOnly }"
+          @click="showFavoritesOnly = true"
+          :size="isMobile ? 'small' : 'normal'"
+        />
+      </PrimeButtonGroup>
+    </div>
+  </div>
+
   <PrimeDataTable
+    class="prime-data-table"
     :value="filteredRankingData"
-    :size="rowSpacingConfig"
+    :size="isDesktop ? rowSpacingConfig : 'small'"
     :loading="isLoading"
+    scrollable
+    scroll-height="flex"
     striped-rows
     row-hover
   >
-    <PrimeColumn
-      field="score.position"
-      header="Posição"
-      sortable
-    >
+    <PrimeColumn field="score.position" header="Posição" sortable>
       <template #body="slotProps">
         <div
           class="row"
@@ -23,11 +61,15 @@
             <div
               v-if="!isActiveProfile(slotProps.data.user.id)"
               class="badge"
-              :class="slotProps.data.user.isOnline ? 'badgeOnline' : 'badgeOffline'"
+              :class="
+                slotProps.data.user.isOnline ? 'badgeOnline' : 'badgeOffline'
+              "
             />
             <div class="position-number">
               {{
-                slotProps.data.score.position < 10 ? `0${slotProps.data.score.position}` : slotProps.data.score.position
+                slotProps.data.score.position < 10
+                  ? `0${slotProps.data.score.position}`
+                  : slotProps.data.score.position
               }}
             </div>
             <div
@@ -49,10 +91,7 @@
                 v-else-if="getPositionVariation(slotProps.data) < 0"
                 class="pi pi-arrow-down"
               />
-              <i
-                v-else
-                class="pi pi-minus"
-              />
+              <i v-else class="pi pi-minus" />
               <span class="variation-value">
                 {{ Math.abs(getPositionVariation(slotProps.data)) }}
               </span>
@@ -70,20 +109,16 @@
     </PrimeColumn>
     <PrimeColumn
       field="score.points"
-      header="Pontos"
+      :header="isDesktop ? 'Pontos' : 'Pts.'"
       style="text-align: center"
       sortable
     />
-    <PrimeColumn
-      field="score.exacts"
-      sortable
-      style="text-align: center"
-    >
+    <PrimeColumn field="score.exacts" sortable style="text-align: center">
       <template #header>
-        <i
-          v-tooltip.top="'Na mosca'"
-          class="pi pi-bullseye"
-        />
+        <div class="flexHeader">
+          <i class="pi pi-trophy" />
+          Acerto
+        </div>
       </template>
     </PrimeColumn>
     <PrimeColumn
@@ -93,10 +128,10 @@
       sortable
     >
       <template #header>
-        <i
-          v-tooltip.top="'Acerto Parcial'"
-          class="pi pi-star-half-fill"
-        />
+        <div class="flexHeader">
+          <i class="pi pi-verified" />
+          Parcial
+        </div>
       </template>
     </PrimeColumn>
     <PrimeColumn
@@ -106,23 +141,23 @@
       sortable
     >
       <template #header>
-        <i
-          v-tooltip.top="'Vencedor Correto'"
-          class="pi pi-star-half"
-        />
+        <div class="flexHeader">
+          <i class="pi pi-check-circle" />
+          Mínimo
+        </div>
       </template>
     </PrimeColumn>
     <PrimeColumn
-      v-if="columnConfig === 'complete'"
+      v-if="columnConfig === 'complete' && isDesktop"
       field="score.misses"
       style="text-align: center"
       sortable
     >
       <template #header>
-        <i
-          v-tooltip.top="'Erros'"
-          class="pi pi-times"
-        />
+        <div class="flexHeader">
+          <i class="pi pi-times" />
+          Erros
+        </div>
       </template>
     </PrimeColumn>
     <PrimeColumn
@@ -132,26 +167,45 @@
       sortable
     >
       <template #header>
-        <i
-          v-tooltip.top="'Aproveitamento'"
-          class="pi pi-percentage"
-        />
+        <div class="flexHeader">
+          <i class="pi pi-percentage" />
+          {{ isDesktop ? "Aproveitamento" : "Aprov." }}
+        </div>
       </template>
     </PrimeColumn>
     <PrimeColumn
-      v-if="columnConfig === 'complete'"
+      v-if="columnConfig === 'complete' && !isMobile"
       field="score.extras.points"
       style="text-align: center"
       sortable
     >
       <template #header>
-        <i
-          v-tooltip.top="'Extras'"
-          class="pi pi-plus"
-        />
+        <div class="flexHeader">
+          <i class="pi pi-plus" />
+          Extras
+        </div>
       </template>
     </PrimeColumn>
   </PrimeDataTable>
+  <div
+    v-if="!isLoading && showFavoritesOnly && filteredRankingData.length === 0"
+    class="centralized-content"
+  >
+    <p>Nenhum favorito adicionado.</p>
+    <p>
+      Para adicionar alguém aos seus favoritos, clique no usuário e ative a
+      estrela no topo das estatísticas.
+    </p>
+  </div>
+  <div
+    v-if="showFavoritesOnly && !isLoading && filteredRankingData.length > 0"
+    class="centralized-content"
+  >
+    <PrimeButton
+      label="Gerenciar favoritos"
+      @click="isFavoritesModalOpen = true"
+    />
+  </div>
   <PrimeMessage
     v-if="error"
     class="error-message"
@@ -160,97 +214,148 @@
   >
     Ops, houve um problema de comunicação com o servidor para buscar o ranking.
     <p>
-      Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir, entre em contato com os
-      administradores do Bolão.
+      Certifique-se de que sua conexão está estável e tente novamente. Se o erro
+      persistir, entre em contato com os administradores do Bolão.
     </p>
     <p>{{ error }}</p>
   </PrimeMessage>
+
+  <!-- Modals -->
+  <ManageFavoritesModal
+    :is-open="isFavoritesModalOpen"
+    :handle-close-modal="handleCloseFavoritesModal"
+  />
   <UserTrackingModal
     :is-open="isUserTrackingModalOpen"
     :is-user-active="activeProfile?.id === selectedUser?.id"
     :selected-user="selectedUser"
-    :handle-close-modal="() => ((isUserTrackingModalOpen = false), (selectedUser = null))"
+    :handle-close-modal="
+      () => ((isUserTrackingModalOpen = false), (selectedUser = null))
+    "
   />
 </template>
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
-import type { IUser } from '@/stores/activeProfile.types';
-import type { TColumnsValue, TRowSpacingValue } from '@/stores/configuration.types';
-import type { IRankingLine } from '@/stores/ranking.types';
+import type { IUser } from "@/stores/activeProfile.types";
+import type {
+  TColumnsValue,
+  TRowSpacingValue,
+} from "@/stores/configuration.types";
+import type { IRankingLine } from "@/stores/ranking.types";
 
-import NameTag from '@/components/NameTag.vue';
-import FavoritesService from '@/services/favorites';
+import NameTag from "@/components/NameTag.vue";
+import ManageFavoritesModal from "@/components/Ranking/ManageFavoritesModal.vue";
+import FavoritesService from "@/services/favorites";
+import { useViewport } from "@/services/viewport";
+import { useActiveProfileStore } from "@/stores/activeProfile";
+import { useConfigurationStore } from "@/stores/configuration";
+import { useRankingStore } from "@/stores/ranking";
 
-import UserTrackingModal from '../UserTrackingModal.vue';
+import UserTrackingModal from "../UserTrackingModal.vue";
 
-const props = defineProps<{
-  activeProfile: IUser | null;
+defineProps<{
   columnConfig: TColumnsValue;
-  error: Error | null;
-  isLoading: boolean;
-  isRound: boolean;
-  rankingData: IRankingLine[];
   rowSpacingConfig: TRowSpacingValue;
-  showFavoritesOnly: boolean;
-}>();
-
-const emit = defineEmits<{
-  'update:showFavoritesOnly': [value: boolean];
 }>();
 
 // ------ Refs ------
 const isUserTrackingModalOpen = ref<boolean>(false);
 const selectedUser = ref<IUser | null>(null);
 const favorites = ref<number[]>([]);
+const isRound = ref(false);
+const showFavoritesOnly = ref(false);
+const isFavoritesModalOpen = ref(false);
 
 // ------ Initialization ------
 const favoritesService = new FavoritesService();
+const configurationStore = useConfigurationStore();
+const rankingStore = useRankingStore();
+const activeProfileStore = useActiveProfileStore();
+const { isDesktop, isMobile } = useViewport();
 
 onMounted(() => {
   loadFavorites();
   // Listen for favorites-cleared event from ConfigModal
-  window.addEventListener('favorites-cleared', loadFavorites);
+  window.addEventListener("favorites-cleared", loadFavorites);
 });
 
 onBeforeUnmount(() => {
   // Clean up event listener
-  window.removeEventListener('favorites-cleared', loadFavorites);
+  window.removeEventListener("favorites-cleared", loadFavorites);
 });
 
 // ------ Computed Properties ------
+const activeProfile = computed(() => activeProfileStore.activeProfile);
+const isLoadingRounds = computed(
+  () => configurationStore.isLoading || rankingStore.isLoadingRounds,
+);
+const isLoadingSeason = computed(
+  () => configurationStore.isLoading || rankingStore.isLoadingSeason,
+);
+const isLoading = computed(() =>
+  isRound.value ? isLoadingRounds.value : isLoadingSeason.value,
+);
+const errorRounds = computed(() => rankingStore.errorRounds);
+const errorSeason = computed(() => rankingStore.errorSeason);
+const error = computed(() =>
+  isRound.value ? errorRounds.value : errorSeason.value,
+);
+const seasonRanking = computed(() => rankingStore.seasonRanking);
+const selectedRoundRanking = computed(
+  () =>
+    rankingStore.roundsRanking?.find(
+      (roundRanking) => roundRanking.round === selectedRound.value,
+    )?.ranking || [],
+);
+const selectedRanking = computed(() =>
+  isRound.value ? selectedRoundRanking.value : seasonRanking.value,
+);
+const selectedRound = computed(() => configurationStore.selectedRound);
+
 const filteredRankingData = computed(() => {
-  if (!props.showFavoritesOnly || favorites.value.length === 0) {
-    return props.rankingData;
+  if (!showFavoritesOnly.value) {
+    return selectedRanking.value;
   }
 
-  return props.rankingData.filter((rankingLine) => {
+  if (showFavoritesOnly.value && favorites.value.length === 0) {
+    return []; // If showFavoritesOnly is true but there are no favorites, return empty array
+  }
+
+  return selectedRanking.value.filter((rankingLine) => {
     const isFavorite = favorites.value.includes(rankingLine.user.id);
-    const isLoggedInUser = props.activeProfile && rankingLine.user.id === props.activeProfile.id;
+    const isLoggedInUser =
+      activeProfile.value && rankingLine.user.id === activeProfile.value.id;
     return isFavorite || isLoggedInUser;
   });
 });
 
 // ------ Functions ------
 function getPositionVariation(data: IRankingLine): number {
-  return props.isRound ? data.accumulatedScore.positionVariation : data.score.positionVariation;
+  return isRound.value
+    ? data.accumulatedScore.positionVariation
+    : data.score.positionVariation;
+}
+
+function handleCloseFavoritesModal() {
+  isFavoritesModalOpen.value = false;
 }
 
 function isActiveProfile(userId: number): boolean {
-  return props.activeProfile?.id === userId;
+  return activeProfile.value?.id === userId;
 }
 
 function loadFavorites() {
-  if (!props.activeProfile) {
+  if (!activeProfile.value) {
     favorites.value = [];
     return;
   }
-  favorites.value = favoritesService.getFavorites(props.activeProfile.id);
+  favorites.value = favoritesService.getFavorites(activeProfile.value.id);
 }
 
 // ------ Watches ------
 watch(
-  () => props.activeProfile,
+  () => activeProfile.value,
   (newProfile) => {
     if (newProfile) {
       loadFavorites();
@@ -263,23 +368,16 @@ watch(isUserTrackingModalOpen, (newValue) => {
     // Reload favorites when modal closes (in case it was updated)
     loadFavorites();
     // Notify other components that favorites may have changed
-    window.dispatchEvent(new Event('favorites-cleared'));
+    window.dispatchEvent(new Event("favorites-cleared"));
   }
 });
 
 watch(
-  () => props.showFavoritesOnly,
+  () => showFavoritesOnly.value,
   () => {
     loadFavorites();
   },
 );
-
-watch(favorites, (newFavorites) => {
-  // If favorites filter is on but there are no favorites, turn off the filter
-  if (props.showFavoritesOnly && newFavorites.length === 0) {
-    emit('update:showFavoritesOnly', false);
-  }
-});
 </script>
 <style lang="scss" scoped>
 :deep(tr) {
@@ -287,10 +385,54 @@ watch(favorites, (newFavorites) => {
     padding: 0 !important;
   }
 }
+
+:deep(.p-datatable-wrapper) {
+  overflow-y: auto;
+}
+
+.ranking-header {
+  display: flex;
+  flex: 0;
+  align-items: center;
+  justify-content: center;
+  padding: var(--l-spacing) 0;
+  font-size: var(--s-font-size);
+  color: var(--bolao-c-grey1-t2);
+}
+
+.button-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--m-spacing);
+  align-items: center;
+  justify-content: center;
+}
+
 .row {
   display: flex;
   flex-direction: row;
   padding: var(--xs-spacing) var(--s-spacing);
+
+  @media (max-width: 1024px) {
+    padding: var(--xxs-spacing) 0;
+    font-size: var(--xs-font-size);
+  }
+}
+
+.prime-data-table {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  // max-height: 500px;
+
+  @media (max-width: 1024px) {
+    max-height: 100vh;
+    width: 100vw;
+    overflow-x: auto;
+    font-size: 12px;
+  }
 }
 
 .top-10-row {
@@ -304,6 +446,7 @@ watch(favorites, (newFavorites) => {
 }
 
 .active-user-row {
+  font-weight: bold;
   background: linear-gradient(
     90deg,
     color-mix(in srgb, var(--bolao-c-green) 60%, transparent) 0%,
@@ -311,39 +454,38 @@ watch(favorites, (newFavorites) => {
     transparent 100%
   );
   box-shadow: inset 3px 0 0 var(--bolao-c-green);
-  font-weight: bold;
 }
 
 .outer-position {
+  position: relative;
   display: flex;
   gap: var(--xs-spacing);
   align-items: center;
-  position: relative;
   padding: var(--xs-spacing) 0;
-  padding-left: var(--s-spacing);
   padding-right: var(--s-spacing);
+  padding-left: var(--s-spacing);
   border-radius: 4px;
   transition: all 0.2s;
 }
 
 .position-number {
-  font-weight: 600;
   width: 35px;
   padding-left: var(--s-spacing);
+  font-weight: 600;
 }
 
 .position-variation {
   display: inline-flex;
+  gap: 2px;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  font-size: 11px;
-  line-height: 1;
-  font-weight: 600;
-  padding: 2px 4px;
-  border-radius: 4px;
-  background-color: color-mix(in srgb, var(--bolao-c-black) 60%, transparent);
   width: 30px;
+  padding: 2px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  background-color: color-mix(in srgb, var(--bolao-c-black) 60%, transparent);
+  border-radius: 4px;
 
   i {
     font-size: 9px;
@@ -369,43 +511,91 @@ watch(favorites, (newFavorites) => {
   }
 }
 
-.badge {
+%badge {
   position: absolute;
-  left: 0px;
   top: 50%;
-  transform: translateY(-50%);
+  left: 5px;
   width: 6px;
   height: 6px;
   border-radius: 50%;
+  transform: translateY(-50%);
+}
 
-  &Online {
-    @extend .badge;
-    background-color: var(--bolao-c-mint);
-    color: var(--bolao-c-mint);
+.badge {
+  @extend %badge;
+}
 
-    &::after {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      animation: ripple 2s infinite ease-in-out;
-      border: 1px solid;
-      content: '';
-    }
+.badgeOnline {
+  @extend %badge;
+
+  color: var(--bolao-c-mint);
+  background-color: var(--bolao-c-mint);
+
+  &::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 6px;
+    content: "";
+    border: 1px solid;
+    border-radius: 50%;
+    animation: ripple 2s infinite ease-in-out;
   }
+}
 
-  &Offline {
-    @extend .badge;
+.badgeOffline {
+  @extend %badge;
 
-    background-color: var(--bolao-c-grey3);
-    color: var(--bolao-c-red);
-    opacity: 0.2;
-  }
+  color: var(--bolao-c-red);
+  background-color: var(--bolao-c-grey3);
+  opacity: 0.2;
 }
 
 .name-container {
   position: relative;
+}
+
+.centralized-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--xxl-spacing);
+  color: var(--bolao-c-grey1-t2);
+  text-align: center;
+}
+
+.toggle {
+  color: var(--bolao-c-white);
+  background-color: var(--bolao-c-blue-d2);
+  transition: 0.2s;
+
+  &:hover {
+    color: var(--bolao-c-blue);
+  }
+}
+
+.activeToggle {
+  background-color: var(--bolao-c-blue);
+}
+
+.flexHeader {
+  display: flex;
+  gap: var(--xs-spacing);
+  align-items: center;
+  justify-content: center;
+
+  // width: 100%;
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
+}
+
+.table-header {
+  @media (max-width: 1024px) {
+    font-size: var(--xxs-font-size) !important;
+  }
 }
 </style>

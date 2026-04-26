@@ -1,11 +1,11 @@
 <template>
   <div
     class="outer-match line"
-    :class="{ clickable: !isBetting }"
+    :class="{ clickable: isMatchClickable }"
     @click="handleMatchClick"
   >
     <ScoreComponent
-      :is-betting="isBetting"
+      :is-team-clickable="isTeamClickable"
       :match="match"
       :active-user-bet="match.loggedUserBets ?? null"
       :is-match-started="isMatchStarted"
@@ -27,27 +27,29 @@
   />
 </template>
 <script lang="ts" setup>
-import { isDesktop } from '@basitcodeenv/vue3-device-detect';
-import { computed, ref } from 'vue';
+import { computed, ref } from "vue";
 
-import type { IMatch } from '@/stores/matches.types';
+import type { IMatch } from "@/stores/matches.types";
 
-import { HIT_LEVELS } from '@/constants/bets';
-import { useClockStore } from '@/stores/clock';
+import { HIT_LEVELS } from "@/constants/bets";
+import { useViewport } from "@/services/viewport";
+import { useClockStore } from "@/stores/clock";
 
-import BetsModal from './BetsModal/BetsModal.vue';
-import ClockComponent from './ClockComponent.vue';
-import ScoreComponent from './ScoreComponent.vue';
+import BetsModal from "./BetsModal/BetsModal.vue";
+import ClockComponent from "./ClockComponent.vue";
+import ScoreComponent from "./ScoreComponent.vue";
 
 const props = withDefaults(
   defineProps<{
-    isBetting?: boolean;
     isDemo?: boolean;
+    isMatchClickable?: boolean;
+    isTeamClickable?: boolean;
     match: IMatch;
   }>(),
   {
-    isBetting: false,
     isDemo: false,
+    isMatchClickable: false,
+    isTeamClickable: false,
   },
 );
 
@@ -56,6 +58,7 @@ const isBetsModalOpen = ref(false);
 
 // ------ Initialization ------
 const clockStore = useClockStore();
+const { isDesktop } = useViewport();
 
 // ------ Computed Properties ------
 // const correctBets = { bullseye: [], half: [] };
@@ -69,25 +72,37 @@ const hitLevel = computed(() => {
     return null;
   }
 
-  const homeScoreMatch = props.match.loggedUserBets.scoreHome === props.match.score.home;
-  const awayScoreMatch = props.match.loggedUserBets.scoreAway === props.match.score.away;
+  const homeScoreMatch =
+    props.match.loggedUserBets.scoreHome === props.match.score.home;
+  const awayScoreMatch =
+    props.match.loggedUserBets.scoreAway === props.match.score.away;
 
   if (homeScoreMatch && awayScoreMatch) {
     return HIT_LEVELS.exactScore;
   }
 
   // Determine the winner/outcome of the bet and actual match
-  const betHomeWon = props.match.loggedUserBets.scoreHome > props.match.loggedUserBets.scoreAway;
-  const betAwayWon = props.match.loggedUserBets.scoreAway > props.match.loggedUserBets.scoreHome;
-  const betDraw = props.match.loggedUserBets.scoreHome === props.match.loggedUserBets.scoreAway;
+  const betHomeWon =
+    props.match.loggedUserBets.scoreHome > props.match.loggedUserBets.scoreAway;
+  const betAwayWon =
+    props.match.loggedUserBets.scoreAway > props.match.loggedUserBets.scoreHome;
+  const betDraw =
+    props.match.loggedUserBets.scoreHome ===
+    props.match.loggedUserBets.scoreAway;
 
   const actualHomeWon = props.match.score.home > props.match.score.away;
   const actualAwayWon = props.match.score.away > props.match.score.home;
   const actualDraw = props.match.score.home === props.match.score.away;
 
-  const gotWinnerRight = (betHomeWon && actualHomeWon) || (betAwayWon && actualAwayWon) || (betDraw && actualDraw);
+  const gotWinnerRight =
+    (betHomeWon && actualHomeWon) ||
+    (betAwayWon && actualAwayWon) ||
+    (betDraw && actualDraw);
   if (gotWinnerRight) {
-    if ((homeScoreMatch && !awayScoreMatch) || (!homeScoreMatch && awayScoreMatch)) {
+    if (
+      (homeScoreMatch && !awayScoreMatch) ||
+      (!homeScoreMatch && awayScoreMatch)
+    ) {
       return HIT_LEVELS.oneScore;
     }
     return HIT_LEVELS.winnerOnly;
@@ -102,7 +117,7 @@ function handleCloseModal() {
 
 // ------ Functions ------
 function handleMatchClick() {
-  if (props.isBetting || props.isDemo) {
+  if (!props.isMatchClickable || props.isDemo) {
     return;
   }
   isBetsModalOpen.value = true;
@@ -111,8 +126,8 @@ function handleMatchClick() {
 <style scoped>
 .outer-match {
   display: flex;
-  opacity: 1;
   gap: var(--m-spacing);
+  opacity: 1;
 }
 
 .clickable {
@@ -125,7 +140,7 @@ function handleMatchClick() {
 }
 
 .line {
-  min-height: 60px;
   width: 100%;
+  min-height: 60px;
 }
 </style>

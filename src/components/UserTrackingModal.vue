@@ -12,7 +12,7 @@
       <p class="modal-title">
         <i
           v-if="!isUserActive"
-          v-tooltip.top="isFavorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'"
+          v-tooltip.top="isFavorite ? 'Remover favorito' : 'Adicionar aos favoritos'"
           :class="isFavorite ? 'pi pi-star-fill' : 'pi pi-star'"
           class="favorite-star"
           @click="toggleFavorite"
@@ -241,28 +241,29 @@ watch(isVisible, async (newValue) => {
 </script>
 <style lang="scss" scoped>
 .modal-title {
-  font-size: var(--l-font-size);
   display: flex;
-  align-items: center;
   gap: var(--s-spacing);
+  align-items: center;
+  font-size: var(--l-font-size);
 }
 
 .content-class {
   padding: 0 !important;
   overflow-x: hidden !important;
 }
+
 .favorite-star {
-  cursor: pointer;
   font-size: 1.2rem;
   color: var(--bolao-c-yellow, #f4b303);
+  cursor: pointer;
   transition:
     transform 0.2s,
     opacity 0.2s;
 }
 
 .favorite-star:hover {
-  transform: scale(1.2);
   opacity: 0.8;
+  transform: scale(1.2);
 }
 
 .pi-star {

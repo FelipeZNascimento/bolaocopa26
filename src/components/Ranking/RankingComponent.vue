@@ -1,6 +1,6 @@
 <template>
   <div :class="{ 'outer-ranking': !isModal }">
-    <div class="ranking-header">
+    <!-- <div class="ranking-header">
       <span
         class="toggle"
         :class="{ activeToggle: !isRoundRanking }"
@@ -21,9 +21,9 @@
       </span>
       <span
         class="toggle"
-        :class="{ activeToggle: showFavoritesOnly }"
+        :class="{ activeToggle: showFavoritesOnly, disabled: !activeProfile }"
         :style="{ color: showFavoritesOnly ? 'var(--bolao-c-gold)' : '' }"
-        @click="showFavoritesOnly = true"
+        @click="console.log('wtf'); showFavoritesOnly = true"
       >
         <i :class="{ 'pi pi-star-fill': showFavoritesOnly, 'pi pi-star': !showFavoritesOnly }" /> Favoritos
       </span>
@@ -37,7 +37,7 @@
       >
         <i class="pi pi-filter-slash" />
       </span>
-    </div>
+    </div> -->
     <div class="ranking-container">
       <RankingTable
         v-model:show-favorites-only="showFavoritesOnly"
@@ -50,28 +50,24 @@
         :error="isRoundRanking ? errorSeason : errorRounds"
       />
     </div>
-    <RouterLink
-      to="/ranking"
-      class="see-full-ranking-link"
-    >
+    <RouterLink to="/ranking" class="see-full-ranking-link">
       <PrimeButton
-        icon="pi pi-plus"
         class="match-info-toggle"
-        label="Ranking completo"
+        label="Ver ranking completo"
         severity="secondary"
-        aria-label="Ranking completo"
+        aria-label="Ver ranking completo"
       />
     </RouterLink>
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch } from "vue";
 
-import { useActiveProfileStore } from '@/stores/activeProfile';
-import { useConfigurationStore } from '@/stores/configuration';
-import { useRankingStore } from '@/stores/ranking';
+import { useActiveProfileStore } from "@/stores/activeProfile";
+import { useConfigurationStore } from "@/stores/configuration";
+import { useRankingStore } from "@/stores/ranking";
 
-import RankingTable from './RankingTable.vue';
+import RankingTable from "./RankingTable.vue";
 
 withDefaults(
   defineProps<{
@@ -94,61 +90,59 @@ const activeProfileStore = useActiveProfileStore();
 // ------ Computed Properties  ------
 const errorRounds = computed(() => rankingStore.errorRounds);
 const errorSeason = computed(() => rankingStore.errorSeason);
-const isLoadingRounds = computed(() => configurationStore.isLoading || rankingStore.isLoadingRounds);
+const isLoadingRounds = computed(
+  () => configurationStore.isLoading || rankingStore.isLoadingRounds,
+);
 const selectedRound = computed(() => configurationStore.selectedRound);
-const isLoadingSeason = computed(() => configurationStore.isLoading || rankingStore.isLoadingSeason);
+const isLoadingSeason = computed(
+  () => configurationStore.isLoading || rankingStore.isLoadingSeason,
+);
 const seasonRanking = computed(() => rankingStore.seasonRanking);
 const selectedRoundRanking = computed(
-  () => rankingStore.roundsRanking?.find((roundRanking) => roundRanking.round === selectedRound.value)?.ranking || [],
+  () =>
+    rankingStore.roundsRanking?.find(
+      (roundRanking) => roundRanking.round === selectedRound.value,
+    )?.ranking || [],
 );
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 
 // if activeProfile becomes empty, showFavoritesOnly should be set to false to avoid showing empty ranking
 watch(activeProfile, (newValue) => {
   if (!newValue) {
+    console.log("Active profile is empty, setting showFavoritesOnly to false");
     showFavoritesOnly.value = false;
   }
 });
 </script>
 <style scoped>
 .outer-ranking {
+  position: sticky;
   top: 10vh;
   right: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  position: sticky;
-  border-left: 1px solid var(--color-background-mute);
+  width: 440px;
   min-width: 310px;
   max-height: calc(80vh);
-  box-shadow: var(--drop-shadow);
-  border-radius: var(--border-radius);
   background-color: var(--bolao-c-navbar);
+  border-left: 1px solid var(--color-background-mute);
+  border-radius: var(--border-radius);
+  box-shadow: var(--drop-shadow);
 }
 
 .ranking-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
   max-height: calc(100% - 50px);
   overflow-y: auto;
-  scrollbar-gutter: stable;
-  width: 100%;
-  flex: 1;
 }
 
 .outer-position {
   display: flex;
   gap: var(--s-spacing);
-}
-
-.ranking-header {
-  display: flex;
-  gap: var(--s-spacing);
-  justify-content: center;
-  align-items: center;
-  padding: var(--s-spacing) var(--xl-spacing);
-  font-size: var(--s-font-size);
-  height: 50px;
-  color: var(--bolao-c-grey1-t2);
 }
 
 .skeleton-ranking-line {
@@ -160,8 +154,17 @@ watch(activeProfile, (newValue) => {
 .toggle {
   cursor: pointer;
   transition: 0.2s;
+
   &:hover {
     color: var(--bolao-c-white);
+  }
+}
+
+.disabled {
+  cursor: not-allowed;
+
+  &:hover {
+    color: var(--bolao-c-grey1-t2);
   }
 }
 
@@ -175,7 +178,7 @@ watch(activeProfile, (newValue) => {
 }
 
 .see-full-ranking-link {
-  padding: var(--l-spacing) 0;
   flex: 0;
+  padding: var(--l-spacing) 0;
 }
 </style>

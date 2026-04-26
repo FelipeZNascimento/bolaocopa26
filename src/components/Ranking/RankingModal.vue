@@ -51,9 +51,9 @@ watch(isVisible, async (newValue) => {
 .buttons-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   gap: var(--m-spacing);
+  align-items: center;
+  justify-content: center;
 }
 
 .signup-button {

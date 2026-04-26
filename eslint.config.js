@@ -1,42 +1,19 @@
-// @ts-check
-
-import eslint from '@eslint/js';
-import vitest from '@vitest/eslint-plugin';
 import vueTsEslintConfig from '@vue/eslint-config-typescript';
+import pluginOxlint from 'eslint-plugin-oxlint';
 import perfectionist from 'eslint-plugin-perfectionist';
 import pluginVue from 'eslint-plugin-vue';
-import globals from 'globals';
 
 export default [
   {
-    ignores: ['dist/**', 'node_modules/**', 'dev-dist/**', 'public/**'],
+    files: ['**/*.{ts,mts,tsx,vue}'],
+    name: 'app/files-to-lint',
   },
-  eslint.configs.recommended,
-  ...pluginVue.configs['flat/recommended'],
+  {
+    ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**'],
+    name: 'app/files-to-ignore',
+  },
+  ...pluginVue.configs['flat/essential'],
   ...vueTsEslintConfig(),
-  {
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-      },
-    },
-  },
   perfectionist.configs['recommended-natural'],
-  {
-    files: ['**/*.test.ts', '**/*.spec.ts'],
-    plugins: {
-      vitest,
-    },
-    rules: {
-      ...vitest.configs.recommended.rules,
-    },
-  },
-  {
-    rules: {
-      // Customize rules here
-      '@typescript-eslint/no-explicit-any': 'warn',
-      'vue/multi-word-component-names': 'warn',
-      'vue/no-v-html': 'warn',
-    },
-  },
+  ...pluginOxlint.configs['flat/recommended'],
 ];

@@ -4,93 +4,62 @@
     dismissable-mask
     modal
     :draggable="false"
-    :style="{ width: '1024px', height: '70vh', backgroundColor: 'var(--bolao-c-blue4)' }"
-    :breakpoints="{ '1280px': '75vw', '575px': '90vw' }"
+    :style="{
+      width: '1024px',
+      height: '70vh',
+      backgroundColor: 'var(--bolao-c-blue4)',
+    }"
+    :breakpoints="{ '1024px': '90vw', '575px': '95vw' }"
     content-class="content-class"
   >
-    <template #default>
-      <div class="teams-outer">
-        <ScoreComponent
-          :is-score-modal-open="true"
-          :match="match"
-          :active-user-bet="match.loggedUserBets"
-          :is-match-started="isMatchStarted"
+    <template #header>
+      <div
+        style="
+          display: flex;
+          gap: var(--s-spacing);
+          justify-content: center;
+          align-items: center;
+          width: 100%;
+        "
+      >
+        <span v-if="!isMobile && match">
+          {{ clockStore.getRoundName(match.round) }} -
+        </span>
+        <img
+          class="team-shield-image"
+          :src="`https://assets.omegafox.me/copa/countries_flags/${match.homeTeam.isoCode.toLowerCase()}.png`"
+          :alt="`${match.homeTeam.name} Shield`"
+          style="height: 20px"
         />
-
-        <ClockComponent
-          style="margin-left: var(--l-spacing)"
-          :timestamp="match.timestamp"
-          :status="match.status"
-          :clock="match.timestamp ? clockStore.getFormattedTime(match.timestamp) : null"
-          :hit-level="hitLevel"
-          :is-match-started="isMatchStarted"
-        />
-        <PrimeButton
-          :icon="showMatchInfo ? 'pi pi-minus' : 'pi pi-plus'"
-          class="match-info-toggle"
-          label="Info"
-          severity=""
-          aria-label="Search"
-          @click="toggleMatchInfo"
+        {{
+          match
+            ? `${match.homeTeam.abbreviation} ${match.score?.home ?? 0} x ${match.score?.away ?? 0} ${match.awayTeam.abbreviation}`
+            : ""
+        }}
+        <img
+          class="team-shield-image"
+          :src="`https://assets.omegafox.me/copa/countries_flags/${match.awayTeam.isoCode.toLowerCase()}.png`"
+          :alt="`${match.awayTeam.name} Shield`"
+          style="height: 20px"
         />
       </div>
+    </template>
+    <template #default>
+      <BetsModalMobileView
+        v-if="isMobile"
+        :match="match"
+        :hit-level="hitLevel"
+        :is-match-started="isMatchStarted"
+      />
+      <BetsModalDesktopView
+        v-else
+        :match="match"
+        :hit-level="hitLevel"
+        :is-match-started="isMatchStarted"
+      />
       <div>
-        <div header="Informações">
-          <Transition name="expand">
-            <div
-              v-show="showMatchInfo"
-              class="match-info-wrapper"
-            >
-              <div class="match-info">
-                <div class="info-section">
-                  <h3><i class="pi pi-building" /> Estádio</h3>
-                  <p class="info-title">
-                    {{ match.stadium.name }}
-                  </p>
-                  <p class="info-detail">
-                    {{ match.stadium.city }}, {{ match.stadium.country }}
-                  </p>
-                  <p class="info-detail">
-                    Capacidade: {{ match.stadium.capacity.toLocaleString('pt-BR') }} pessoas
-                  </p>
-                </div>
-
-                <div class="info-section">
-                  <h3><i class="pi pi-user" /> Árbitro</h3>
-                  <p class="info-title">
-                    {{ match.referee.name }}
-                  </p>
-                  <p class="info-detail">
-                    {{ match.referee.country }}
-                  </p>
-                </div>
-
-                <div class="info-section">
-                  <h3><i class="pi pi-calendar" /> Data e Hora</h3>
-                  <p class="info-title">
-                    {{ formatDate(match.timestamp) }}
-                  </p>
-                  <p class="info-detail">
-                    {{ formatTime(match.timestamp) }}
-                  </p>
-                </div>
-
-                <div class="info-section">
-                  <h3><i class="pi pi-flag" /> Rodada</h3>
-                  <p class="info-title">
-                    {{ getRoundName(match.round) }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Transition>
-        </div>
-
         <div header="Apostas">
-          <div
-            v-if="activeProfileStore.activeProfile"
-            class="favorites-filter"
-          >
+          <div v-if="activeProfileStore.activeProfile" class="favorites-filter">
             <span
               class="toggle"
               :class="{ activeToggle: !showFavoritesOnly }"
@@ -101,59 +70,87 @@
             <span
               class="toggle"
               :class="{ activeToggle: showFavoritesOnly }"
-              :style="{ color: showFavoritesOnly ? 'var(--bolao-c-gold)' : 'var(--bolao-c-grey1-t2)' }"
+              :style="{
+                color: showFavoritesOnly
+                  ? 'var(--bolao-c-gold)'
+                  : 'var(--bolao-c-grey1-t2)',
+              }"
               @click="showFavoritesOnly = true"
             >
-              <i :class="{ 'pi pi-star-fill': showFavoritesOnly, 'pi pi-star': !showFavoritesOnly }" /> Favoritos
+              <i
+                :class="{
+                  'pi pi-star-fill': showFavoritesOnly,
+                  'pi pi-star': !showFavoritesOnly,
+                }"
+              />
+              Favoritos
             </span>
           </div>
           <div class="bets-outer">
             <BetsColumn
               :bets="filterBets(match.bets, 'exact')"
               :column-value="BETS_VALUES.AWAY_EASY"
-              :active-user-bet="filterBets(match.loggedUserBets ? [match.loggedUserBets] : null, 'exact')"
+              :active-user-bet="
+                filterBets(
+                  match.loggedUserBets ? [match.loggedUserBets] : null,
+                  'exact',
+                )
+              "
               :hit-level="HIT_LEVELS.exactScore"
             />
             <BetsColumn
               :bets="filterBets(match.bets, 'oneScore')"
               :column-value="BETS_VALUES.AWAY_EASY"
-              :active-user-bet="filterBets(match.loggedUserBets ? [match.loggedUserBets] : null, 'oneScore')"
+              :active-user-bet="
+                filterBets(
+                  match.loggedUserBets ? [match.loggedUserBets] : null,
+                  'oneScore',
+                )
+              "
               :hit-level="HIT_LEVELS.oneScore"
             />
             <BetsColumn
               :bets="filterBets(match.bets, 'winnerOnly')"
               :column-value="BETS_VALUES.AWAY_EASY"
-              :active-user-bet="filterBets(match.loggedUserBets ? [match.loggedUserBets] : null, 'winnerOnly')"
+              :active-user-bet="
+                filterBets(
+                  match.loggedUserBets ? [match.loggedUserBets] : null,
+                  'winnerOnly',
+                )
+              "
               :hit-level="HIT_LEVELS.winnerOnly"
             />
             <BetsColumn
               :bets="filterBets(match.bets, 'miss')"
               :column-value="BETS_VALUES.AWAY_EASY"
-              :active-user-bet="filterBets(match.loggedUserBets ? [match.loggedUserBets] : null, 'miss')"
+              :active-user-bet="
+                filterBets(
+                  match.loggedUserBets ? [match.loggedUserBets] : null,
+                  'miss',
+                )
+              "
               :hit-level="HIT_LEVELS.miss"
             />
           </div>
         </div>
       </div>
     </template>
-
-    <!-- <template #footer>a</template> -->
   </PrimeDialog>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 
-import type { IBet, IMatch } from '@/stores/matches.types';
+import type { IBet, IMatch } from "@/stores/matches.types";
 
-import { BETS_VALUES, HIT_LEVELS, type HitLevel } from '@/constants/bets';
-import { ROUNDS } from '@/constants/rounds';
-import FavoritesService from '@/services/favorites';
-import { useActiveProfileStore } from '@/stores/activeProfile';
-import { useClockStore } from '@/stores/clock';
+import { BETS_VALUES, HIT_LEVELS, type HitLevel } from "@/constants/bets";
+import FavoritesService from "@/services/favorites";
+import { useViewport } from "@/services/viewport";
+import { useActiveProfileStore } from "@/stores/activeProfile";
+import { useClockStore } from "@/stores/clock";
 
-import ClockComponent from '../ClockComponent.vue';
-import ScoreComponent from '../ScoreComponent.vue';
-import BetsColumn from './BetsColumn.vue';
+import BetsColumn from "./BetsColumn.vue";
+import BetsModalDesktopView from "./BetsModalDesktopView.vue";
+import BetsModalMobileView from "./BetsModalMobileView.vue";
 
 const props = defineProps<{
   handleCloseModal: () => void;
@@ -169,15 +166,17 @@ const favoritesService = new FavoritesService();
 const isVisible = ref(false);
 const showFavoritesOnly = ref(false);
 const favorites = ref<number[]>([]);
-const showMatchInfo = ref(false);
+const { isMobile } = useViewport();
 
 onMounted(() => {
   loadFavorites();
-  window.addEventListener('favorites-cleared', loadFavorites);
+  window.addEventListener("favorites-cleared", loadFavorites);
+  window.addEventListener("favorites-updated", loadFavorites);
 });
 
 onUnmounted(() => {
-  window.removeEventListener('favorites-cleared', loadFavorites);
+  window.removeEventListener("favorites-cleared", loadFavorites);
+  window.removeEventListener("favorites-updated", loadFavorites);
 });
 
 // ------ Computed Properties ------
@@ -189,11 +188,20 @@ const isMatchStarted = computed(() => {
 function filterBets(bets: IBet[] | null, hitLevel: HitLevel) {
   if (!bets) return [];
 
-  let filteredBets = bets.filter((bet) => {
+  const filteredBets = bets.filter((bet) => {
+    if (showFavoritesOnly.value && activeProfileStore.activeProfile) {
+      if (
+        !isFavoriteUser(bet.user.id) &&
+        bet.user.id !== activeProfileStore.activeProfile?.id
+      ) {
+        return false;
+      }
+    }
+
     const homeScoreMatch = bet.scoreHome === props.match.score.home;
     const awayScoreMatch = bet.scoreAway === props.match.score.away;
 
-    if (hitLevel === 'exact') {
+    if (hitLevel === "exact") {
       return homeScoreMatch && awayScoreMatch;
     }
 
@@ -206,18 +214,24 @@ function filterBets(bets: IBet[] | null, hitLevel: HitLevel) {
     const actualAwayWon = props.match.score.away > props.match.score.home;
     const actualDraw = props.match.score.home === props.match.score.away;
 
-    const gotWinnerRight = (betHomeWon && actualHomeWon) || (betAwayWon && actualAwayWon) || (betDraw && actualDraw);
+    const gotWinnerRight =
+      (betHomeWon && actualHomeWon) ||
+      (betAwayWon && actualAwayWon) ||
+      (betDraw && actualDraw);
 
-    if (hitLevel === 'oneScore' && gotWinnerRight) {
-      return (homeScoreMatch && !awayScoreMatch) || (!homeScoreMatch && awayScoreMatch);
+    if (hitLevel === "oneScore" && gotWinnerRight) {
+      return (
+        (homeScoreMatch && !awayScoreMatch) ||
+        (!homeScoreMatch && awayScoreMatch)
+      );
     }
 
-    if (hitLevel === 'winnerOnly' && gotWinnerRight) {
+    if (hitLevel === "winnerOnly" && gotWinnerRight) {
       // Got the winner right but not exact score or one score
       return !homeScoreMatch && !awayScoreMatch;
     }
 
-    if (hitLevel === 'miss') {
+    if (hitLevel === "miss") {
       // Didn't get the winner right
       return !gotWinnerRight;
     }
@@ -225,37 +239,7 @@ function filterBets(bets: IBet[] | null, hitLevel: HitLevel) {
     return false;
   });
 
-  // Apply favorites filter if enabled
-  if (showFavoritesOnly.value && activeProfileStore.activeProfile) {
-    filteredBets = filteredBets.filter(
-      (bet) => isFavoriteUser(bet.user.id) || bet.user.id === activeProfileStore.activeProfile?.id,
-    );
-  }
-
   return filteredBets;
-}
-
-function formatDate(timestamp: number): string {
-  const date = new Date(timestamp * 1000);
-  return date.toLocaleDateString('pt-BR', {
-    day: 'numeric',
-    month: 'long',
-    weekday: 'long',
-    year: 'numeric',
-  });
-}
-
-function formatTime(timestamp: number): string {
-  const date = new Date(timestamp * 1000);
-  return date.toLocaleTimeString('pt-BR', {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
-
-function getRoundName(round: number): string {
-  const roundObj = ROUNDS.find((r) => r.num === round);
-  return roundObj ? roundObj.display : `Rodada ${round}`;
 }
 
 function isFavoriteUser(userId: number): boolean {
@@ -267,11 +251,9 @@ function loadFavorites() {
     favorites.value = [];
     return;
   }
-  favorites.value = favoritesService.getFavorites(activeProfileStore.activeProfile.id);
-}
-
-function toggleMatchInfo() {
-  showMatchInfo.value = !showMatchInfo.value;
+  favorites.value = favoritesService.getFavorites(
+    activeProfileStore.activeProfile.id,
+  );
 }
 
 // ------ Watches ------
@@ -307,17 +289,10 @@ watch(favorites, (newFavorites) => {
 });
 </script>
 <style lang="scss" scoped>
-.teams-outer {
-  display: flex;
-  padding: var(--m-spacing);
-  background-color: var(--bolao-c-blue3-t2);
-  border-radius: var(--border-radius);
-}
-
 .toggle {
+  color: var(--bolao-c-grey1-t2);
   cursor: pointer;
   transition: 0.2s;
-  color: var(--bolao-c-grey1-t2);
 }
 
 .activeToggle {
@@ -336,80 +311,18 @@ watch(favorites, (newFavorites) => {
   overflow-x: hidden !important;
 }
 
-.content-class {
-  padding: 0 !important;
-  padding-left: var(--l-spacing) !important;
-  overflow-x: hidden !important;
-  scrollbar-gutter: stable;
-  justify-items: center;
-}
-
 .favorites-filter {
   display: flex;
-  justify-content: center;
   gap: var(--m-spacing);
+  justify-content: center;
   padding: var(--s-spacing);
 }
+</style>
 
-.match-info {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--l-spacing);
-  padding: var(--l-spacing) 0;
-}
-
-.info-section {
-  background-color: var(--bolao-c-blue3-t2);
-  padding: var(--m-spacing);
-  border-radius: var(--border-radius);
-}
-
-.info-section h3 {
-  color: var(--bolao-c-gold);
-  font-size: 0.9rem;
-  margin-bottom: var(--m-spacing);
-  display: flex;
-  align-items: center;
-  gap: var(--s-spacing);
-}
-
-.info-section .info-title {
-  font-size: 1.1rem;
-  font-weight: bold;
-  color: var(--bolao-c-white);
-  margin-bottom: var(--s-spacing);
-}
-
-.info-section .info-detail {
-  color: var(--bolao-c-grey1-t2);
-  font-size: 0.9rem;
-  margin-bottom: var(--xs-spacing);
-}
-
-.match-info-toggle {
-  display: flex;
-  justify-content: center;
-  margin-left: var(--l-spacing);
-  border-radius: var(--border-radius) !important;
-  height: var(--match-list-height);
-}
-
-.match-info-wrapper {
-  overflow: hidden;
-}
-
-.expand-enter-active,
-.expand-leave-active {
-  transition: all 0.4s ease;
-  max-height: 500px;
-  opacity: 1;
-}
-
-.expand-enter-from,
-.expand-leave-to {
-  max-height: 0;
-  opacity: 0;
-  padding-top: 0;
-  padding-bottom: 0;
+<style lang="scss">
+/* Unscoped styles for PrimeDialog content customization */
+.content-class {
+  padding: 0 !important;
+  scrollbar-gutter: stable;
 }
 </style>

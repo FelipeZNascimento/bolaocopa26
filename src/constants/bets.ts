@@ -21,10 +21,10 @@ export const HIT_LEVELS_POINTS = {
 };
 
 export const HIT_LEVELS_LABELS = {
-  [HIT_LEVELS.exactScore]: `Na Mosca [${HIT_LEVELS_POINTS[HIT_LEVELS.exactScore]}]`,
-  [HIT_LEVELS.oneScore]: `Acerto Parcial [${HIT_LEVELS_POINTS[HIT_LEVELS.oneScore]}]`,
-  [HIT_LEVELS.winnerOnly]: `Acerto Mínimo [${HIT_LEVELS_POINTS[HIT_LEVELS.winnerOnly]}]`,
-  [HIT_LEVELS.miss]: `Errrrou [${HIT_LEVELS_POINTS[HIT_LEVELS.miss]}]`,
+  [HIT_LEVELS.exactScore]: `Acerto Total (${HIT_LEVELS_POINTS[HIT_LEVELS.exactScore]} pontos)`,
+  [HIT_LEVELS.oneScore]: `Acerto Parcial (${HIT_LEVELS_POINTS[HIT_LEVELS.oneScore]} pontos)`,
+  [HIT_LEVELS.winnerOnly]: `Acerto Mínimo (${HIT_LEVELS_POINTS[HIT_LEVELS.winnerOnly]} pontos)`,
+  [HIT_LEVELS.miss]: `Errrrou (${HIT_LEVELS_POINTS[HIT_LEVELS.miss]} pontos)`,
 };
 
 export const EXTRA_BETS_VALUES = {

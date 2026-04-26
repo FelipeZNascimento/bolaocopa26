@@ -38,7 +38,7 @@ function formatDate() {
     return '';
   }
 
-  return `${clockStore.formattedDate(editionStart.value)}, ${clockStore.getFormattedTime(editionStart.value)}`;
+  return `${clockStore.getFormattedDate(editionStart.value)}, ${clockStore.getFormattedTime(editionStart.value)}`;
 }
 
 const tableScores = [

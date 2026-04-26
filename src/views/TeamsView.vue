@@ -1,14 +1,8 @@
 <template>
   <div class="outer-teams">
     <h1>Equipes</h1>
-    <PrimeSkeleton
-      v-if="isLoading"
-      class="skeleton-outer"
-    />
-    <div
-      v-else
-      class="groups-container"
-    >
+    <PrimeSkeleton v-if="isLoading" class="skeleton-outer" />
+    <div v-else class="groups-container">
       <div
         v-for="group in groupedTeams"
         :key="group.groupName"
@@ -27,7 +21,7 @@
             <img
               :src="`https://assets.omegafox.me/copa/countries_flags/${team.isoCode.toLowerCase()}.png`"
               :alt="`${team.name} Flag`"
-            >
+            />
             <div class="team-name">
               {{ team.name }}
             </div>
@@ -44,13 +38,13 @@
   />
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref } from "vue";
 
-import type { ITeam } from '@/stores/teams.types';
+import type { ITeam } from "@/stores/teams.types";
 
-import TeamDetailsModal from '@/components/TeamDetailsModal.vue';
-import TeamService from '@/services/team';
-import { useTeamsStore } from '@/stores/teams';
+import TeamDetailsModal from "@/components/TeamDetailsModal.vue";
+import TeamService from "@/services/team";
+import { useTeamsStore } from "@/stores/teams";
 
 // ------ Services & Stores ------
 const teamService = new TeamService();
@@ -109,7 +103,7 @@ teamService.fetch();
   padding: var(--l-spacing) 160px;
   flex: 1;
 
-  @media (max-width: 767px) {
+  @media (max-width: 768px) {
     padding: var(--xxl-spacing) var(--s-spacing);
   }
 
@@ -161,12 +155,16 @@ teamService.fetch();
   max-width: 160px;
   flex-direction: column;
   align-items: center;
-  gap: var(--s-spacing);
   // padding: var(--m-spacing);
   border-radius: var(--border-radius);
   background: color-mix(in srgb, var(--color-contrast) 5%, transparent);
   transition: all 0.2s ease;
   cursor: pointer;
+  font-size: var(--m-font-size);
+
+  @media (max-width: 768px) {
+    font-size: var(--xs-font-size);
+  }
 
   &:hover {
     background: color-mix(in srgb, var(--color-contrast) 10%, transparent);
@@ -176,14 +174,30 @@ teamService.fetch();
 
   img {
     width: 100%;
+    min-height: 100px;
     height: 100px;
     object-fit: cover;
+    flex: 0;
+
+    @media (max-width: 768px) {
+      min-height: 80px;
+      height: 80px;
+    }
+    @media (max-width: 480px) {
+      min-height: 50px;
+      height: 50px;
+    }
   }
 
   .team-name {
+    flex: 1;
+    min-height: 50px;
+    display: flex;
+    justify-content: center;
     text-align: center;
+    align-items: center;
     font-weight: 600;
-    font-size: var(--m-font-size);
+    text-decoration: underline dotted;
   }
 }
 
@@ -206,7 +220,11 @@ teamService.fetch();
 }
 
 .group-b {
-  background: linear-gradient(90deg, color-mix(in srgb, var(--bolao-c-fifa-red) 15%, transparent) 0%, transparent 100%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-red) 15%, transparent) 0%,
+    transparent 100%
+  );
   .group-header {
     border-left: 4px solid var(--bolao-c-fifa-red);
     background: linear-gradient(
@@ -250,10 +268,18 @@ teamService.fetch();
 }
 
 .group-e {
-  background: linear-gradient(90deg, color-mix(in srgb, var(--bolao-c-orange) 15%, transparent) 0%, transparent 100%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-orange) 15%, transparent) 0%,
+    transparent 100%
+  );
   .group-header {
     border-left: 4px solid var(--bolao-c-orange);
-    background: linear-gradient(90deg, color-mix(in srgb, var(--bolao-c-orange) 15%, transparent) 0%, transparent 100%);
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bolao-c-orange) 15%, transparent) 0%,
+      transparent 100%
+    );
   }
 }
 
