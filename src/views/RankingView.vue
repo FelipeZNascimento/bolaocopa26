@@ -22,7 +22,7 @@ import RankingTable from "@/components/Ranking/RankingTable.vue";
   padding: 0;
   overflow-y: auto;
 
-  @media (max-width: 1024px) {
+  @media (width <= 1024px) {
     height: calc(100vh - var(--paginator-height) - var(--navbar-height-mobile));
   }
 }
@@ -32,9 +32,9 @@ import RankingTable from "@/components/Ranking/RankingTable.vue";
   align-items: center;
   min-height: 0;
   padding-bottom: var(--xl-spacing);
+  overflow: hidden;
   background-color: var(--bolao-c-blue4);
   border-radius: var(--border-radius);
   box-shadow: var(--drop-shadow);
-  overflow: hidden;
 }
 </style>

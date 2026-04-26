@@ -210,54 +210,53 @@ function isPlayerWithExtras(
 <style lang="scss" scoped>
 .cards-container {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
   gap: var(--m-spacing);
   justify-content: center;
   max-width: 100vw;
 }
 
 .all-bets-card {
-  overflow: hidden;
   width: 160px;
+  overflow: hidden;
   font-size: var(--m-font-size);
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     width: 80px;
     font-size: var(--s-font-size);
   }
 
   .header-container {
+    position: relative;
     width: 100%;
     height: 140px;
-    position: relative;
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
       height: 70px;
     }
   }
 
   .header-overlay {
     position: absolute;
+    right: 0;
     bottom: 0;
     left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-    text-align: center;
     padding: var(--xs-spacing);
     font-weight: bold;
+    color: white;
+    text-align: center;
+    background: rgb(0 0 0 / 50%);
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
       padding: var(--xxxs-spacing);
     }
   }
 
   .card-content {
-    text-align: center;
     padding: var(--m-spacing) 0;
+    text-align: center;
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
       font-size: var(--xs-font-size);
     }
   }
@@ -266,28 +265,28 @@ function isPlayerWithExtras(
     // text-align: center;
     padding: var(--s-spacing);
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
       font-size: var(--xxs-font-size);
     }
   }
 
   img {
-    object-fit: cover;
     width: 100%;
     height: 100%;
+    object-fit: cover;
   }
 }
 
 .outer-extras {
   display: flex;
+  flex: 1;
   flex-direction: column;
+  gap: var(--m-spacing);
   align-items: center;
   justify-content: space-between;
-  gap: var(--m-spacing);
   padding: var(--l-spacing) 160px;
-  flex: 1;
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     padding: var(--xxl-spacing) var(--s-spacing);
   }
 }

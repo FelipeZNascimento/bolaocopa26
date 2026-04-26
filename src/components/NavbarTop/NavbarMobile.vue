@@ -453,8 +453,8 @@ function toggleMenu() {
   align-items: center;
 
   i {
-    color: var(--bolao-c-white);
     font-size: var(--m-font-size);
+    color: var(--bolao-c-white);
   }
 }
 
@@ -520,9 +520,9 @@ function toggleMenu() {
   width: 40px;
   height: 40px;
   padding: 0;
+  cursor: pointer;
   background: transparent;
   border: none;
-  cursor: pointer;
   transition: transform 0.3s ease;
 
   &:active {
@@ -555,10 +555,7 @@ function toggleMenu() {
 /* Overlay */
 .overlay {
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   z-index: 999;
   background-color: rgb(0 0 0 / 50%);
   backdrop-filter: blur(2px);
@@ -601,10 +598,10 @@ function toggleMenu() {
   padding: 0;
   font-size: var(--l-font-size);
   color: var(--bolao-c-white);
+  cursor: pointer;
   background: transparent;
   border: none;
   border-radius: 4px;
-  cursor: pointer;
   transition: background-color 0.2s ease;
 
   &:hover {
@@ -634,15 +631,14 @@ function toggleMenu() {
   transition: all 0.2s ease;
 
   i {
-    font-size: var(--l-font-size);
     min-width: 24px;
+    font-size: var(--l-font-size);
   }
 
   .label {
-    font-size: var(--m-font-size);
-    padding-left: var(--m-spacing);
-
     flex: 1;
+    padding-left: var(--m-spacing);
+    font-size: var(--m-font-size);
   }
 
   .button-container {
@@ -665,13 +661,13 @@ function toggleMenu() {
   transition: all 0.2s ease;
 
   i {
-    font-size: var(--l-font-size);
     min-width: 24px;
+    font-size: var(--l-font-size);
   }
 
   .link-label {
-    font-size: var(--m-font-size);
     flex: 1;
+    font-size: var(--m-font-size);
   }
 
   &:hover {
@@ -683,8 +679,8 @@ function toggleMenu() {
   }
 
   &.active {
-    background-color: rgb(255 255 255 / 10%);
     font-weight: bold;
+    background-color: rgb(255 255 255 / 10%);
 
     .link-label {
       color: var(--bolao-c-gold-t3);

@@ -37,11 +37,11 @@ function openTeamModal() {
 </script>
 <style lang="scss" scoped>
 .player-name-hover {
-  cursor: pointer;
-  transition: all 0.2s ease;
   text-decoration: underline;
   text-decoration-style: dotted;
   text-underline-offset: 2px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 
   &:hover {
     color: var(--bolao-c-gold);

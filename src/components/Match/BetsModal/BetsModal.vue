@@ -17,8 +17,8 @@
         style="
           display: flex;
           gap: var(--s-spacing);
-          justify-content: center;
           align-items: center;
+          justify-content: center;
           width: 100%;
         "
       >

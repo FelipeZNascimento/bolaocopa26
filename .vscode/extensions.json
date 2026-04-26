@@ -3,6 +3,7 @@
     "Vue.volar",
     "vitest.explorer",
     "dbaeumer.vscode-eslint",
+    "stylelint.vscode-stylelint",
     "EditorConfig.EditorConfig",
     "oxc.oxc-vscode",
     "esbenp.prettier-vscode"

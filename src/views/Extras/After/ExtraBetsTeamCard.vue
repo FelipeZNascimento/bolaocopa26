@@ -62,62 +62,61 @@ defineProps<{
 <style lang="scss" scoped>
 .cards-container {
   display: flex;
-  gap: var(--m-spacing);
   flex-wrap: wrap;
+  gap: var(--m-spacing);
   justify-content: center;
 }
 
 .bets-card {
-  width: 160px;
-  border-radius: var(--border-radius);
-  background: color-mix(in srgb, var(--vt-c-indigo) 50%, transparent);
-  color: white;
-  box-shadow: var(--drop-shadow);
   display: flex;
   flex-direction: column;
-  text-align: center;
+  width: 160px;
   font-size: var(--m-font-size);
+  color: white;
+  text-align: center;
+  background: color-mix(in srgb, var(--vt-c-indigo) 50%, transparent);
+  border-radius: var(--border-radius);
+  box-shadow: var(--drop-shadow);
 
-  @media (max-width: 768px) {
-    font-size: var(--s-font-size);
+  @media (width <= 768px) {
     width: 100px;
+    font-size: var(--s-font-size);
   }
 
   .top-text {
-    padding: 4px;
-    height: 62px;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    height: 62px;
+    padding: 4px;
   }
 
   .image-container {
     display: flex;
+    flex: 0;
     align-items: center;
     justify-content: center;
-    max-height: 100px;
     height: 100px;
-    flex: 0;
+    max-height: 100px;
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
       height: 50px;
       max-height: 50px;
     }
   }
 
   img {
-    object-fit: contain;
     width: 100%;
     height: 100%;
+    object-fit: contain;
   }
 
   .bottom-text {
     display: flex;
-    justify-content: center;
     align-items: center;
-
-    padding: 4px;
+    justify-content: center;
     height: 62px;
+    padding: 4px;
   }
 }
 </style>

@@ -50,10 +50,10 @@
         style="
           display: flex;
           align-items: center;
+          width: 100%;
           min-height: 40px;
           padding: var(--xxs-spacing) 0;
           border-bottom: 1px dotted var(--bolao-c-grey3-t1);
-          width: 100%;
         "
         :style="{
           flexDirection: isHomeTeam ? 'row' : 'row-reverse',
@@ -65,16 +65,16 @@
             display: flex;
             flex-direction: column;
             gap: 0;
-            line-height: 1;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             width: 60px;
             min-width: 60px;
             font-size: var(--xs-font-size);
+            line-height: 1;
           "
         >
           <img
-            style="height: 20px; width: 20px"
+            style=" width: 20px;height: 20px"
             :src="getEventIconUrl(event.event.id, isHomeTeam)"
             :alt="event.event.description"
           />
@@ -205,7 +205,7 @@ function openTeamModal(team: ITeam) {
     height: 100%;
     transform: translate(0, -50%);
 
-    @media (max-width: 1024px) {
+    @media (width <= 1024px) {
       top: 0%;
       transform: none;
     }
@@ -228,9 +228,9 @@ function openTeamModal(team: ITeam) {
   width: 100px;
   object-fit: cover;
 
-  @media (max-width: 768px) {
-    margin: 0 var(--s-spacing);
+  @media (width <= 768px) {
     width: 36px;
+    margin: 0 var(--s-spacing);
     object-fit: contain;
   }
 }
@@ -244,24 +244,24 @@ function openTeamModal(team: ITeam) {
   font-size: var(--m-font-size);
   line-height: var(--xl-spacing);
 
-  @media (max-width: 1444px) {
+  @media (width <= 1444px) {
     font-size: var(--m-font-size);
   }
 
-  @media (max-width: 1024px) {
+  @media (width <= 1024px) {
     font-size: var(--m-font-size);
   }
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
+    max-width: 60%;
+    padding: var(--xs-spacing);
     font-size: var(--s-font-size);
-    max-width: 60%;
-    padding: var(--xs-spacing);
   }
 
-  @media (max-width: 360px) {
-    font-size: var(--xs-font-size);
+  @media (width <= 360px) {
     max-width: 60%;
     padding: var(--xs-spacing);
+    font-size: var(--xs-font-size);
   }
 }
 
@@ -278,10 +278,10 @@ function openTeamModal(team: ITeam) {
   background-color: color-mix(in srgb, var(--color-main), transparent 50%);
   border-radius: var(--border-radius);
 
-  @media (max-width: 768px) {
-    font-size: var(--m-font-size);
+  @media (width <= 768px) {
     min-width: 28px;
     padding: 0 var(--xs-spacing);
+    font-size: var(--m-font-size);
   }
 }
 

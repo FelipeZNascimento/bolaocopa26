@@ -10,14 +10,14 @@
 <script lang="ts" setup></script>
 <style lang="scss" scoped>
 .outer-skeleton-line {
-  width: 100%;
   display: flex;
   flex-direction: column;
   gap: var(--m-spacing);
+  width: 100%;
 }
 
 .skeleton-match-line {
-  height: 60px !important;
   width: 100% !important;
+  height: 60px !important;
 }
 </style>

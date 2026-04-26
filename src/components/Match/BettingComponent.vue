@@ -83,15 +83,16 @@ function handleNewBet(e: Event, newBet: BetsValues) {
 <style lang="scss" scoped>
 .betting-radio-button-container {
   &:nth-child(2) {
-    box-shadow: 1px 0px 0px 0px rgba(grey, 0.75);
-    -webkit-box-shadow: 1px 0px 0px 0px rgba(grey, 0.75);
-    -moz-box-shadow: 1px 0px 0px 0px rgba(grey, 0.75);
+    -webkit-box-shadow: 1px 0 0 0 rgb(grey, 0.75);
+    -moz-box-shadow: 1px 0 0 0 rgb(grey, 0.75);
+    box-shadow: 1px 0 0 0 rgb(grey, 0.75);
   }
 }
+
 .betting-radio-button {
   margin: var(--m-spacing);
 
-  @media (min-width: 1440px) {
+  @media (width >= 1440px) {
     margin: var(--l-spacing);
   }
 }
@@ -100,9 +101,9 @@ function handleNewBet(e: Event, newBet: BetsValues) {
   position: absolute;
   top: 15%;
   left: 50%;
-  transform: translateY(-100%) translateX(-50%);
+  z-index: 1;
   font-size: var(--xs-font-size);
   color: var(--text-color);
-  z-index: 1;
+  transform: translateY(-100%) translateX(-50%);
 }
 </style>

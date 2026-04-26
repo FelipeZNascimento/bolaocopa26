@@ -105,9 +105,9 @@ function toggleMatchInfo() {
 .outer {
   display: flex;
   padding: var(--m-spacing);
+  margin: 0 var(--l-spacing) !important;
   background-color: var(--bolao-c-blue3-t2);
   border-radius: var(--border-radius);
-  margin: 0 var(--l-spacing) !important;
 }
 
 .match-info-toggle {

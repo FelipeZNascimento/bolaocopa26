@@ -57,18 +57,18 @@ const sortedEvents = computed(() => {
 </script>
 <style scoped>
 .outer-mobile-score-line {
-  flex: 1;
   display: flex;
+  flex: 1;
+  gap: var(--m-spacing);
   align-items: flex-start;
   justify-content: center;
-  gap: var(--m-spacing);
 }
 
 .outer-score-line {
-  flex: 1;
   display: flex;
+  flex: 1;
+  gap: var(--m-spacing);
   align-items: flex-start;
   justify-content: center;
-  gap: var(--m-spacing);
 }
 </style>

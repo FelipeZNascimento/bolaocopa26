@@ -141,31 +141,28 @@ watch(isVisible, (newValue) => {
 .header-container {
   position: relative;
   width: 100%;
+  min-height: 160px;
   overflow: hidden;
   border-radius: var(--border-radius);
-  min-height: 160px;
 
-  @media (max-width: 768px) {
-    margin-right: 0;
+  @media (width <= 768px) {
     min-height: auto;
+    margin-right: 0;
   }
 }
 
 .header-background {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
+  z-index: 0;
   background: linear-gradient(
     135deg,
     var(--team-color-2) 0%,
     var(--team-color-1) 100%
   );
   opacity: 0.75;
-  z-index: 0;
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     opacity: 0.85;
   }
 }
@@ -174,54 +171,55 @@ watch(isVisible, (newValue) => {
   position: relative;
   z-index: 1;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--l-spacing);
   gap: var(--xl-spacing);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--l-spacing);
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     flex-direction: column;
+    gap: var(--l-spacing);
     align-items: center;
     padding: var(--l-spacing) var(--m-spacing);
-    gap: var(--l-spacing);
     text-align: center;
   }
 }
+
 .header-flag {
+  flex-shrink: 0;
   height: 40px;
+  padding: var(--s-spacing);
   object-fit: contain;
   border-radius: var(--border-radius);
-  padding: var(--s-spacing);
-  flex-shrink: 0;
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     height: 40px;
   }
 }
 
 .team-flag {
+  flex-shrink: 0;
   height: 120px;
+  padding: var(--s-spacing);
   object-fit: contain;
   border-radius: var(--border-radius);
-  padding: var(--s-spacing);
-  flex-shrink: 0;
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     height: 60px;
   }
 }
 
 .team-crest {
+  flex-shrink: 0;
   width: 120px;
   height: 120px;
-  object-fit: contain;
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: var(--border-radius);
   padding: var(--s-spacing);
-  flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  object-fit: contain;
+  background: rgb(255 255 255 / 80%);
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     width: 100px;
     height: 100px;
   }
@@ -229,11 +227,11 @@ watch(isVisible, (newValue) => {
 
 .header-left {
   display: flex;
-  align-items: center;
-  gap: var(--l-spacing);
   flex: 1;
+  gap: var(--l-spacing);
+  align-items: center;
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     flex-direction: column;
     gap: var(--m-spacing);
     width: 100%;
@@ -244,7 +242,7 @@ watch(isVisible, (newValue) => {
     flex-direction: column;
     gap: var(--xs-spacing);
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
       gap: 0;
     }
 
@@ -252,11 +250,11 @@ watch(isVisible, (newValue) => {
       margin: 0;
       font-size: var(--xxl-font-size);
       font-weight: 700;
-      color: var(--color-contrast);
       line-height: 1.2;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      color: var(--color-contrast);
+      text-shadow: 0 2px 4px rgb(0 0 0 / 10%);
 
-      @media (max-width: 768px) {
+      @media (width <= 768px) {
         font-size: var(--l-font-size);
         line-height: 1.3;
       }
@@ -265,11 +263,11 @@ watch(isVisible, (newValue) => {
     .team-name-en {
       margin: 0;
       font-size: var(--l-font-size);
-      color: var(--color-contrast);
       font-weight: 500;
+      color: var(--color-contrast);
       opacity: 0.85;
 
-      @media (max-width: 768px) {
+      @media (width <= 768px) {
         font-size: var(--m-font-size);
       }
     }
@@ -281,7 +279,7 @@ watch(isVisible, (newValue) => {
   gap: var(--m-spacing);
   align-items: center;
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     justify-content: center;
     width: 100%;
   }
@@ -291,20 +289,20 @@ watch(isVisible, (newValue) => {
   display: flex;
   flex-direction: column;
   gap: var(--xs-spacing);
-  background: var(--color-background);
-  padding: var(--m-spacing);
-  border-radius: var(--border-radius);
-  border: 2px solid var(--color-border);
   min-width: 100px;
-  box-shadow: var(--drop-shadow);
   height: 100%;
+  padding: var(--m-spacing);
+  background: var(--color-background);
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius);
+  box-shadow: var(--drop-shadow);
 
   .badge-label {
     font-size: var(--s-font-size);
+    font-weight: 600;
+    color: var(--bolao-c-grey1-t2);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: var(--bolao-c-grey1-t2);
-    font-weight: 600;
   }
 
   .badge-value {
@@ -317,7 +315,7 @@ watch(isVisible, (newValue) => {
 .players-container {
   // padding: var(--m-spacing) 0;
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     p {
       font-size: var(--s-font-size);
     }
@@ -329,7 +327,7 @@ watch(isVisible, (newValue) => {
   font-size: var(--l-font-size);
   color: var(--color-contrast);
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     margin: 0 0 var(--m-spacing) 0;
     font-size: var(--m-font-size);
   }
@@ -340,7 +338,7 @@ watch(isVisible, (newValue) => {
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: var(--m-spacing);
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     grid-template-columns: 1fr;
     gap: var(--s-spacing);
   }
@@ -348,16 +346,16 @@ watch(isVisible, (newValue) => {
 
 .player-card {
   display: flex;
-  align-items: center;
   gap: var(--m-spacing);
+  align-items: center;
   padding: var(--m-spacing);
-  border-radius: var(--border-radius);
   background: color-mix(in srgb, var(--color-contrast) 5%, transparent);
+  border-radius: var(--border-radius);
   transition: all 0.2s ease;
 
-  @media (max-width: 768px) {
-    padding: var(--s-spacing) var(--m-spacing);
+  @media (width <= 768px) {
     gap: var(--s-spacing);
+    padding: var(--s-spacing) var(--m-spacing);
   }
 
   &:hover {
@@ -365,20 +363,20 @@ watch(isVisible, (newValue) => {
     transform: translateX(4px);
   }
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     &:hover {
       transform: none;
     }
   }
 
   .player-number {
+    min-width: 40px;
     font-size: var(--l-font-size);
     font-weight: bold;
     color: var(--bolao-c-blue);
-    min-width: 40px;
     text-align: center;
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
       min-width: 32px;
       font-size: var(--m-font-size);
     }
@@ -388,19 +386,19 @@ watch(isVisible, (newValue) => {
     flex: 1;
 
     .player-name {
-      font-weight: 600;
-      font-size: var(--m-font-size);
       margin-bottom: var(--xs-spacing);
+      font-size: var(--m-font-size);
+      font-weight: 600;
     }
 
     .player-details {
       display: flex;
+      flex-wrap: wrap;
       gap: var(--m-spacing);
       font-size: var(--s-font-size);
       color: var(--bolao-c-grey1-t2);
-      flex-wrap: wrap;
 
-      @media (max-width: 768px) {
+      @media (width <= 768px) {
         gap: var(--s-spacing);
         font-size: var(--xs-font-size);
       }
@@ -411,7 +409,7 @@ watch(isVisible, (newValue) => {
       }
 
       .player-club {
-        @media (max-width: 768px) {
+        @media (width <= 768px) {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;

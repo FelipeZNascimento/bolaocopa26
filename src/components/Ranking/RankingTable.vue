@@ -413,23 +413,24 @@ watch(
   flex-direction: row;
   padding: var(--xs-spacing) var(--s-spacing);
 
-  @media (max-width: 1024px) {
+  @media (width <= 1024px) {
     padding: var(--xxs-spacing) 0;
     font-size: var(--xs-font-size);
   }
 }
 
 .prime-data-table {
-  width: 100%;
-  flex: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
+  width: 100%;
   min-height: 0;
+
   // max-height: 500px;
 
-  @media (max-width: 1024px) {
-    max-height: 100vh;
+  @media (width <= 1024px) {
     width: 100vw;
+    max-height: 100vh;
     overflow-x: auto;
     font-size: 12px;
   }
@@ -588,13 +589,13 @@ watch(
 
   // width: 100%;
 
-  @media (max-width: 1024px) {
+  @media (width <= 1024px) {
     flex-direction: column;
   }
 }
 
 .table-header {
-  @media (max-width: 1024px) {
+  @media (width <= 1024px) {
     font-size: var(--xxs-font-size) !important;
   }
 }

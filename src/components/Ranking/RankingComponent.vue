@@ -133,8 +133,8 @@ watch(activeProfile, (newValue) => {
 
 .ranking-container {
   display: flex;
-  flex-direction: column;
   flex: 1;
+  flex-direction: column;
   width: 100%;
   max-height: calc(100% - 50px);
   overflow-y: auto;

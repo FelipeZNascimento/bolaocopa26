@@ -4,8 +4,8 @@
     <div
       style="
         display: flex;
-        gap: var(--m-spacing);
         flex-wrap: wrap;
+        gap: var(--m-spacing);
         justify-content: center;
       "
     >
@@ -52,14 +52,14 @@ const buttonOptions = ref<RulesToggle[]>([
 <style lang="scss" scoped>
 .outer-rules {
   display: flex;
+  flex: 1;
   flex-direction: column;
+  gap: var(--m-spacing);
   align-items: center;
   justify-content: space-between;
-  gap: var(--m-spacing);
   padding: var(--l-spacing) 160px;
-  flex: 1;
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     padding: var(--xxl-spacing) var(--s-spacing);
   }
 }

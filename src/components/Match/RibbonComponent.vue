@@ -76,21 +76,28 @@ const activeProfile = computed(() => {
 .ribbon {
   /* control the folded part */
   --f: 0.2em;
+
   /* control the cutout */
   --r: 0.4em;
 
+  position: absolute;
+  top: calc(-1 * var(--f));
+  right: 4px;
+  z-index: 1;
+  width: 36px;
+  height: 44px;
+  padding-top: var(--s-spacing);
+
   // font-size: var(--s-font-size);
   color: #fff;
-  position: absolute;
-  right: 4px;
-  top: calc(-1 * var(--f));
-  padding-top: var(--s-spacing);
-  border: solid #0000;
-  border-width: 0 calc(2 * var(--f)) var(--r) 0;
+  text-align: center;
   background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100%
     0 / calc(2 * var(--f)) var(--f) no-repeat border-box;
   background-color: #bf4d28;
+  border: solid #0000;
+  border-width: 0 calc(2 * var(--f)) var(--r) 0;
   border-radius: var(--f) var(--f) 0 0;
+  box-shadow: 0 0 15px 1px #0006;
   clip-path: polygon(
     100% 0,
     0 0,
@@ -100,17 +107,12 @@ const activeProfile = computed(() => {
     calc(100% - 2 * var(--f)) var(--f),
     100% var(--f)
   );
-  z-index: 1;
-  box-shadow: 0 0 15px 1px #0006;
-  width: 36px;
-  height: 44px;
-  text-align: center;
 
   .pi {
     font-size: var(--l-font-size);
   }
 
-  @media (max-width: 1023px) {
+  @media (width <= 1023px) {
     height: 40px;
 
     i {
@@ -122,27 +124,24 @@ const activeProfile = computed(() => {
 .gold-bg {
   --c: var(--bolao-c-gold-l2);
 
+  color: var(--bolao-c-gold-d2);
   background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100%
     0 / calc(2 * var(--f)) var(--f) no-repeat border-box;
   background-color: var(--c);
-  color: var(--bolao-c-gold-d2);
 
   &::before {
-    content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
+    pointer-events: none;
+    content: "";
     background: linear-gradient(
       90deg,
       transparent 20%,
-      rgba(255, 255, 255, 0.6) 50%,
+      rgb(255 255 255 / 60%) 50%,
       transparent 80%
     );
-    animation: gold-shine 3s ease-in-out infinite;
-    pointer-events: none;
     clip-path: inherit;
+    animation: gold-shine 3s ease-in-out infinite;
   }
 }
 
@@ -150,6 +149,7 @@ const activeProfile = computed(() => {
   0% {
     transform: translateX(-150%) rotate(30deg);
   }
+
   100% {
     transform: translateX(150%) rotate(30deg);
   }
@@ -158,10 +158,10 @@ const activeProfile = computed(() => {
 .green-bg {
   --c: var(--bolao-c-green-l3);
 
+  color: var(--bolao-c-green-d1);
   background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100%
     0 / calc(2 * var(--f)) var(--f) no-repeat border-box;
   background-color: var(--c);
-  color: var(--bolao-c-green-d1);
 }
 
 .orange-bg {
@@ -175,28 +175,28 @@ const activeProfile = computed(() => {
 .blue-bg {
   --c: var(--bolao-c-blue-l2);
 
+  color: var(--bolao-c-blue-d2);
   background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100%
     0 / calc(2 * var(--f)) var(--f) no-repeat border-box;
   background-color: var(--c);
-  color: var(--bolao-c-blue-d2);
 }
 
 .white-bg {
   --c: var(--bolao-c-white);
 
+  color: var(--bolao-c-black);
   background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100%
     0 / calc(2 * var(--f)) var(--f) no-repeat border-box;
   background-color: var(--c);
-  color: var(--bolao-c-black);
 }
 
 .red-bg {
   --c: var(--bolao-c-red);
 
+  color: var(--bolao-c-red-l3);
   background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100%
     0 / calc(2 * var(--f)) var(--f) no-repeat border-box;
   background-color: var(--c);
-  color: var(--bolao-c-red-l3);
 }
 
 .grey-bg {

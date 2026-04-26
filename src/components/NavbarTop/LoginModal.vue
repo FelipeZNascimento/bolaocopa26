@@ -123,7 +123,7 @@
       </div>
       <p
         v-show="loginError"
-        style="text-align: center; padding-top: var(--l-spacing)"
+        style=" padding-top: var(--l-spacing);text-align: center"
       >
         <PrimeTag
           severity="contrast"
@@ -309,10 +309,11 @@ watch(isVisible, async (newValue) => {
 .input {
   padding-bottom: var(--m-spacing);
 }
+
 .buttons-container {
   display: flex;
-  justify-content: center;
   gap: var(--m-spacing);
+  justify-content: center;
 }
 
 .signup-button {

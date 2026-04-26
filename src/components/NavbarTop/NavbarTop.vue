@@ -360,22 +360,6 @@ function animateWave(targetIndex: number) {
   animationFrame = requestAnimationFrame(animate);
 }
 
-function getIconClass(routeId: number): string {
-  const iconMap: Record<number, string> = {
-    [ROUTE_ID.BET]: "pi pi-money-bill",
-    [ROUTE_ID.EXTRAS]: "pi pi-star",
-    [ROUTE_ID.GAMES]: "pi pi-list",
-    [ROUTE_ID.HOME]: "pi pi-home",
-    [ROUTE_ID.LOGIN]: "pi pi-user",
-    [ROUTE_ID.PROFILE]: "pi pi-user",
-    [ROUTE_ID.RANKING]: "pi pi-trophy",
-    [ROUTE_ID.RECORDS]: "pi pi-chart-bar",
-    [ROUTE_ID.RULES]: "pi pi-book",
-    [ROUTE_ID.TEAMS]: "pi pi-globe",
-  };
-  return iconMap[routeId] || "pi pi-circle";
-}
-
 function handleCloseConfigModal() {
   isConfigModalOpen.value = false;
   syncActiveRouteWithPath();
@@ -627,7 +611,7 @@ function updateBallPosition() {
 }
 
 /* Responsive */
-@media (max-width: 1280px) {
+@media (width <= 1280px) {
   .navbar {
     height: var(--navbar-height-mobile);
   }
@@ -648,7 +632,7 @@ function updateBallPosition() {
   }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .nav-links-wrapper {
     padding: 0 var(--xs-spacing);
   }

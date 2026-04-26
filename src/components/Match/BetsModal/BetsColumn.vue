@@ -118,8 +118,8 @@ const isMissColumn = computed(() => props.hitLevel === "miss");
   white-space: nowrap;
 
   @media (width <= 768px) {
-    align-items: center;
     flex-direction: column;
+    align-items: center;
   }
 }
 
@@ -129,9 +129,9 @@ const isMissColumn = computed(() => props.hitLevel === "miss");
   border-bottom: 1px solid rgb(255 255 255 / 10%);
 
   @media (width <= 768px) {
-    text-align: center;
-    font-size: var(--xs-font-size);
     width: 100%;
+    font-size: var(--xs-font-size);
+    text-align: center;
   }
 }
 </style>

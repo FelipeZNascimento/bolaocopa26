@@ -7,9 +7,8 @@
       v-if="!isMatchStarted"
       style="
         display: flex;
+        flex-flow: column wrap;
         align-items: flex-end;
-        flex-wrap: wrap;
-        flex-direction: column;
       "
       class="clock-time"
     >
@@ -65,45 +64,46 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
 }
 
 .outer-clock {
+  position: relative;
   display: flex;
   align-items: center;
   font-size: var(--m-font-size);
-  position: relative;
-  background-color: var(--bolao-c-white-t1);
   color: var(--color-contrast);
+  background-color: var(--bolao-c-white-t1);
   border-radius: var(--border-radius);
 
   span {
     display: -webkit-box;
-    line-clamp: 2;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     height: calc(var(--match-list-height) - 20px);
   }
 
-  @media (min-width: 769px) {
+  @media (width >= 769px) {
     height: var(--match-list-height);
   }
-  @media (max-width: 1023px) {
-    font-size: var(--s-font-size);
+
+  @media (width <= 1023px) {
     padding: 0 var(--m-spacing);
+    font-size: var(--s-font-size);
   }
 
-  @media (min-width: 1024px) {
+  @media (width >= 1024px) {
     width: 120px;
-    font-size: var(--s-font-size);
     padding: 0 var(--m-spacing);
+    font-size: var(--s-font-size);
   }
 
-  @media (min-width: 1440px) {
+  @media (width >= 1440px) {
     width: 140px;
-    font-size: var(--m-font-size);
     padding: 0 var(--xxl-spacing);
+    font-size: var(--m-font-size);
   }
 }
 
@@ -114,7 +114,7 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
 .clock-time {
   font-size: var(--m-font-size);
 
-  @media (max-width: 1024px) {
+  @media (width <= 1024px) {
     font-size: var(--s-font-size);
   }
 }

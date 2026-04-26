@@ -72,8 +72,8 @@ function isFavorite(): boolean {
 </script>
 <style lang="scss" scoped>
 .outer-short {
-  max-width: 100%;
   min-width: 0;
+  max-width: 100%;
 
   .username {
     overflow: hidden;
@@ -116,9 +116,9 @@ function isFavorite(): boolean {
 }
 
 .clickable {
+  text-decoration: underline dotted;
   cursor: pointer;
   transition: 0.2s;
-  text-decoration: underline dotted;
 
   &:hover {
     text-decoration: underline;

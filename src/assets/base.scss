@@ -36,13 +36,15 @@ $colors: (
   "orange": #dc6d31,
   "navy": #1b2f42,
 
-  /* stylelint-disable-next-line color-hex-length */ "white": #ffffff,
+  /* stylelint-disable-next-line color-hex-length */
+  "white": #ffffff,
   "grey1": #eceff1,
   "grey2": #cfd8dc,
   "grey3": #9da4a7,
   "grey4": #757a7c,
   "grey5": #545859,
-  /* stylelint-disable-next-line color-hex-length */ "black": #000000,
+  /* stylelint-disable-next-line color-hex-length */
+  "black": #000000,
 
   "blue1": #1e85e6,
   "blue2": #1b78d0,
@@ -132,11 +134,11 @@ $colors: (
   --vt-c-text-dark-1: var(--bolao-c-white);
   --vt-c-text-dark-2: rgb(235 235 235 / 64%);
 
-  @media (max-width: 1439px) {
+  @media (width <= 1439px) {
     --page-width: 100%;
   }
 
-  @media (min-width: 1440px) {
+  @media (width >= 1440px) {
     --page-width: 1440px;
   }
 }

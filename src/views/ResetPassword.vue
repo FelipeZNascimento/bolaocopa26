@@ -189,8 +189,8 @@ const handleResetPassword = async (formData: FormSubmitEvent<Record<string, stri
 <style scoped>
 .reset-password-container {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   padding: 1rem;
 }
 

@@ -27,9 +27,8 @@ const isSeasonStarted = computed(
 </script>
 <style lang="scss" scoped>
 .skeleton-outer {
-  margin-top: var(--l-spacing);
-
   width: 100% !important;
   height: 500px !important;
+  margin-top: var(--l-spacing);
 }
 </style>

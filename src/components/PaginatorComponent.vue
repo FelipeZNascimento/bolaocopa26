@@ -44,15 +44,16 @@ function handlePageChange(e: PageState) {
   align-items: center;
   justify-content: center;
   width: 100%;
-  border-radius: var(--border-radius);
   height: var(--paginator-height);
+  border-radius: var(--border-radius);
+
   // margin: var(--s-spacing) 0;
 
-  @media (max-width: 1024px) {
+  @media (width <= 1024px) {
     gap: var(--xs-spacing);
   }
 
-  @media (min-width: 1025px) {
+  @media (width >= 1025px) {
     gap: var(--l-spacing);
   }
 }

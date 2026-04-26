@@ -92,7 +92,7 @@ watch(activeProfile, async (newValue) => {
   width: 100%;
   margin-top: var(--navbar-height);
 
-  @media (max-width: 1024px) {
+  @media (width <= 1024px) {
     margin-top: var(--navbar-height-mobile);
   }
 }
@@ -101,12 +101,12 @@ watch(activeProfile, async (newValue) => {
   position: fixed;
   bottom: 0;
   left: 0;
+  z-index: 1000;
+  width: 100vw;
+  padding: var(--m-spacing) 0;
   font-size: var(--l-font-size);
   color: black;
-  z-index: 1000;
-  background-color: rgba(255, 255, 255, 0.7);
-  width: 100vw;
   text-align: center;
-  padding: var(--m-spacing) 0;
+  background-color: rgb(255 255 255 / 70%);
 }
 </style>

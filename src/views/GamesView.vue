@@ -61,7 +61,7 @@ const selectedRound = computed(() => configurationStore.selectedRound);
   width: 100%;
   padding: var(--xl-spacing);
 
-  @media (max-width: 1024px) {
+  @media (width <= 1024px) {
     padding: var(--xs-spacing);
   }
 }
