@@ -307,7 +307,7 @@ function updateCallback(isSuccess: boolean, error?: Error) {
   padding: var(--l-spacing) 160px;
   flex: 1;
 
-  @media (max-width: 767px) {
+  @media (max-width: 768px) {
     padding: var(--xxl-spacing) var(--s-spacing);
   }
 }
@@ -325,7 +325,7 @@ function updateCallback(isSuccess: boolean, error?: Error) {
   gap: var(--l-spacing);
   width: 100%;
 
-  @media (max-width: 767px) {
+  @media (max-width: 768px) {
     flex-direction: column;
   }
 
@@ -334,7 +334,7 @@ function updateCallback(isSuccess: boolean, error?: Error) {
     width: 400px;
     height: 400px !important;
 
-    @media (max-width: 767px) {
+    @media (max-width: 768px) {
       width: 100% !important;
       min-width: 100% !important;
     }

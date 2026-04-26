@@ -84,14 +84,14 @@ watch(isVisible, (newValue) => {
 <style lang="scss" scoped>
 .teams-outer {
   display: flex;
-  width: 100%;
-  height: 60px;
+  gap: var(--m-spacing);
   align-items: center;
   justify-content: center;
-  gap: var(--m-spacing);
+  width: 100%;
+  height: 60px;
+  padding-bottom: var(--s-spacing);
   font-size: var(--l-font-size);
   font-weight: bold;
-  padding-bottom: var(--s-spacing);
   border-bottom: 1px solid var(--color-contrast);
 
   img {
@@ -121,28 +121,28 @@ watch(isVisible, (newValue) => {
   column-gap: var(--m-spacing);
   padding: var(--m-spacing);
 
-  @media (max-width: 900px) {
+  @media (width <= 900px) {
     columns: 3 200px;
   }
 
-  @media (max-width: 700px) {
+  @media (width <= 700px) {
     columns: 2 200px;
   }
 
-  @media (max-width: 500px) {
+  @media (width <= 500px) {
     columns: 1 200px;
   }
 }
 
 .bet-item {
   display: flex;
+  flex-shrink: 0;
   flex-direction: row;
   align-items: center;
-  text-align: center;
   width: 200px;
-  flex-shrink: 0;
-  break-inside: avoid;
   margin-bottom: var(--s-spacing);
+  text-align: center;
+  break-inside: avoid;
 
   p {
     margin: 0;

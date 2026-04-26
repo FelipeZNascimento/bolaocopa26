@@ -111,7 +111,7 @@ const easyMatch: IMatch = {
   loggedUserBets: null,
   overUnder: 'o47.5',
   status: 0,
-  timestamp: 1757276700,
+  timestamp: 1757276800,
 };
 
 const hardMatch: IMatch = {
@@ -148,7 +148,7 @@ const hardMatch: IMatch = {
   loggedUserBets: null,
   overUnder: 'o47.5',
   status: 0,
-  timestamp: 1757276700,
+  timestamp: 1757276800,
 };
 </script>
 <style lang="scss" scoped></style> -->

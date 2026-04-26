@@ -4,33 +4,36 @@
       :first="selectedRound && selectedRound - 1"
       :rows="1"
       :total-records="rounds.filter((round) => !round.hidden).length"
-      :template="{
-        default: 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink JumpToPageDropdown',
-      }"
+      :template="isMobile ? templateMobile : templateDesktop"
       @page="handlePageChange"
     />
   </div>
 </template>
 <script setup lang="ts">
-import type { PageState } from 'primevue';
+import type { PageState } from "primevue";
 
-import { computed, ref } from 'vue';
+import { computed, ref } from "vue";
 
-import { ROUNDS } from '@/constants/rounds';
-import { useConfigurationStore } from '@/stores/configuration';
+import { ROUNDS } from "@/constants/rounds";
+import { useViewport } from "@/services/viewport";
+import { useConfigurationStore } from "@/stores/configuration";
 
 // ------ Refs ------
 const rounds = ref(ROUNDS);
 
 // ------ Initialization ------
 const configurationStore = useConfigurationStore();
+const { isMobile } = useViewport();
 
 // ------ Computed Properties ------
 const selectedRound = computed(() => configurationStore.selectedRound);
+const templateMobile =
+  "PrevPageLink CurrentPageReport NextPageLink JumpToPageDropdown";
+const templateDesktop =
+  "FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink JumpToPageDropdown";
 
 // ------ Functions ------
 function handlePageChange(e: PageState) {
-  console.log('Page changed to:', e.page + 1);
   configurationStore.setSelectedRound(e.page + 1);
 }
 </script>
@@ -38,16 +41,19 @@ function handlePageChange(e: PageState) {
 .outer-paginator {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   width: 100%;
+  height: var(--paginator-height);
   border-radius: var(--border-radius);
 
-  @media (max-width: 1024px) {
+  // margin: var(--s-spacing) 0;
+
+  @media (width <= 1024px) {
     gap: var(--xs-spacing);
   }
 
-  @media (min-width: 1025px) {
+  @media (width >= 1025px) {
     gap: var(--l-spacing);
   }
 }

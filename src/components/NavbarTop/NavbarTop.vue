@@ -2,32 +2,14 @@
   <header class="navbar">
     <nav class="nav-container">
       <div class="wave-background">
-        <svg
-          class="wave-svg"
-          viewBox="0 0 1400 100"
-          preserveAspectRatio="none"
-        >
-          <path
-            :d="wavePath"
-            fill="var(--bolao-c-green-t3)"
-          />
+        <svg class="wave-svg" viewBox="0 0 1400 100" preserveAspectRatio="none">
+          <path :d="wavePath" fill="var(--bolao-c-green-t3)" />
         </svg>
       </div>
 
       <!-- All Navigation Items -->
-      <div
-        ref="navWrapper"
-        class="nav-links-wrapper"
-      >
+      <div ref="navWrapper" class="nav-links-wrapper">
         <!-- Soccer ball that moves between items -->
-        <div
-          class="telstar-ball"
-          :style="{
-            left: ballPosition,
-            transform: `translate(-50%, -20px) rotate(${ballRotation}deg)`,
-          }"
-        />
-
         <RouterLink
           v-for="(routeItem, index) in allRoutes"
           :key="routeItem.id"
@@ -42,21 +24,14 @@
           custom
         >
           <a
+            :autohide="false"
             @click="
-              routeItem.id === ROUTE_ID.PROFILE || routeItem.id === ROUTE_ID.LOGIN
+              routeItem.id === ROUTE_ID.PROFILE ||
+              routeItem.id === ROUTE_ID.LOGIN
                 ? handleNavigate($event, index, navigate, routeItem)
                 : handleRouteClick(routeItem, index, navigate)
             "
           >
-            <div
-              class="icon-wrapper"
-              :class="{ elevated: routeItem.id === activeRoute }"
-            >
-              <i
-                :class="getIconClass(routeItem.id)"
-                class="nav-icon"
-              />
-            </div>
             <span
               class="nav-label"
               :class="{ 'active-label': routeItem.id === activeRoute }"
@@ -65,14 +40,19 @@
             </span>
           </a>
         </RouterLink>
+        <div
+          v-if="isDesktop"
+          class="telstar-ball"
+          :style="{
+            left: ballPosition,
+            transform: `translate(0, -20px) rotate(${ballRotation}deg)`,
+          }"
+        />
       </div>
     </nav>
 
     <!-- Profile Popover -->
-    <PrimePopover
-      ref="profilePopover"
-      @hide="syncActiveRouteWithPath"
-    >
+    <PrimePopover ref="profilePopover" @hide="syncActiveRouteWithPath">
       <div class="outer-profile-popover">
         <PrimeButton
           variant="text"
@@ -101,6 +81,16 @@
           label="Configurações"
           @click="
             isConfigModalOpen = true;
+            profilePopover.toggle();
+          "
+        />
+        <PrimeButton
+          variant="text"
+          severity="secondary"
+          size="small"
+          label="Favoritos"
+          @click="
+            isFavoritesModalOpen = true;
             profilePopover.toggle();
           "
         />
@@ -138,23 +128,31 @@
     :is-open="isRankingModalOpen"
     :handle-close-modal="handleCloseRankingModal"
   />
+  <ManageFavoritesModal
+    :is-open="isFavoritesModalOpen"
+    :handle-close-modal="handleCloseFavoritesModal"
+  />
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { useRoute } from "vue-router";
 
-import ConfigModal from '@/components/NavbarTop/ConfigModal.vue';
-import LoginModal from '@/components/NavbarTop/LoginModal.vue';
-import UserService from '@/services/user';
-import { useActiveProfileStore } from '@/stores/activeProfile';
+import ConfigModal from "@/components/NavbarTop/ConfigModal.vue";
+import LoginModal from "@/components/NavbarTop/LoginModal.vue";
+import ManageFavoritesModal from "@/components/Ranking/ManageFavoritesModal.vue";
+import UserService from "@/services/user";
+import { useViewport } from "@/services/viewport";
+import { useActiveProfileStore } from "@/stores/activeProfile";
 
-import RankingModal from '../Ranking/RankingModal.vue';
-import PasswordModal from './ChangePasswordModal.vue';
-import ProfileModal from './ProfileModal.vue';
-import { ROUTE_ID, ROUTES, type TROUTE } from './routes';
+import RankingModal from "../Ranking/RankingModal.vue";
+import PasswordModal from "./ChangePasswordModal.vue";
+import ProfileModal from "./ProfileModal.vue";
+import { ROUTE_ID, ROUTES, type TROUTE } from "./routes";
 
-type ExtendedRoute = TROUTE | { id: number; label: string; needCredentials: boolean; url: string };
+type ExtendedRoute =
+  | TROUTE
+  | { id: number; label: string; needCredentials: boolean; url: string };
 
 // ------ Refs ------
 const isLoginModalOpen = ref(false);
@@ -169,26 +167,29 @@ const animatedItemIndex = ref(0);
 const ballRotation = ref(0);
 const ballPositionPx = ref(0);
 const navWrapper = ref<HTMLElement | null>(null);
+const isFavoritesModalOpen = ref(false);
+
 let animationFrame: null | number = null;
 
 const profileRoute = computed(() => ({
   id: ROUTE_ID.PROFILE,
-  label: activeProfile.value ? activeProfile.value.name : 'Perfil',
+  label: activeProfile.value ? activeProfile.value.name : "Perfil",
   needCredentials: true,
-  url: '',
+  url: "",
 }));
 
 const loginRoute: ExtendedRoute = {
   id: ROUTE_ID.LOGIN,
-  label: 'Login',
+  label: "Login",
   needCredentials: false,
-  url: '',
+  url: "",
 };
 
 // ------ Initializations ------
 const activeProfileStore = useActiveProfileStore();
 const userService = new UserService();
 const route = useRoute();
+const { isDesktop } = useViewport();
 
 onMounted(() => {
   const currentPath = window.location.pathname;
@@ -252,7 +253,8 @@ const wavePath = computed(() => {
 
     const distanceFromCenter = Math.abs(x - centerX);
     if (distanceFromCenter < dipWidth) {
-      const dipFactor = Math.cos((distanceFromCenter / dipWidth) * Math.PI) * 0.5 + 0.5;
+      const dipFactor =
+        Math.cos((distanceFromCenter / dipWidth) * Math.PI) * 0.5 + 0.5;
       y = height * 0.3 + dipDepth * dipFactor;
     }
 
@@ -309,7 +311,7 @@ function animateWave(targetIndex: number) {
 
   // Get start and end positions from DOM
   if (!navWrapper.value) return;
-  const navItems = navWrapper.value.querySelectorAll('.nav-link');
+  const navItems = navWrapper.value.querySelectorAll(".nav-link");
   if (navItems.length === 0) return;
 
   const startItem = navItems[Math.round(startIndex)] as HTMLElement;
@@ -329,7 +331,10 @@ function animateWave(targetIndex: number) {
     const progress = Math.min(elapsed / duration, 1);
 
     // Ease-in-ease-out function
-    const easeProgress = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+    const easeProgress =
+      progress < 0.5
+        ? 2 * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
 
     animatedItemIndex.value = startIndex + distance * easeProgress;
     ballRotation.value = startRotation + rotationDistance * easeProgress;
@@ -355,25 +360,13 @@ function animateWave(targetIndex: number) {
   animationFrame = requestAnimationFrame(animate);
 }
 
-function getIconClass(routeId: number): string {
-  const iconMap: Record<number, string> = {
-    [ROUTE_ID.BET]: 'pi pi-money-bill',
-    [ROUTE_ID.EXTRAS]: 'pi pi-star',
-    [ROUTE_ID.GAMES]: 'pi pi-list',
-    [ROUTE_ID.HOME]: 'pi pi-home',
-    [ROUTE_ID.LOGIN]: 'pi pi-user',
-    [ROUTE_ID.PROFILE]: 'pi pi-user',
-    [ROUTE_ID.RANKING]: 'pi pi-trophy',
-    [ROUTE_ID.RECORDS]: 'pi pi-chart-bar',
-    [ROUTE_ID.RULES]: 'pi pi-book',
-    [ROUTE_ID.TEAMS]: 'pi pi-globe',
-  };
-  return iconMap[routeId] || 'pi pi-circle';
-}
-
 function handleCloseConfigModal() {
   isConfigModalOpen.value = false;
   syncActiveRouteWithPath();
+}
+
+function handleCloseFavoritesModal() {
+  isFavoritesModalOpen.value = false;
 }
 
 function handleCloseLoginModal() {
@@ -401,7 +394,12 @@ function handleLogout() {
   profilePopover.value.toggle();
 }
 
-function handleNavigate(event: Event, index: number, navigate: () => void, route: ExtendedRoute) {
+function handleNavigate(
+  event: Event,
+  index: number,
+  navigate: () => void,
+  route: ExtendedRoute,
+) {
   if (route.needCredentials && !activeProfile.value) {
     return;
   }
@@ -424,8 +422,12 @@ function handleNavigate(event: Event, index: number, navigate: () => void, route
   }
 }
 
-function handleRouteClick(route: ExtendedRoute, index: number, navigate: () => void) {
-  console.log('Route clicked in handleRouteClick:', route);
+function handleRouteClick(
+  route: ExtendedRoute,
+  index: number,
+  navigate: () => void,
+) {
+  console.log("Route clicked in handleRouteClick:", route);
   if (route.id === ROUTE_ID.PROFILE) {
     activeRoute.value = route.id;
     activeItemIndex.value = index;
@@ -461,7 +463,7 @@ function togglePopover(event: Event) {
 function updateBallPosition() {
   if (!navWrapper.value) return;
 
-  const navItems = navWrapper.value.querySelectorAll('.nav-link');
+  const navItems = navWrapper.value.querySelectorAll(".nav-link");
   if (navItems.length === 0) return;
 
   const targetIndex = Math.round(animatedItemIndex.value);
@@ -482,28 +484,29 @@ function updateBallPosition() {
 .navbar {
   position: absolute;
   top: 0;
-  left: 0;
   right: 0;
+  left: 0;
   z-index: 1000;
-  height: var(--navbar-height);
   width: 100%;
+  height: var(--navbar-height);
   background-color: var(--bolao-c-navbar);
 }
 
 .nav-container {
   position: relative;
+  height: 100%;
+
   // max-width: 1400px;
   margin: 0 auto;
-  height: 100%;
 }
 
 .wave-background {
   position: absolute;
   top: 0;
-  left: 0;
   right: 0;
-  height: 100%;
+  left: 0;
   width: 100%;
+  height: 100%;
   overflow: visible;
 }
 
@@ -513,114 +516,90 @@ function updateBallPosition() {
   left: 0;
   width: 100%;
   height: 80px;
+
   // filter: drop-shadow(0/ -2px 10px rgba(0, 0, 0, 0.9));
 }
 
 .nav-links-wrapper {
   position: relative;
-  display: flex;
-  justify-content: space-around;
-  align-items: flex-end;
-  height: 100%;
-  padding: 0 var(--l-spacing);
   z-index: 10;
+  display: flex;
   gap: var(--l-spacing);
+  align-items: flex-end;
+  justify-content: space-around;
+  height: 100%;
+  padding: 0 var(--l-spacing) var(--xs-spacing) var(--l-spacing);
 }
 
 .nav-link {
+  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: var(--xs-spacing);
-  text-decoration: none;
-  color: var(--color-text);
-  transition: all 0.3s ease;
-  position: relative;
-  padding: var(--xs-spacing);
-  // flex: 1;
+  align-items: center;
   justify-content: center;
+  padding: var(--xs-spacing);
+  color: var(--bolao-c-white);
+  text-decoration: none;
   cursor: pointer;
+  transition: all 0.3s ease;
 
   &.disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
     pointer-events: none;
-  }
-}
-
-.icon-wrapper {
-  position: relative;
-  width: 10px;
-  height: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  z-index: 2;
-
-  &.elevated {
-    color: var(--bolao-c-gold);
-    transform: translateX(15px);
+    cursor: not-allowed;
+    opacity: 0.4;
   }
 }
 
 .telstar-ball {
   position: absolute;
   bottom: 10px;
+  z-index: 3;
   width: 25px;
   height: 25px;
-  background: url('/soccer_ball.svg') center center / cover no-repeat;
-  border-radius: 50%;
-  z-index: 3;
-  box-shadow:
-    0 8px 16px rgba(0, 0, 0, 0.3),
-    0 4px 8px rgba(0, 0, 0, 0.15);
   pointer-events: none;
-}
-
-.nav-icon {
-  font-size: var(--l-font-size);
-  color: var(--bolao-c-white);
-  transition: all 0.3s ease;
-  z-index: 1;
-
-  .elevated & {
-    color: var(--bolao-c-gold);
-    font-size: 24px;
-  }
+  background: url("/soccer_ball.svg") center center / cover no-repeat;
+  border-radius: 50%;
+  box-shadow:
+    0 8px 16px rgb(0 0 0 / 30%),
+    0 4px 8px rgb(0 0 0 / 15%);
 }
 
 .nav-label {
-  font-size: var(--s-font-size);
-  font-weight: 500;
-  text-align: center;
-  white-space: nowrap;
   max-width: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: var(--bolao-c-white);
+  font-size: var(--m-font-size);
+  text-align: center;
+  white-space: nowrap;
+  opacity: 0.9;
   transition: all 0.3s ease;
-  opacity: 0.7;
 
   &.active-label {
+    font-weight: bold;
     color: var(--bolao-c-white);
-    font-weight: 700;
     opacity: 1;
-    transform: scale(1.05);
+    transform: scale(1.15);
+  }
+
+  &:hover {
+    transform: scale(1.1);
   }
 }
 
-@keyframes popIn {
+@keyframes pop-in {
   0% {
-    transform: scale(0) rotate(-180deg);
     opacity: 0;
+    transform: scale(0) rotate(-180deg);
   }
+
   50% {
     transform: scale(1.15) rotate(-90deg);
   }
+
   100% {
-    transform: scale(1) rotate(0deg);
     opacity: 1;
+    transform: scale(1) rotate(0deg);
   }
 }
 
@@ -632,22 +611,13 @@ function updateBallPosition() {
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (width <= 1280px) {
   .navbar {
-    height: 70px;
+    height: var(--navbar-height-mobile);
   }
 
   .nav-links-wrapper {
     padding: 0 var(--s-spacing);
-  }
-
-  .icon-wrapper {
-    width: 30px;
-    height: 30px;
-
-    &.elevated {
-      transform: translateX(-15px);
-    }
   }
 
   .telstar-ball {
@@ -655,21 +625,14 @@ function updateBallPosition() {
     height: 55px;
   }
 
-  .nav-icon {
-    font-size: var(--l-font-size);
-
-    .elevated & {
-      font-size: 20px;
-    }
-  }
-
   .nav-label {
-    font-size: 10px;
-    max-width: 60px;
+    &.active-label {
+      transform: scale(1.25);
+    }
   }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .nav-links-wrapper {
     padding: 0 var(--xs-spacing);
   }

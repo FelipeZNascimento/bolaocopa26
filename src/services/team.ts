@@ -1,9 +1,9 @@
-import type { ITeam } from '@/stores/teams.types';
+import type { ITeam } from "@/stores/teams.types";
 
-import { useConfigurationStore } from '@/stores/configuration';
-import { useTeamsStore } from '@/stores/teams';
+import { useConfigurationStore } from "@/stores/configuration";
+import { useTeamsStore } from "@/stores/teams";
 
-import ApiService from './api_request';
+import ApiService from "./api_request";
 
 export default class TeamService {
   private apiRequest;
@@ -25,13 +25,17 @@ export default class TeamService {
     }
 
     try {
-      const response = await this.apiRequest.get<ITeam[]>(`team/all/${edition}`);
+      const response = await this.apiRequest.get<ITeam[]>(
+        `team/all/${edition}`,
+      );
       this.teamsStore.setTeams(response);
       this.teamsStore.setLoading(false);
       this.teamsStore.setError(null);
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.teamsStore.setLoading(false);
-      this.teamsStore.setError(new Error(error));
+      this.teamsStore.setError(
+        new Error(error instanceof Error ? error.message : String(error)),
+      );
     }
   }
 }

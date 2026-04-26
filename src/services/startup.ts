@@ -1,24 +1,19 @@
-import type { IUser } from '@/stores/activeProfile.types';
-import type { TRankingPositionValue } from '@/stores/configuration.types';
-import type { ITeam } from '@/stores/teams.types';
+import type { IUser } from "@/stores/activeProfile.types";
+import type { TRankingPositionValue } from "@/stores/configuration.types";
+import type { ITeam } from "@/stores/teams.types";
 
-import { useActiveProfileStore } from '@/stores/activeProfile';
-import { useConfigurationStore } from '@/stores/configuration';
-import { useExtraBetStore } from '@/stores/extraBet';
-import { isFulfilled, isRejected } from '@/util/promiseCheck';
+import { useActiveProfileStore } from "@/stores/activeProfile";
+import { useConfigurationStore } from "@/stores/configuration";
+import { useExtraBetStore } from "@/stores/extraBet";
+import { isFulfilled, isRejected } from "@/util/promiseCheck";
 
-import ApiService from './api_request';
+import ApiService from "./api_request";
 
 export interface InitializeObj {
   currentEdition: number;
   currentRound: number;
   editionStart: string;
 }
-
-// export interface TeamByConferenceAndDivision {
-//   AFC: IConferenceTeams;
-//   NFC: IConferenceTeams;
-// }
 
 export default class StartupService {
   private activeProfileStore;
@@ -39,18 +34,27 @@ export default class StartupService {
     this.configurationStore.setLoading(true);
     this.extraBetStore.setLoading(true);
     try {
-      const [activeProfileResponse, seasonResponse, teamResponse] = await Promise.allSettled([
-        this.apiRequest.get<IUser>('user/activeProfile'),
-        this.apiRequest.get<InitializeObj>('season/current'),
-        this.apiRequest.get<ITeam[]>('team/all/'),
-      ]);
+      const [activeProfileResponse, seasonResponse, teamResponse] =
+        await Promise.allSettled([
+          this.apiRequest.get<IUser>("user/activeProfile"),
+          this.apiRequest.get<InitializeObj>("season/current"),
+          this.apiRequest.get<ITeam[]>("team/all/"),
+        ]);
 
-      if (isRejected(activeProfileResponse) || isRejected(seasonResponse) || isRejected(teamResponse)) {
-        throw new Error('Falha ao inicializar a aplicação');
+      if (
+        isRejected(activeProfileResponse) ||
+        isRejected(seasonResponse) ||
+        isRejected(teamResponse)
+      ) {
+        throw new Error("Falha ao inicializar a aplicação");
       }
 
-      const loggedUser = isFulfilled(activeProfileResponse) ? activeProfileResponse.value : null;
-      const seasonData = isFulfilled(seasonResponse) ? seasonResponse.value : null;
+      const loggedUser = isFulfilled(activeProfileResponse)
+        ? activeProfileResponse.value
+        : null;
+      const seasonData = isFulfilled(seasonResponse)
+        ? seasonResponse.value
+        : null;
 
       // Set Active Profile store properties
       this.activeProfileStore.setLoading(false);
@@ -63,7 +67,9 @@ export default class StartupService {
         // this.configurationStore.setCurrentRound(seasonData.currentRound);
         this.configurationStore.setCurrentRound(1);
         this.configurationStore.setSelectedRound(1);
-        this.configurationStore.setEditionStart(parseInt(seasonData.editionStart));
+        this.configurationStore.setEditionStart(
+          parseInt(seasonData.editionStart),
+        );
         this.configurationStore.setError(null);
       }
 
@@ -71,38 +77,45 @@ export default class StartupService {
       this.extraBetStore.setLoading(false);
 
       return callback(true);
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.activeProfileStore.setLoading(false);
       this.configurationStore.setLoading(false);
       this.extraBetStore.setLoading(false);
-      this.configurationStore.setError(new Error(error));
+      this.configurationStore.setError(
+        new Error(error instanceof Error ? error.message : String(error)),
+      );
       return callback(false);
     }
   }
 
   initializeLocalStoragePreferences() {
-    const themePreference = localStorage.getItem('theme-preference');
-    const rankingPositionPreference = localStorage.getItem('ranking-position') as TRankingPositionValue;
+    const themePreference = localStorage.getItem("theme-preference");
+    const rankingPositionPreference = localStorage.getItem(
+      "ranking-position",
+    ) as TRankingPositionValue;
 
     if (rankingPositionPreference) {
       this.configurationStore.setRankingPosition(rankingPositionPreference);
     } else {
-      localStorage.setItem('ranking-position', 'active');
+      localStorage.setItem("ranking-position", "active");
     }
 
     if (themePreference) {
-      document.documentElement.setAttribute('data-theme', themePreference);
-      if (themePreference === 'light') {
-        this.configurationStore.setTheme('light');
-        document.documentElement.classList.remove('dark-mode');
+      document.documentElement.setAttribute("data-theme", themePreference);
+      if (themePreference === "light") {
+        this.configurationStore.setTheme("light");
+        document.documentElement.classList.remove("dark-mode");
       } else {
-        this.configurationStore.setTheme('dark');
-        document.documentElement.classList.add('dark-mode');
+        this.configurationStore.setTheme("dark");
+        document.documentElement.classList.add("dark-mode");
       }
-    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      this.configurationStore.setTheme('dark');
+    } else if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    ) {
+      this.configurationStore.setTheme("dark");
     } else {
-      this.configurationStore.setTheme('light');
+      this.configurationStore.setTheme("light");
     }
   }
 }

@@ -55,8 +55,8 @@ if (!self.define) {
     let exports = {};
     const require = depUri => singleRequire(depUri, uri);
     const specialDeps = {
-      module: { uri },
       exports,
+      module: { uri },
       require
     };
     registry[uri] = Promise.all(depsNames.map(
@@ -78,11 +78,11 @@ define(['./workbox-d47a0fae'], (function (workbox) { 'use strict';
    * See https://goo.gl/S9QRab
    */
   workbox.precacheAndRoute([{
-    "url": "registerSW.js",
-    "revision": "3ca0b8505b4bec776b69afdba2768812"
+    "revision": "3ca0b8505b4bec776b69afdba2768812",
+    "url": "registerSW.js"
   }, {
-    "url": "index.html",
-    "revision": "0.hqdvj5gejlg"
+    "revision": "0.jo55tldpi28",
+    "url": "index.html"
   }], {});
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {

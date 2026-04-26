@@ -1,6 +1,7 @@
 <template>
   <span
     class="player-name-hover"
+    :style="{ textAlign: textAlign }"
     @mouseenter="(e) => showPlayerSticker(e, player)"
     @mouseleave="hidePlayerSticker"
   >
@@ -17,13 +18,14 @@
   </PrimePopover>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
-import type { IPlayer } from '@/stores/teams.types';
+import type { IPlayer } from "@/stores/teams.types";
 
-import PlayerStickerComponent from '@/components/PlayerStickerComponent.vue';
+import PlayerStickerComponent from "@/components/PlayerStickerComponent.vue";
 defineProps<{
   player: IPlayer;
+  textAlign?: "left" | "right";
 }>();
 
 // ------ Refs ------
@@ -78,11 +80,11 @@ function showPlayerSticker(event: MouseEvent, player: IPlayer) {
 </script>
 <style lang="scss" scoped>
 .player-name-hover {
-  cursor: pointer;
-  transition: all 0.2s ease;
   text-decoration: underline;
   text-decoration-style: dotted;
   text-underline-offset: 2px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 
   &:hover {
     color: var(--bolao-c-gold);

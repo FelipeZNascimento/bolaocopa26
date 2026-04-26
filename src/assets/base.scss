@@ -1,74 +1,81 @@
-@use 'sass:color';
+@use "sass:color";
 
 /* ------------------- */
+
 /* ---- VARIABLES ---- */
+
 /* ------------------- */
 $spacings: (
-  'none': 0px,
-  'xxs': 2px,
-  'xs': 4px,
-  's': 8px,
-  'm': 12px,
-  'l': 16px,
-  'xl': 20px,
-  'xxl': 32px,
-  'xxxl': 64px,
+  "none": 0px,
+  "xxs": 2px,
+  "xs": 4px,
+  "s": 8px,
+  "m": 12px,
+  "l": 16px,
+  "xl": 20px,
+  "xxl": 32px,
+  "xxxl": 64px,
 );
-
 $font-sizes: (
-  'xxs': 8px,
-  'xs': 12px,
-  's': 16px,
-  'm': 18px,
-  'm2': 20px,
-  'l': 24px,
-  'xl': 36px,
-  'xxl': 48px,
+  "xxs": 8px,
+  "xs": 12px,
+  "s": 16px,
+  "m": 18px,
+  "m2": 20px,
+  "l": 24px,
+  "xl": 36px,
+  "xxl": 48px,
 );
-
 $colors: (
-  'gold': #f4b303,
-  'green': #197b30,
-  'mint': #29c84e,
-  'blue': #1565c0,
-  'sky': #03a9f4,
-  'red': #be2a2a,
-  'orange': #dc6d31,
-  'navy': #1b2f42,
+  "gold": #f4b303,
+  "green": #197b30,
+  "mint": #29c84e,
+  "blue": #1565c0,
+  "sky": #03a9f4,
+  "red": #be2a2a,
+  "orange": #dc6d31,
+  "navy": #1b2f42,
 
-  'white': #ffffff,
-  'grey1': #eceff1,
-  'grey2': #cfd8dc,
-  'grey3': #9da4a7,
-  'grey4': #757a7c,
-  'grey5': #545859,
-  'black': #000000,
+  /* stylelint-disable-next-line color-hex-length */
+  "white": #ffffff,
+  "grey1": #eceff1,
+  "grey2": #cfd8dc,
+  "grey3": #9da4a7,
+  "grey4": #757a7c,
+  "grey5": #545859,
+  /* stylelint-disable-next-line color-hex-length */
+  "black": #000000,
 
-  'blue1': #1e85e6,
-  'blue2': #1b78d0,
-  'blue3': #13518a,
-  'blue4': #152a68,
-  'blue5': #080f25,
+  "blue1": #1e85e6,
+  "blue2": #1b78d0,
+  "blue3": #13518a,
+  "blue4": #152a68,
+  "blue5": #080f25,
 
-  'fifa-green1': #009e60,
-  'fifa-green2': #56bcb6,
-  'fifa-green3': #006958,
-  'fifa-red': #ee1c24,
-  'fifa-darkred': #7f011d,
-  'fifa-yellow': #e8ea7c,
-  'fifa-blue': #1768b4,
-  'fifa-orange': #f58021,
-  'fifa-lilac': #b0a7d1,
-  'fifa-purple': #4d3b98,
-  'fifa-lightpink': #f8aa9b,
-  'fifa-pink': #ef3875,
+  "fifa-green1": #009e60,
+  "fifa-green2": #56bcb6,
+  "fifa-green3": #006958,
+  "fifa-red": #ee1c24,
+  "fifa-darkred": #7f011d,
+  "fifa-yellow": #e8ea7c,
+  "fifa-blue": #1768b4,
+  "fifa-orange": #f58021,
+  "fifa-lilac": #b0a7d1,
+  "fifa-purple": #4d3b98,
+  "fifa-lightpink": #f8aa9b,
+  "fifa-pink": #ef3875,
 );
+
 /* ------------------- */
+
 /* ---- VARIABLES ---- */
+
 /* ------------------- */
 
 /* -------------------- */
+
 /* ------ MIXINS ------ */
+
 /* -------------------- */
 :root {
   @each $key_name, $pixels in $spacings {
@@ -79,11 +86,9 @@ $colors: (
     --bolao-c-#{$key_name}-l1: #{color.adjust($color, $lightness: 10%)};
     --bolao-c-#{$key_name}-l2: #{color.adjust($color, $lightness: 20%)};
     --bolao-c-#{$key_name}-l3: #{color.adjust($color, $lightness: 30%)};
-
     --bolao-c-#{$key_name}-d1: #{color.adjust($color, $lightness: -10%)};
     --bolao-c-#{$key_name}-d2: #{color.adjust($color, $lightness: -20%)};
     --bolao-c-#{$key_name}-d3: #{color.adjust($color, $lightness: -30%)};
-
     --bolao-c-#{$key_name}: #{$color};
     --bolao-c-#{$key_name}-t1: #{$color}44;
     --bolao-c-#{$key_name}-t2: #{$color}88;
@@ -96,75 +101,77 @@ $colors: (
 
   --border-radius: 12px;
 }
+
 /* -------------------- */
+
 /* ------ MIXINS ------ */
+
 /* -------------------- */
 
 /* color palette from <https://github.com/vuejs/theme> */
 :root {
   --p-knob-text-color: white !important;
   --p-knob-range-background: var(--bolao-c-grey2) !important;
-
   --bolao-c-background-blue: #141c2c;
+
   // --bolao-c-background-blue: var(--bolao-c-blue5-t2);
 
   --bolao-c-navbar: var(--bolao-c-blue4);
   --nav-disabled: #545859;
   --nav-link: #9da4a7;
   --nav-link-hover: white;
-
-  --vt-c-white: #ffffff;
   --vt-c-white-soft: #dee0e4;
   --vt-c-white-mute: #c4c7ce;
-
-  --vt-c-black: #181818;
-  --vt-c-black-soft: #222222;
+  --vt-c-black-soft: #222;
   --vt-c-black-mute: #282828;
-
   --vt-c-indigo: #2c3e50;
-
-  --vt-c-divider-light-1: rgba(60, 60, 60, 0.395);
-  --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
-  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
-  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
-
+  --vt-c-divider-light-1: rgb(60 60 60 / 39.5%);
+  --vt-c-divider-light-2: rgb(60 60 60 / 12%);
+  --vt-c-divider-dark-1: rgb(84 84 84 / 65%);
+  --vt-c-divider-dark-2: rgb(84 84 84 / 48%);
   --vt-c-text-light-1: var(--vt-c-indigo);
-  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
-  --vt-c-text-dark-1: var(--vt-c-white);
-  --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
+  --vt-c-text-light-2: rgb(60 60 60 / 66%);
+  --vt-c-text-dark-1: var(--bolao-c-white);
+  --vt-c-text-dark-2: rgb(235 235 235 / 64%);
 
-  @media (max-width: 1439px) {
+  @media (width <= 1439px) {
     --page-width: 100%;
   }
-  @media (min-width: 1440px) {
+
+  @media (width >= 1440px) {
     --page-width: 1440px;
   }
 }
 
 /* semantic color variables for this project */
 :root {
-  --color-main: var(--vt-c-white);
-  --color-contrast: var(--vt-c-black);
+  --color-main: var(--bolao-c-white);
+  --color-contrast: var(--bolao-c-black);
   --color-match-overlay: var(--bolao-c-grey1);
   --color-anchor: var(--bolao-c-blue1);
-
-  --color-background: linear-gradient(135deg, #d4dce6 0%, #c8d5e0 50%, #bccdd9 100%);
+  --color-background: linear-gradient(
+    135deg,
+    #d4dce6 0%,
+    #c8d5e0 50%,
+    #bccdd9 100%
+  );
   --color-background-soft: var(--vt-c-white-soft);
   --color-background-mute: var(--vt-c-white-mute);
-
   --color-border: var(--vt-c-divider-light-2);
   --color-border-hover: var(--vt-c-divider-light-1);
-
   --color-heading: var(--vt-c-text-light-1);
   --color-text: var(--vt-c-text-light-1);
-
   --section-gap: 160px;
-  --navbar-height: 80px;
+  --paginator-height: 80px;
+  --navbar-height: 70px;
+  --navbar-height-mobile: 50px;
   --match-list-height: 60px;
-  --drop-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 8px 24px rgba(0, 0, 0, 0.1);
+  --drop-shadow: 0 4px 12px rgb(0 0 0 / 15%), 0 8px 24px rgb(0 0 0 / 10%);
 
   // PrimeVue component overrides
   // Button
+  --p-button-primary-hover-background: var(--bolao-c-blue) !important;
+  --p-button-primary-hover-color: var(--bolao-c-white) !important;
   --p-button-secondary-background: var(--bolao-c-blue1-t2) !important;
   --p-button-secondary-border-color: var(--bolao-c-blue1) !important;
   --p-button-secondary-color: var(--bolao-c-white) !important;
@@ -181,7 +188,9 @@ $colors: (
   --p-togglebutton-checked-background: var(--bolao-c-blue1-t3) !important;
   --p-togglebutton-checked-border-color: var(--bolao-c-blue1) !important;
   --p-togglebutton-checked-color: var(--bolao-c-white) !important;
-  --p-togglebutton-content-checked-background: var(--bolao-c-blue1-t2) !important;
+  --p-togglebutton-content-checked-background: var(
+    --bolao-c-blue1-t2
+  ) !important;
 
   // Select
   --p-select-background: var(--bolao-c-green-t3) !important;
@@ -200,15 +209,19 @@ $colors: (
 
   // Paginator
   --p-paginator-background: var(--bolao-c-navbar) !important;
-  --p-paginator-nav-button-color: var(--vt-c-white) !important;
+  --p-paginator-nav-button-color: var(--bolao-c-white) !important;
   --p-paginator-nav-button-selected-background: var(--bolao-c-gold) !important;
   --p-paginator-nav-button-selected-color: var(--bolao-c-blue5) !important;
 
   // Table
   --p-datatable-header-cell-color: var(--bolao-c-grey1) !important;
   --p-datatable-header-cell-hover-color: var(--bolao-c-white) !important;
-  --p-datatable-header-cell-hover-background: var(--bolao-c-blue1-t1) !important;
-  --p-datatable-header-cell-selected-background: var(--bolao-c-blue3-t3) !important;
+  --p-datatable-header-cell-hover-background: var(
+    --bolao-c-blue1-t1
+  ) !important;
+  --p-datatable-header-cell-selected-background: var(
+    --bolao-c-blue3-t3
+  ) !important;
   --p-datatable-header-cell-selected-color: var(--bolao-c-gold) !important;
   --p-datatable-header-cell-background: var(--bolao-c-blue3) !important;
   --p-datatable-row-background: var(--bolao-c-blue3-t1) !important;
@@ -221,19 +234,22 @@ $colors: (
   --surface-card: var(--bolao-c-white-t3) !important;
 }
 
-[data-theme='dark'] {
-  --color-main: var(--vt-c-black);
-  --color-contrast: var(--vt-c-white);
-  --color-match-overlay: var(--vt-c-black);
+[data-theme="dark"] {
+  --color-main: var(--bolao-c-black);
+  --color-contrast: var(--bolao-c-white);
+  --color-match-overlay: var(--bolao-c-black);
 
   // --color-background: var(--vt-c-black-soft);
-  --color-background: linear-gradient(135deg, #0a0e14 0%, #141c2c 50%, #1a2738 100%);
+  --color-background: linear-gradient(
+    135deg,
+    #0a0e14 0%,
+    #141c2c 50%,
+    #1a2738 100%
+  );
   --color-background-soft: var(--vt-c-black-soft);
   --color-background-mute: var(--vt-c-black-mute);
-
   --color-border: var(--vt-c-divider-dark-2);
   --color-border-hover: var(--vt-c-divider-dark-1);
-
   --color-heading: var(--vt-c-text-dark-1);
   --color-text: var(--vt-c-text-dark-2);
 
@@ -251,29 +267,29 @@ $colors: (
   margin: 0;
   font-weight: normal;
 }
+
 body {
-  min-height: 100vh;
-  color: var(--color-text);
-  background: var(--color-background);
-  transition:
-    color 0.5s,
-    background-color 0.5s;
-  line-height: 1.6;
   font-family:
     Inter,
     -apple-system,
     BlinkMacSystemFont,
-    'Segoe UI',
+    "Segoe UI",
     Roboto,
     Oxygen,
     Ubuntu,
     Cantarell,
-    'Fira Sans',
-    'Droid Sans',
-    'Helvetica Neue',
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue",
     sans-serif;
   font-size: 15px;
-  text-rendering: optimizeLegibility;
+  line-height: 1.6;
+  color: var(--color-text);
+  background: var(--color-background);
+  text-rendering: optimizelegibility;
+  transition:
+    color 0.5s,
+    background-color 0.5s;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

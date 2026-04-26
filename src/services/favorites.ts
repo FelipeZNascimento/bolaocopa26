@@ -1,5 +1,5 @@
 export default class FavoritesService {
-  private static readonly STORAGE_KEY_PREFIX = 'favoriteUsers';
+  private static readonly STORAGE_KEY_PREFIX = "favoriteUsers";
 
   /**
    * Add a user to favorites
@@ -14,6 +14,7 @@ export default class FavoritesService {
 
     favorites.push(targetUserId);
     this.saveFavorites(activeUserId, favorites);
+    this.dispatchFavoritesUpdatedEvent();
     return true;
   }
 
@@ -25,7 +26,7 @@ export default class FavoritesService {
     try {
       sessionStorage.removeItem(this.getStorageKey(activeUserId));
     } catch (error) {
-      console.error('Error clearing favorites from sessionStorage:', error);
+      console.error("Error clearing favorites from sessionStorage:", error);
     }
   }
 
@@ -37,7 +38,7 @@ export default class FavoritesService {
       const stored = sessionStorage.getItem(this.getStorageKey(activeUserId));
       return stored ? JSON.parse(stored) : [];
     } catch (error) {
-      console.error('Error reading favorites from sessionStorage:', error);
+      console.error("Error reading favorites from sessionStorage:", error);
       return [];
     }
   }
@@ -71,6 +72,7 @@ export default class FavoritesService {
 
     favorites.splice(index, 1);
     this.saveFavorites(activeUserId, favorites);
+    this.dispatchFavoritesUpdatedEvent();
     return true;
   }
 
@@ -91,6 +93,13 @@ export default class FavoritesService {
   }
 
   /**
+   * Dispatch event when favorites are updated
+   */
+  private dispatchFavoritesUpdatedEvent(): void {
+    window.dispatchEvent(new CustomEvent("favorites-updated"));
+  }
+
+  /**
    * Generate user-specific storage key
    */
   private getStorageKey(activeUserId: number): string {
@@ -102,9 +111,12 @@ export default class FavoritesService {
    */
   private saveFavorites(activeUserId: number, favorites: number[]): void {
     try {
-      sessionStorage.setItem(this.getStorageKey(activeUserId), JSON.stringify(favorites));
+      sessionStorage.setItem(
+        this.getStorageKey(activeUserId),
+        JSON.stringify(favorites),
+      );
     } catch (error) {
-      console.error('Error saving favorites to sessionStorage:', error);
+      console.error("Error saving favorites to sessionStorage:", error);
     }
   }
 }

@@ -104,7 +104,7 @@
         </p>
         <p
           v-show="error"
-          style="text-align: center; padding-top: var(--l-spacing)"
+          style=" padding-top: var(--l-spacing);text-align: center"
         >
           <PrimeTag
             severity="contrast"
@@ -197,9 +197,9 @@ watch(isVisible, async (newValue) => {
 .buttons-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   gap: var(--m-spacing);
+  align-items: center;
+  justify-content: center;
 }
 
 .signup-button {

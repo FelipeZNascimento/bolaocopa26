@@ -135,13 +135,13 @@ const isUpdating = computed(() => extraBetStore.isUpdating);
   align-items: center;
   flex-direction: column;
 
-  @media (max-width: 767px) {
+  @media (max-width: 768px) {
     width: 100%;
     min-width: 100%;
   }
 
   .extras-table {
-    @media (max-width: 767px) {
+    @media (max-width: 768px) {
       min-width: 100%;
       width: 100%;
     }

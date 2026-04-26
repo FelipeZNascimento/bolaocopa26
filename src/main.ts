@@ -14,6 +14,7 @@ import PrimeAutocomplete from 'primevue/autocomplete';
 /* ---- PrimeVue ---- */
 import PrimeAvatar from 'primevue/avatar';
 import PrimeButton from 'primevue/button';
+import PrimeButtonGroup from 'primevue/buttongroup';
 import PrimeCard from 'primevue/card';
 import PrimeChart from 'primevue/chart';
 import PrimeColorPicker from 'primevue/colorpicker';
@@ -104,6 +105,7 @@ app.component('PrimeColorPicker', PrimeColorPicker);
 app.component('PrimeToast', PrimeToast);
 app.component('PrimeRadioButton', PrimeRadioButton);
 app.component('PrimeRadioButtonGroup', PrimeRadioButtonGroup);
+app.component('PrimeButtonGroup', PrimeButtonGroup);
 app.component('PrimeDivider', PrimeDivider);
 app.component('PrimeMenubar', PrimeMenubar);
 app.component('PrimeAvatar', PrimeAvatar);

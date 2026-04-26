@@ -1,13 +1,15 @@
-@use './base.scss';
-@import 'primeicons/primeicons.css';
+@use "./base";
+@import "primeicons/primeicons.css";
+
 #app {
   margin: 0 auto;
   font-weight: normal;
 }
+
 a {
+  color: var(--color-anchor);
   text-decoration: none;
   cursor: pointer;
-  color: var(--color-anchor);
 
   &:hover {
     text-decoration: underline;
@@ -53,9 +55,10 @@ a {
       color: var(--bolao-c-grey1) !important;
     }
   }
+
   .p-button-text.p-button-secondary:not(:disabled):hover {
-    background-color: var(--bolao-c-blue2) !important;
     color: var(--bolao-c-white) !important;
+    background-color: var(--bolao-c-blue2) !important;
   }
 }
 
@@ -64,15 +67,15 @@ a {
   border-color: transparent !important;
 
   .p-inputtext:not(:disabled) {
-    background-color: var(--bolao-c-blue3-t1) !important;
     color: var(--bolao-c-white) !important;
+    background-color: var(--bolao-c-blue3-t1) !important;
   }
 }
 
-.p-divider-vertical:before,
-.p-divider-horizontal:before {
-  border-inline-start: 1px solid var(--color-contrast) !important;
+.p-divider-vertical::before,
+.p-divider-horizontal::before {
   border-block-start: 1px solid var(--color-contrast) !important;
+  border-inline-start: 1px solid var(--color-contrast) !important;
 }
 
 .p-paginator {
