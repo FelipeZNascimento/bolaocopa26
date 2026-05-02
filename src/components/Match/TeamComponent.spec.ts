@@ -25,11 +25,15 @@ vi.mock('@/stores/activeProfile', () => ({
 
 let mockMatches: IMatch[] = [];
 let mockUpdatingMatches: number[] = [];
-const mockUpdateLoggedUserBets = vi.fn((matchId: number, bet: unknown) => {
+const mockUpdateLoggedUserBets = vi.fn((matchId: number, bet: Partial<NonNullable<IMatch['loggedUserBets']>>) => {
   const matchIndex = mockMatches.findIndex((m) => m.id === matchId);
   if (matchIndex !== -1) {
-    const existingBets = mockMatches[matchIndex].loggedUserBets || {};
-    mockMatches[matchIndex].loggedUserBets = { ...existingBets, ...bet } as IMatch['loggedUserBets'];
+    const existingBets = mockMatches[matchIndex].loggedUserBets;
+    if (existingBets) {
+      mockMatches[matchIndex].loggedUserBets = { ...existingBets, ...bet };
+    } else {
+      mockMatches[matchIndex].loggedUserBets = bet as IMatch['loggedUserBets'];
+    }
   }
 });
 
@@ -121,12 +125,13 @@ describe('TeamComponent', () => {
     TeamDetailsModal: true,
   };
 
-  const mountComponent = (props: { props: Record<string, unknown> }) => {
+  const mountComponent = (options: { props: Record<string, unknown> }) => {
     return mount(TeamComponent, {
-      ...props,
       global: {
         stubs: defaultStubs,
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      props: options.props as any,
     });
   };
 
@@ -490,15 +495,15 @@ describe('TeamComponent', () => {
         },
       });
 
-      const input = wrapper.find('input') as any;
+      const input = wrapper.find('input');
 
       // Simulate typing 150
-      input.element.value = '150';
+      (input.element as HTMLInputElement).value = '150';
       await input.trigger('input');
       await nextTick();
 
       // Value should be empty (rejected) since lastValidValue was empty
-      expect(input.element.value).toBe('');
+      expect((input.element as HTMLInputElement).value).toBe('');
     });
 
     it('should prevent negative values', async () => {

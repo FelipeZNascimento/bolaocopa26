@@ -208,6 +208,11 @@ function filterBets(bets: IBet[] | null, hitLevel: HitLevel) {
     }
 
     // Determine the winner/outcome of the bet and actual match
+    if(bet.scoreHome === null || bet.scoreAway === null || props.match.score.home === null || props.match.score.away === null) {
+      // If any score is null, we can't determine the outcome, so we consider it a miss
+      return hitLevel === "miss";
+    }
+
     const betHomeWon = bet.scoreHome > bet.scoreAway;
     const betAwayWon = bet.scoreAway > bet.scoreHome;
     const betDraw = bet.scoreHome === bet.scoreAway;
