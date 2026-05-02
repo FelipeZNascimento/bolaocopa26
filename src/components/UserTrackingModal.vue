@@ -130,7 +130,6 @@ const chartData = computed(() => {
       round: round.round,
     };
   });
-  console.log('userRoundsRanking', userRoundsRanking);
 
   if (!userLine) {
     return {

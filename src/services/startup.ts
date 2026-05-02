@@ -36,9 +36,9 @@ export default class StartupService {
     try {
       const [activeProfileResponse, seasonResponse, teamResponse] =
         await Promise.allSettled([
-          this.apiRequest.get<IUser>("user/activeProfile"),
-          this.apiRequest.get<InitializeObj>("season/current"),
-          this.apiRequest.get<ITeam[]>("team/all/"),
+          this.apiRequest.get<IUser>("user/activeProfile", undefined, { retries: 3 }),
+          this.apiRequest.get<InitializeObj>("season/current", undefined, { retries: 3 }),
+          this.apiRequest.get<ITeam[]>("team/all/", undefined, { retries: 3 }),
         ]);
 
       if (

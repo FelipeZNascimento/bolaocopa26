@@ -19,6 +19,7 @@
           class="team-shield-image"
           :src="`https://assets.omegafox.me/copa/countries_flags/${team.isoCode.toLowerCase()}.png`"
           :alt="`${team.name} Shield`"
+          fetchpriority="high"
         />
       </div>
       <div

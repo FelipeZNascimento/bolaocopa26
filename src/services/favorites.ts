@@ -22,7 +22,6 @@ export default class FavoritesService {
    * Clear all favorites for a specific user
    */
   public clearAllFavorites(activeUserId: number): void {
-    console.log(`Clearing all favorites for user ${activeUserId}`);
     try {
       sessionStorage.removeItem(this.getStorageKey(activeUserId));
     } catch (error) {

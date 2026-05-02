@@ -325,7 +325,7 @@ watch(isVisible, (newValue) => {
 .players-title {
   margin: 0 0 var(--l-spacing) 0;
   font-size: var(--l-font-size);
-  color: var(--color-contrast);
+  color: var(--bolao-c-white);
 
   @media (width <= 768px) {
     margin: 0 0 var(--m-spacing) 0;

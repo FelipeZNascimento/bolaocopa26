@@ -139,7 +139,7 @@ const isLoadingExtras = computed(() => extraBetStore.isLoading);
 const isUpdatingExtras = computed(() => extraBetStore.isUpdating);
 const activeProfileBets = computed(() => extraBetStore.activeProfileBets);
 const isLoadingTeams = computed(() => teamsStore.isLoading);
-const teams = computed(() => teamsStore.teams);
+const teams = computed(() => teamsStore.teams.filter(team => team.id !== 33)); // Filter out placeholder team
 const currentSelectedToggle = computed(() => buttonOptions.value.find(
   (option) => option.value === selectedToggle.value.value,
 ));
@@ -181,9 +181,6 @@ async function handleClick(team: ITeam) {
     } else {
       currentSelectedToggle.value.selectedTeam = team;
     }
-
-    console.log('Selected Team:', currentSelectedToggle.value.selectedTeam);
-    console.log('Selected Toggle:', currentSelectedToggle.value.value);
 
     await extraBetService.update(
       {

@@ -427,7 +427,6 @@ function handleRouteClick(
   index: number,
   navigate: () => void,
 ) {
-  console.log("Route clicked in handleRouteClick:", route);
   if (route.id === ROUTE_ID.PROFILE) {
     activeRoute.value = route.id;
     activeItemIndex.value = index;
