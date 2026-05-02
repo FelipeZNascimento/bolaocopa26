@@ -3,11 +3,10 @@ import { ref } from 'vue';
 
 import type { IExtraBet, IExtraResults, IPlayerWithExtras, ITeamWithExtras, IUserWithExtras } from './extraBet.types';
 
-export const useExtraBetStore = defineStore('extras', () => {
-  const extraBets = ref<IExtraBet[]>([]);
+export const useExtraBetStore = defineStore('extraBet', () => {
   const extraBetsByTeam = ref<ITeamWithExtras[]>([]);
   const results = ref<IExtraResults[]>([]);
-  const loggedUserBets = ref<IExtraBet[]>([]);
+  const activeProfileBets = ref<IExtraBet[]>([]);
   const topScorerBetsByPlayer = ref<IPlayerWithExtras[]>([]);
   const extraBetsByUser = ref<IUserWithExtras[]>([]);
 
@@ -27,20 +26,16 @@ export const useExtraBetStore = defineStore('extras', () => {
     extraBetsByUser.value = newExtras;
   }
 
-  function setLoggedUserBets(newExtras: IExtraBet[]) {
-    loggedUserBets.value = newExtras;
+  function setActiveProfileBets(newExtras: IExtraBet[]) {
+    activeProfileBets.value = newExtras;
   }
 
   function setResults(newExtras: IExtraResults[]) {
     results.value = newExtras;
   }
 
-  function resetLoggedUserBets() {
-    loggedUserBets.value = [];
-  }
-
-  function setExtraBets(newExtras: IExtraBet[]) {
-    extraBets.value = newExtras;
+  function resetActiveProfileBets() {
+    activeProfileBets.value = [];
   }
 
   function setUpdating(loadingState: boolean) {
@@ -56,21 +51,19 @@ export const useExtraBetStore = defineStore('extras', () => {
   }
 
   return {
+    activeProfileBets,
     error,
-    extraBets,
     extraBetsByTeam,
     extraBetsByUser,
     isLoading,
     isUpdating,
-    loggedUserBets,
-    resetLoggedUserBets,
+    resetActiveProfileBets,
     results,
+    setActiveProfileBets,
     setError,
-    setExtraBets,
     setExtraBetsByTeam,
     setExtraBetsByUser,
     setLoading,
-    setLoggedUserBets,
     setResults,
     setTopScorerBetsByPlayer,
     setUpdating,

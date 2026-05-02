@@ -27,7 +27,7 @@
             :autohide="false"
             @click="
               routeItem.id === ROUTE_ID.PROFILE ||
-              routeItem.id === ROUTE_ID.LOGIN
+                routeItem.id === ROUTE_ID.LOGIN
                 ? handleNavigate($event, index, navigate, routeItem)
                 : handleRouteClick(routeItem, index, navigate)
             "

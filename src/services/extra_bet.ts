@@ -1,6 +1,5 @@
 import type {
   IExtraAllBets,
-  IExtraBet,
   IExtraResults,
   IPlayerWithExtras,
   ITeamWithExtras,
@@ -8,33 +7,26 @@ import type {
 } from '@/stores/extraBet.types';
 
 import { EXTRA_BETS_VALUES } from '@/constants/bets';
-import { useActiveProfileStore } from '@/stores/activeProfile';
-import { useConfigurationStore } from '@/stores/configuration';
 import { useExtraBetStore } from '@/stores/extraBet';
 import { isFulfilled, isRejected } from '@/util/promiseCheck';
 
 import ApiService from './api_request';
 
 export default class ExtraBetService {
-  private activeProfileStore;
   private apiRequest;
-  private configurationStore;
   private extraBetStore;
 
   constructor() {
     this.apiRequest = new ApiService();
     this.extraBetStore = useExtraBetStore();
-    this.configurationStore = useConfigurationStore();
-    this.activeProfileStore = useActiveProfileStore();
   }
 
   public async fetch() {
-    const activeProfile = this.activeProfileStore.activeProfile;
     this.extraBetStore.setLoading(true);
 
     try {
       const [extraResponse, extraResultsResponse] = await Promise.allSettled([
-        this.apiRequest.get<IExtraAllBets[]>(`bet/extra/`),
+        this.apiRequest.get<{activeProfileBets: IExtraAllBets[]; bets: IExtraAllBets[],}>(`bet/extra/`),
         this.apiRequest.get<IExtraResults[]>(`bet/extra/results`),
       ]);
 
@@ -42,19 +34,12 @@ export default class ExtraBetService {
         throw new Error('Falha ao buscar apostas extras');
       }
 
-      const extraBets = isFulfilled(extraResponse) ? extraResponse.value : [];
+      console.log(extraResponse.value);
+      const extraBets = isFulfilled(extraResponse) ? extraResponse.value.bets : [];
+      const activeProfileBets = isFulfilled(extraResponse) ? extraResponse.value.activeProfileBets : [];
       const extraBetsResults = isFulfilled(extraResultsResponse) ? extraResultsResponse.value : [];
 
-      const loggedUserBets: IExtraBet[] = [];
-      extraBets.forEach((extraBetType) => {
-        extraBetType.bets.forEach((bet) => {
-          if (bet.user.id === activeProfile?.id) {
-            loggedUserBets.push(bet);
-          }
-        });
-      });
-
-      this.extraBetStore.setLoggedUserBets(loggedUserBets.sort((a, b) => (a.extraType > b.extraType ? 1 : -1)));
+      this.extraBetStore.setActiveProfileBets(activeProfileBets.map((betType) => betType.bets).flat().sort((a, b) => (a.extraType > b.extraType ? 1 : -1)));
       this.extraBetStore.setResults(extraBetsResults.sort((a, b) => (a.extraType > b.extraType ? 1 : -1)));
 
       const splittedBetsByTeam = this.splitBetsByTeams(
@@ -77,6 +62,7 @@ export default class ExtraBetService {
   }
 
   splitBetsByPlayers(extraBets: IExtraAllBets[]) {
+    console.log(extraBets);
     const playersWithExtras: IPlayerWithExtras[] = [];
 
     extraBets.forEach((extraBetType) => {
@@ -137,24 +123,24 @@ export default class ExtraBetService {
     return usersWithExtras;
   }
 
-  // public async update(
-  //   updateObj: { [n: string]: null | number | number[] },
-  //   callback?: (isSuccess: boolean, error?: Error) => void,
-  // ) {
-  //   this.extraBetStore.setUpdating(true);
+  public async update(
+    updateObj: { extraType: number; teamId: null | number },
+    callback?: (isSuccess: boolean, error?: Error) => void,
+  ) {
+    this.extraBetStore.setUpdating(true);
 
-  //   try {
-  //     await this.apiRequest.post<IExtrasFetch>(`bet/update/extra`, updateObj);
+    try {
+      await this.apiRequest.post(`bet/extra/update`, updateObj);
 
-  //     this.extraBetStore.setUpdating(false);
-  //     if (callback) {
-  //       callback(true);
-  //     }
-  //   } catch (error: unknown) {
-  //     this.extraBetStore.setUpdating(false);
-  //     if (callback) {
-  //       callback(false, error as Error);
-  //     }
-  //   }
-  // }
+      this.extraBetStore.setUpdating(false);
+      if (callback) {
+        callback(true);
+      }
+    } catch (error: unknown) {
+      this.extraBetStore.setUpdating(false);
+      if (callback) {
+        callback(false, error as Error);
+      }
+    }
+  }
 }

@@ -4,7 +4,6 @@
     dismissable-mask
     modal
     :draggable="false"
-    position="top"
     :style="{ width: '400px' }"
     :breakpoints="{ '1280px': '75vw', '575px': '90vw' }"
   >

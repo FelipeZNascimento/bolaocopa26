@@ -76,7 +76,7 @@ watch(activeProfile, async (newValue) => {
   if (newValue) {
     extraBetService.fetch();
   } else {
-    extraBetStore.setLoggedUserBets([]);
+    extraBetStore.setActiveProfileBets([]);
   }
 
   // Week is possibly zero (preseason)
@@ -90,9 +90,11 @@ watch(activeProfile, async (newValue) => {
 <style lang="scss" scoped>
 .outer-view {
   width: 100%;
+  min-height: calc(100vh - var(--navbar-height));
   margin-top: var(--navbar-height);
 
   @media (width <= 1024px) {
+    min-height: calc(100vh - var(--navbar-height-mobile));
     margin-top: var(--navbar-height-mobile);
   }
 }

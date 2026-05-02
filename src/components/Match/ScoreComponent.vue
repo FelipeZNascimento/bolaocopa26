@@ -1,23 +1,17 @@
 <template>
   <div class="outer-score-line">
     <TeamComponent
-      :is-clickable="isTeamClickable"
       :is-home-team="true"
       :show-events="isScoreModalOpen"
-      :is-winning="match.score.away < match.score.home"
+      :is-winning="isHomeTeamWinning"
       :events="sortedEvents"
-      :team="match.homeTeam"
-      :match-status="match.status"
-      :score="match.score"
+      :match="match"
     />
     <TeamComponent
-      :is-clickable="isTeamClickable"
       :is-home-team="false"
       :show-events="isScoreModalOpen"
-      :is-winning="match.score.away > match.score.home"
-      :team="match.awayTeam"
-      :match-status="match.status"
-      :score="match.score"
+      :is-winning="isAwayTeamWinning"
+      :match="match"
       :events="sortedEvents"
     />
   </div>
@@ -27,20 +21,36 @@ import { computed } from "vue";
 
 import type { IBet, IMatch } from "@/stores/matches.types";
 
+import { PENALTIES } from "@/constants/match";
+
 import TeamComponent from "./TeamComponent.vue";
 const props = withDefaults(
   defineProps<{
     activeUserBet: IBet | null;
     isMatchStarted: boolean;
     isScoreModalOpen?: boolean;
-    isTeamClickable?: boolean;
     match: IMatch;
   }>(),
   {
     isScoreModalOpen: false,
-    isTeamClickable: false,
   },
 );
+
+const isHomeTeamWinning = computed(() => {
+  if (PENALTIES.includes(props.match.status)) {
+    return props.match.score.homePenalties > props.match.score.awayPenalties;
+  }
+
+  return props.match.score.home > props.match.score.away;
+});
+
+const isAwayTeamWinning = computed(() => {
+  if (PENALTIES.includes(props.match.status)) {
+    return props.match.score.awayPenalties > props.match.score.homePenalties;
+  }
+
+  return props.match.score.away > props.match.score.home;
+});
 
 const sortedEvents = computed(() => {
   return [...props.match.events].sort((a, b) => {
@@ -70,5 +80,10 @@ const sortedEvents = computed(() => {
   gap: var(--m-spacing);
   align-items: flex-start;
   justify-content: center;
+
+  @media (width <=768px) {
+    gap: var(--xs-spacing);
+  }
+
 }
 </style>

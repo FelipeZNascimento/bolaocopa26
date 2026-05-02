@@ -33,6 +33,7 @@ import PrimePaginator from 'primevue/paginator';
 import PrimePanel from 'primevue/panel';
 import PrimePassword from 'primevue/password';
 import PrimePopover from 'primevue/popover';
+import PrimeProgressSpinner from 'primevue/progressspinner';
 import PrimeRadioButton from 'primevue/radiobutton';
 import PrimeRadioButtonGroup from 'primevue/radiobuttongroup';
 import PrimeSelectButton from 'primevue/selectbutton';
@@ -114,6 +115,7 @@ app.component('PrimeOverlayBadge', PrimeOverlayBadge);
 app.component('PrimePanel', PrimePanel);
 app.component('PrimeChart', PrimeChart);
 app.component('PrimeCard', PrimeCard);
+app.component('PrimeProgressSpinner', PrimeProgressSpinner);
 
 app.directive('tooltip', PrimeTooltip);
 

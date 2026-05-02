@@ -3,7 +3,7 @@
     v-if="isLoadingConfig"
     class="skeleton-outer"
   />
-  <!-- <ExtrasBefore v-else-if="!isLoadingConfig && !isSeasonStarted" /> -->
+  <ExtrasBefore v-else-if="!isLoadingConfig && !isSeasonStarted" />
   <ExtrasAfter v-else-if="!isLoadingConfig && isSeasonStarted" />
 </template>
 <script setup lang="ts">
@@ -13,7 +13,7 @@ import { useClockStore } from '@/stores/clock';
 import { useConfigurationStore } from '@/stores/configuration';
 
 import ExtrasAfter from './Extras/ExtrasAfter.vue';
-// import ExtrasBefore from './Extras/ExtrasBefore.vue';
+import ExtrasBefore from './Extras/ExtrasBefore.vue';
 
 // ------ Initialization ------
 const clockStore = useClockStore();

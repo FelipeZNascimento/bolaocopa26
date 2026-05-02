@@ -166,6 +166,7 @@ $colors: (
   --navbar-height: 70px;
   --navbar-height-mobile: 50px;
   --match-list-height: 60px;
+  --match-list-height-mobile: 48px;
   --drop-shadow: 0 4px 12px rgb(0 0 0 / 15%), 0 8px 24px rgb(0 0 0 / 10%);
 
   // PrimeVue component overrides
@@ -266,6 +267,23 @@ $colors: (
   box-sizing: border-box;
   margin: 0;
   font-weight: normal;
+}
+
+input {
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue",
+    sans-serif;
+
 }
 
 body {

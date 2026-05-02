@@ -1,16 +1,5 @@
 <template>
-  <div
-    class="outer-match line"
-    :class="{ clickable: isMatchClickable }"
-    @click="handleMatchClick"
-  >
-    <ScoreComponent
-      :is-team-clickable="isTeamClickable"
-      :match="match"
-      :active-user-bet="match.loggedUserBets ?? null"
-      :is-match-started="isMatchStarted"
-      :hit-level="hitLevel"
-    />
+  <div class="outer-match line" :class="{ clickable: isMatchStarted }">
     <ClockComponent
       v-if="isDesktop && !isDemo"
       :hit-level="hitLevel"
@@ -18,10 +7,22 @@
       :status="match.status"
       :is-match-started="isMatchStarted"
     />
+    <ScoreComponent
+      :is-team-clickable="isTeamClickable"
+      :match="match"
+      :active-user-bet="match.loggedUserBets ?? null"
+      :is-match-started="isMatchStarted"
+      :hit-level="hitLevel"
+    />
+    <div class="more-info" @click="handleMatchClick">
+      <i class="pi pi-plus-circle" />
+      <span v-if="!isMobile">Ver Mais</span>
+    </div>
+
   </div>
-  <BetsModal
+  <MoreInfoModal
     :match="match"
-    :is-open="isBetsModalOpen"
+    :is-open="isMoreInfoModalOpen"
     :hit-level="hitLevel"
     :handle-close-modal="handleCloseModal"
   />
@@ -35,8 +36,8 @@ import { HIT_LEVELS } from "@/constants/bets";
 import { useViewport } from "@/services/viewport";
 import { useClockStore } from "@/stores/clock";
 
-import BetsModal from "./BetsModal/BetsModal.vue";
 import ClockComponent from "./ClockComponent.vue";
+import MoreInfoModal from "./MoreInfoModal/MoreInfoModal.vue";
 import ScoreComponent from "./ScoreComponent.vue";
 
 const props = withDefaults(
@@ -54,11 +55,11 @@ const props = withDefaults(
 );
 
 // ------ Refs ------
-const isBetsModalOpen = ref(false);
+const isMoreInfoModalOpen = ref(false);
 
 // ------ Initialization ------
 const clockStore = useClockStore();
-const { isDesktop } = useViewport();
+const { isDesktop, isMobile } = useViewport();
 
 // ------ Computed Properties ------
 // const correctBets = { bullseye: [], half: [] };
@@ -79,6 +80,10 @@ const hitLevel = computed(() => {
 
   if (homeScoreMatch && awayScoreMatch) {
     return HIT_LEVELS.exactScore;
+  }
+
+  if (props.match.loggedUserBets.scoreHome === null || props.match.loggedUserBets.scoreAway === null) {
+    return HIT_LEVELS.miss;
   }
 
   // Determine the winner/outcome of the bet and actual match
@@ -112,35 +117,84 @@ const hitLevel = computed(() => {
 });
 
 function handleCloseModal() {
-  isBetsModalOpen.value = false;
+  isMoreInfoModalOpen.value = false;
 }
 
 // ------ Functions ------
 function handleMatchClick() {
-  if (!props.isMatchClickable || props.isDemo) {
-    return;
-  }
-  isBetsModalOpen.value = true;
+  isMoreInfoModalOpen.value = true;
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .outer-match {
   display: flex;
   gap: var(--m-spacing);
   opacity: 1;
+
+  @media (width <=768px) {
+    gap: var(--xs-spacing);
+  }
+
 }
 
-.clickable {
+.more-info {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--xxs-spacing);
+  align-items: center;
+  justify-content: center;
+  padding: var(--s-spacing);
+  font-size: var(--xs-font-size);
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
+  background-color: var(--bolao-c-white-t1);
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+  transition: all 0.2s ease;
+
+  i {
+    font-size: var(--m-font-size);
+    transition: transform 0.2s ease;
+  }
+
+  span {
+    white-space: nowrap;
+  }
 
   &:hover {
-    opacity: 0.6;
+    box-shadow: 0 4px 8px rgb(0 0 0 / 20%);
+    transform: translateY(-1px);
+
+    i {
+      transform: scale(1.1);
+    }
   }
+
+  @media (width <=768px) {
+    min-width: 48px;
+    min-height: 48px;
+    padding: var(--xs-spacing);
+    font-size: var(--xxs-font-size);
+    color: #fff;
+
+
+    i {
+      font-size: var(--l-font-size);
+      color: #fff;
+      filter: drop-shadow(0 1px 2px rgb(0 0 0 / 20%));
+    }
+  }
+
 }
 
 .line {
   width: 100%;
-  min-height: 60px;
+  height: var(--match-list-height);
+
+  @media (width <=768px) {
+    height: var(--match-list-height-mobile);
+  }
+
 }
 </style>

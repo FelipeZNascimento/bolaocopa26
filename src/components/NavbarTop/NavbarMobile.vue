@@ -66,7 +66,7 @@
               }"
               @click="
                 routeItem.id === ROUTE_ID.PROFILE ||
-                routeItem.id === ROUTE_ID.LOGIN
+                  routeItem.id === ROUTE_ID.LOGIN
                   ? handleSpecialRoute($event, routeItem, navigate)
                   : handleRouteClick(routeItem, navigate)
               "
@@ -295,9 +295,9 @@ function getIconClass(routeId: number): string {
   const iconMap: Record<number, string> = {
     [ROUTE_ID.BET]: "pi pi-money-bill",
     [ROUTE_ID.EXTRAS]: "pi pi-star",
-    [ROUTE_ID.GAMES]: "pi pi-list",
     [ROUTE_ID.HOME]: "pi pi-home",
     [ROUTE_ID.LOGIN]: "pi pi-user",
+    [ROUTE_ID.MATCHES]: "pi pi-list",
     [ROUTE_ID.PROFILE]: "pi pi-user",
     [ROUTE_ID.RANKING]: "pi pi-trophy",
     [ROUTE_ID.RECORDS]: "pi pi-chart-bar",
