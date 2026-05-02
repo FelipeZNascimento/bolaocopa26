@@ -271,6 +271,7 @@ function handleBlur() {
           scoreHome: newHomeScore,
         });
       } else {
+        console.error('Failed to place bet:', error);
         notificationStore.error(`Falha ao atualizar a partida`, `${homeTeam.abbreviation} x ${awayTeam.abbreviation}`);
         // Revert to store value on error
         const revertValue = props.isHomeTeam ? existingHomeScore : existingAwayScore;

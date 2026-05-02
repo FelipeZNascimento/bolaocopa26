@@ -20,13 +20,13 @@ export default [
   ...vueTsEslintConfig(),
   perfectionist.configs["recommended-natural"],
   {
-    name: "app/typescript-formatting",
     files: ["**/*.{ts,mts,tsx}"],
+    name: "app/typescript-formatting",
     rules: {
-      "indent": ["error", 2, { "SwitchCase": 1 }],
-      "no-trailing-spaces": "error",
-      "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0 }],
       "comma-dangle": ["error", "always-multiline"],
+      "indent": ["error", 2, { "SwitchCase": 1 }],
+      "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0 }],
+      "no-trailing-spaces": "error",
     },
   },
   {

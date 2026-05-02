@@ -1,8 +1,6 @@
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
-import { useExtraBetStore } from '@/stores/extraBet';
 import { useMatchesStore } from '@/stores/matches';
-import { isFulfilled, isRejected } from '@/util/promiseCheck';
 
 import ApiService from './api_request';
 
