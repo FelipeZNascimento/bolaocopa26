@@ -103,7 +103,8 @@ const groupedMatches = computed(() => {
   gap: var(--m-spacing);
   padding: var(--m-spacing);
 
-  @media (width <= 768px) {
+  @media (width <=768px) {
+    gap: var(--xs-spacing);
     padding: var(--xs-spacing);
   }
 }
@@ -132,12 +133,10 @@ const groupedMatches = computed(() => {
   width: 200px;
   height: 100%;
   content: "";
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    color-mix(in srgb, currentcolor 20%, transparent) 50%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  transparent 0%,
+  color-mix(in srgb, currentcolor 20%, transparent) 50%,
+  transparent 100%);
 }
 
 .group-header {
@@ -177,272 +176,212 @@ const groupedMatches = computed(() => {
 }
 
 .group-a {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-green1) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-green1) 15%, transparent) 0%,
+  transparent 100%);
   border-color: var(--bolao-c-fifa-green1);
 }
 
 .group-a .group-header {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-green1) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-green1) 15%, transparent) 0%,
+  transparent 100%);
   border-left: 4px solid var(--bolao-c-fifa-green1);
 }
 
 .group-b {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-red) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-red) 15%, transparent) 0%,
+  transparent 100%);
   border-color: var(--bolao-c-fifa-red);
 }
 
 .group-b .group-header {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-red) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-red) 15%, transparent) 0%,
+  transparent 100%);
   border-left: 4px solid var(--bolao-c-fifa-red);
 }
 
 .group-c {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-yellow) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-yellow) 15%, transparent) 0%,
+  transparent 100%);
   border-color: var(--bolao-c-fifa-green2);
 }
 
 .group-c .group-header {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-yellow) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-yellow) 15%, transparent) 0%,
+  transparent 100%);
   border-left: 4px solid var(--bolao-c-fifa-yellow);
 }
 
 .group-d {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-blue) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-blue) 15%, transparent) 0%,
+  transparent 100%);
   border-color: var(--bolao-c-fifa-blue);
 }
 
 .group-d .group-header {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-blue) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-blue) 15%, transparent) 0%,
+  transparent 100%);
   border-left: 4px solid var(--bolao-c-fifa-blue);
 }
 
 .group-e {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-orange) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-orange) 15%, transparent) 0%,
+  transparent 100%);
   border-color: var(--bolao-c-orange);
 }
 
 .group-e .group-header {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-orange) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-orange) 15%, transparent) 0%,
+  transparent 100%);
   border-left: 4px solid var(--bolao-c-orange);
 }
 
 .group-f {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-green2) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-green2) 15%, transparent) 0%,
+  transparent 100%);
   border-color: var(--bolao-c-fifa-green2);
 }
 
 .group-f .group-header {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-green2) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-green2) 15%, transparent) 0%,
+  transparent 100%);
   border-left: 4px solid var(--bolao-c-fifa-green2);
 }
 
 .group-g {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-lilac) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-lilac) 15%, transparent) 0%,
+  transparent 100%);
   border-color: var(--bolao-c-lilac);
 }
 
 .group-g .group-header {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-lilac) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-lilac) 15%, transparent) 0%,
+  transparent 100%);
   border-left: 4px solid var(--bolao-c-fifa-lilac);
 }
 
 .group-h {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-green3) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-green3) 15%, transparent) 0%,
+  transparent 100%);
   border-color: var(--bolao-c-fifa-green3);
 }
 
 .group-h .group-header {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-green3) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-green3) 15%, transparent) 0%,
+  transparent 100%);
   border-left: 4px solid var(--bolao-c-fifa-green3);
 }
 
 .group-i {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-purple) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-purple) 15%, transparent) 0%,
+  transparent 100%);
   border-color: var(--bolao-c-fifa-purple);
 }
 
 .group-i .group-header {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-purple) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-purple) 15%, transparent) 0%,
+  transparent 100%);
   border-left: 4px solid var(--bolao-c-fifa-purple);
 }
 
 .group-j {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-lightpink) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-lightpink) 15%, transparent) 0%,
+  transparent 100%);
   border-color: var(--bolao-c-fifa-lightpink);
 }
 
 .group-j .group-header {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-lightpink) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-lightpink) 15%, transparent) 0%,
+  transparent 100%);
   border-left: 4px solid var(--bolao-c-fifa-lightpink);
 }
 
 .group-k {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
+  transparent 100%);
   border-color: var(--bolao-c-fifa-pink);
 }
 
 .group-k .group-header {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
+  transparent 100%);
   border-left: 4px solid var(--bolao-c-fifa-pink);
 }
 
 .group-l {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-darkred) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-darkred) 15%, transparent) 0%,
+  transparent 100%);
   border-color: var(--bolao-c-fifa-darkred);
 }
 
 .group-l .group-header {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-darkred) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-darkred) 15%, transparent) 0%,
+  transparent 100%);
   border-left: 4px solid var(--bolao-c-fifa-darkred);
 }
 
 .round-4 {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
+  transparent 100%);
   border-color: var(--bolao-c-fifa-pink);
 }
 
 .round-5 {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
+  transparent 100%);
   border-color: var(--bolao-c-fifa-pink);
 }
 
 .round-6 {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
+  transparent 100%);
   border-color: var(--bolao-c-fifa-pink);
 }
 
 .round-7 {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
+  transparent 100%);
   border-color: var(--bolao-c-fifa-pink);
 }
 
 .round-8 {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
+  transparent 100%);
   border-color: var(--bolao-c-fifa-pink);
 }
 
 .round-9 {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+  color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
+  transparent 100%);
   border-color: var(--bolao-c-fifa-pink);
 }
 </style>

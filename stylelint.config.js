@@ -11,7 +11,11 @@ export default {
     "**/dev-dist/**",
     "**/node_modules/**",
   ],
+  plugins: ["@stylistic/stylelint-plugin"],
   rules: {
+    // Enforce consistent indentation
+    "@stylistic/indentation": 2,
+
     // Allow unknown CSS variables and functions
     "function-no-unknown": null,
     // Allow empty sources (e.g., <style> blocks with just imports)

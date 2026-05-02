@@ -58,9 +58,36 @@ export const useClockStore = defineStore("clock", () => {
     return roundObj ? roundObj.display : `Rodada ${round}`;
   }
 
+  function getCountdown(targetTimestamp: number): string {
+    const secondsUntil = targetTimestamp - currentTimestamp.value;
+
+    if (secondsUntil <= 0) {
+      return "";
+    }
+
+    const days = Math.floor(secondsUntil / 86400);
+    const hours = Math.floor((secondsUntil % 86400) / 3600);
+    const minutes = Math.floor((secondsUntil % 3600) / 60);
+
+    const parts: string[] = [];
+
+    if (days > 0) {
+      parts.push(`${days} ${days === 1 ? "dia" : "dias"}`);
+    }
+    if (hours > 0) {
+      parts.push(`${hours} ${hours === 1 ? "hora" : "horas"}`);
+    }
+    if (minutes > 0 || parts.length === 0) {
+      parts.push(`${minutes} ${minutes === 1 ? "minuto" : "minutos"}`);
+    }
+
+    return parts.join(", ");
+  }
+
   return {
     currentTime,
     currentTimestamp,
+    getCountdown,
     getFormattedDate,
     getFormattedTime,
     getRoundName,

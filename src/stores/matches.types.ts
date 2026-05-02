@@ -6,8 +6,8 @@ import type { IPlayer, ITeam } from './teams.types';
 export interface IBet {
   id: number;
   matchId: number;
-  scoreAway: number;
-  scoreHome: number;
+  scoreAway: null | number;
+  scoreHome: null | number;
   timestamp: string;
   user: Pick<IUser, 'id' | 'nickname'>;
 }
@@ -53,9 +53,9 @@ export interface IReferee {
 
 export interface IScore {
   away: number;
-  awayPenalties: null | number;
+  awayPenalties: number;
   home: number;
-  homePenalties: null | number;
+  homePenalties: number;
 }
 
 export interface IStadium {

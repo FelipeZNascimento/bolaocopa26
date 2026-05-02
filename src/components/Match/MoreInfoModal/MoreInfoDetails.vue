@@ -1,35 +1,7 @@
 <template>
-  <div class="outer">
-    <ScoreComponent
-      :is-score-modal-open="true"
-      :match="match"
-      :active-user-bet="match.loggedUserBets"
-      :is-team-clickable="true"
-      :is-match-started="isMatchStarted"
-    />
-    <ClockComponent
-      style="margin-left: var(--l-spacing)"
-      :timestamp="match.timestamp"
-      :status="match.status"
-      :clock="
-        match.timestamp ? clockStore.getFormattedTime(match.timestamp) : null
-      "
-      :hit-level="hitLevel"
-      :is-match-started="isMatchStarted"
-    />
-    <PrimeButton
-      :icon="showMatchInfo ? 'pi pi-minus' : 'pi pi-plus'"
-      class="match-info-toggle"
-      label="Info"
-      severity=""
-      aria-label="Search"
-      size="small"
-      @click="toggleMatchInfo"
-    />
-  </div>
   <div header="Informações">
     <Transition name="expand">
-      <div v-show="showMatchInfo" class="match-info-wrapper">
+      <div v-show="showMatchInfo" class="outer">
         <div class="match-info">
           <div class="info-section">
             <h3><i class="pi pi-building" /> Estádio</h3>
@@ -63,6 +35,10 @@
             <p class="info-detail">
               {{ clockStore.getFormattedTime(match.timestamp) }}
             </p>
+            <p v-if="countdown" class="countdown">
+              <i class="pi pi-clock" />
+              Faltam {{ countdown }}
+            </p>
           </div>
 
           <div class="info-section">
@@ -77,64 +53,30 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref } from "vue";
+import { computed } from "vue";
 
-import type { HitLevel } from "@/constants/bets";
 import type { IMatch } from "@/stores/matches.types";
 
 import { useClockStore } from "@/stores/clock";
 
-import ClockComponent from "../ClockComponent.vue";
-import ScoreComponent from "../ScoreComponent.vue";
-
-defineProps<{
-  hitLevel: HitLevel | null;
-  isMatchStarted: boolean;
+const props = defineProps<{
   match: IMatch;
+  showMatchInfo: boolean;
 }>();
 
 // ------ Initialization ------
 const clockStore = useClockStore();
-const showMatchInfo = ref(false);
 
-function toggleMatchInfo() {
-  showMatchInfo.value = !showMatchInfo.value;
-}
+// ------ Computed Properties ------
+const countdown = computed(() => {
+  return clockStore.getCountdown(props.match.timestamp);
+});
+
 </script>
 <style lang="scss" scoped>
 .outer {
-  display: flex;
-  padding: var(--m-spacing);
-  margin: 0 var(--l-spacing) !important;
-  background-color: var(--bolao-c-blue3-t2);
-  border-radius: var(--border-radius);
-}
-
-.match-info-toggle {
-  display: flex;
-  justify-content: center;
-  height: var(--match-list-height);
-  margin-left: var(--l-spacing);
-  border-radius: var(--border-radius) !important;
-}
-
-.match-info-wrapper {
+  padding: 0 var(--l-spacing);
   overflow: hidden;
-}
-
-.expand-enter-active,
-.expand-leave-active {
-  max-height: 500px;
-  opacity: 1;
-  transition: all 0.4s ease;
-}
-
-.expand-enter-from,
-.expand-leave-to {
-  max-height: 0;
-  padding-top: 0;
-  padding-bottom: 0;
-  opacity: 0;
 }
 
 .match-info {
@@ -171,4 +113,20 @@ function toggleMatchInfo() {
   font-size: 0.9rem;
   color: var(--bolao-c-grey1-t2);
 }
+
+.expand-enter-active,
+.expand-leave-active {
+  max-height: 500px;
+  opacity: 1;
+  transition: all 0.4s ease;
+}
+
+.expand-enter-from,
+.expand-leave-to {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  opacity: 0;
+}
+
 </style>

@@ -159,7 +159,7 @@ extraBetService.fetch();
 const isLoadingExtras = computed(() => extraBetStore.isLoading);
 const isLoadingConfig = computed(() => configurationStore.isLoading);
 const extraBetsResults = computed(() => extraBetStore.results);
-const activeProfileExtraBets = computed(() => extraBetStore.loggedUserBets);
+const activeProfileExtraBets = computed(() => extraBetStore.activeProfileBets);
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 const extraBetsByTeam = computed(() => extraBetStore.extraBetsByTeam);
 const topScorersByPlayer = computed(() => extraBetStore.topScorerBetsByPlayer);

@@ -5,6 +5,7 @@ import type { IMatch } from './matches.types';
 
 export const useMatchesStore = defineStore('matches', () => {
   const isLoading = ref<boolean>(false);
+  const updatingMatches = ref<number[]>([]); // Array to track which matches are currently being updated
   const matches = ref<IMatch[]>([]);
   const error = ref<Error | null>(null);
 
@@ -16,6 +17,13 @@ export const useMatchesStore = defineStore('matches', () => {
 
   function setMatches(newMatches: IMatch[]) {
     matches.value = newMatches;
+  }
+
+  function updateLoggedUserBets(matchId: number, bet: { scoreAway: null | number; scoreHome: null | number; }) {
+    const match = matches.value.find((m) => m.id === matchId);
+    if (match && match.loggedUserBets) {
+      match.loggedUserBets = {...match.loggedUserBets, ...bet};
+    }
   }
 
   // function updateMatches(updatedMatches: IMatch[]) {
@@ -34,6 +42,17 @@ export const useMatchesStore = defineStore('matches', () => {
   //   });
   // }
 
+  function setUpdatingMatch(loadingState: boolean, matchId: null | number) {
+    if (loadingState && matchId !== null) {
+      updatingMatches.value.push(matchId);
+    } else if (!loadingState && matchId !== null) {
+      const index = updatingMatches.value.indexOf(matchId);
+      if (index !== -1) {
+        updatingMatches.value.splice(index, 1);
+      }
+    }
+  }
+
   function setLoading(loadingState: boolean) {
     isLoading.value = loadingState;
   }
@@ -42,5 +61,5 @@ export const useMatchesStore = defineStore('matches', () => {
     error.value = newError;
   }
 
-  return { error, isLoading, matches, resetLoggedUserBets, setError, setLoading, setMatches };
+  return { error, isLoading, matches, resetLoggedUserBets, setError, setLoading, setMatches, setUpdatingMatch, updateLoggedUserBets, updatingMatches };
 });

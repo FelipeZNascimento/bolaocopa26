@@ -54,34 +54,6 @@ export default class MatchService {
     }
   }
 
-  public async updateBet(
-    matchId: number,
-    betValue: number,
-    callback?: (isSuccess: boolean, error?: Error) => void,
-  ) {
-    const betObject = {
-      betValue,
-      matchId,
-    };
-
-    try {
-      await this.apiRequest.post<IMatch>(`bet/update/`, betObject);
-      // const response = await this.apiRequest.post<Match>(`bet/update/`, betObject);
-      // Deal with the response update the match in the store?
-
-      if (callback) {
-        callback(true);
-      }
-    } catch (error: unknown) {
-      if (callback) {
-        callback(
-          false,
-          error instanceof Error ? error : new Error(String(error)),
-        );
-      }
-    }
-  }
-
   private onWebsocketUpdate(this: WebSocket, ev: MessageEvent<unknown>) {
     // const configurationStore = useConfigurationStore();
     // const selectedRound = configurationStore.selectedRound;

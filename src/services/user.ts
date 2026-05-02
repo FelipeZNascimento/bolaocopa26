@@ -90,7 +90,7 @@ export default class UserService {
       this.rankingStore.setInitialState();
       this.configurationStore.setInitialState();
       this.matchesStore.resetLoggedUserBets();
-      this.extraBetStore.resetLoggedUserBets();
+      this.extraBetStore.resetActiveProfileBets();
     } catch (error: unknown) {
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setError(

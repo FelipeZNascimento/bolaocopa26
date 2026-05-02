@@ -2,22 +2,17 @@
   <div class="left-aligned outer-clock">
     <RibbonComponent v-if="activeProfile && hitLevel" :hit-level="hitLevel" />
     <span v-if="isClockStopped">{{ MATCH_STATUS_LABELS[status] }}</span>
-    <!-- <span v-if="isMatchStarted && !isClockStopped">{{ clock }} {{ MATCH_STATUS_LABELS[status] }}</span> -->
-    <span
-      v-if="!isMatchStarted"
-      style="
-        display: flex;
-        flex-flow: column wrap;
-        align-items: flex-end;
-      "
-      class="clock-time"
-    >
-      <p style="font-weight: bold">
-        {{ clockStore.getFormattedDate(timestamp) }}
-      </p>
-      <p style="font-size: var(--s-font-size)">
-        {{ clockStore.getFormattedTime(timestamp) }}
-      </p>
+    <span v-if="isMatchStarted && !isClockStopped">0' {{ MATCH_STATUS_LABELS[status] }}</span>
+    <span v-if="!isMatchStarted" class="clock-future">
+      <i class="pi pi-clock" style="font-size: var(--m2-font-size)" />
+      <div class="date">
+        <p style="font-weight: bold">
+          {{ clockStore.getFormattedDate(timestamp) }}
+        </p>
+        <p>
+          {{ clockStore.getFormattedTime(timestamp) }}
+        </p>
+      </div>
     </span>
   </div>
 </template>
@@ -72,50 +67,56 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
   background-color: var(--bolao-c-white-t1);
   border-radius: var(--border-radius);
 
-  span {
-    display: -webkit-box;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
+  @media (width <=768px) {
+    height: var(--match-list-height-mobile);
   }
 
-  @media (width <= 768px) {
-    height: calc(var(--match-list-height) - 20px);
-  }
-
-  @media (width >= 769px) {
+  @media (width >=769px) {
     height: var(--match-list-height);
   }
 
-  @media (width <= 1023px) {
+  @media (width <=1023px) {
     padding: 0 var(--m-spacing);
     font-size: var(--s-font-size);
   }
 
-  @media (width >= 1024px) {
+  @media (width >=1024px) {
     width: 120px;
     padding: 0 var(--m-spacing);
     font-size: var(--s-font-size);
   }
 
-  @media (width >= 1440px) {
+  @media (width >=1440px) {
     width: 140px;
     padding: 0 var(--xxl-spacing);
     font-size: var(--m-font-size);
   }
 }
 
-.clock-date {
-  font-size: var(--m2-font-size);
-}
-
-.clock-time {
+.clock-future {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  gap: var(--s-spacing);
+  align-items: center;
+  justify-content: center;
   font-size: var(--m-font-size);
 
-  @media (width <= 1024px) {
+  @media (width <=1024px) {
     font-size: var(--s-font-size);
+  }
+
+  .date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    @media (width <=1024px) {
+      flex-direction: row;
+      gap: var(--s-spacing);
+      font-size: var(--s-font-size);
+    }
   }
 }
 </style>

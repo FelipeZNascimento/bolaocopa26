@@ -1,5 +1,4 @@
 import vueTsEslintConfig from "@vue/eslint-config-typescript";
-import pluginOxlint from "eslint-plugin-oxlint";
 import perfectionist from "eslint-plugin-perfectionist";
 import pluginVue from "eslint-plugin-vue";
 
@@ -20,5 +19,61 @@ export default [
   ...pluginVue.configs["flat/essential"],
   ...vueTsEslintConfig(),
   perfectionist.configs["recommended-natural"],
-  ...pluginOxlint.configs["flat/recommended"],
+  {
+    files: ["**/*.{ts,mts,tsx}"],
+    name: "app/typescript-formatting",
+    rules: {
+      "comma-dangle": ["error", "always-multiline"],
+      "indent": ["error", 2, { "SwitchCase": 1 }],
+      "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0 }],
+      "no-trailing-spaces": "error",
+    },
+  },
+  {
+    name: "app/vue-template-formatting",
+    rules: {
+      "vue/first-attribute-linebreak": [
+        "warn",
+        {
+          multiline: "below",
+          singleline: "ignore",
+        },
+      ],
+      "vue/html-closing-bracket-newline": [
+        "warn",
+        {
+          multiline: "always",
+          singleline: "never",
+        },
+      ],
+      // Proper indentation for Vue templates
+      "vue/html-indent": [
+        "warn",
+        2,
+        {
+          alignAttributesVertically: false,
+          attribute: 1,
+          baseIndent: 1,
+          closeBracket: 0,
+        },
+      ],
+      // Enforce attributes on new lines when line is too long
+      "vue/max-attributes-per-line": [
+        "warn",
+        {
+          multiline: { max: 1 },
+          singleline: { max: 3 },
+        },
+      ],
+      // Script indentation
+      "vue/script-indent": [
+        "error",
+        2,
+        {
+          baseIndent: 0,
+          switchCase: 1,
+        },
+      ],
+    },
+  },
 ];

@@ -33,7 +33,8 @@
         />
         {{
           match
-            ? `${match.homeTeam.abbreviation} ${match.score?.home ?? 0} x ${match.score?.away ?? 0} ${match.awayTeam.abbreviation}`
+            ? `${match.homeTeam.abbreviation} ${match.score?.home ?? 0} x ${match.score?.away ?? 0}
+        ${match.awayTeam.abbreviation}`
             : ""
         }}
         <img
@@ -45,13 +46,13 @@
       </div>
     </template>
     <template #default>
-      <BetsModalMobileView
+      <MoreInfoMobileView
         v-if="isMobile"
         :match="match"
         :hit-level="hitLevel"
         :is-match-started="isMatchStarted"
       />
-      <BetsModalDesktopView
+      <MoreInfoDesktopView
         v-else
         :match="match"
         :hit-level="hitLevel"
@@ -60,11 +61,7 @@
       <div>
         <div header="Apostas">
           <div v-if="activeProfileStore.activeProfile" class="favorites-filter">
-            <span
-              class="toggle"
-              :class="{ activeToggle: !showFavoritesOnly }"
-              @click="showFavoritesOnly = false"
-            >
+            <span class="toggle" :class="{ activeToggle: !showFavoritesOnly }" @click="showFavoritesOnly = false">
               <i class="pi pi-list" /> Todos
             </span>
             <span
@@ -86,51 +83,52 @@
               Favoritos
             </span>
           </div>
-          <div class="bets-outer">
+          <div class="bets-outer" v-if="isMatchStarted">
             <BetsColumn
               :bets="filterBets(match.bets, 'exact')"
               :column-value="BETS_VALUES.AWAY_EASY"
-              :active-user-bet="
-                filterBets(
-                  match.loggedUserBets ? [match.loggedUserBets] : null,
-                  'exact',
-                )
+              :active-user-bet="filterBets(
+                match.loggedUserBets ? [match.loggedUserBets] : null,
+                'exact',
+              )
               "
               :hit-level="HIT_LEVELS.exactScore"
             />
             <BetsColumn
               :bets="filterBets(match.bets, 'oneScore')"
               :column-value="BETS_VALUES.AWAY_EASY"
-              :active-user-bet="
-                filterBets(
-                  match.loggedUserBets ? [match.loggedUserBets] : null,
-                  'oneScore',
-                )
+              :active-user-bet="filterBets(
+                match.loggedUserBets ? [match.loggedUserBets] : null,
+                'oneScore',
+              )
               "
               :hit-level="HIT_LEVELS.oneScore"
             />
             <BetsColumn
               :bets="filterBets(match.bets, 'winnerOnly')"
               :column-value="BETS_VALUES.AWAY_EASY"
-              :active-user-bet="
-                filterBets(
-                  match.loggedUserBets ? [match.loggedUserBets] : null,
-                  'winnerOnly',
-                )
+              :active-user-bet="filterBets(
+                match.loggedUserBets ? [match.loggedUserBets] : null,
+                'winnerOnly',
+              )
               "
               :hit-level="HIT_LEVELS.winnerOnly"
             />
             <BetsColumn
               :bets="filterBets(match.bets, 'miss')"
               :column-value="BETS_VALUES.AWAY_EASY"
-              :active-user-bet="
-                filterBets(
-                  match.loggedUserBets ? [match.loggedUserBets] : null,
-                  'miss',
-                )
+              :active-user-bet="filterBets(
+                match.loggedUserBets ? [match.loggedUserBets] : null,
+                'miss',
+              )
               "
               :hit-level="HIT_LEVELS.miss"
             />
+          </div>
+          <div v-else class="no-bets-message">
+            <p v-if="countdown">Você tem {{ countdown }} para fazer sua aposta nesse jogo.</p>
+            <i class="pi pi-clock" />
+            <p>As apostas de todos os participantes estarão disponíveis quando a partida começar.</p>
           </div>
         </div>
       </div>
@@ -149,8 +147,8 @@ import { useActiveProfileStore } from "@/stores/activeProfile";
 import { useClockStore } from "@/stores/clock";
 
 import BetsColumn from "./BetsColumn.vue";
-import BetsModalDesktopView from "./BetsModalDesktopView.vue";
-import BetsModalMobileView from "./BetsModalMobileView.vue";
+import MoreInfoDesktopView from "./MoreInfoDesktopView.vue";
+import MoreInfoMobileView from "./MoreInfoMobileView.vue";
 
 const props = defineProps<{
   handleCloseModal: () => void;
@@ -184,6 +182,10 @@ const isMatchStarted = computed(() => {
   return clockStore.currentTimestamp >= props.match.timestamp;
 });
 
+const countdown = computed(() => {
+  return clockStore.getCountdown(props.match.timestamp);
+});
+
 // ------ Functions ------
 function filterBets(bets: IBet[] | null, hitLevel: HitLevel) {
   if (!bets) return [];
@@ -206,6 +208,11 @@ function filterBets(bets: IBet[] | null, hitLevel: HitLevel) {
     }
 
     // Determine the winner/outcome of the bet and actual match
+    if(bet.scoreHome === null || bet.scoreAway === null || props.match.score.home === null || props.match.score.away === null) {
+      // If any score is null, we can't determine the outcome, so we consider it a miss
+      return hitLevel === "miss";
+    }
+
     const betHomeWon = bet.scoreHome > bet.scoreAway;
     const betAwayWon = bet.scoreAway > bet.scoreHome;
     const betDraw = bet.scoreHome === bet.scoreAway;
@@ -317,12 +324,33 @@ watch(favorites, (newFavorites) => {
   justify-content: center;
   padding: var(--s-spacing);
 }
+
+.no-bets-message {
+  display: flex;
+  flex-direction: column;
+  gap: var(--m-spacing);
+  align-items: center;
+  justify-content: center;
+  padding: var(--xl-spacing) var(--l-spacing);
+  text-align: center;
+
+  i {
+    font-size: var(--xxl-font-size);
+    color: var(--bolao-c-grey1-t2);
+  }
+
+  p {
+    margin: 0;
+    font-size: var(--m-font-size);
+    line-height: 1.6;
+    color: var(--bolao-c-grey1-t2);
+  }
+}
 </style>
 
 <style lang="scss">
 /* Unscoped styles for PrimeDialog content customization */
 .content-class {
   padding: 0 !important;
-  scrollbar-gutter: stable;
 }
 </style>
