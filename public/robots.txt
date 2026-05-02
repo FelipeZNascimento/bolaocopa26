@@ -1,0 +1,58 @@
+# robots.txt for Bolão Copa 2026
+# https://bolaocopa.omegafox.me (adjust with your actual domain)
+
+# Allow all well-behaved bots by default
+User-agent: *
+
+# Allow crawling of public pages
+Allow: /
+Allow: /jogos
+Allow: /extras
+Allow: /regras
+Allow: /ranking
+Allow: /equipes
+
+# Disallow authentication and user-specific pages
+Disallow: /reset-password
+Disallow: /api/
+Disallow: /*?token=
+Disallow: /*?auth=
+
+# Disallow admin or private sections (if any)
+Disallow: /admin/
+Disallow: /private/
+
+# Block common bot traps and sensitive files
+Disallow: /*.json$
+Disallow: /*.xml$
+Disallow: /config/
+
+# Sitemap location
+Sitemap: https://bolaocopa.omegafox.me/sitemap.xml
+
+# Crawl delay to be polite (1 second between requests)
+Crawl-delay: 1
+
+# Specific rules for aggressive bots
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+# Allow major search engines full access to public content
+User-agent: Googlebot
+Allow: /
+Disallow: /reset-password
+Disallow: /api/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /reset-password
+Disallow: /api/

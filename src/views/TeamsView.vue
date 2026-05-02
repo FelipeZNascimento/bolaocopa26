@@ -1,7 +1,13 @@
 <template>
   <div class="outer-teams">
     <h1>Equipes</h1>
-    <PrimeSkeleton v-if="isLoading" class="skeleton-outer" />
+    <div v-if="isLoading" style="display: flex; flex-direction: row; gap: var(--l-spacing); align-items: center; width: 100%;">
+      <PrimeSkeleton
+        v-for="value in 3"
+        :key="value"
+        class="skeleton-outer"
+      />
+    </div>
     <div v-else class="groups-container">
       <div
         v-for="group in groupedTeams"
@@ -60,6 +66,10 @@ const groupedTeams = computed(() => {
 
   // Group teams by their group property
   teams.value.forEach((team) => {
+    if(team.id === 33) {
+      return; // Skip placeholder team
+    }
+
     const groupKey = team.group;
     if (!groups.has(groupKey)) {
       groups.set(groupKey, []);
@@ -109,19 +119,20 @@ teamService.fetch();
 }
 
 .skeleton-outer {
-  width: 100%;
+  width: 50%;
   min-height: 400px;
 }
 
 .groups-container {
   display: flex;
-  flex-direction: column;
+  flex-flow: row wrap;
   gap: var(--xl-spacing);
   width: 100%;
 }
 
 .group-section {
-  width: 100%;
+  flex: 1;
+  min-width: 300px;
   overflow: hidden;
   color: var(--color-contrast);
   border-radius: 8px;
@@ -147,10 +158,10 @@ teamService.fetch();
 
 .team-card {
   display: flex;
-  flex: 1;
   flex-direction: column;
   align-items: center;
-  max-width: 160px;
+  width: 140px;
+  height: 140px;
   font-size: var(--m-font-size);
   cursor: pointer;
   background: color-mix(in srgb, var(--color-contrast) 5%, transparent);
@@ -160,7 +171,14 @@ teamService.fetch();
   transition: all 0.2s ease;
 
   @media (width <=768px) {
-    font-size: var(--xs-font-size);
+    height: 160px;
+    font-size: var(--s-font-size);
+
+  }
+
+  @media (width <=480px) {
+    width: 140px;
+    height: 140px;
   }
 
   &:hover {
@@ -172,18 +190,18 @@ teamService.fetch();
   img {
     flex: 0;
     width: 100%;
-    height: 100px;
-    min-height: 100px;
+    height: 80px;
+    min-height: 80px;
     object-fit: cover;
 
     @media (width <=768px) {
-      height: 80px;
-      min-height: 80px;
+      height: 100px;
+      min-height: 100px;
     }
 
     @media (width <=480px) {
-      height: 50px;
-      min-height: 50px;
+      height: 80px;
+      min-height: 80px;
     }
   }
 
@@ -192,9 +210,13 @@ teamService.fetch();
     flex: 1;
     align-items: center;
     justify-content: center;
+    width: 100%;
     min-height: 50px;
+    padding: var(--s-spacing);
     font-weight: 600;
     text-align: center;
+    word-break: break-word;
+    overflow-wrap: break-word;
     text-decoration: underline dotted;
   }
 }

@@ -161,7 +161,6 @@ function onFormSubmit(formData: FormSubmitEvent<Record<string, string>>) {
     return updateCallback(true);
   }
 
-  console.log('Updating password with values:', { currentPassword, newPassword });
   userService.updatePassword(currentPassword, newPassword, updateCallback);
 }
 

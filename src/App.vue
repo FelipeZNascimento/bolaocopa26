@@ -42,7 +42,6 @@ const { isMobile } = useViewport();
 
 function initializationCallback(isSuccess: boolean) {
   if (isSuccess) {
-    console.log("Fetching initial matches and rankings...");
     matchService.fetch();
   }
 }

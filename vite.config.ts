@@ -13,7 +13,7 @@ export default defineConfig({
       devOptions: {
         enabled: true,
       },
-      includeAssets: ['favicon.svg', 'robots.txt'],
+      includeAssets: ['favicon.svg', 'robots.txt', 'sitemap.xml'],
       manifest: {
         background_color: '#1b2f42',
         description: 'Um bolão para acompanhar a Copa do Mundo 2026 em tempo real!',

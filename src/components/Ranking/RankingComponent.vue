@@ -109,7 +109,6 @@ const activeProfile = computed(() => activeProfileStore.activeProfile);
 // if activeProfile becomes empty, showFavoritesOnly should be set to false to avoid showing empty ranking
 watch(activeProfile, (newValue) => {
   if (!newValue) {
-    console.log("Active profile is empty, setting showFavoritesOnly to false");
     showFavoritesOnly.value = false;
   }
 });

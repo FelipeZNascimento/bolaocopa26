@@ -34,7 +34,6 @@ export default class ExtraBetService {
         throw new Error('Falha ao buscar apostas extras');
       }
 
-      console.log(extraResponse.value);
       const extraBets = isFulfilled(extraResponse) ? extraResponse.value.bets : [];
       const activeProfileBets = isFulfilled(extraResponse) ? extraResponse.value.activeProfileBets : [];
       const extraBetsResults = isFulfilled(extraResultsResponse) ? extraResultsResponse.value : [];
@@ -62,7 +61,6 @@ export default class ExtraBetService {
   }
 
   splitBetsByPlayers(extraBets: IExtraAllBets[]) {
-    console.log(extraBets);
     const playersWithExtras: IPlayerWithExtras[] = [];
 
     extraBets.forEach((extraBetType) => {
