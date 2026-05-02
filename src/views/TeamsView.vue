@@ -215,7 +215,6 @@ teamService.fetch();
     padding: var(--s-spacing);
     font-weight: 600;
     text-align: center;
-    word-break: break-word;
     overflow-wrap: break-word;
     text-decoration: underline dotted;
   }
