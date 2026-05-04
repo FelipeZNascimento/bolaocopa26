@@ -22,7 +22,7 @@ const activeProfileStore = useActiveProfileStore();
 ### Set active profile
 
 ```typescript
-const user: IUser = { id: 1, name: 'John Doe', /* ... */ };
+const user: IUser = { id: 1, name: 'John Doe' /* ... */ };
 activeProfileStore.setActiveProfile(user);
 ```
 
@@ -96,7 +96,7 @@ const activeProfileStore = useActiveProfileStore();
 async function loadUserProfile(userId: number) {
   activeProfileStore.setLoading(true);
   activeProfileStore.setError(null);
-  
+
   try {
     const user = await fetchUserById(userId);
     activeProfileStore.setActiveProfile(user);

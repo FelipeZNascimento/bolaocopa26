@@ -23,7 +23,9 @@ const teamsStore = useTeamsStore();
 ### Set teams data
 
 ```typescript
-const teams: ITeam[] = [/* ... */];
+const teams: ITeam[] = [
+  /* ... */
+];
 teamsStore.setTeams(teams);
 ```
 
@@ -99,7 +101,7 @@ const error = computed(() => teamsStore.error);
 async function loadTeams() {
   teamsStore.setLoading(true);
   teamsStore.setError(null);
-  
+
   try {
     await teamService.fetch(); // Service handles store updates
   } catch (error) {
@@ -138,13 +140,11 @@ import { useTeamsStore } from '@/stores/teams';
 const teamsStore = useTeamsStore();
 
 function getTeamById(teamId: number) {
-  return teamsStore.teams.find(team => team.id === teamId);
+  return teamsStore.teams.find((team) => team.id === teamId);
 }
 
 // Or as computed property
-const selectedTeam = computed(() => 
-  teamsStore.teams.find(team => team.id === selectedTeamId.value)
-);
+const selectedTeam = computed(() => teamsStore.teams.find((team) => team.id === selectedTeamId.value));
 ```
 
 ## Example: Filter Teams
@@ -157,12 +157,12 @@ const teamsStore = useTeamsStore();
 
 // Filter teams by group
 const getTeamsByGroup = (group: string) => {
-  return teamsStore.teams.filter(team => team.group === group);
+  return teamsStore.teams.filter((team) => team.group === group);
 };
 
 // All groups
 const groups = computed(() => {
-  const uniqueGroups = new Set(teamsStore.teams.map(t => t.group));
+  const uniqueGroups = new Set(teamsStore.teams.map((t) => t.group));
   return Array.from(uniqueGroups).sort();
 });
 ```

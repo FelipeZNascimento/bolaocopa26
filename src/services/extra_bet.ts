@@ -26,7 +26,7 @@ export default class ExtraBetService {
 
     try {
       const [extraResponse, extraResultsResponse] = await Promise.allSettled([
-        this.apiRequest.get<{activeProfileBets: IExtraAllBets[]; bets: IExtraAllBets[],}>(`bet/extra/`),
+        this.apiRequest.get<{ activeProfileBets: IExtraAllBets[]; bets: IExtraAllBets[] }>(`bet/extra/`),
         this.apiRequest.get<IExtraResults[]>(`bet/extra/results`),
       ]);
 
@@ -38,7 +38,12 @@ export default class ExtraBetService {
       const activeProfileBets = isFulfilled(extraResponse) ? extraResponse.value.activeProfileBets : [];
       const extraBetsResults = isFulfilled(extraResultsResponse) ? extraResultsResponse.value : [];
 
-      this.extraBetStore.setActiveProfileBets(activeProfileBets.map((betType) => betType.bets).flat().sort((a, b) => (a.extraType > b.extraType ? 1 : -1)));
+      this.extraBetStore.setActiveProfileBets(
+        activeProfileBets
+          .map((betType) => betType.bets)
+          .flat()
+          .sort((a, b) => (a.extraType > b.extraType ? 1 : -1)),
+      );
       this.extraBetStore.setResults(extraBetsResults.sort((a, b) => (a.extraType > b.extraType ? 1 : -1)));
 
       const splittedBetsByTeam = this.splitBetsByTeams(

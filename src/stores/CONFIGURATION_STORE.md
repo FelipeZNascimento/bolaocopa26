@@ -145,6 +145,7 @@ Sets the error state.
 #### `setInitialState()`
 
 Resets all settings to default values and clears related localStorage entries:
+
 - `theme` → `'dark'`
 - `rankingPosition` → `'active'`
 - Removes: `'ranking-columns'`, `'theme-preference'`, `'ranking-position'`
@@ -191,13 +192,13 @@ const configurationStore = useConfigurationStore();
 
 async function initializeApp() {
   configurationStore.setLoading(true);
-  
+
   try {
     const config = await fetchAppConfiguration();
     configurationStore.setCurrentEdition(config.edition);
     configurationStore.setCurrentRound(config.currentRound);
     configurationStore.setEditionStart(config.startTimestamp);
-    
+
     // Load theme from localStorage or use default
     const savedTheme = localStorage.getItem('theme-preference') as TThemeValue;
     if (savedTheme) {

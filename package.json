@@ -13,9 +13,11 @@
     "test:unit": "vitest",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
-    "lint": "npm run lint:js && npm run lint:style",
+    "lint": "npm run format && npm run lint:js && npm run lint:style",
     "lint:js": "eslint . --fix",
-    "lint:style": "stylelint '**/*.{vue,css,scss}' --fix"
+    "lint:style": "stylelint '**/*.{vue,css,scss}' --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.0.0",
@@ -45,6 +47,7 @@
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.9.1",
     "eslint": "^10.2.1",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-perfectionist": "^5.9.0",
     "eslint-plugin-vue": "^10.8.0",
     "jiti": "^2.4.2",

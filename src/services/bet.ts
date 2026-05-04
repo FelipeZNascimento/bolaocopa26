@@ -18,7 +18,7 @@ export default class BetService {
   }
 
   public async placeBet(
-    updateObj: { awayScore: null | number; homeScore: null | number, matchId: number, },
+    updateObj: { awayScore: null | number; homeScore: null | number; matchId: number },
     callback?: (isSuccess: boolean, error?: Error) => void,
   ) {
     try {

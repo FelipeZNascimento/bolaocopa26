@@ -1,7 +1,14 @@
 <template>
   <!-- Render of extra bets -->
-  <div v-if="extraBets && extraBets.length > 0" class="cards-container">
-    <div v-for="extraBet in extraBets" :key="extraBet.id" class="bets-card">
+  <div
+    v-if="extraBets && extraBets.length > 0"
+    class="cards-container"
+  >
+    <div
+      v-for="extraBet in extraBets"
+      :key="extraBet.id"
+      class="bets-card"
+    >
       <div class="top-text">
         {{ EXTRA_BETS_LABELS[extraBet.extraType] }}
       </div>
@@ -12,13 +19,22 @@
         />
       </div>
       <div class="bottom-text">
-        <HoverablePlayerName v-if="extraBet.player" :player="extraBet.player" />
-        <ClickableTeamName v-else :team="extraBet.team" />
+        <HoverablePlayerName
+          v-if="extraBet.player"
+          :player="extraBet.player"
+        />
+        <ClickableTeamName
+          v-else
+          :team="extraBet.team"
+        />
       </div>
     </div>
   </div>
   <!-- Render of results for extra bets -->
-  <div v-else-if="results && results.length > 0" class="cards-container">
+  <div
+    v-else-if="results && results.length > 0"
+    class="cards-container"
+  >
     <div
       v-for="(extraBetType, index) in results"
       :key="index"
@@ -39,19 +55,25 @@
           />
         </div>
         <div class="bottom-text">
-          <HoverablePlayerName v-if="value.player" :player="value.player" />
-          <ClickableTeamName v-else :team="value.team" />
+          <HoverablePlayerName
+            v-if="value.player"
+            :player="value.player"
+          />
+          <ClickableTeamName
+            v-else
+            :team="value.team"
+          />
         </div>
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import type { IExtraBet, IExtraResults } from "@/stores/extraBet.types";
+import type { IExtraBet, IExtraResults } from '@/stores/extraBet.types';
 
-import ClickableTeamName from "@/components/ClickableTeamName.vue";
-import HoverablePlayerName from "@/components/HoverablePlayerName.vue";
-import { EXTRA_BETS_LABELS } from "@/constants/bets";
+import ClickableTeamName from '@/components/ClickableTeamName.vue';
+import HoverablePlayerName from '@/components/HoverablePlayerName.vue';
+import { EXTRA_BETS_LABELS } from '@/constants/bets';
 
 defineProps<{
   extraBets?: IExtraBet[];

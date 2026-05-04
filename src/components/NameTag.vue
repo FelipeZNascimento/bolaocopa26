@@ -5,6 +5,10 @@
     @click="handleUserClick"
   >
     <i
+      v-if="activeProfile?.id === user.id"
+      class="pi pi-star-fill active-profile-badge"
+    />
+    <i
       v-if="isFavorite()"
       v-tooltip.top="'Favorito'"
       class="pi pi-star-fill favorite-badge"
@@ -24,19 +28,19 @@
   />
 </template>
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { computed, ref } from 'vue';
 
-import type { IUser } from "@/stores/activeProfile.types";
+import type { IUser } from '@/stores/activeProfile.types';
 
-import UserTrackingModal from "@/components/UserTrackingModal.vue";
-import FavoritesService from "@/services/favorites";
-import { useActiveProfileStore } from "@/stores/activeProfile";
+import UserTrackingModal from '@/components/UserTrackingModal.vue';
+import UserService from '@/services/user';
+import { useActiveProfileStore } from '@/stores/activeProfile';
 
 const props = withDefaults(
   defineProps<{
     isClickable?: boolean;
     isShort?: boolean;
-    user: Pick<IUser, "id" | "nickname">;
+    user: Pick<IUser, 'id' | 'nickname'>;
   }>(),
   {
     isClickable: false,
@@ -47,27 +51,25 @@ const props = withDefaults(
 const isUserTrackingModalOpen = ref<boolean>(false);
 
 // ------ Initialization ------
-const favoritesService = new FavoritesService();
 const activeProfileStore = useActiveProfileStore();
+const userService = new UserService();
 
 // ------ Computed ------
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 
 // ------ Functions ------
 function handleUserClick() {
+  console.log('User clicked:', props.user.nickname);
   if (!props.isClickable) {
     return;
   }
 
+  console.log('Opening User Tracking Modal for user:', props.user.nickname);
   isUserTrackingModalOpen.value = true;
 }
 
 function isFavorite(): boolean {
-  if (!activeProfile.value) {
-    return false;
-  }
-
-  return favoritesService.isFavorite(activeProfile.value.id, props.user.id);
+  return userService.isFavorite(props.user.id);
 }
 </script>
 <style lang="scss" scoped>
@@ -96,6 +98,15 @@ function isFavorite(): boolean {
 
 .active {
   font-weight: bold;
+}
+
+.active-profile-badge {
+  z-index: 1;
+  padding-right: var(--xs-spacing);
+  font-size: var(--xs-font-size);
+  color: var(--bolao-c-mint);
+  cursor: pointer;
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 30%));
 }
 
 .favorite-badge {

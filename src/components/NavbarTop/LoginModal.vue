@@ -122,7 +122,7 @@
       </div>
       <p
         v-show="loginError"
-        style=" padding-top: var(--l-spacing);text-align: center"
+        style="padding-top: var(--l-spacing); text-align: center"
       >
         <PrimeTag
           severity="contrast"
@@ -191,13 +191,7 @@ const resolverDecider = () => {
   return loginResolver.value;
 };
 
-const forgotPasswordResolver = ref(
-  zodResolver(
-    z.object({
-      email: z.email({ error: 'Email inválido' }),
-    }),
-  ),
-);
+const forgotPasswordResolver = ref(zodResolver(z.object({ email: z.email({ error: 'Email inválido' }) })));
 
 const loginResolver = ref(
   zodResolver(

@@ -17,14 +17,7 @@
     <div v-if="isLoadingActiveProfile || isLoadingRounds || isLoadingSeason">
       <PrimeSkeleton style="width: 100%; height: 200px" />
     </div>
-    <div
-      v-else-if="favoriteUsers.length === 0"
-      class="favorites-empty"
-    >
-      <i class="pi pi-info-circle" />
-      <p>Nenhum favorito adicionado</p>
-      <p>Para adicionar alguém aos seus favoritos, clique no usuário e ative a estrela no topo das estatísticas.</p>
-    </div>
+    <EmptyFavorites v-else-if="favoriteUsers.length === 0" />
     <div
       v-else
       class="favorites-list"
@@ -63,12 +56,14 @@ import { computed, ref, watch } from 'vue';
 
 import type { IUser } from '@/stores/activeProfile.types';
 
-import FavoritesService from '@/services/favorites';
+import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
+import { useNotificationStore } from '@/stores/notification';
 import { useRankingStore } from '@/stores/ranking';
 
 import NameTag from '../NameTag.vue';
+import EmptyFavorites from './EmptyFavorites.vue';
 
 const props = defineProps<{
   handleCloseModal: () => void;
@@ -77,15 +72,16 @@ const props = defineProps<{
 
 // ------ Refs ------
 const isVisible = ref(false);
-const favorites = ref<number[]>([]);
 
 // ------ Initialization ------
 const activeProfileStore = useActiveProfileStore();
 const rankingStore = useRankingStore();
 const configurationStore = useConfigurationStore();
-const favoritesService = new FavoritesService();
+const userService = new UserService();
+const notificationStore = useNotificationStore();
 
 // ------ Computed ------
+const favorites = computed(() => activeProfileStore.activeProfile?.favorites || []);
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 const seasonRanking = computed(() => rankingStore.seasonRanking);
 const isLoadingRounds = computed(() => configurationStore.isLoading || rankingStore.isLoadingRounds);
@@ -110,44 +106,31 @@ const favoriteUsers = computed(() => {
 function handleClearFavorites() {
   if (!activeProfile.value) return;
 
-  favoritesService.clearAllFavorites(activeProfile.value.id);
-  loadFavorites();
-  // Trigger event for RankingTable to update
-  window.dispatchEvent(new Event('favorites-cleared'));
-}
-
-function loadFavorites() {
-  if (!activeProfile.value) {
-    favorites.value = [];
-    return;
-  }
-  favorites.value = favoritesService.getFavorites(activeProfile.value.id);
+  userService.updateFavorites([], updateCallback);
 }
 
 function removeFavorite(userId: number) {
   if (!activeProfile.value) return;
 
-  favoritesService.removeFavorite(activeProfile.value.id, userId);
-  loadFavorites();
-  // Trigger event for RankingTable to update
-  window.dispatchEvent(new Event('favorites-cleared'));
+  const newFavorites = favorites.value.filter((id) => id !== userId);
+  userService.updateFavorites(newFavorites, updateCallback);
+}
+
+function updateCallback(isSuccess: boolean) {
+  if (isSuccess) {
+    notificationStore.success('Favoritos atualizados com sucesso', 'success');
+    console.log('Favorites updated successfully');
+  } else {
+    notificationStore.error('Falha ao atualizar favoritos', 'error');
+    console.error('Failed to update favorites');
+  }
 }
 
 // ------ Watches ------
 watch(
-  () => activeProfile.value,
-  (newProfile) => {
-    if (newProfile) {
-      loadFavorites();
-    }
-  },
-);
-
-watch(
   () => props.isOpen,
   (newValue) => {
     if (newValue) {
-      loadFavorites();
       isVisible.value = true;
     }
   },
@@ -205,27 +188,6 @@ watch(isVisible, (newValue) => {
 
   &:hover {
     transform: scale(1.2);
-  }
-}
-
-.favorites-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: var(--xxl-spacing);
-  color: var(--bolao-c-grey1-t2);
-  text-align: center;
-
-  i {
-    margin-bottom: var(--m-spacing);
-    font-size: 4rem;
-  }
-
-  p {
-    max-width: 400px;
-    margin: var(--xs-spacing) 0;
-    font-size: var(--s-font-size);
   }
 }
 </style>

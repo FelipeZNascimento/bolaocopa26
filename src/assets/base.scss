@@ -1,4 +1,4 @@
-@use "sass:color";
+@use 'sass:color';
 
 /* ------------------- */
 
@@ -12,10 +12,10 @@
   Calculated using: https://screenspan.net/fallback
 */
 @font-face {
-  font-family: "Inter Fallback";
+  font-family: 'Inter Fallback';
   font-style: normal;
   font-weight: 400;
-  src: local("Arial");
+  src: local('Arial');
   size-adjust: 107%;
   ascent-override: 90%;
   descent-override: 22%;
@@ -23,10 +23,10 @@
 }
 
 @font-face {
-  font-family: "Inter Fallback";
+  font-family: 'Inter Fallback';
   font-style: normal;
   font-weight: 500;
-  src: local("Arial");
+  src: local('Arial');
   size-adjust: 107%;
   ascent-override: 90%;
   descent-override: 22%;
@@ -34,10 +34,10 @@
 }
 
 @font-face {
-  font-family: "Inter Fallback";
+  font-family: 'Inter Fallback';
   font-style: normal;
   font-weight: 600;
-  src: local("Arial");
+  src: local('Arial');
   size-adjust: 107%;
   ascent-override: 90%;
   descent-override: 22%;
@@ -45,10 +45,10 @@
 }
 
 @font-face {
-  font-family: "Inter Fallback";
+  font-family: 'Inter Fallback';
   font-style: normal;
   font-weight: 700;
-  src: local("Arial");
+  src: local('Arial');
   size-adjust: 107%;
   ascent-override: 90%;
   descent-override: 22%;
@@ -61,64 +61,62 @@
 
 /* ------------------- */
 $spacings: (
-  "none": 0px,
-  "xxs": 2px,
-  "xs": 4px,
-  "s": 8px,
-  "m": 12px,
-  "l": 16px,
-  "xl": 20px,
-  "xxl": 32px,
-  "xxxl": 64px,
+  'none': 0px,
+  'xxs': 2px,
+  'xs': 4px,
+  's': 8px,
+  'm': 12px,
+  'l': 16px,
+  'xl': 20px,
+  'xxl': 32px,
+  'xxxl': 64px,
 );
 $font-sizes: (
-  "xxs": 8px,
-  "xs": 12px,
-  "s": 16px,
-  "m": 18px,
-  "m2": 20px,
-  "l": 24px,
-  "xl": 36px,
-  "xxl": 48px,
+  'xxs': 8px,
+  'xs': 12px,
+  's': 16px,
+  'm': 18px,
+  'm2': 20px,
+  'l': 24px,
+  'xl': 36px,
+  'xxl': 48px,
 );
 $colors: (
-  "gold": #f4b303,
-  "green": #197b30,
-  "mint": #29c84e,
-  "blue": #1565c0,
-  "sky": #03a9f4,
-  "red": #be2a2a,
-  "orange": #dc6d31,
-  "navy": #1b2f42,
+  'gold': #f4b303,
+  'green': #197b30,
+  'mint': #29c84e,
+  'blue': #1565c0,
+  'sky': #03a9f4,
+  'red': #be2a2a,
+  'orange': #dc6d31,
+  'navy': #1b2f42,
 
-  /* stylelint-disable-next-line color-hex-length */
-  "white": #ffffff,
-  "grey1": #eceff1,
-  "grey2": #cfd8dc,
-  "grey3": #9da4a7,
-  "grey4": #757a7c,
-  "grey5": #545859,
-  /* stylelint-disable-next-line color-hex-length */
-  "black": #000000,
+  /* stylelint-disable-next-line color-hex-length */ 'white': #fff,
+  'grey1': #eceff1,
+  'grey2': #cfd8dc,
+  'grey3': #9da4a7,
+  'grey4': #757a7c,
+  'grey5': #545859,
+  /* stylelint-disable-next-line color-hex-length */ 'black': #000,
 
-  "blue1": #1e85e6,
-  "blue2": #1b78d0,
-  "blue3": #13518a,
-  "blue4": #152a68,
-  "blue5": #080f25,
+  'blue1': #1e85e6,
+  'blue2': #1b78d0,
+  'blue3': #13518a,
+  'blue4': #152a68,
+  'blue5': #080f25,
 
-  "fifa-green1": #009e60,
-  "fifa-green2": #56bcb6,
-  "fifa-green3": #006958,
-  "fifa-red": #ee1c24,
-  "fifa-darkred": #7f011d,
-  "fifa-yellow": #e8ea7c,
-  "fifa-blue": #1768b4,
-  "fifa-orange": #f58021,
-  "fifa-lilac": #b0a7d1,
-  "fifa-purple": #4d3b98,
-  "fifa-lightpink": #f8aa9b,
-  "fifa-pink": #ef3875,
+  'fifa-green1': #009e60,
+  'fifa-green2': #56bcb6,
+  'fifa-green3': #006958,
+  'fifa-red': #ee1c24,
+  'fifa-darkred': #7f011d,
+  'fifa-yellow': #e8ea7c,
+  'fifa-blue': #1768b4,
+  'fifa-orange': #f58021,
+  'fifa-lilac': #b0a7d1,
+  'fifa-purple': #4d3b98,
+  'fifa-lightpink': #f8aa9b,
+  'fifa-pink': #ef3875,
 );
 
 /* ------------------- */
@@ -204,12 +202,7 @@ $colors: (
   --color-contrast: var(--bolao-c-black);
   --color-match-overlay: var(--bolao-c-grey1);
   --color-anchor: var(--bolao-c-blue1);
-  --color-background: linear-gradient(
-    135deg,
-    #d4dce6 0%,
-    #c8d5e0 50%,
-    #bccdd9 100%
-  );
+  --color-background: linear-gradient(135deg, #d4dce6 0%, #c8d5e0 50%, #bccdd9 100%);
   --color-background-soft: var(--vt-c-white-soft);
   --color-background-mute: var(--vt-c-white-mute);
   --color-border: var(--vt-c-divider-light-2);
@@ -244,9 +237,7 @@ $colors: (
   --p-togglebutton-checked-background: var(--bolao-c-blue1-t3) !important;
   --p-togglebutton-checked-border-color: var(--bolao-c-blue1) !important;
   --p-togglebutton-checked-color: var(--bolao-c-white) !important;
-  --p-togglebutton-content-checked-background: var(
-    --bolao-c-blue1-t2
-  ) !important;
+  --p-togglebutton-content-checked-background: var(--bolao-c-blue1-t2) !important;
 
   // Select
   --p-select-background: var(--bolao-c-green-t3) !important;
@@ -260,8 +251,8 @@ $colors: (
   --p-dialog-background: var(--bolao-c-blue4) !important;
 
   // Popover
-  --p-popover-background: var(--bolao-c-blue3-t3) !important;
-  --p-popover-border-color: transparent !important;
+  --p-popover-background: var(--bolao-c-blue4) !important;
+  --p-popover-border-color: var(--bolao-c-blue3) !important;
 
   // Paginator
   --p-paginator-background: var(--bolao-c-navbar) !important;
@@ -272,16 +263,12 @@ $colors: (
   // Table
   --p-datatable-header-cell-color: var(--bolao-c-grey1) !important;
   --p-datatable-header-cell-hover-color: var(--bolao-c-white) !important;
-  --p-datatable-header-cell-hover-background: var(
-    --bolao-c-blue1-t1
-  ) !important;
-  --p-datatable-header-cell-selected-background: var(
-    --bolao-c-blue3-t3
-  ) !important;
+  --p-datatable-header-cell-hover-background: var(--bolao-c-blue1-t1) !important;
+  --p-datatable-header-cell-selected-background: var(--bolao-c-blue3-t3) !important;
   --p-datatable-header-cell-selected-color: var(--bolao-c-gold) !important;
   --p-datatable-header-cell-background: var(--bolao-c-blue3) !important;
-  --p-datatable-row-background: var(--bolao-c-blue3-t1) !important;
-  --p-datatable-row-striped-background: var(--bolao-c-blue3-t2) !important;
+  --p-datatable-row-background: var(--bolao-c-blue3) !important;
+  --p-datatable-row-striped-background: var(--bolao-c-blue3-d1) !important;
   --p-datatable-row-color: var(--bolao-c-white) !important;
   --p-datatable-row-hover-background: var(--bolao-c-blue5-t1) !important;
   --p-datatable-row-hover-color: var(--bolao-c-white) !important;
@@ -290,18 +277,13 @@ $colors: (
   --surface-card: var(--bolao-c-white-t3) !important;
 }
 
-[data-theme="dark"] {
+[data-theme='dark'] {
   --color-main: var(--bolao-c-black);
   --color-contrast: var(--bolao-c-white);
   --color-match-overlay: var(--bolao-c-black);
 
   // --color-background: var(--vt-c-black-soft);
-  --color-background: linear-gradient(
-    135deg,
-    #0a0e14 0%,
-    #141c2c 50%,
-    #1a2738 100%
-  );
+  --color-background: linear-gradient(135deg, #0a0e14 0%, #141c2c 50%, #1a2738 100%);
   --color-background-soft: var(--vt-c-black-soft);
   --color-background-mute: var(--vt-c-black-mute);
   --color-border: var(--vt-c-divider-dark-2);
@@ -327,35 +309,34 @@ $colors: (
 input {
   font-family:
     Inter,
-    "Inter Fallback",
+    'Inter Fallback',
     -apple-system,
     BlinkMacSystemFont,
-    "Segoe UI",
+    'Segoe UI',
     Roboto,
     Oxygen,
     Ubuntu,
     Cantarell,
-    "Fira Sans",
-    "Droid Sans",
-    "Helvetica Neue",
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
     sans-serif;
-
 }
 
 body {
   font-family:
     Inter,
-    "Inter Fallback",
+    'Inter Fallback',
     -apple-system,
     BlinkMacSystemFont,
-    "Segoe UI",
+    'Segoe UI',
     Roboto,
     Oxygen,
     Ubuntu,
     Cantarell,
-    "Fira Sans",
-    "Droid Sans",
-    "Helvetica Neue",
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
     sans-serif;
   font-size: 15px;
   line-height: 1.6;

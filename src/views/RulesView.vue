@@ -1,14 +1,7 @@
 <template>
   <div class="outer-rules">
     <h1>Regras</h1>
-    <div
-      style="
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--m-spacing);
-        justify-content: center;
-      "
-    >
+    <div style="display: flex; flex-wrap: wrap; gap: var(--m-spacing); justify-content: center">
       <PrimeButton
         v-for="(button, index) in buttonOptions"
         :key="index"
@@ -25,7 +18,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref } from 'vue';
 
 // import RulesBetting from './Rules/RulesBetting.vue';
 // import RulesExtras from './Rules/RulesExtras.vue';
@@ -33,21 +26,10 @@ import { ref } from "vue";
 // import RulesScores from './Rules/RulesScores.vue';
 // import RulesSubscription from './Rules/RulesSubscription.vue';
 
-type RulesToggle =
-  | "Apostas"
-  | "Extras"
-  | "Inscrição"
-  | "Pontuação"
-  | "Premiação";
+type RulesToggle = 'Apostas' | 'Extras' | 'Inscrição' | 'Pontuação' | 'Premiação';
 // ------ Refs ------
-const selectedButton = ref<RulesToggle>("Inscrição");
-const buttonOptions = ref<RulesToggle[]>([
-  "Inscrição",
-  "Pontuação",
-  "Apostas",
-  "Extras",
-  "Premiação",
-]);
+const selectedButton = ref<RulesToggle>('Inscrição');
+const buttonOptions = ref<RulesToggle[]>(['Inscrição', 'Pontuação', 'Apostas', 'Extras', 'Premiação']);
 </script>
 <style lang="scss" scoped>
 .outer-rules {

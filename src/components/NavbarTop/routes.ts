@@ -37,8 +37,28 @@ export const ROUTES = [
   //   needCredentials: true,
   //   url: '/apostar',
   // },
-  { id: ROUTE_ID.EXTRAS, label: 'Extras', needCredentials: false, url: '/extras' },
-  { id: ROUTE_ID.RANKING, label: 'Ranking', needCredentials: false, url: '/ranking' },
-  { id: ROUTE_ID.RULES, label: 'Regras', needCredentials: false, url: '/regras' },
-  { id: ROUTE_ID.TEAMS, label: 'Equipes', needCredentials: false, url: '/equipes' },
+  {
+    id: ROUTE_ID.EXTRAS,
+    label: 'Extras',
+    needCredentials: false,
+    url: '/extras',
+  },
+  {
+    id: ROUTE_ID.RANKING,
+    label: 'Ranking',
+    needCredentials: false,
+    url: '/ranking',
+  },
+  {
+    id: ROUTE_ID.RULES,
+    label: 'Regras',
+    needCredentials: false,
+    url: '/regras',
+  },
+  {
+    id: ROUTE_ID.TEAMS,
+    label: 'Equipes',
+    needCredentials: false,
+    url: '/equipes',
+  },
 ];

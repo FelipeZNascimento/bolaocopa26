@@ -13,7 +13,7 @@
           class="sticker-flag"
           :src="`https://assets.omegafox.me/copa/countries_flags/${player.team.isoCode.toLowerCase()}.png`"
           :alt="player.team.name"
-        >
+        />
         {{ player.team.name }}
       </div>
     </div>
@@ -33,7 +33,7 @@
         :alt="player.name"
         @load="isLoadingImage = false"
         @error="handleImageError"
-      >
+      />
       <div
         v-else
         class="placeholder-photo"

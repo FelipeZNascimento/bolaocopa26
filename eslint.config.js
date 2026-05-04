@@ -1,79 +1,46 @@
-import vueTsEslintConfig from "@vue/eslint-config-typescript";
-import perfectionist from "eslint-plugin-perfectionist";
-import pluginVue from "eslint-plugin-vue";
+import vueTsEslintConfig from '@vue/eslint-config-typescript';
+import eslintConfigPrettier from 'eslint-config-prettier';
+import perfectionist from 'eslint-plugin-perfectionist';
+import pluginVue from 'eslint-plugin-vue';
 
 export default [
   {
-    files: ["**/*.{ts,mts,tsx,vue}"],
-    name: "app/files-to-lint",
+    files: ['**/*.{ts,mts,tsx,vue}'],
+    name: 'app/files-to-lint',
   },
   {
-    ignores: [
-      "**/dist/**",
-      "**/dist-ssr/**",
-      "**/coverage/**",
-      "**/dev-dist/**",
-    ],
-    name: "app/files-to-ignore",
+    ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**', '**/dev-dist/**'],
+    name: 'app/files-to-ignore',
   },
-  ...pluginVue.configs["flat/essential"],
+  ...pluginVue.configs['flat/essential'],
   ...vueTsEslintConfig(),
-  perfectionist.configs["recommended-natural"],
+  perfectionist.configs['recommended-natural'],
   {
-    files: ["**/*.{ts,mts,tsx}"],
-    name: "app/typescript-formatting",
+    name: 'app/code-quality-rules',
     rules: {
-      "comma-dangle": ["error", "always-multiline"],
-      "indent": ["error", 2, { "SwitchCase": 1 }],
-      "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0 }],
-      "no-trailing-spaces": "error",
-    },
-  },
-  {
-    name: "app/vue-template-formatting",
-    rules: {
-      "vue/first-attribute-linebreak": [
-        "warn",
+      // Enforce consistent attribute order (code quality, not formatting)
+      'vue/attributes-order': [
+        'error',
         {
-          multiline: "below",
-          singleline: "ignore",
-        },
-      ],
-      "vue/html-closing-bracket-newline": [
-        "warn",
-        {
-          multiline: "always",
-          singleline: "never",
-        },
-      ],
-      // Proper indentation for Vue templates
-      "vue/html-indent": [
-        "warn",
-        2,
-        {
-          alignAttributesVertically: false,
-          attribute: 1,
-          baseIndent: 1,
-          closeBracket: 0,
-        },
-      ],
-      // Enforce attributes on new lines when line is too long
-      "vue/max-attributes-per-line": [
-        "warn",
-        {
-          multiline: { max: 1 },
-          singleline: { max: 3 },
-        },
-      ],
-      // Script indentation
-      "vue/script-indent": [
-        "error",
-        2,
-        {
-          baseIndent: 0,
-          switchCase: 1,
+          alphabetical: false,
+          order: [
+            'DEFINITION', // is, v-is
+            'LIST_RENDERING', // v-for
+            'CONDITIONALS', // v-if, v-else-if, v-else, v-show, v-cloak
+            'RENDER_MODIFIERS', // v-once, v-pre
+            'GLOBAL', // id
+            'UNIQUE', // ref, key
+            'SLOT', // v-slot, slot
+            'TWO_WAY_BINDING', // v-model
+            'OTHER_DIRECTIVES', // v-custom-directive
+            'OTHER_ATTR', // all other attributes (class, style, custom props, :prop, prop="value")
+            'EVENTS', // @click, v-on:click
+            'CONTENT', // v-html, v-text
+          ],
         },
       ],
     },
   },
+  // Must be last - disables all ESLint formatting rules that conflict with Prettier
+  eslintConfigPrettier,
 ];

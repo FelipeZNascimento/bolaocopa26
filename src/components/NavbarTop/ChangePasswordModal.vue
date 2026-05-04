@@ -104,7 +104,7 @@
         </p>
         <p
           v-show="error"
-          style=" padding-top: var(--l-spacing);text-align: center"
+          style="padding-top: var(--l-spacing); text-align: center"
         >
           <PrimeTag
             severity="contrast"

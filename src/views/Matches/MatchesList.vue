@@ -1,0 +1,473 @@
+<template>
+  <FloatingButtons
+    :selectedRound="selectedRound"
+    :groupToggleState="groupToggleState"
+    @toggle-group-view="groupToggleState = !groupToggleState"
+  />
+  <template v-if="shouldGroupByGroup">
+    <div
+      v-for="group in groupedMatches"
+      :key="group.groupName"
+      :class="`group-section group-${group.groupName.toLowerCase().split(' ')[1]}`"
+      style="text-align: left"
+    >
+      <h2 class="group-header">
+        {{ group.groupName }}
+      </h2>
+      <div class="outer-line">
+        <MatchComponent
+          v-for="match in group.matches"
+          :key="match.id"
+          :is-match-clickable="!isTeamClickable"
+          :is-team-clickable="isTeamClickable"
+          :match="match"
+        />
+      </div>
+    </div>
+  </template>
+  <div
+    v-else
+    :class="`group-section round-${selectedRound}`"
+    style="text-align: center"
+  >
+    <h3 class="group-header">
+      {{ roundLabel }}
+    </h3>
+    <div class="outer-line">
+      <MatchComponent
+        v-for="match in sortedMatches"
+        :key="match.id"
+        :is-match-clickable="!isTeamClickable"
+        :is-team-clickable="isTeamClickable"
+        :match="match"
+      />
+    </div>
+  </div>
+</template>
+<script lang="ts" setup>
+import { computed, onMounted, onUnmounted, ref } from 'vue';
+
+import type { IMatch } from '@/stores/matches.types';
+
+import MatchComponent from '@/components/Match/MatchComponent.vue';
+import { useViewport } from '@/services/viewport';
+import FloatingButtons from '@/views/Matches/FloatingButtons.vue';
+
+const props = withDefaults(
+  defineProps<{
+    isTeamClickable?: boolean;
+    matches: IMatch[];
+    selectedRound: null | number;
+  }>(),
+  { isTeamClickable: false },
+);
+
+// ------ Refs ------
+const groupToggleState = ref(true);
+const isScrolled = ref(false);
+
+// ------ Initialization ------
+const { isDesktop } = useViewport();
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
+
+// ------ Functions ------
+const handleScroll = () => {
+  if (!isDesktop) {
+    return;
+  }
+
+  isScrolled.value = window.scrollY > 100;
+};
+
+// ------ Computed Properties ------
+const sortedMatches = computed(() => {
+  return [...props.matches].sort((a, b) => {
+    const dateA = new Date(a.timestamp).getTime();
+    const dateB = new Date(b.timestamp).getTime();
+    return dateA - dateB;
+  });
+});
+const shouldGroupByGroup = computed(() => {
+  const round = props.selectedRound;
+  const isGroupStage = round === 1 || round === 2 || round === 3;
+  return isGroupStage && groupToggleState.value;
+});
+
+const roundLabel = computed(() => {
+  const round = props.selectedRound;
+  if (round === null) {
+    return '';
+  }
+
+  const labels: Record<number, string> = {
+    1: 'Fase de Grupos - Rodada 1',
+    2: 'Fase de Grupos - Rodada 2',
+    3: 'Fase de Grupos - Rodada 3',
+    4: '16 Avos',
+    5: 'Oitavas',
+    6: 'Quartas',
+    7: 'Semi Finais',
+    8: 'Final',
+  };
+  return labels[round] || `Rodada ${round}`;
+});
+
+const groupedMatches = computed(() => {
+  const groups = new Map<string, IMatch[]>();
+
+  props.matches.forEach((match) => {
+    const groupKey = match.homeTeam.group;
+    if (!groups.has(groupKey)) {
+      groups.set(groupKey, []);
+    }
+    groups.get(groupKey)!.push(match);
+  });
+
+  // Sort groups alphabetically and convert to array
+  return Array.from(groups.entries())
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([groupName, matches]) => ({
+      groupName: `Grupo ${groupName}`,
+      matches,
+    }));
+});
+</script>
+<style lang="scss" scoped>
+.outer-line {
+  display: flex;
+  flex-direction: column;
+  gap: var(--m-spacing);
+  padding: 0 var(--m-spacing) var(--m-spacing) var(--m-spacing);
+
+  @media (width <=768px) {
+    gap: var(--xs-spacing);
+    padding: var(--xs-spacing);
+  }
+}
+
+.group-section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  color: var(--color-contrast);
+  border-radius: 8px;
+  box-shadow: var(--drop-shadow);
+}
+
+.group-section::before {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  content: '';
+}
+
+.group-header {
+  position: relative;
+  z-index: 1;
+  padding: var(--s-spacing);
+  padding-left: var(--l-spacing);
+  overflow: hidden;
+  font-size: var(--m-font-size);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 4px;
+}
+
+.group-section:hover .group-header::after {
+  position: absolute;
+  top: 0;
+  left: -200px;
+  width: 200px;
+  height: 100%;
+  content: '';
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, currentcolor 20%, transparent) 50%,
+    transparent 100%
+  );
+}
+
+.groups-container {
+  width: 100%;
+}
+
+.group-fade-enter-active,
+.group-fade-leave-active {
+  transition: all 0.5s ease;
+}
+
+.group-fade-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.group-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.group-fade-move {
+  transition: transform 0.5s ease;
+}
+
+// Group colors
+.group-a {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-green1) 15%, transparent) 0%,
+    transparent 100%
+  );
+
+  .group-header {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bolao-c-fifa-green1) 15%, transparent) 0%,
+      transparent 100%
+    );
+    border-left: 4px solid var(--bolao-c-fifa-green1);
+  }
+}
+
+.group-b {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--bolao-c-fifa-red) 15%, transparent) 0%, transparent 100%);
+
+  .group-header {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bolao-c-fifa-red) 15%, transparent) 0%,
+      transparent 100%
+    );
+    border-left: 4px solid var(--bolao-c-fifa-red);
+  }
+}
+
+.group-c {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-yellow) 15%, transparent) 0%,
+    transparent 100%
+  );
+
+  .group-header {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bolao-c-fifa-yellow) 15%, transparent) 0%,
+      transparent 100%
+    );
+    border-left: 4px solid var(--bolao-c-fifa-yellow);
+  }
+}
+
+.group-d {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-blue) 15%, transparent) 0%,
+    transparent 100%
+  );
+
+  .group-header {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bolao-c-fifa-blue) 15%, transparent) 0%,
+      transparent 100%
+    );
+    border-left: 4px solid var(--bolao-c-fifa-blue);
+  }
+}
+
+.group-e {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--bolao-c-orange) 15%, transparent) 0%, transparent 100%);
+
+  .group-header {
+    background: linear-gradient(90deg, color-mix(in srgb, var(--bolao-c-orange) 15%, transparent) 0%, transparent 100%);
+    border-left: 4px solid var(--bolao-c-orange);
+  }
+}
+
+.group-f {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-green2) 15%, transparent) 0%,
+    transparent 100%
+  );
+
+  .group-header {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bolao-c-fifa-green2) 15%, transparent) 0%,
+      transparent 100%
+    );
+    border-left: 4px solid var(--bolao-c-fifa-green2);
+  }
+}
+
+.group-g {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-lilac) 15%, transparent) 0%,
+    transparent 100%
+  );
+
+  .group-header {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bolao-c-fifa-lilac) 15%, transparent) 0%,
+      transparent 100%
+    );
+    border-left: 4px solid var(--bolao-c-fifa-lilac);
+  }
+}
+
+.group-h {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-purple) 15%, transparent) 0%,
+    transparent 100%
+  );
+
+  .group-header {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bolao-c-fifa-purple) 15%, transparent) 0%,
+      transparent 100%
+    );
+    border-left: 4px solid var(--bolao-c-fifa-purple);
+  }
+}
+
+.group-i {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-purple) 15%, transparent) 0%,
+    transparent 100%
+  );
+  border-color: var(--bolao-c-fifa-purple);
+
+  .group-header {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bolao-c-fifa-purple) 15%, transparent) 0%,
+      transparent 100%
+    );
+    border-left: 4px solid var(--bolao-c-fifa-purple);
+  }
+}
+
+.group-j {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-lightpink) 15%, transparent) 0%,
+    transparent 100%
+  );
+  border-color: var(--bolao-c-fifa-lightpink);
+
+  .group-header {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bolao-c-fifa-lightpink) 15%, transparent) 0%,
+      transparent 100%
+    );
+    border-left: 4px solid var(--bolao-c-fifa-lightpink);
+  }
+}
+
+.group-k {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
+    transparent 100%
+  );
+  border-color: var(--bolao-c-fifa-pink);
+
+  .group-header {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
+      transparent 100%
+    );
+    border-left: 4px solid var(--bolao-c-fifa-pink);
+  }
+}
+
+.group-l {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-darkred) 15%, transparent) 0%,
+    transparent 100%
+  );
+  border-color: var(--bolao-c-fifa-darkred);
+
+  .group-header {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bolao-c-fifa-darkred) 15%, transparent) 0%,
+      transparent 100%
+    );
+    border-left: 4px solid var(--bolao-c-fifa-darkred);
+  }
+}
+
+.round-4 {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
+    transparent 100%
+  );
+  border-color: var(--bolao-c-fifa-pink);
+}
+
+.round-5 {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
+    transparent 100%
+  );
+  border-color: var(--bolao-c-fifa-pink);
+}
+
+.round-6 {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
+    transparent 100%
+  );
+  border-color: var(--bolao-c-fifa-pink);
+}
+
+.round-7 {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
+    transparent 100%
+  );
+  border-color: var(--bolao-c-fifa-pink);
+}
+
+.round-8 {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
+    transparent 100%
+  );
+  border-color: var(--bolao-c-fifa-pink);
+}
+
+.round-9 {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
+    transparent 100%
+  );
+  border-color: var(--bolao-c-fifa-pink);
+}
+</style>

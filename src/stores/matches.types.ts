@@ -23,6 +23,7 @@ export interface IMatch {
   awayTeam: ITeam;
   bets: IBet[];
   events: IMatchEvent[];
+  group: null | string;
   homeTeam: ITeam;
   id: number;
   idFifa: number;
@@ -32,7 +33,7 @@ export interface IMatch {
   score: IScore;
   stadium: IStadium;
   status: TMatchStatus;
-  timestamp: number;
+  timestamp: string;
 }
 export interface IMatchEvent {
   event: IEvent;

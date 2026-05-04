@@ -25,8 +25,8 @@
       <div
         v-if="!isNameless"
         class="team-alias clickable"
-        @click="openTeamModal(team)"
         :style="{ textAlign: isHomeTeam ? 'right' : 'left' }"
+        @click="openTeamModal(team)"
       >
         {{ team.name }}
       </div>
@@ -38,26 +38,26 @@
         @click="handleScoreClick($event)"
       >
         <input
+          v-model="inputValue"
           type="number"
           min="0"
           max="99"
           class="score-input"
-          :class="{ 'is-loading': isLoadingMatch }"
+          :class="{ 'is-loading': isLoadingMatch, 'has-unsaved-changes': hasUnsavedChanges }"
           placeholder="_"
-          :disabled="isMatchStarted || !activeProfile"
-          :readonly="isLoadingMatch"
-          v-model="localInputValue"
+          :readonly="isMatchStarted || !activeProfile || isLoadingMatch"
           :style="{
             fontWeight: isWinning ? 'bold' : 'normal',
             textAlign: isOnPenalties && !isMobile ? 'left' : 'center',
             pointerEvents: activeProfile && !isMatchStarted ? 'auto' : 'none',
           }"
           @input="handleInput($event)"
-          @focus="handleFocus"
-          @blur="handleBlur"
           @keydown="handleKeydown($event)"
         />
-        <div class="loading-spinner-wrapper" v-if="isLoadingMatch && !isOnPenalties">
+        <div
+          v-if="isLoadingMatch && !isOnPenalties"
+          class="loading-spinner-wrapper"
+        >
           <i class="pi pi-spin pi-spinner" />
         </div>
         <div
@@ -74,7 +74,11 @@
         </div>
       </div>
     </div>
-    <div v-if="showEvents && events.length > 0" class="events-container" :style="{ alignItems: isHomeTeam ? 'flex-start' : 'flex-end' }">
+    <div
+      v-if="showEvents && events.length > 0"
+      class="events-container"
+      :style="{ alignItems: isHomeTeam ? 'flex-start' : 'flex-end' }"
+    >
       <div
         v-for="event in events"
         :key="event.id"
@@ -86,42 +90,47 @@
       >
         <div class="line">
           <img
-            style=" width: 20px;height: 20px"
+            style="width: 20px; height: 20px"
             :src="getEventIconUrl(event.event.id, isHomeTeam)"
             :alt="event.event.description"
           />
           <span>{{ event.event.gametime }}</span>
         </div>
-        <HoverablePlayerName v-if="event.player" :player="event.player" :text-align="isHomeTeam ? 'right' : 'left'" />
+        <HoverablePlayerName
+          v-if="event.player"
+          :player="event.player"
+          :text-align="isHomeTeam ? 'right' : 'left'"
+        />
       </div>
     </div>
   </div>
 
   <!-- Modals -->
-  <TeamDetailsModal :is-open="isTeamModalOpen" :team="selectedTeam" :handle-close-modal="closeTeamModal" />
+  <TeamDetailsModal
+    :is-open="isTeamModalOpen"
+    :team="selectedTeam"
+    :handle-close-modal="closeTeamModal"
+  />
   <LoginModal
     :is-open="isLoginModalOpen"
     :handle-close-modal="handleCloseLoginModal"
   />
-
 </template>
 <script lang="ts" setup>
-import { computed, ref, watch } from "vue";
+import { computed, ref } from 'vue';
 
-import type { IMatch, IMatchEvent } from "@/stores/matches.types";
-import type { ITeam } from "@/stores/teams.types";
+import type { IMatch, IMatchEvent } from '@/stores/matches.types';
+import type { ITeam } from '@/stores/teams.types';
 
-import LoginModal from "@/components/NavbarTop/LoginModal.vue";
-import TeamDetailsModal from "@/components/TeamDetailsModal.vue";
-import { MATCH_EVENT, PENALTIES } from "@/constants/match";
-import BetService from '@/services/bet';
-import { useViewport } from "@/services/viewport";
-import { useActiveProfileStore } from "@/stores/activeProfile";
-import { useClockStore } from "@/stores/clock";
-import { useMatchesStore } from "@/stores/matches";
-import { useNotificationStore } from "@/stores/notification";
+import LoginModal from '@/components/NavbarTop/LoginModal.vue';
+import TeamDetailsModal from '@/components/TeamDetailsModal.vue';
+import { MATCH_EVENT, PENALTIES } from '@/constants/match';
+import { useViewport } from '@/services/viewport';
+import { useActiveProfileStore } from '@/stores/activeProfile';
+import { useClockStore } from '@/stores/clock';
+import { useMatchesStore } from '@/stores/matches';
 
-import HoverablePlayerName from "../HoverablePlayerName.vue";
+import HoverablePlayerName from '../HoverablePlayerName.vue';
 
 const props = withDefaults(
   defineProps<{
@@ -146,53 +155,45 @@ const props = withDefaults(
 // ------ Refs ------
 const selectedTeam = ref<ITeam | null>(null);
 const isTeamModalOpen = ref(false);
-const lastValidValue = ref("");
 const isLoginModalOpen = ref(false);
-const localInputValue = ref<number | string>("");
-const isInputFocused = ref(false);
 
 // ------ Initialization ------
 const clockStore = useClockStore();
 const { isMobile } = useViewport();
-const betService = new BetService();
 const activeProfileStore = useActiveProfileStore();
 const matchesStore = useMatchesStore();
-const notificationStore = useNotificationStore();
 
 // ------ Computed Properties ------
 const isLoadingMatch = computed(() => matchesStore.updatingMatches.includes(props.match.id));
+
+const inputValue = computed({
+  get() {
+    const working = matchesStore.getWorkingBet(props.match.id);
+    return props.isHomeTeam ? working.scoreHome : working.scoreAway;
+  },
+  set(value: null | number) {
+    const working = matchesStore.getWorkingBet(props.match.id);
+    const newBet = {
+      scoreAway: !props.isHomeTeam ? value : working.scoreAway,
+      scoreHome: props.isHomeTeam ? value : working.scoreHome,
+    };
+    matchesStore.updateWorkingBet(props.match.id, newBet.scoreHome, newBet.scoreAway);
+  },
+});
+
+const hasUnsavedChanges = computed(() => matchesStore.hasWorkingBetChanged(props.match.id));
+
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 const isMatchStarted = computed(() => {
-  return clockStore.currentTimestamp >= timestamp;
+  return clockStore.currentTimestamp >= parseInt(timestamp, 10);
 });
 
 const isOnPenalties = computed(() => {
   return PENALTIES.includes(status);
 });
 
-const { awayTeam, homeTeam, score, status, timestamp } = props.match;
+const { score, status, timestamp } = props.match;
 const team = props.isHomeTeam ? props.match.homeTeam : props.match.awayTeam;
-
-// Sync local input value with props when they change
-// Only update if we're not currently focused on this input (to avoid overwriting user input)
-watch(
-  () => {
-    if (isMatchStarted.value) {
-      // Match has started - show actual score
-      return props.isHomeTeam ? props.match.score.home : props.match.score.away;
-    } else {
-      // Match hasn't started - show bet
-      return props.isHomeTeam ? props.match.loggedUserBets?.scoreHome : props.match.loggedUserBets?.scoreAway;
-    }
-  },
-  (value) => {
-    if (!isInputFocused.value) {
-      // Convert null/undefined to empty string, keep numbers (including 0)
-      localInputValue.value = (value !== null && value !== undefined) ? value : "";
-    }
-  },
-  { immediate: true },
-);
 
 // ------ Functions ------
 function closeTeamModal() {
@@ -204,90 +205,24 @@ function getEventIconUrl(eventType: number, isHome: boolean) {
   switch (eventType) {
     case MATCH_EVENT.GOAL: {
       return isHome
-        ? "https://assets.omegafox.me/copa/icons/goal.png"
-        : "https://assets.omegafox.me/copa/icons/goal_a.png";
+        ? 'https://assets.omegafox.me/copa/icons/goal.png'
+        : 'https://assets.omegafox.me/copa/icons/goal_a.png';
     }
     case MATCH_EVENT.OWN_GOAL: {
       return isHome
-        ? "https://assets.omegafox.me/copa/icons/own_goal.png"
-        : "https://assets.omegafox.me/copa/icons/own_goal_a.png";
+        ? 'https://assets.omegafox.me/copa/icons/own_goal.png'
+        : 'https://assets.omegafox.me/copa/icons/own_goal_a.png';
     }
     case MATCH_EVENT.PENALTY_GOAL: {
       return isHome
-        ? "https://assets.omegafox.me/copa/icons/penalty_goal.png"
-        : "https://assets.omegafox.me/copa/icons/penalty_goal_a.png";
+        ? 'https://assets.omegafox.me/copa/icons/penalty_goal.png'
+        : 'https://assets.omegafox.me/copa/icons/penalty_goal_a.png';
     }
   }
-}
-
-function handleBlur() {
-  isInputFocused.value = false;
-
-  // Helper to convert input value to number or null
-  const parseScore = (value: number | string): null | number => {
-    if (value === "" || value === null || value === undefined) {
-      return null;
-    }
-    if (typeof value === "number") {
-      return value;
-    }
-    const parsed = Number(value);
-    return isNaN(parsed) ? null : parsed;
-  };
-
-  // Get the current input value for this team
-  const currentScore = parseScore(localInputValue.value);
-
-  // Get the existing bet from the store
-  const existingHomeScore = props.match.loggedUserBets?.scoreHome ?? null;
-  const existingAwayScore = props.match.loggedUserBets?.scoreAway ?? null;
-
-  // Build the new bet object
-  const newHomeScore = props.isHomeTeam ? currentScore : existingHomeScore;
-  const newAwayScore = props.isHomeTeam ? existingAwayScore : currentScore;
-
-  // Only call API if this team's score has changed
-  const hasChanged = props.isHomeTeam
-    ? newHomeScore !== existingHomeScore
-    : newAwayScore !== existingAwayScore;
-
-  if (!hasChanged) {
-    return; // No change, don't call API
-  }
-
-  betService.placeBet(
-    {
-      awayScore: newAwayScore,
-      homeScore: newHomeScore,
-      matchId: props.match.id,
-    },
-    (isSuccess, error) => {
-      if (isSuccess) {
-        const homeDisplay = newHomeScore !== null ? newHomeScore : '_';
-        const awayDisplay = newAwayScore !== null ? newAwayScore : '_';
-
-        notificationStore.success(`Partida atualizada com sucesso`, `${homeTeam.abbreviation} ${homeDisplay} x ${awayDisplay} ${awayTeam.abbreviation}`);
-        matchesStore.updateLoggedUserBets(props.match.id, {
-          scoreAway: newAwayScore,
-          scoreHome: newHomeScore,
-        });
-      } else {
-        console.error('Failed to place bet:', error);
-        notificationStore.error(`Falha ao atualizar a partida`, `${homeTeam.abbreviation} x ${awayTeam.abbreviation}`);
-        // Revert to store value on error
-        const revertValue = props.isHomeTeam ? existingHomeScore : existingAwayScore;
-        localInputValue.value = revertValue !== null ? revertValue : "";
-      }
-    },
-  );
 }
 
 function handleCloseLoginModal() {
   isLoginModalOpen.value = false;
-}
-
-function handleFocus() {
-  isInputFocused.value = true;
 }
 
 function handleInput(event: Event) {
@@ -295,37 +230,28 @@ function handleInput(event: Event) {
   let value = target.value;
 
   // Remove any non-numeric characters (including dash)
-  value = value.replace(/[^0-9]/g, "");
+  value = value.replace(/[^0-9]/g, '');
 
-  let numValue: null | number;
-
-  // If empty, set to null (user is clearing the bet)
-  if (value === "") {
-    localInputValue.value = "";
-    lastValidValue.value = "";
-    numValue = null;
-  } else {
-    numValue = parseInt(value, 10);
-
-    // If invalid or exceeds limits, restore last valid value
-    if (isNaN(numValue) || numValue > 99 || numValue < 0) {
-      localInputValue.value = lastValidValue.value;
-      return;
-    }
-
-    // Valid input, update local state
-    localInputValue.value = numValue;
-    lastValidValue.value = value;
+  // Limit to 2 digits
+  if (value.length > 2) {
+    value = value.slice(0, 2);
   }
+
+  const numValue = value === '' ? null : parseInt(value, 10);
+
+  target.value = value;
+  inputValue.value = numValue; // Update the store via computed setter
 }
 
 function handleKeydown(event: KeyboardEvent) {
+  const target = event.target as HTMLInputElement;
+
   // Allow: backspace, delete, tab, escape, enter
   if ([8, 9, 13, 27, 46].includes(event.keyCode)) {
     return;
   }
   // Allow: Ctrl/Cmd+A, Ctrl/Cmd+C, Ctrl/Cmd+V, Ctrl/Cmd+X
-  if ((event.ctrlKey || event.metaKey) && ["a", "c", "v", "x"].includes(event.key.toLowerCase())) {
+  if ((event.ctrlKey || event.metaKey) && ['a', 'c', 'v', 'x'].includes(event.key.toLowerCase())) {
     return;
   }
   // Allow: home, end, left, right, up, down
@@ -333,10 +259,23 @@ function handleKeydown(event: KeyboardEvent) {
     return;
   }
   // Prevent: dash, minus, plus, e, E, and any non-numeric characters
-  if (event.key === "-" || event.key === "+" || event.key === "e" || event.key === "E" || event.key === ".") {
+  if (event.key === '-' || event.key === '+' || event.key === 'e' || event.key === 'E' || event.key === '.') {
     event.preventDefault();
     return;
   }
+
+  // Check if adding this digit would exceed 2 characters (and no text is selected)
+  const currentValue = target.value || '';
+  const selectionStart = target.selectionStart || 0;
+  const selectionEnd = target.selectionEnd || 0;
+  const hasSelection = selectionStart !== selectionEnd;
+
+  // If we're typing a number and already have 2 digits (and nothing selected), prevent
+  if (!hasSelection && currentValue.length >= 2 && event.key >= '0' && event.key <= '9') {
+    event.preventDefault();
+    return;
+  }
+
   // Ensure it's a number
   if ((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105)) {
     event.preventDefault();
@@ -372,7 +311,6 @@ function openTeamModal(team: ITeam) {
   @media (width <=768px) {
     height: var(--match-list-height-mobile);
   }
-
 }
 
 .overlay {
@@ -380,9 +318,7 @@ function openTeamModal(team: ITeam) {
   bottom: 0;
   width: 100%;
   height: 22px;
-  background-color: color-mix(in srgb,
-  var(--color-match-overlay) 20%,
-  transparent);
+  background-color: color-mix(in srgb, var(--color-match-overlay) 20%, transparent);
 }
 
 .outer-team-nameless {
@@ -503,6 +439,12 @@ function openTeamModal(team: ITeam) {
     opacity: 0.7;
   }
 
+  &.has-unsaved-changes {
+    background: color-mix(in srgb, var(--bolao-c-fifa-yellow), transparent 95%);
+    border-color: var(--bolao-c-fifa-yellow);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--bolao-c-fifa-yellow), transparent 70%);
+  }
+
   &::-webkit-inner-spin-button,
   &::-webkit-outer-spin-button {
     margin: 0;
@@ -522,7 +464,6 @@ function openTeamModal(team: ITeam) {
     max-width: 28px;
     font-size: var(--s-font-size);
   }
-
 }
 
 .loading-spinner-wrapper {
@@ -544,7 +485,7 @@ function openTeamModal(team: ITeam) {
 
 .penalties-outer {
   position: absolute;
-  top:0;
+  top: 0;
   right: var(--xs-spacing);
   height: 100%;
   text-align: center;
@@ -559,13 +500,12 @@ function openTeamModal(team: ITeam) {
     // font-weight: bold;
     color: var(--bolao-c-red-l3);
 
-    @media (width <=768px){
+    @media (width <=768px) {
       height: 100%;
 
       // padding: var(--xxs-spacing);
       font-size: var(--s-font-size);
     }
-
   }
 
   .label {

@@ -26,23 +26,33 @@ const extraBetStore = useExtraBetStore();
 
 ```typescript
 // Set bets grouped by team
-const teamBets: ITeamWithExtras[] = [/* ... */];
+const teamBets: ITeamWithExtras[] = [
+  /* ... */
+];
 extraBetStore.setExtraBetsByTeam(teamBets);
 
 // Set top scorer bets grouped by player
-const playerBets: IPlayerWithExtras[] = [/* ... */];
+const playerBets: IPlayerWithExtras[] = [
+  /* ... */
+];
 extraBetStore.setTopScorerBetsByPlayer(playerBets);
 
 // Set bets grouped by user
-const userBets: IUserWithExtras[] = [/* ... */];
+const userBets: IUserWithExtras[] = [
+  /* ... */
+];
 extraBetStore.setExtraBetsByUser(userBets);
 
 // Set active profile's bets
-const activeBets: IExtraBet[] = [/* ... */];
+const activeBets: IExtraBet[] = [
+  /* ... */
+];
 extraBetStore.setActiveProfileBets(activeBets);
 
 // Set extra bet results
-const results: IExtraResults[] = [/* ... */];
+const results: IExtraResults[] = [
+  /* ... */
+];
 extraBetStore.setResults(results);
 ```
 
@@ -164,7 +174,7 @@ const activeProfileBets = computed(() => extraBetStore.activeProfileBets);
 async function loadExtraBets() {
   extraBetStore.setLoading(true);
   extraBetStore.setError(null);
-  
+
   try {
     await extraBetService.fetch(); // Service handles store updates
   } catch (error) {
@@ -192,7 +202,7 @@ const extraBetService = new ExtraBetService();
 
 async function submitExtraBet(extraType: number, teamId: number) {
   extraBetStore.setUpdating(true);
-  
+
   try {
     await extraBetService.update({ extraType, teamId });
     await extraBetService.fetch(); // Refresh data
@@ -215,11 +225,11 @@ const extraBetStore = useExtraBetStore();
 
 const activeProfileBets = computed(() => extraBetStore.activeProfileBets);
 
-const championBet = computed(() => 
+const championBet = computed(() =>
   activeProfileBets.value.find(bet => bet.extraType === EXTRA_BETS_VALUES.CHAMPION)
 );
 
-const topScorerBet = computed(() => 
+const topScorerBet = computed(() =>
   activeProfileBets.value.find(bet => bet.extraType === EXTRA_BETS_VALUES.TOP_SCORER)
 );
 

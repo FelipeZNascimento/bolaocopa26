@@ -2,9 +2,7 @@
   <div class="reset-password-container">
     <PrimeCard class="reset-password-card">
       <template #header>
-        <h1 style="text-align: center">
-          Redefinir Senha
-        </h1>
+        <h1 style="text-align: center">Redefinir Senha</h1>
       </template>
 
       <template #content>

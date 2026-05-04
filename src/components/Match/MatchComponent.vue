@@ -1,9 +1,12 @@
 <template>
-  <div class="outer-match line" :class="{ clickable: isMatchStarted }">
+  <div
+    class="outer-match line"
+    :class="{ clickable: isMatchStarted }"
+  >
     <ClockComponent
       v-if="isDesktop && !isDemo"
       :hit-level="hitLevel"
-      :timestamp="match.timestamp"
+      :timestamp="parseInt(match.timestamp, 10)"
       :status="match.status"
       :is-match-started="isMatchStarted"
     />
@@ -14,11 +17,13 @@
       :is-match-started="isMatchStarted"
       :hit-level="hitLevel"
     />
-    <div class="more-info" @click="handleMatchClick">
+    <div
+      class="more-info"
+      @click="handleMatchClick"
+    >
       <i class="pi pi-plus-circle" />
       <span v-if="!isMobile">Ver Mais</span>
     </div>
-
   </div>
   <MoreInfoModal
     :match="match"
@@ -28,17 +33,17 @@
   />
 </template>
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { computed, ref } from 'vue';
 
-import type { IMatch } from "@/stores/matches.types";
+import type { IMatch } from '@/stores/matches.types';
 
-import { HIT_LEVELS } from "@/constants/bets";
-import { useViewport } from "@/services/viewport";
-import { useClockStore } from "@/stores/clock";
+import { HIT_LEVELS } from '@/constants/bets';
+import { useViewport } from '@/services/viewport';
+import { useClockStore } from '@/stores/clock';
 
-import ClockComponent from "./ClockComponent.vue";
-import MoreInfoModal from "./MoreInfoModal/MoreInfoModal.vue";
-import ScoreComponent from "./ScoreComponent.vue";
+import ClockComponent from './ClockComponent.vue';
+import MoreInfoModal from './MoreInfoModal/MoreInfoModal.vue';
+import ScoreComponent from './ScoreComponent.vue';
 
 const props = withDefaults(
   defineProps<{
@@ -65,7 +70,7 @@ const { isDesktop, isMobile } = useViewport();
 // const correctBets = { bullseye: [], half: [] };
 // const correctBets = computed(() => calculateCorrectBets(props.match.away.score, props.match.home.score));
 const isMatchStarted = computed(() => {
-  return clockStore.currentTimestamp >= props.match.timestamp;
+  return clockStore.currentTimestamp >= parseInt(props.match.timestamp, 10);
 });
 
 const hitLevel = computed(() => {
@@ -73,10 +78,8 @@ const hitLevel = computed(() => {
     return null;
   }
 
-  const homeScoreMatch =
-    props.match.loggedUserBets.scoreHome === props.match.score.home;
-  const awayScoreMatch =
-    props.match.loggedUserBets.scoreAway === props.match.score.away;
+  const homeScoreMatch = props.match.loggedUserBets.scoreHome === props.match.score.home;
+  const awayScoreMatch = props.match.loggedUserBets.scoreAway === props.match.score.away;
 
   if (homeScoreMatch && awayScoreMatch) {
     return HIT_LEVELS.exactScore;
@@ -87,27 +90,17 @@ const hitLevel = computed(() => {
   }
 
   // Determine the winner/outcome of the bet and actual match
-  const betHomeWon =
-    props.match.loggedUserBets.scoreHome > props.match.loggedUserBets.scoreAway;
-  const betAwayWon =
-    props.match.loggedUserBets.scoreAway > props.match.loggedUserBets.scoreHome;
-  const betDraw =
-    props.match.loggedUserBets.scoreHome ===
-    props.match.loggedUserBets.scoreAway;
+  const betHomeWon = props.match.loggedUserBets.scoreHome > props.match.loggedUserBets.scoreAway;
+  const betAwayWon = props.match.loggedUserBets.scoreAway > props.match.loggedUserBets.scoreHome;
+  const betDraw = props.match.loggedUserBets.scoreHome === props.match.loggedUserBets.scoreAway;
 
   const actualHomeWon = props.match.score.home > props.match.score.away;
   const actualAwayWon = props.match.score.away > props.match.score.home;
   const actualDraw = props.match.score.home === props.match.score.away;
 
-  const gotWinnerRight =
-    (betHomeWon && actualHomeWon) ||
-    (betAwayWon && actualAwayWon) ||
-    (betDraw && actualDraw);
+  const gotWinnerRight = (betHomeWon && actualHomeWon) || (betAwayWon && actualAwayWon) || (betDraw && actualDraw);
   if (gotWinnerRight) {
-    if (
-      (homeScoreMatch && !awayScoreMatch) ||
-      (!homeScoreMatch && awayScoreMatch)
-    ) {
+    if ((homeScoreMatch && !awayScoreMatch) || (!homeScoreMatch && awayScoreMatch)) {
       return HIT_LEVELS.oneScore;
     }
     return HIT_LEVELS.winnerOnly;
@@ -134,7 +127,6 @@ function handleMatchClick() {
   @media (width <=768px) {
     gap: var(--xs-spacing);
   }
-
 }
 
 .more-info {
@@ -178,14 +170,12 @@ function handleMatchClick() {
     font-size: var(--xxs-font-size);
     color: #fff;
 
-
     i {
       font-size: var(--l-font-size);
       color: #fff;
       filter: drop-shadow(0 1px 2px rgb(0 0 0 / 20%));
     }
   }
-
 }
 
 .line {
@@ -195,6 +185,5 @@ function handleMatchClick() {
   @media (width <=768px) {
     height: var(--match-list-height-mobile);
   }
-
 }
 </style>

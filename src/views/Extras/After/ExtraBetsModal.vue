@@ -17,7 +17,7 @@
         <img
           :src="`https://assets.omegafox.me/copa/countries_flags/${team.team.isoCode.toLowerCase()}.png`"
           :alt="`${team.team.name} Shield`"
-        >
+        />
         <p>{{ player ? player.name : team.team.name }}</p>
       </div>
     </template>

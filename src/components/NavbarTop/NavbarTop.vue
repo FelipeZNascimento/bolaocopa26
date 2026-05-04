@@ -2,13 +2,23 @@
   <header class="navbar">
     <nav class="nav-container">
       <div class="wave-background">
-        <svg class="wave-svg" viewBox="0 0 1400 100" preserveAspectRatio="none">
-          <path :d="wavePath" fill="var(--bolao-c-green-t3)" />
+        <svg
+          class="wave-svg"
+          viewBox="0 0 1400 100"
+          preserveAspectRatio="none"
+        >
+          <path
+            :d="wavePath"
+            fill="var(--bolao-c-green-t3)"
+          />
         </svg>
       </div>
 
       <!-- All Navigation Items -->
-      <div ref="navWrapper" class="nav-links-wrapper">
+      <div
+        ref="navWrapper"
+        class="nav-links-wrapper"
+      >
         <!-- Soccer ball that moves between items -->
         <RouterLink
           v-for="(routeItem, index) in allRoutes"
@@ -26,8 +36,7 @@
           <a
             :autohide="false"
             @click="
-              routeItem.id === ROUTE_ID.PROFILE ||
-                routeItem.id === ROUTE_ID.LOGIN
+              routeItem.id === ROUTE_ID.PROFILE || routeItem.id === ROUTE_ID.LOGIN
                 ? handleNavigate($event, index, navigate, routeItem)
                 : handleRouteClick(routeItem, index, navigate)
             "
@@ -52,7 +61,10 @@
     </nav>
 
     <!-- Profile Popover -->
-    <PrimePopover ref="profilePopover" @hide="syncActiveRouteWithPath">
+    <PrimePopover
+      ref="profilePopover"
+      @hide="syncActiveRouteWithPath"
+    >
       <div class="outer-profile-popover">
         <PrimeButton
           variant="text"
@@ -78,24 +90,26 @@
           variant="text"
           severity="secondary"
           size="small"
-          label="Configurações"
-          @click="
-            isConfigModalOpen = true;
-            profilePopover.toggle();
-          "
-        />
-        <PrimeButton
-          variant="text"
-          severity="secondary"
-          size="small"
           label="Favoritos"
           @click="
             isFavoritesModalOpen = true;
             profilePopover.toggle();
           "
         />
+        <PrimeButton
+          severity="secondary"
+          variant="link"
+          size="small"
+          @click="handleThemeConfig(theme === 'dark' ? 'light' : 'dark')"
+        >
+          <i
+            :class="theme === 'dark' ? 'pi pi-sun' : 'pi pi-moon'"
+            :style="{ color: theme === 'dark' ? 'var(--bolao-c-gold)' : 'var(--bolao-c-grey2)' }"
+            style="font-size: var(--l-font-size)"
+          />
+        </PrimeButton>
         <PrimeDivider />
-        <!-- style="color: black" -->
+
         <PrimeButton
           severity="secondary"
           size="small"
@@ -119,11 +133,6 @@
     :is-open="isPasswordModalOpen"
     :handle-close-modal="handleClosePasswordModal"
   />
-  <ConfigModal
-    :active-profile="activeProfile"
-    :is-open="isConfigModalOpen"
-    :handle-close-modal="handleCloseConfigModal"
-  />
   <RankingModal
     :is-open="isRankingModalOpen"
     :handle-close-modal="handleCloseRankingModal"
@@ -135,24 +144,24 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
-import ConfigModal from "@/components/NavbarTop/ConfigModal.vue";
-import LoginModal from "@/components/NavbarTop/LoginModal.vue";
-import ManageFavoritesModal from "@/components/Ranking/ManageFavoritesModal.vue";
-import UserService from "@/services/user";
-import { useViewport } from "@/services/viewport";
-import { useActiveProfileStore } from "@/stores/activeProfile";
+import type { TThemeValue } from '@/stores/configuration.types';
 
-import RankingModal from "../Ranking/RankingModal.vue";
-import PasswordModal from "./ChangePasswordModal.vue";
-import ProfileModal from "./ProfileModal.vue";
-import { ROUTE_ID, ROUTES, type TROUTE } from "./routes";
+import LoginModal from '@/components/NavbarTop/LoginModal.vue';
+import ManageFavoritesModal from '@/components/Ranking/ManageFavoritesModal.vue';
+import UserService from '@/services/user';
+import { useViewport } from '@/services/viewport';
+import { useActiveProfileStore } from '@/stores/activeProfile';
+import { useConfigurationStore } from '@/stores/configuration';
 
-type ExtendedRoute =
-  | TROUTE
-  | { id: number; label: string; needCredentials: boolean; url: string };
+import RankingModal from '../Ranking/RankingModal.vue';
+import PasswordModal from './ChangePasswordModal.vue';
+import ProfileModal from './ProfileModal.vue';
+import { ROUTE_ID, ROUTES, type TROUTE } from './routes';
+
+type ExtendedRoute = TROUTE | { id: number; label: string; needCredentials: boolean; url: string };
 
 // ------ Refs ------
 const isLoginModalOpen = ref(false);
@@ -160,7 +169,6 @@ const isProfileModalOpen = ref(false);
 const isPasswordModalOpen = ref(false);
 const isRankingModalOpen = ref(false);
 const profilePopover = ref();
-const isConfigModalOpen = ref(false);
 const activeRoute = ref<number>(ROUTES[0].id);
 const activeItemIndex = ref(0);
 const animatedItemIndex = ref(0);
@@ -173,20 +181,21 @@ let animationFrame: null | number = null;
 
 const profileRoute = computed(() => ({
   id: ROUTE_ID.PROFILE,
-  label: activeProfile.value ? activeProfile.value.name : "Perfil",
+  label: activeProfile.value ? activeProfile.value.nickname : 'Perfil',
   needCredentials: true,
-  url: "",
+  url: '',
 }));
 
 const loginRoute: ExtendedRoute = {
   id: ROUTE_ID.LOGIN,
-  label: "Login",
+  label: 'Login',
   needCredentials: false,
-  url: "",
+  url: '',
 };
 
 // ------ Initializations ------
 const activeProfileStore = useActiveProfileStore();
+const configurationStore = useConfigurationStore();
 const userService = new UserService();
 const route = useRoute();
 const { isDesktop } = useViewport();
@@ -213,6 +222,7 @@ onUnmounted(() => {
 
 // ------ Computed Properties ------
 const activeProfile = computed(() => activeProfileStore.activeProfile);
+const theme = computed(() => configurationStore.theme);
 
 const allRoutes = computed(() => {
   const routes: ExtendedRoute[] = [...ROUTES];
@@ -253,8 +263,7 @@ const wavePath = computed(() => {
 
     const distanceFromCenter = Math.abs(x - centerX);
     if (distanceFromCenter < dipWidth) {
-      const dipFactor =
-        Math.cos((distanceFromCenter / dipWidth) * Math.PI) * 0.5 + 0.5;
+      const dipFactor = Math.cos((distanceFromCenter / dipWidth) * Math.PI) * 0.5 + 0.5;
       y = height * 0.3 + dipDepth * dipFactor;
     }
 
@@ -311,7 +320,7 @@ function animateWave(targetIndex: number) {
 
   // Get start and end positions from DOM
   if (!navWrapper.value) return;
-  const navItems = navWrapper.value.querySelectorAll(".nav-link");
+  const navItems = navWrapper.value.querySelectorAll('.nav-link');
   if (navItems.length === 0) return;
 
   const startItem = navItems[Math.round(startIndex)] as HTMLElement;
@@ -331,10 +340,7 @@ function animateWave(targetIndex: number) {
     const progress = Math.min(elapsed / duration, 1);
 
     // Ease-in-ease-out function
-    const easeProgress =
-      progress < 0.5
-        ? 2 * progress * progress
-        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+    const easeProgress = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
 
     animatedItemIndex.value = startIndex + distance * easeProgress;
     ballRotation.value = startRotation + rotationDistance * easeProgress;
@@ -358,11 +364,6 @@ function animateWave(targetIndex: number) {
   }
 
   animationFrame = requestAnimationFrame(animate);
-}
-
-function handleCloseConfigModal() {
-  isConfigModalOpen.value = false;
-  syncActiveRouteWithPath();
 }
 
 function handleCloseFavoritesModal() {
@@ -394,12 +395,7 @@ function handleLogout() {
   profilePopover.value.toggle();
 }
 
-function handleNavigate(
-  event: Event,
-  index: number,
-  navigate: () => void,
-  route: ExtendedRoute,
-) {
+function handleNavigate(event: Event, index: number, navigate: () => void, route: ExtendedRoute) {
   if (route.needCredentials && !activeProfile.value) {
     return;
   }
@@ -422,11 +418,7 @@ function handleNavigate(
   }
 }
 
-function handleRouteClick(
-  route: ExtendedRoute,
-  index: number,
-  navigate: () => void,
-) {
+function handleRouteClick(route: ExtendedRoute, index: number, navigate: () => void) {
   if (route.id === ROUTE_ID.PROFILE) {
     activeRoute.value = route.id;
     activeItemIndex.value = index;
@@ -439,6 +431,10 @@ function handleRouteClick(
   if (route.url) {
     navigate();
   }
+}
+
+function handleThemeConfig(newOption: TThemeValue) {
+  configurationStore.setTheme(newOption);
 }
 
 function syncActiveRouteWithPath() {
@@ -462,7 +458,7 @@ function togglePopover(event: Event) {
 function updateBallPosition() {
   if (!navWrapper.value) return;
 
-  const navItems = navWrapper.value.querySelectorAll(".nav-link");
+  const navItems = navWrapper.value.querySelectorAll('.nav-link');
   if (navItems.length === 0) return;
 
   const targetIndex = Math.round(animatedItemIndex.value);
@@ -494,8 +490,6 @@ function updateBallPosition() {
 .nav-container {
   position: relative;
   height: 100%;
-
-  // max-width: 1400px;
   margin: 0 auto;
 }
 
@@ -557,7 +551,7 @@ function updateBallPosition() {
   width: 25px;
   height: 25px;
   pointer-events: none;
-  background: url("/soccer_ball.svg") center center / cover no-repeat;
+  background: url('/soccer_ball.svg') center center / cover no-repeat;
   border-radius: 50%;
   box-shadow:
     0 8px 16px rgb(0 0 0 / 30%),
@@ -605,7 +599,7 @@ function updateBallPosition() {
 .outer-profile-popover {
   display: flex;
   flex-direction: column;
-  gap: var(--xs-spacing);
+  gap: var(--m-spacing);
   padding: var(--s-spacing);
 }
 
