@@ -1,5 +1,20 @@
 <template>
   <div class="outer">
+    <ClockComponent
+      style="margin-right: var(--l-spacing)"
+      :timestamp="parseInt(match.timestamp, 10)"
+      :status="match.status"
+      :clock="match.timestamp ? clockStore.getFormattedTime(parseInt(match.timestamp, 10)) : null"
+      :hit-level="hitLevel"
+      :is-match-started="isMatchStarted"
+    />
+    <ScoreComponent
+      :is-score-modal-open="true"
+      :match="match"
+      :active-user-bet="match.loggedUserBets"
+      :is-team-clickable="true"
+      :is-match-started="isMatchStarted"
+    />
     <PrimeButton
       :icon="showMatchInfo ? 'pi pi-minus' : 'pi pi-plus'"
       class="match-info-toggle"
@@ -9,37 +24,23 @@
       size="small"
       @click="toggleMatchInfo"
     />
-    <ScoreComponent
-      :is-score-modal-open="true"
-      :match="match"
-      :active-user-bet="match.loggedUserBets"
-      :is-team-clickable="true"
-      :is-match-started="isMatchStarted"
-    />
-    <ClockComponent
-      style="margin-left: var(--l-spacing)"
-      :timestamp="match.timestamp"
-      :status="match.status"
-      :clock="
-        match.timestamp ? clockStore.getFormattedTime(match.timestamp) : null
-      "
-      :hit-level="hitLevel"
-      :is-match-started="isMatchStarted"
-    />
   </div>
-  <MoreInfoDetails :match="match" :showMatchInfo="showMatchInfo" />
+  <MoreInfoDetails
+    :match="match"
+    :showMatchInfo="showMatchInfo"
+  />
 </template>
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref } from 'vue';
 
-import type { HitLevel } from "@/constants/bets";
-import type { IMatch } from "@/stores/matches.types";
+import type { HitLevel } from '@/constants/bets';
+import type { IMatch } from '@/stores/matches.types';
 
-import { useClockStore } from "@/stores/clock";
+import { useClockStore } from '@/stores/clock';
 
-import ClockComponent from "../ClockComponent.vue";
-import ScoreComponent from "../ScoreComponent.vue";
-import MoreInfoDetails from "./MoreInfoDetails.vue";
+import ClockComponent from '../ClockComponent.vue';
+import ScoreComponent from '../ScoreComponent.vue';
+import MoreInfoDetails from './MoreInfoDetails.vue';
 
 defineProps<{
   hitLevel: HitLevel | null;
@@ -68,8 +69,7 @@ function toggleMatchInfo() {
   display: flex;
   justify-content: center;
   height: var(--match-list-height);
-  margin-right: var(--l-spacing);
+  margin-left: var(--l-spacing);
   border-radius: var(--border-radius) !important;
 }
-
 </style>

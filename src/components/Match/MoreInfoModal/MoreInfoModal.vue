@@ -13,18 +13,8 @@
     content-class="content-class"
   >
     <template #header>
-      <div
-        style="
-          display: flex;
-          gap: var(--s-spacing);
-          align-items: center;
-          justify-content: center;
-          width: 100%;
-        "
-      >
-        <span v-if="!isMobile && match">
-          {{ clockStore.getRoundName(match.round) }} -
-        </span>
+      <div style="display: flex; gap: var(--s-spacing); align-items: center; justify-content: center; width: 100%">
+        <span v-if="!isMobile && match"> {{ clockStore.getRoundName(match.round) }} - </span>
         <img
           class="team-shield-image"
           :src="`https://assets.omegafox.me/copa/countries_flags/${match.homeTeam.isoCode.toLowerCase()}.png`"
@@ -35,7 +25,7 @@
           match
             ? `${match.homeTeam.abbreviation} ${match.score?.home ?? 0} x ${match.score?.away ?? 0}
         ${match.awayTeam.abbreviation}`
-            : ""
+            : ''
         }}
         <img
           class="team-shield-image"
@@ -60,17 +50,22 @@
       />
       <div>
         <div header="Apostas">
-          <div v-if="activeProfileStore.activeProfile" class="favorites-filter">
-            <span class="toggle" :class="{ activeToggle: !showFavoritesOnly }" @click="showFavoritesOnly = false">
+          <div
+            v-if="activeProfileStore.activeProfile && isMatchStarted"
+            class="favorites-filter"
+          >
+            <span
+              class="toggle"
+              :class="{ activeToggle: !showFavoritesOnly }"
+              @click="showFavoritesOnly = false"
+            >
               <i class="pi pi-list" /> Todos
             </span>
             <span
               class="toggle"
               :class="{ activeToggle: showFavoritesOnly }"
               :style="{
-                color: showFavoritesOnly
-                  ? 'var(--bolao-c-gold)'
-                  : 'var(--bolao-c-grey1-t2)',
+                color: showFavoritesOnly ? 'var(--bolao-c-gold)' : 'var(--bolao-c-grey1-t2)',
               }"
               @click="showFavoritesOnly = true"
             >
@@ -83,49 +78,39 @@
               Favoritos
             </span>
           </div>
-          <div class="bets-outer" v-if="isMatchStarted">
+          <div
+            v-if="isMatchStarted"
+            class="bets-outer"
+          >
             <BetsColumn
               :bets="filterBets(match.bets, 'exact')"
               :column-value="BETS_VALUES.AWAY_EASY"
-              :active-user-bet="filterBets(
-                match.loggedUserBets ? [match.loggedUserBets] : null,
-                'exact',
-              )
-              "
+              :active-user-bet="filterBets(match.loggedUserBets ? [match.loggedUserBets] : null, 'exact')"
               :hit-level="HIT_LEVELS.exactScore"
             />
             <BetsColumn
               :bets="filterBets(match.bets, 'oneScore')"
               :column-value="BETS_VALUES.AWAY_EASY"
-              :active-user-bet="filterBets(
-                match.loggedUserBets ? [match.loggedUserBets] : null,
-                'oneScore',
-              )
-              "
+              :active-user-bet="filterBets(match.loggedUserBets ? [match.loggedUserBets] : null, 'oneScore')"
               :hit-level="HIT_LEVELS.oneScore"
             />
             <BetsColumn
               :bets="filterBets(match.bets, 'winnerOnly')"
               :column-value="BETS_VALUES.AWAY_EASY"
-              :active-user-bet="filterBets(
-                match.loggedUserBets ? [match.loggedUserBets] : null,
-                'winnerOnly',
-              )
-              "
+              :active-user-bet="filterBets(match.loggedUserBets ? [match.loggedUserBets] : null, 'winnerOnly')"
               :hit-level="HIT_LEVELS.winnerOnly"
             />
             <BetsColumn
               :bets="filterBets(match.bets, 'miss')"
               :column-value="BETS_VALUES.AWAY_EASY"
-              :active-user-bet="filterBets(
-                match.loggedUserBets ? [match.loggedUserBets] : null,
-                'miss',
-              )
-              "
+              :active-user-bet="filterBets(match.loggedUserBets ? [match.loggedUserBets] : null, 'miss')"
               :hit-level="HIT_LEVELS.miss"
             />
           </div>
-          <div v-else class="no-bets-message">
+          <div
+            v-else
+            class="no-bets-message"
+          >
             <p v-if="countdown">Você tem {{ countdown }} para fazer sua aposta nesse jogo.</p>
             <i class="pi pi-clock" />
             <p>As apostas de todos os participantes estarão disponíveis quando a partida começar.</p>
@@ -136,19 +121,19 @@
   </PrimeDialog>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, ref, watch } from 'vue';
 
-import type { IBet, IMatch } from "@/stores/matches.types";
+import type { IBet, IMatch } from '@/stores/matches.types';
 
-import { BETS_VALUES, HIT_LEVELS, type HitLevel } from "@/constants/bets";
-import FavoritesService from "@/services/favorites";
-import { useViewport } from "@/services/viewport";
-import { useActiveProfileStore } from "@/stores/activeProfile";
-import { useClockStore } from "@/stores/clock";
+import { BETS_VALUES, HIT_LEVELS, type HitLevel } from '@/constants/bets';
+import UserService from '@/services/user';
+import { useViewport } from '@/services/viewport';
+import { useActiveProfileStore } from '@/stores/activeProfile';
+import { useClockStore } from '@/stores/clock';
 
-import BetsColumn from "./BetsColumn.vue";
-import MoreInfoDesktopView from "./MoreInfoDesktopView.vue";
-import MoreInfoMobileView from "./MoreInfoMobileView.vue";
+import BetsColumn from './BetsColumn.vue';
+import MoreInfoDesktopView from './MoreInfoDesktopView.vue';
+import MoreInfoMobileView from './MoreInfoMobileView.vue';
 
 const props = defineProps<{
   handleCloseModal: () => void;
@@ -160,30 +145,19 @@ const props = defineProps<{
 // ------ Initialization ------
 const clockStore = useClockStore();
 const activeProfileStore = useActiveProfileStore();
-const favoritesService = new FavoritesService();
 const isVisible = ref(false);
 const showFavoritesOnly = ref(false);
-const favorites = ref<number[]>([]);
 const { isMobile } = useViewport();
-
-onMounted(() => {
-  loadFavorites();
-  window.addEventListener("favorites-cleared", loadFavorites);
-  window.addEventListener("favorites-updated", loadFavorites);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("favorites-cleared", loadFavorites);
-  window.removeEventListener("favorites-updated", loadFavorites);
-});
+const userService = new UserService();
 
 // ------ Computed Properties ------
+const activeProfile = computed(() => activeProfileStore.activeProfile);
 const isMatchStarted = computed(() => {
-  return clockStore.currentTimestamp >= props.match.timestamp;
+  return clockStore.currentTimestamp >= parseInt(props.match.timestamp, 10);
 });
 
 const countdown = computed(() => {
-  return clockStore.getCountdown(props.match.timestamp);
+  return clockStore.getCountdown(parseInt(props.match.timestamp, 10));
 });
 
 // ------ Functions ------
@@ -191,11 +165,8 @@ function filterBets(bets: IBet[] | null, hitLevel: HitLevel) {
   if (!bets) return [];
 
   const filteredBets = bets.filter((bet) => {
-    if (showFavoritesOnly.value && activeProfileStore.activeProfile) {
-      if (
-        !isFavoriteUser(bet.user.id) &&
-        bet.user.id !== activeProfileStore.activeProfile?.id
-      ) {
+    if (showFavoritesOnly.value && activeProfile.value) {
+      if (!isFavorite(bet.user.id) && bet.user.id !== activeProfile.value.id) {
         return false;
       }
     }
@@ -203,14 +174,19 @@ function filterBets(bets: IBet[] | null, hitLevel: HitLevel) {
     const homeScoreMatch = bet.scoreHome === props.match.score.home;
     const awayScoreMatch = bet.scoreAway === props.match.score.away;
 
-    if (hitLevel === "exact") {
+    if (hitLevel === 'exact') {
       return homeScoreMatch && awayScoreMatch;
     }
 
     // Determine the winner/outcome of the bet and actual match
-    if(bet.scoreHome === null || bet.scoreAway === null || props.match.score.home === null || props.match.score.away === null) {
+    if (
+      bet.scoreHome === null ||
+      bet.scoreAway === null ||
+      props.match.score.home === null ||
+      props.match.score.away === null
+    ) {
       // If any score is null, we can't determine the outcome, so we consider it a miss
-      return hitLevel === "miss";
+      return hitLevel === 'miss';
     }
 
     const betHomeWon = bet.scoreHome > bet.scoreAway;
@@ -221,24 +197,18 @@ function filterBets(bets: IBet[] | null, hitLevel: HitLevel) {
     const actualAwayWon = props.match.score.away > props.match.score.home;
     const actualDraw = props.match.score.home === props.match.score.away;
 
-    const gotWinnerRight =
-      (betHomeWon && actualHomeWon) ||
-      (betAwayWon && actualAwayWon) ||
-      (betDraw && actualDraw);
+    const gotWinnerRight = (betHomeWon && actualHomeWon) || (betAwayWon && actualAwayWon) || (betDraw && actualDraw);
 
-    if (hitLevel === "oneScore" && gotWinnerRight) {
-      return (
-        (homeScoreMatch && !awayScoreMatch) ||
-        (!homeScoreMatch && awayScoreMatch)
-      );
+    if (hitLevel === 'oneScore' && gotWinnerRight) {
+      return (homeScoreMatch && !awayScoreMatch) || (!homeScoreMatch && awayScoreMatch);
     }
 
-    if (hitLevel === "winnerOnly" && gotWinnerRight) {
+    if (hitLevel === 'winnerOnly' && gotWinnerRight) {
       // Got the winner right but not exact score or one score
       return !homeScoreMatch && !awayScoreMatch;
     }
 
-    if (hitLevel === "miss") {
+    if (hitLevel === 'miss') {
       // Didn't get the winner right
       return !gotWinnerRight;
     }
@@ -249,18 +219,8 @@ function filterBets(bets: IBet[] | null, hitLevel: HitLevel) {
   return filteredBets;
 }
 
-function isFavoriteUser(userId: number): boolean {
-  return favorites.value.includes(userId);
-}
-
-function loadFavorites() {
-  if (!activeProfileStore.activeProfile) {
-    favorites.value = [];
-    return;
-  }
-  favorites.value = favoritesService.getFavorites(
-    activeProfileStore.activeProfile.id,
-  );
+function isFavorite(userId: number): boolean {
+  return userService.isFavorite(userId);
 }
 
 // ------ Watches ------
@@ -276,22 +236,6 @@ watch(
 watch(isVisible, async (newValue) => {
   if (!newValue) {
     props.handleCloseModal();
-  }
-});
-
-watch(
-  () => activeProfileStore.activeProfile,
-  (newProfile) => {
-    if (newProfile) {
-      loadFavorites();
-    }
-  },
-);
-
-watch(favorites, (newFavorites) => {
-  // If favorites filter is on but there are no favorites, turn off the filter
-  if (showFavoritesOnly.value && newFavorites.length === 0) {
-    showFavoritesOnly.value = false;
   }
 });
 </script>

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
+import { useMatchesStore } from '@/stores/matches';
 import MatchesView from '@/views/MatchesView.vue';
 
 const router = createRouter({
@@ -58,6 +59,29 @@ const router = createRouter({
       path: '/reset-password',
     },
   ],
+});
+
+// Navigation guard to warn about unsaved changes
+router.beforeEach((to, from, next) => {
+  const matchesStore = useMatchesStore();
+
+  // Check if there are unsaved changes
+  if (matchesStore.hasAnyChanges()) {
+    const answer = window.confirm(
+      'Você tem alterações não salvas nas apostas. Tem certeza que deseja sair sem salvar?',
+    );
+
+    if (answer) {
+      // User confirmed, allow navigation
+      next();
+    } else {
+      // User cancelled, stay on the current page
+      next(false);
+    }
+  } else {
+    // No unsaved changes, allow navigation
+    next();
+  }
 });
 
 export default router;

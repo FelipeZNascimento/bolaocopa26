@@ -47,7 +47,10 @@
               </p>
             </div>
           </div>
-          <div class="header-right" v-if="!isMobile">
+          <div
+            v-if="!isMobile"
+            class="header-right"
+          >
             <img
               :src="`https://assets.omegafox.me/copa/countries_flags/${team.isoCode.toLowerCase()}.png`"
               :alt="`${team.name} Flag`"
@@ -56,7 +59,13 @@
           </div>
         </div>
       </div>
-      <p>Técnico: <HoverablePlayerName v-if="coach" :player="coach" /></p>
+      <p>
+        Técnico:
+        <HoverablePlayerName
+          v-if="coach"
+          :player="coach"
+        />
+      </p>
       <h3 class="players-title">Jogadores ({{ sortedPlayers.length }})</h3>
       <div class="players-grid">
         <div
@@ -69,12 +78,13 @@
           </div>
           <div class="player-info">
             <div class="player-name">
-              <HoverablePlayerName v-if="player" :player="player" />
+              <HoverablePlayerName
+                v-if="player"
+                :player="player"
+              />
             </div>
             <div class="player-details">
-              <span class="player-position">{{
-                player.position.abbreviation
-              }}</span>
+              <span class="player-position">{{ player.position.abbreviation }}</span>
               <span class="player-club">{{ player.club.name }}</span>
             </div>
           </div>
@@ -85,12 +95,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch } from 'vue';
 
-import type { ITeam } from "@/stores/teams.types";
+import type { ITeam } from '@/stores/teams.types';
 
-import HoverablePlayerName from "@/components/HoverablePlayerName.vue";
-import { useViewport } from "@/services/viewport";
+import HoverablePlayerName from '@/components/HoverablePlayerName.vue';
+import { useViewport } from '@/services/viewport';
 
 const props = defineProps<{
   handleCloseModal: () => void;
@@ -107,17 +117,13 @@ const isVisible = ref(false);
 // ------ Computed ------
 const coach = computed(() => {
   if (!props.team) return null;
-  const coachPlayer = props.team.players.find(
-    (player) => player.position.id === 1,
-  );
+  const coachPlayer = props.team.players.find((player) => player.position.id === 1);
   return coachPlayer ? coachPlayer : null;
 });
 
 const sortedPlayers = computed(() => {
   if (!props.team) return [];
-  return [...props.team.players]
-    .filter((player) => player.position.id !== 1)
-    .sort((a, b) => a.number - b.number);
+  return [...props.team.players].filter((player) => player.position.id !== 1).sort((a, b) => a.number - b.number);
 });
 
 // ------ Watches ------
@@ -155,11 +161,7 @@ watch(isVisible, (newValue) => {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: linear-gradient(
-    135deg,
-    var(--team-color-2) 0%,
-    var(--team-color-1) 100%
-  );
+  background: linear-gradient(135deg, var(--team-color-2) 0%, var(--team-color-1) 100%);
   opacity: 0.75;
 
   @media (width <= 768px) {

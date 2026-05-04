@@ -25,7 +25,9 @@ const matchesStore = useMatchesStore();
 ### Set matches data
 
 ```typescript
-const matches: IMatch[] = [/* ... */];
+const matches: IMatch[] = [
+  /* ... */
+];
 matchesStore.setMatches(matches);
 ```
 
@@ -35,7 +37,7 @@ matchesStore.setMatches(matches);
 // Update a specific match bet
 matchesStore.updateLoggedUserBets(matchId, {
   scoreHome: 2,
-  scoreAway: 1
+  scoreAway: 1,
 });
 ```
 
@@ -149,7 +151,7 @@ const isLoading = computed(() => matchesStore.isLoading);
 async function loadMatches() {
   matchesStore.setLoading(true);
   matchesStore.setError(null);
-  
+
   try {
     await matchService.fetch(); // Service handles store updates
   } catch (error) {
@@ -170,10 +172,10 @@ const betService = new BetService();
 async function submitBet(matchId: number, scoreHome: number, scoreAway: number) {
   // Track this specific match as updating
   matchesStore.setUpdatingMatch(true, matchId);
-  
+
   try {
     await betService.update(matchId, { scoreHome, scoreAway });
-    
+
     // Optimistically update the UI
     matchesStore.updateLoggedUserBets(matchId, { scoreHome, scoreAway });
   } catch (error) {
@@ -193,7 +195,7 @@ import { useMatchesStore } from '@/stores/matches';
 const matchesStore = useMatchesStore();
 
 const match = computed(() => matchesStore.matches.find(m => m.id === matchId));
-const isUpdating = computed(() => 
+const isUpdating = computed(() =>
   matchesStore.updatingMatches.includes(matchId)
 );
 
@@ -216,7 +218,7 @@ const matchesStore = useMatchesStore();
 function logout() {
   // Clear all user bets
   matchesStore.resetLoggedUserBets();
-  
+
   // ... other logout logic
 }
 ```

@@ -21,5 +21,12 @@ export const useTeamsStore = defineStore('teams', () => {
     error.value = newError;
   }
 
-  return { error, isLoading, setError, setLoading, setTeams, teams };
+  return {
+    error,
+    isLoading,
+    setError,
+    setLoading,
+    setTeams,
+    teams,
+  };
 });

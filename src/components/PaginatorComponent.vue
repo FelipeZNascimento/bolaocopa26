@@ -10,13 +10,13 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { PageState } from "primevue";
+import type { PageState } from 'primevue';
 
-import { computed, ref } from "vue";
+import { computed, ref } from 'vue';
 
-import { ROUNDS } from "@/constants/rounds";
-import { useViewport } from "@/services/viewport";
-import { useConfigurationStore } from "@/stores/configuration";
+import { ROUNDS } from '@/constants/rounds';
+import { useViewport } from '@/services/viewport';
+import { useConfigurationStore } from '@/stores/configuration';
 
 // ------ Refs ------
 const rounds = ref(ROUNDS);
@@ -27,10 +27,8 @@ const { isMobile } = useViewport();
 
 // ------ Computed Properties ------
 const selectedRound = computed(() => configurationStore.selectedRound);
-const templateMobile =
-  "PrevPageLink CurrentPageReport NextPageLink JumpToPageDropdown";
-const templateDesktop =
-  "FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink JumpToPageDropdown";
+const templateMobile = 'PrevPageLink CurrentPageReport NextPageLink JumpToPageDropdown';
+const templateDesktop = 'FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink JumpToPageDropdown';
 
 // ------ Functions ------
 function handlePageChange(e: PageState) {
@@ -47,14 +45,19 @@ function handlePageChange(e: PageState) {
   height: var(--paginator-height);
   border-radius: var(--border-radius);
 
-  // margin: var(--s-spacing) 0;
+  // @media (width <= 1024px) {
+  //   gap: var(--xs-spacing);
+  // }
 
-  @media (width <= 1024px) {
-    gap: var(--xs-spacing);
-  }
+  // @media (width >= 1025px) {
+  //   gap: var(--l-spacing);
+  // }
 
-  @media (width >= 1025px) {
-    gap: var(--l-spacing);
+  h3 {
+    padding: 0;
+    margin: 0;
+
+    // line-height: var(--xxs-font-size);
   }
 }
 </style>

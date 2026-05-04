@@ -6,15 +6,15 @@
           label="Geral"
           class="toggle"
           :class="{ activeToggle: !isRound }"
-          @click="isRound = false"
           :size="isMobile ? 'small' : 'normal'"
+          @click="isRound = false"
         />
         <PrimeButton
           :label="`Rodada ${selectedRound}`"
           class="toggle"
           :class="{ activeToggle: isRound }"
-          @click="isRound = true"
           :size="isMobile ? 'small' : 'normal'"
+          @click="isRound = true"
         />
       </PrimeButtonGroup>
       <PrimeButtonGroup>
@@ -23,16 +23,16 @@
           class="toggle"
           icon="pi pi-list"
           :class="{ activeToggle: !showFavoritesOnly }"
-          @click="showFavoritesOnly = false"
           :size="isMobile ? 'small' : 'normal'"
+          @click="showFavoritesOnly = false"
         />
         <PrimeButton
           label="Favoritos"
           :icon="showFavoritesOnly ? 'pi pi-star-fill' : 'pi pi-star'"
           class="toggle"
           :class="{ activeToggle: showFavoritesOnly }"
-          @click="showFavoritesOnly = true"
           :size="isMobile ? 'small' : 'normal'"
+          @click="showFavoritesOnly = true"
         />
       </PrimeButtonGroup>
     </div>
@@ -48,7 +48,12 @@
     striped-rows
     row-hover
   >
-    <PrimeColumn field="score.position" header="Posição" sortable>
+    <PrimeColumn
+      field="score.position"
+      header="Posição"
+      :frozen="!isDesktop"
+      sortable
+    >
       <template #body="slotProps">
         <div
           class="row"
@@ -61,15 +66,11 @@
             <div
               v-if="!isActiveProfile(slotProps.data.user.id)"
               class="badge"
-              :class="
-                slotProps.data.user.isOnline ? 'badgeOnline' : 'badgeOffline'
-              "
+              :class="slotProps.data.user.isOnline ? 'badgeOnline' : 'badgeOffline'"
             />
             <div class="position-number">
               {{
-                slotProps.data.score.position < 10
-                  ? `0${slotProps.data.score.position}`
-                  : slotProps.data.score.position
+                slotProps.data.score.position < 10 ? `0${slotProps.data.score.position}` : slotProps.data.score.position
               }}
             </div>
             <div
@@ -91,7 +92,10 @@
                 v-else-if="getPositionVariation(slotProps.data) < 0"
                 class="pi pi-arrow-down"
               />
-              <i v-else class="pi pi-minus" />
+              <i
+                v-else
+                class="pi pi-minus"
+              />
               <span class="variation-value">
                 {{ Math.abs(getPositionVariation(slotProps.data)) }}
               </span>
@@ -113,7 +117,11 @@
       style="text-align: center"
       sortable
     />
-    <PrimeColumn field="score.exacts" sortable style="text-align: center">
+    <PrimeColumn
+      field="score.exacts"
+      sortable
+      style="text-align: center"
+    >
       <template #header>
         <div class="flexHeader">
           <i class="pi pi-trophy" />
@@ -169,12 +177,12 @@
       <template #header>
         <div class="flexHeader">
           <i class="pi pi-percentage" />
-          {{ isDesktop ? "Aproveitamento" : "Aprov." }}
+          {{ isDesktop ? 'Aproveitamento' : 'Aprov.' }}
         </div>
       </template>
     </PrimeColumn>
     <PrimeColumn
-      v-if="columnConfig === 'complete' && !isMobile"
+      v-if="columnConfig === 'complete'"
       field="score.extras.points"
       style="text-align: center"
       sortable
@@ -187,16 +195,7 @@
       </template>
     </PrimeColumn>
   </PrimeDataTable>
-  <div
-    v-if="!isLoading && showFavoritesOnly && filteredRankingData.length === 0"
-    class="centralized-content"
-  >
-    <p>Nenhum favorito adicionado.</p>
-    <p>
-      Para adicionar alguém aos seus favoritos, clique no usuário e ative a
-      estrela no topo das estatísticas.
-    </p>
-  </div>
+  <EmptyFavorites v-if="!isLoading && showFavoritesOnly && filteredRankingData.length === 0" />
   <div
     v-if="showFavoritesOnly && !isLoading && filteredRankingData.length > 0"
     class="centralized-content"
@@ -214,8 +213,8 @@
   >
     Ops, houve um problema de comunicação com o servidor para buscar o ranking.
     <p>
-      Certifique-se de que sua conexão está estável e tente novamente. Se o erro
-      persistir, entre em contato com os administradores do Bolão.
+      Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir, entre em contato com os
+      administradores do Bolão.
     </p>
     <p>{{ error }}</p>
   </PrimeMessage>
@@ -229,30 +228,26 @@
     :is-open="isUserTrackingModalOpen"
     :is-user-active="activeProfile?.id === selectedUser?.id"
     :selected-user="selectedUser"
-    :handle-close-modal="
-      () => ((isUserTrackingModalOpen = false), (selectedUser = null))
-    "
+    :handle-close-modal="() => ((isUserTrackingModalOpen = false), (selectedUser = null))"
   />
 </template>
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, ref } from 'vue';
 
-import type { IUser } from "@/stores/activeProfile.types";
-import type {
-  TColumnsValue,
-  TRowSpacingValue,
-} from "@/stores/configuration.types";
-import type { IRankingLine } from "@/stores/ranking.types";
+import type { IUser } from '@/stores/activeProfile.types';
+import type { TColumnsValue, TRowSpacingValue } from '@/stores/configuration.types';
+import type { IRankingLine } from '@/stores/ranking.types';
 
-import NameTag from "@/components/NameTag.vue";
-import ManageFavoritesModal from "@/components/Ranking/ManageFavoritesModal.vue";
-import FavoritesService from "@/services/favorites";
-import { useViewport } from "@/services/viewport";
-import { useActiveProfileStore } from "@/stores/activeProfile";
-import { useConfigurationStore } from "@/stores/configuration";
-import { useRankingStore } from "@/stores/ranking";
+import NameTag from '@/components/NameTag.vue';
+import ManageFavoritesModal from '@/components/Ranking/ManageFavoritesModal.vue';
+import UserService from '@/services/user';
+import { useViewport } from '@/services/viewport';
+import { useActiveProfileStore } from '@/stores/activeProfile';
+import { useConfigurationStore } from '@/stores/configuration';
+import { useRankingStore } from '@/stores/ranking';
 
-import UserTrackingModal from "../UserTrackingModal.vue";
+import UserTrackingModal from '../UserTrackingModal.vue';
+import EmptyFavorites from './EmptyFavorites.vue';
 
 defineProps<{
   columnConfig: TColumnsValue;
@@ -262,55 +257,31 @@ defineProps<{
 // ------ Refs ------
 const isUserTrackingModalOpen = ref<boolean>(false);
 const selectedUser = ref<IUser | null>(null);
-const favorites = ref<number[]>([]);
 const isRound = ref(false);
 const showFavoritesOnly = ref(false);
 const isFavoritesModalOpen = ref(false);
 
 // ------ Initialization ------
-const favoritesService = new FavoritesService();
+const userService = new UserService();
 const configurationStore = useConfigurationStore();
 const rankingStore = useRankingStore();
 const activeProfileStore = useActiveProfileStore();
 const { isDesktop, isMobile } = useViewport();
 
-onMounted(() => {
-  loadFavorites();
-  // Listen for favorites-cleared event from ConfigModal
-  window.addEventListener("favorites-cleared", loadFavorites);
-});
-
-onBeforeUnmount(() => {
-  // Clean up event listener
-  window.removeEventListener("favorites-cleared", loadFavorites);
-});
-
 // ------ Computed Properties ------
 const activeProfile = computed(() => activeProfileStore.activeProfile);
-const isLoadingRounds = computed(
-  () => configurationStore.isLoading || rankingStore.isLoadingRounds,
-);
-const isLoadingSeason = computed(
-  () => configurationStore.isLoading || rankingStore.isLoadingSeason,
-);
-const isLoading = computed(() =>
-  isRound.value ? isLoadingRounds.value : isLoadingSeason.value,
-);
+const favorites = computed(() => activeProfile.value?.favorites || []);
+const isLoadingRounds = computed(() => configurationStore.isLoading || rankingStore.isLoadingRounds);
+const isLoadingSeason = computed(() => configurationStore.isLoading || rankingStore.isLoadingSeason);
+const isLoading = computed(() => (isRound.value ? isLoadingRounds.value : isLoadingSeason.value));
 const errorRounds = computed(() => rankingStore.errorRounds);
 const errorSeason = computed(() => rankingStore.errorSeason);
-const error = computed(() =>
-  isRound.value ? errorRounds.value : errorSeason.value,
-);
+const error = computed(() => (isRound.value ? errorRounds.value : errorSeason.value));
 const seasonRanking = computed(() => rankingStore.seasonRanking);
 const selectedRoundRanking = computed(
-  () =>
-    rankingStore.roundsRanking?.find(
-      (roundRanking) => roundRanking.round === selectedRound.value,
-    )?.ranking || [],
+  () => rankingStore.roundsRanking?.find((roundRanking) => roundRanking.round === selectedRound.value)?.ranking || [],
 );
-const selectedRanking = computed(() =>
-  isRound.value ? selectedRoundRanking.value : seasonRanking.value,
-);
+const selectedRanking = computed(() => (isRound.value ? selectedRoundRanking.value : seasonRanking.value));
 const selectedRound = computed(() => configurationStore.selectedRound);
 
 const filteredRankingData = computed(() => {
@@ -323,18 +294,15 @@ const filteredRankingData = computed(() => {
   }
 
   return selectedRanking.value.filter((rankingLine) => {
-    const isFavorite = favorites.value.includes(rankingLine.user.id);
-    const isLoggedInUser =
-      activeProfile.value && rankingLine.user.id === activeProfile.value.id;
+    const isFavorite = userService.isFavorite(rankingLine.user.id);
+    const isLoggedInUser = activeProfile.value && rankingLine.user.id === activeProfile.value.id;
     return isFavorite || isLoggedInUser;
   });
 });
 
 // ------ Functions ------
 function getPositionVariation(data: IRankingLine): number {
-  return isRound.value
-    ? data.accumulatedScore.positionVariation
-    : data.score.positionVariation;
+  return isRound.value ? data.accumulatedScore.positionVariation : data.score.positionVariation;
 }
 
 function handleCloseFavoritesModal() {
@@ -344,40 +312,6 @@ function handleCloseFavoritesModal() {
 function isActiveProfile(userId: number): boolean {
   return activeProfile.value?.id === userId;
 }
-
-function loadFavorites() {
-  if (!activeProfile.value) {
-    favorites.value = [];
-    return;
-  }
-  favorites.value = favoritesService.getFavorites(activeProfile.value.id);
-}
-
-// ------ Watches ------
-watch(
-  () => activeProfile.value,
-  (newProfile) => {
-    if (newProfile) {
-      loadFavorites();
-    }
-  },
-);
-
-watch(isUserTrackingModalOpen, (newValue) => {
-  if (!newValue) {
-    // Reload favorites when modal closes (in case it was updated)
-    loadFavorites();
-    // Notify other components that favorites may have changed
-    window.dispatchEvent(new Event("favorites-cleared"));
-  }
-});
-
-watch(
-  () => showFavoritesOnly.value,
-  () => {
-    loadFavorites();
-  },
-);
 </script>
 <style lang="scss" scoped>
 :deep(tr) {
@@ -388,6 +322,53 @@ watch(
 
 :deep(.p-datatable-wrapper) {
   overflow-y: auto;
+}
+
+// Frozen column styling for mobile
+@media (width <= 1024px) {
+  :deep(.p-datatable-frozen-column) {
+    box-shadow: 2px 0 4px rgb(0 0 0 / 10%);
+  }
+
+  // :deep(.p-datatable-tbody > tr > td.p-datatable-frozen-column) {
+  //   background: transparent !important;
+
+  //   .row {
+  //     background: var(--p-datatable-row-background) !important;
+  //   }
+  // }
+
+  // :deep(.p-datatable-tbody > tr.p-row-odd > td.p-datatable-frozen-column) {
+  //   .row {
+  //     background: var(--p-datatable-striped-row-background) !important;
+  //   }
+  // }
+
+  // :deep(.p-datatable-thead > tr > th.p-datatable-frozen-column) {
+  //   background: var(--color-background-soft) !important;
+  //   box-shadow: 2px 0 4px rgb(0 0 0 / 15%);
+  // }
+
+  // // Make row backgrounds opaque in frozen column
+  // :deep(td.p-datatable-frozen-column) {
+  //   .row.top-10-row {
+  //     background: color-mix(in srgb, var(--bolao-c-white) 20%, var(--p-datatable-row-background)) !important;
+  //   }
+
+  //   .row.active-user-row {
+  //     background: color-mix(in srgb, var(--bolao-c-green) 50%, var(--p-datatable-row-background)) !important;
+  //   }
+  // }
+
+  // :deep(tr.p-row-odd > td.p-datatable-frozen-column) {
+  //   .row.top-10-row {
+  //     background: color-mix(in srgb, var(--bolao-c-white) 20%, var(--p-datatable-striped-row-background)) !important;
+  //   }
+
+  //   .row.active-user-row {
+  //     background: color-mix(in srgb, var(--bolao-c-green) 50%, var(--p-datatable-striped-row-background)) !important;
+  //   }
+  // }
 }
 
 .ranking-header {
@@ -424,9 +405,8 @@ watch(
   flex: 1;
   flex-direction: column;
   width: 100%;
+  height: unset;
   min-height: 0;
-
-  // max-height: 500px;
 
   @media (width <= 1024px) {
     width: 100vw;
@@ -538,7 +518,7 @@ watch(
     left: 0;
     width: 6px;
     height: 6px;
-    content: "";
+    content: '';
     border: 1px solid;
     border-radius: 50%;
     animation: ripple 2s infinite ease-in-out;

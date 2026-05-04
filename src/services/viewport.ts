@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from 'vue';
 
 // Breakpoints
 const MOBILE_MAX = 768;
@@ -17,11 +17,11 @@ class ViewportService {
   }
 
   public startWatching() {
-    window.addEventListener("resize", this.resizeHandler);
+    window.addEventListener('resize', this.resizeHandler);
   }
 
   public stopWatching() {
-    window.removeEventListener("resize", this.resizeHandler);
+    window.removeEventListener('resize', this.resizeHandler);
   }
 
   private updateViewport() {

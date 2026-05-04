@@ -10,18 +10,14 @@ import TeamComponent from './TeamComponent.vue';
 
 // Mock stores
 let mockCurrentTimestamp = 1000000;
-vi.mock('@/stores/clock', () => ({
-  useClockStore: () => ({
-    currentTimestamp: mockCurrentTimestamp,
-  }),
-}));
+vi.mock('@/stores/clock', () => ({ useClockStore: () => ({ currentTimestamp: mockCurrentTimestamp }) }));
 
-let mockActiveProfile: null | { id: number; name: string; nickname: string } = { id: 1, name: 'Test User', nickname: 'testuser' };
-vi.mock('@/stores/activeProfile', () => ({
-  useActiveProfileStore: () => ({
-    activeProfile: mockActiveProfile,
-  }),
-}));
+let mockActiveProfile: null | { id: number; name: string; nickname: string } = {
+  id: 1,
+  name: 'Test User',
+  nickname: 'testuser',
+};
+vi.mock('@/stores/activeProfile', () => ({ useActiveProfileStore: () => ({ activeProfile: mockActiveProfile }) }));
 
 let mockMatches: IMatch[] = [];
 let mockUpdatingMatches: number[] = [];
@@ -30,7 +26,10 @@ const mockUpdateLoggedUserBets = vi.fn((matchId: number, bet: Partial<NonNullabl
   if (matchIndex !== -1) {
     const existingBets = mockMatches[matchIndex].loggedUserBets;
     if (existingBets) {
-      mockMatches[matchIndex].loggedUserBets = { ...existingBets, ...bet };
+      mockMatches[matchIndex].loggedUserBets = {
+        ...existingBets,
+        ...bet,
+      };
     } else {
       mockMatches[matchIndex].loggedUserBets = bet as IMatch['loggedUserBets'];
     }
@@ -55,11 +54,7 @@ vi.mock('@/stores/notification', () => ({
 }));
 
 let mockIsMobile = false;
-vi.mock('@/services/viewport', () => ({
-  useViewport: () => ({
-    isMobile: mockIsMobile,
-  }),
-}));
+vi.mock('@/services/viewport', () => ({ useViewport: () => ({ isMobile: mockIsMobile }) }));
 
 let mockPlaceBet = vi.fn((bet, callback) => callback(true, null));
 vi.mock('@/services/bet', () => ({
@@ -73,7 +68,12 @@ const createTeam = (id: number, name: string, isoCode: string) => ({
   abbreviationEn: name.substring(0, 3).toUpperCase(),
   colors: [],
   colorsRaw: '',
-  confederation: { abbreviation: 'CONF', id: 1, name: 'Confederation', nameEn: 'Confederation' },
+  confederation: {
+    abbreviation: 'CONF',
+    id: 1,
+    name: 'Confederation',
+    nameEn: 'Confederation',
+  },
   group: 'A',
   id,
   idConfederation: 1,
@@ -101,7 +101,12 @@ const createMatch = (overrides = {}): IMatch => ({
     name: 'Referee Name',
   },
   round: 1,
-  score: { away: 1, awayPenalties: 0, home: 2, homePenalties: 0 },
+  score: {
+    away: 1,
+    awayPenalties: 0,
+    home: 2,
+    homePenalties: 0,
+  },
   stadium: {
     capacity: 50000,
     city: 'City',
@@ -114,7 +119,7 @@ const createMatch = (overrides = {}): IMatch => ({
     name: 'Stadium Name',
   },
   status: 1,
-  timestamp: 2000000, // Future match
+  timestamp: '2000000', // Future match
   ...overrides,
 });
 
@@ -127,9 +132,7 @@ describe('TeamComponent', () => {
 
   const mountComponent = (options: { props: Record<string, unknown> }) => {
     return mount(TeamComponent, {
-      global: {
-        stubs: defaultStubs,
-      },
+      global: { stubs: defaultStubs },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       props: options.props as any,
     });
@@ -138,7 +141,11 @@ describe('TeamComponent', () => {
   beforeEach(() => {
     mockMatches = [];
     mockUpdatingMatches = [];
-    mockActiveProfile = { id: 1, name: 'Test User', nickname: 'testuser' };
+    mockActiveProfile = {
+      id: 1,
+      name: 'Test User',
+      nickname: 'testuser',
+    };
     mockCurrentTimestamp = 1000000;
     mockIsMobile = false;
     mockPlaceBet = vi.fn((bet, callback) => callback(true, null));
@@ -180,7 +187,10 @@ describe('TeamComponent', () => {
   describe('Initial rendering - with bets', () => {
     it('should show existing bet for home team', () => {
       const match = createMatch({
-        loggedUserBets: { scoreAway: 1, scoreHome: 3 },
+        loggedUserBets: {
+          scoreAway: 1,
+          scoreHome: 3,
+        },
       });
       const wrapper = mountComponent({
         props: {
@@ -196,7 +206,10 @@ describe('TeamComponent', () => {
 
     it('should show existing bet for away team', () => {
       const match = createMatch({
-        loggedUserBets: { scoreAway: 1, scoreHome: 3 },
+        loggedUserBets: {
+          scoreAway: 1,
+          scoreHome: 3,
+        },
       });
       const wrapper = mountComponent({
         props: {
@@ -231,7 +244,17 @@ describe('TeamComponent', () => {
 
     it('should call placeBet when user blurs the input with changes', async () => {
       const match = createMatch({
-        loggedUserBets: { id: 1, matchId: 1, scoreAway: 0, scoreHome: 0, timestamp: '2024-01-01', user: { id: 1, nickname: 'test' } },
+        loggedUserBets: {
+          id: 1,
+          matchId: 1,
+          scoreAway: 0,
+          scoreHome: 0,
+          timestamp: '2024-01-01',
+          user: {
+            id: 1,
+            nickname: 'test',
+          },
+        },
       });
       mockMatches = [match];
 
@@ -267,7 +290,10 @@ describe('TeamComponent', () => {
   describe('User interaction - clearing existing bets', () => {
     it('should clear input when user deletes value from home team', async () => {
       const match = createMatch({
-        loggedUserBets: { scoreAway: 1, scoreHome: 3 },
+        loggedUserBets: {
+          scoreAway: 1,
+          scoreHome: 3,
+        },
       });
       const wrapper = mountComponent({
         props: {
@@ -288,7 +314,10 @@ describe('TeamComponent', () => {
 
     it('should clear input when user deletes value from away team', async () => {
       const match = createMatch({
-        loggedUserBets: { scoreAway: 1, scoreHome: 3 },
+        loggedUserBets: {
+          scoreAway: 1,
+          scoreHome: 3,
+        },
       });
       const wrapper = mountComponent({
         props: {
@@ -309,7 +338,17 @@ describe('TeamComponent', () => {
 
     it('should call placeBet with null when clearing', async () => {
       const match = createMatch({
-        loggedUserBets: { id: 1, matchId: 1, scoreAway: 1, scoreHome: 3, timestamp: '2024-01-01', user: { id: 1, nickname: 'test' } },
+        loggedUserBets: {
+          id: 1,
+          matchId: 1,
+          scoreAway: 1,
+          scoreHome: 3,
+          timestamp: '2024-01-01',
+          user: {
+            id: 1,
+            nickname: 'test',
+          },
+        },
       });
       mockMatches = [match];
 
@@ -358,7 +397,10 @@ describe('TeamComponent', () => {
       // Simulate login by updating props
       await wrapper.setProps({
         match: createMatch({
-          loggedUserBets: { scoreAway: 1, scoreHome: 2 },
+          loggedUserBets: {
+            scoreAway: 1,
+            scoreHome: 2,
+          },
         }),
       });
       await nextTick();
@@ -371,8 +413,23 @@ describe('TeamComponent', () => {
     it('should show actual score when match has started', () => {
       mockCurrentTimestamp = 2500000; // After match start
       const match = createMatch({
-        loggedUserBets: { id: 1, matchId: 1, scoreAway: 1, scoreHome: 2, timestamp: '2024-01-01', user: { id: 1, nickname: 'test' } },
-        score: { away: 2, awayPenalties: 0, home: 3, homePenalties: 0 },
+        loggedUserBets: {
+          id: 1,
+          matchId: 1,
+          scoreAway: 1,
+          scoreHome: 2,
+          timestamp: '2024-01-01',
+          user: {
+            id: 1,
+            nickname: 'test',
+          },
+        },
+        score: {
+          away: 2,
+          awayPenalties: 0,
+          home: 3,
+          homePenalties: 0,
+        },
         timestamp: 2000000,
       });
       const wrapper = mountComponent({
@@ -390,9 +447,7 @@ describe('TeamComponent', () => {
 
     it('should be disabled when match has started', () => {
       mockCurrentTimestamp = 2500000; // After match start
-      const match = createMatch({
-        timestamp: 2000000,
-      });
+      const match = createMatch({ timestamp: 2000000 });
       const wrapper = mountComponent({
         props: {
           events: [],
@@ -409,7 +464,17 @@ describe('TeamComponent', () => {
   describe('Edge cases', () => {
     it('should handle 0 as a valid bet (different from null)', async () => {
       const match = createMatch({
-        loggedUserBets: { id: 1, matchId: 1, scoreAway: null, scoreHome: null, timestamp: '2024-01-01', user: { id: 1, nickname: 'test' } },
+        loggedUserBets: {
+          id: 1,
+          matchId: 1,
+          scoreAway: null,
+          scoreHome: null,
+          timestamp: '2024-01-01',
+          user: {
+            id: 1,
+            nickname: 'test',
+          },
+        },
       });
       mockMatches = [match];
 
@@ -434,7 +499,17 @@ describe('TeamComponent', () => {
 
     it('should distinguish between 0 and null when updating', async () => {
       const match = createMatch({
-        loggedUserBets: { id: 1, matchId: 1, scoreAway: 0, scoreHome: 0, timestamp: '2024-01-01', user: { id: 1, nickname: 'test' } },
+        loggedUserBets: {
+          id: 1,
+          matchId: 1,
+          scoreAway: 0,
+          scoreHome: 0,
+          timestamp: '2024-01-01',
+          user: {
+            id: 1,
+            nickname: 'test',
+          },
+        },
       });
       mockMatches = [match];
 
@@ -460,7 +535,17 @@ describe('TeamComponent', () => {
 
     it('should not call API when tabbing without changes', async () => {
       const match = createMatch({
-        loggedUserBets: { id: 1, matchId: 1, scoreAway: 1, scoreHome: 3, timestamp: '2024-01-01', user: { id: 1, nickname: 'test' } },
+        loggedUserBets: {
+          id: 1,
+          matchId: 1,
+          scoreAway: 1,
+          scoreHome: 3,
+          timestamp: '2024-01-01',
+          user: {
+            id: 1,
+            nickname: 'test',
+          },
+        },
       });
       mockMatches = [match];
 
@@ -519,7 +604,10 @@ describe('TeamComponent', () => {
       const input = wrapper.find('input');
 
       // Try to type a minus sign
-      await input.trigger('keydown', { key: '-', keyCode: 189 });
+      await input.trigger('keydown', {
+        key: '-',
+        keyCode: 189,
+      });
 
       // The event should be prevented in handleKeydown
       // We can't easily test event.preventDefault(), but we can test that
@@ -567,9 +655,7 @@ describe('TeamComponent', () => {
     });
 
     it('should not show loading spinner during penalties even when updating', () => {
-      const match = createMatch({
-        status: MATCH_STATUS.PENALTIES,
-      });
+      const match = createMatch({ status: MATCH_STATUS.PENALTIES });
       mockUpdatingMatches = [1];
 
       const wrapper = mountComponent({
@@ -621,7 +707,12 @@ describe('TeamComponent', () => {
     it('should show penalties score when match is on penalties (desktop)', () => {
       mockIsMobile = false;
       const match = createMatch({
-        score: { away: 1, awayPenalties: 4, home: 1, homePenalties: 5 },
+        score: {
+          away: 1,
+          awayPenalties: 4,
+          home: 1,
+          homePenalties: 5,
+        },
         status: MATCH_STATUS.PENALTIES,
       });
 
@@ -642,7 +733,12 @@ describe('TeamComponent', () => {
     it('should not show penalties score on mobile', () => {
       mockIsMobile = true;
       const match = createMatch({
-        score: { away: 1, awayPenalties: 4, home: 1, homePenalties: 5 },
+        score: {
+          away: 1,
+          awayPenalties: 4,
+          home: 1,
+          homePenalties: 5,
+        },
         status: MATCH_STATUS.PENALTIES,
       });
 
@@ -661,7 +757,12 @@ describe('TeamComponent', () => {
     it('should show penalties score for away team', () => {
       mockIsMobile = false;
       const match = createMatch({
-        score: { away: 1, awayPenalties: 4, home: 1, homePenalties: 5 },
+        score: {
+          away: 1,
+          awayPenalties: 4,
+          home: 1,
+          homePenalties: 5,
+        },
         status: MATCH_STATUS.AWAITING_PENALTIES,
       });
 
@@ -702,7 +803,11 @@ describe('TeamComponent', () => {
     });
 
     it('should not open login modal when logged in', async () => {
-      mockActiveProfile = { id: 1, name: 'Test User', nickname: 'testuser' };
+      mockActiveProfile = {
+        id: 1,
+        name: 'Test User',
+        nickname: 'testuser',
+      };
       const match = createMatch();
 
       const wrapper = mountComponent({
@@ -748,7 +853,17 @@ describe('TeamComponent', () => {
       mockPlaceBet = vi.fn((bet, callback) => callback(false, new Error('API Error')));
 
       const match = createMatch({
-        loggedUserBets: { id: 1, matchId: 1, scoreAway: 1, scoreHome: 2, timestamp: '2024-01-01', user: { id: 1, nickname: 'test' } },
+        loggedUserBets: {
+          id: 1,
+          matchId: 1,
+          scoreAway: 1,
+          scoreHome: 2,
+          timestamp: '2024-01-01',
+          user: {
+            id: 1,
+            nickname: 'test',
+          },
+        },
       });
       mockMatches = [match];
 
@@ -828,7 +943,17 @@ describe('TeamComponent', () => {
   describe('Input focus behavior', () => {
     it('should not update localInputValue from props when input is focused', async () => {
       const match = createMatch({
-        loggedUserBets: { id: 1, matchId: 1, scoreAway: 1, scoreHome: 2, timestamp: '2024-01-01', user: { id: 1, nickname: 'test' } },
+        loggedUserBets: {
+          id: 1,
+          matchId: 1,
+          scoreAway: 1,
+          scoreHome: 2,
+          timestamp: '2024-01-01',
+          user: {
+            id: 1,
+            nickname: 'test',
+          },
+        },
       });
 
       const wrapper = mountComponent({
@@ -850,7 +975,17 @@ describe('TeamComponent', () => {
       // Props change (e.g., from websocket update)
       await wrapper.setProps({
         match: createMatch({
-          loggedUserBets: { id: 1, matchId: 1, scoreAway: 1, scoreHome: 3, timestamp: '2024-01-01', user: { id: 1, nickname: 'test' } },
+          loggedUserBets: {
+            id: 1,
+            matchId: 1,
+            scoreAway: 1,
+            scoreHome: 3,
+            timestamp: '2024-01-01',
+            user: {
+              id: 1,
+              nickname: 'test',
+            },
+          },
         }),
       });
       await nextTick();
@@ -861,7 +996,17 @@ describe('TeamComponent', () => {
 
     it('should update localInputValue from props when input is not focused', async () => {
       const match = createMatch({
-        loggedUserBets: { id: 1, matchId: 1, scoreAway: 1, scoreHome: 2, timestamp: '2024-01-01', user: { id: 1, nickname: 'test' } },
+        loggedUserBets: {
+          id: 1,
+          matchId: 1,
+          scoreAway: 1,
+          scoreHome: 2,
+          timestamp: '2024-01-01',
+          user: {
+            id: 1,
+            nickname: 'test',
+          },
+        },
       });
 
       const wrapper = mountComponent({
@@ -878,7 +1023,17 @@ describe('TeamComponent', () => {
       // Props change (e.g., from websocket update)
       await wrapper.setProps({
         match: createMatch({
-          loggedUserBets: { id: 1, matchId: 1, scoreAway: 1, scoreHome: 3, timestamp: '2024-01-01', user: { id: 1, nickname: 'test' } },
+          loggedUserBets: {
+            id: 1,
+            matchId: 1,
+            scoreAway: 1,
+            scoreHome: 3,
+            timestamp: '2024-01-01',
+            user: {
+              id: 1,
+              nickname: 'test',
+            },
+          },
         }),
       });
       await nextTick();

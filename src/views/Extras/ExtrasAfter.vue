@@ -1,13 +1,19 @@
 <template>
   <div class="outer-extras">
-    <div v-if="activeProfile" style="text-align: center">
+    <div
+      v-if="activeProfile"
+      style="text-align: center"
+    >
       <h1>Extras</h1>
       <h2>Minhas Apostas</h2>
       <PrimeSkeleton
         v-if="isLoadingConfig || isLoadingExtras"
         class="skeleton-outer"
       />
-      <ExtraBetsTeamCard v-else :extra-bets="activeProfileExtraBets" />
+      <ExtraBetsTeamCard
+        v-else
+        :extra-bets="activeProfileExtraBets"
+      />
       <PrimeDivider />
     </div>
     <h2>Resultados</h2>
@@ -15,31 +21,33 @@
       v-if="isLoadingConfig || isLoadingExtras"
       class="skeleton-outer"
     />
-    <ExtraBetsTeamCard v-else :results="extraBetsResults" />
+    <ExtraBetsTeamCard
+      v-else
+      :results="extraBetsResults"
+    />
     <PrimeDivider />
 
     <h2>Apostas Gerais</h2>
-    <div
-      style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center"
-    >
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center">
       <PrimeButton
         v-for="item in buttonOptions"
         :key="item.value"
         :label="item.label"
         variant="outlined"
         size="small"
-        :severity="
-          selectedToggle.value === item.value ? 'primary' : 'secondary'
-        "
-        @click="selectedToggle.value = item.value"
+        :severity="selectedToggle.value === item.value ? 'primary' : 'secondary'"
         rounded
+        @click="selectedToggle.value = item.value"
       />
     </div>
     <PrimeSkeleton
       v-if="isLoadingConfig || isLoadingExtras"
       class="skeleton-outer"
     />
-    <div v-else class="cards-container">
+    <div
+      v-else
+      class="cards-container"
+    >
       <PrimeCard
         v-for="(item, index) in selectedExtras"
         :key="index"
@@ -87,28 +95,24 @@
   />
 </template>
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref } from 'vue';
 
-import type {
-  IExtraBet,
-  IPlayerWithExtras,
-  ITeamWithExtras,
-} from "@/stores/extraBet.types";
-import type { IPlayer, ITeam } from "@/stores/teams.types";
+import type { IExtraBet, IPlayerWithExtras, ITeamWithExtras } from '@/stores/extraBet.types';
+import type { IPlayer, ITeam } from '@/stores/teams.types';
 
 import {
   EXTRA_BETS_LABELS,
   EXTRA_BETS_VALUES,
   type TEXTRA_BETS_LABELS,
   type TEXTRA_BETS_VALUES,
-} from "@/constants/bets";
-import ExtraBetService from "@/services/extra_bet";
-import { useActiveProfileStore } from "@/stores/activeProfile";
-import { useConfigurationStore } from "@/stores/configuration";
-import { useExtraBetStore } from "@/stores/extraBet";
+} from '@/constants/bets';
+import ExtraBetService from '@/services/extra_bet';
+import { useActiveProfileStore } from '@/stores/activeProfile';
+import { useConfigurationStore } from '@/stores/configuration';
+import { useExtraBetStore } from '@/stores/extraBet';
 
-import ExtraBetsModal from "./After/ExtraBetsModal.vue";
-import ExtraBetsTeamCard from "./After/ExtraBetsTeamCard.vue";
+import ExtraBetsModal from './After/ExtraBetsModal.vue';
+import ExtraBetsTeamCard from './After/ExtraBetsTeamCard.vue';
 
 // ------ Services & Stores ------
 const extraBetService = new ExtraBetService();
@@ -166,20 +170,14 @@ const topScorersByPlayer = computed(() => extraBetStore.topScorerBetsByPlayer);
 
 const selectedExtras = computed<IPlayerWithExtras[] | ITeamWithExtras[]>(() => {
   if (selectedToggle.value.value === EXTRA_BETS_VALUES.TOP_SCORER) {
-    return [...topScorersByPlayer.value].sort((a, b) =>
-      a.player.name.localeCompare(b.player.name),
-    );
+    return [...topScorersByPlayer.value].sort((a, b) => a.player.name.localeCompare(b.player.name));
   }
 
   return extraBetsByTeam.value
-    .filter((team) =>
-      team.bets.some((bet) => bet.extraType === selectedToggle.value.value),
-    )
+    .filter((team) => team.bets.some((bet) => bet.extraType === selectedToggle.value.value))
     .sort((a, b) => a.team.name.localeCompare(b.team.name));
 });
-const isModalOpen = computed(
-  () => selectedTeam.value !== null || selectedPlayer.value !== null,
-);
+const isModalOpen = computed(() => selectedTeam.value !== null || selectedPlayer.value !== null);
 
 function filterBetsByType(bets: IExtraBet[], extraType: TEXTRA_BETS_VALUES) {
   return bets
@@ -201,10 +199,8 @@ function handleSelection(item: IPlayerWithExtras | ITeamWithExtras) {
   selectedTeam.value = item;
 }
 
-function isPlayerWithExtras(
-  item: IPlayerWithExtras | ITeamWithExtras,
-): item is IPlayerWithExtras {
-  return "player" in item;
+function isPlayerWithExtras(item: IPlayerWithExtras | ITeamWithExtras): item is IPlayerWithExtras {
+  return 'player' in item;
 }
 </script>
 <style lang="scss" scoped>

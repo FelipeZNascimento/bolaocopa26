@@ -12,8 +12,8 @@
       <p class="modal-title">
         <i
           v-if="!isUserActive"
-          v-tooltip.top="isFavorite ? 'Remover favorito' : 'Adicionar aos favoritos'"
-          :class="isFavorite ? 'pi pi-star-fill' : 'pi pi-star'"
+          v-tooltip.top="isFavorite() ? 'Remover favorito' : 'Adicionar aos favoritos'"
+          :class="isFavorite() ? 'pi pi-star-fill' : 'pi pi-star'"
           class="favorite-star"
           @click="toggleFavorite"
         />
@@ -27,9 +27,7 @@
       :options="chartOptions"
     />
     <PrimeDivider />
-    <h2 style="text-align: center">
-      Apostas Extras
-    </h2>
+    <h2 style="text-align: center">Apostas Extras</h2>
     <div style="display: flex; justify-content: center; padding: var(--s-spacing)">
       <PrimeSkeleton
         v-if="isLoadingExtras"
@@ -41,14 +39,19 @@
       />
     </div>
   </PrimeDialog>
+  <!-- Modals -->
+  <LoginModal
+    :is-open="isLoginModalOpen"
+    :handle-close-modal="handleCloseLoginModal"
+  />
 </template>
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 import type { IUser } from '@/stores/activeProfile.types';
 
-import FavoritesService from '@/services/favorites';
+import LoginModal from '@/components/NavbarTop/LoginModal.vue';
+import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useExtraBetStore } from '@/stores/extraBet';
 import { useNotificationStore } from '@/stores/notification';
@@ -64,41 +67,41 @@ const props = defineProps<{
 
 // ------ Refs ------
 const isVisible = ref(false);
-const favorites = ref<number[]>([]);
+const isLoginModalOpen = ref(false);
 
 // ------ Initialization ------
 const rankingStore = useRankingStore();
 const activeProfileStore = useActiveProfileStore();
 const notificationStore = useNotificationStore();
-const favoritesService = new FavoritesService();
 const extraBetStore = useExtraBetStore();
+const userService = new UserService();
 
 // ------ Computed Properties  ------
+const activeProfile = computed(() => activeProfileStore.activeProfile);
+const favorites = computed(() => activeProfileStore.activeProfile?.favorites || []);
+const roundsRanking = computed(() => rankingStore.roundsRanking);
+const seasonRanking = computed(() => rankingStore.seasonRanking);
 const isLoadingExtras = computed(() => extraBetStore.isLoading);
 const selectedUserExtraBets = computed(
   () => extraBetStore.extraBetsByUser.find((u) => u.user.id === props.selectedUser?.id)?.bets || [],
 );
 
-const isFavorite = computed(() => {
-  if (!props.selectedUser) return false;
-  return favorites.value.includes(props.selectedUser.id);
-});
-
-const { roundsRanking, seasonRanking } = storeToRefs(rankingStore);
-const { activeProfile } = storeToRefs(activeProfileStore);
-
 // ------ Functions  ------
-function loadFavorites() {
-  if (!activeProfile.value) {
-    favorites.value = [];
-    return;
+function handleCloseLoginModal() {
+  isLoginModalOpen.value = false;
+}
+
+function isFavorite(): boolean {
+  if (!props.selectedUser) {
+    return false;
   }
-  favorites.value = favoritesService.getFavorites(activeProfile.value.id);
+
+  return userService.isFavorite(props.selectedUser.id);
 }
 
 function toggleFavorite() {
   if (!activeProfile.value) {
-    notificationStore.error('Only logged in users can favorite players', 'Login Required');
+    isLoginModalOpen.value = true;
     return;
   }
 
@@ -110,15 +113,23 @@ function toggleFavorite() {
   }
 
   const userId = props.selectedUser.id;
-  const isNowFavorited = favoritesService.toggleFavorite(activeProfile.value.id, userId);
+  const newFavorites = favorites.value.includes(userId)
+    ? favorites.value.filter((id) => id !== userId)
+    : [...favorites.value, userId];
 
-  if (isNowFavorited) {
-    notificationStore.success(`${props.selectedUser.nickname} agora é um favorito!`, 'Favorito Adicionado');
+  userService.updateFavorites(newFavorites, (isSuccess) =>
+    updateCallback(isSuccess, props.selectedUser?.nickname ?? ''),
+  );
+}
+
+function updateCallback(isSuccess: boolean, selectedUser: string) {
+  if (isSuccess) {
+    notificationStore.success(`${selectedUser} agora é um favorito!`, 'Favorito Adicionado');
+    console.log('Favorites updated successfully');
   } else {
-    notificationStore.message(`${props.selectedUser.nickname} removido dos favoritos.`, 'Favorito Removido');
+    notificationStore.error('Falha ao atualizar favoritos', 'error');
+    console.error('Failed to update favorites');
   }
-
-  loadFavorites();
 }
 
 const chartData = computed(() => {
@@ -216,18 +227,12 @@ const chartOptions = {
   },
 };
 
-// ------ Initialization ------
-onMounted(() => {
-  loadFavorites();
-});
-
 // ------ Watches ------
 watch(
   () => props.isOpen,
   async (newValue) => {
     if (newValue) {
       isVisible.value = true;
-      loadFavorites();
     }
   },
 );

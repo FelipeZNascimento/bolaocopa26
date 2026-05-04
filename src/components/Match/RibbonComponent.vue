@@ -15,7 +15,10 @@
       v-tooltip.top="'Sem aposta'"
       style="width: 100%; text-align: center"
     >
-      <i v-show="hitLevel === null" class="pi pi-circle" />
+      <i
+        v-show="hitLevel === null"
+        class="pi pi-circle"
+      />
     </div>
     <!-- <div v-else v-tooltip.top="HIT_LEVELS_LABELS[hitLevel]" style="width: 100%; text-align: center">
       {{ HIT_LEVELS_POINTS[hitLevel] }}
@@ -50,18 +53,16 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed } from 'vue';
 
-import { HIT_LEVELS, HIT_LEVELS_LABELS, type HitLevel } from "@/constants/bets";
-import { useActiveProfileStore } from "@/stores/activeProfile";
+import { HIT_LEVELS, HIT_LEVELS_LABELS, type HitLevel } from '@/constants/bets';
+import { useActiveProfileStore } from '@/stores/activeProfile';
 
 withDefaults(
   defineProps<{
     hitLevel?: HitLevel | null;
   }>(),
-  {
-    hitLevel: null,
-  },
+  { hitLevel: null },
 );
 
 // ------ Initialization ------
@@ -91,8 +92,8 @@ const activeProfile = computed(() => {
   // font-size: var(--s-font-size);
   color: #fff;
   text-align: center;
-  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100%
-    0 / calc(2 * var(--f)) var(--f) no-repeat border-box;
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0 / calc(2 * var(--f)) var(--f) no-repeat
+    border-box;
   background-color: #bf4d28;
   border: solid #0000;
   border-width: 0 calc(2 * var(--f)) var(--r) 0;
@@ -125,21 +126,16 @@ const activeProfile = computed(() => {
   --c: var(--bolao-c-gold-l2);
 
   color: var(--bolao-c-gold-d2);
-  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100%
-    0 / calc(2 * var(--f)) var(--f) no-repeat border-box;
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0 / calc(2 * var(--f)) var(--f) no-repeat
+    border-box;
   background-color: var(--c);
 
   &::before {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    content: "";
-    background: linear-gradient(
-      90deg,
-      transparent 20%,
-      rgb(255 255 255 / 60%) 50%,
-      transparent 80%
-    );
+    content: '';
+    background: linear-gradient(90deg, transparent 20%, rgb(255 255 255 / 60%) 50%, transparent 80%);
     clip-path: inherit;
     animation: gold-shine 3s ease-in-out infinite;
   }
@@ -159,16 +155,16 @@ const activeProfile = computed(() => {
   --c: var(--bolao-c-green-l3);
 
   color: var(--bolao-c-green-d1);
-  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100%
-    0 / calc(2 * var(--f)) var(--f) no-repeat border-box;
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0 / calc(2 * var(--f)) var(--f) no-repeat
+    border-box;
   background-color: var(--c);
 }
 
 .orange-bg {
   --c: var(--bolao-c-orange);
 
-  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100%
-    0 / calc(2 * var(--f)) var(--f) no-repeat border-box;
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0 / calc(2 * var(--f)) var(--f) no-repeat
+    border-box;
   background-color: var(--c);
 }
 
@@ -176,8 +172,8 @@ const activeProfile = computed(() => {
   --c: var(--bolao-c-blue-l2);
 
   color: var(--bolao-c-blue-d2);
-  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100%
-    0 / calc(2 * var(--f)) var(--f) no-repeat border-box;
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0 / calc(2 * var(--f)) var(--f) no-repeat
+    border-box;
   background-color: var(--c);
 }
 
@@ -185,8 +181,8 @@ const activeProfile = computed(() => {
   --c: var(--bolao-c-white);
 
   color: var(--bolao-c-black);
-  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100%
-    0 / calc(2 * var(--f)) var(--f) no-repeat border-box;
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0 / calc(2 * var(--f)) var(--f) no-repeat
+    border-box;
   background-color: var(--c);
 }
 
@@ -194,16 +190,16 @@ const activeProfile = computed(() => {
   --c: var(--bolao-c-red);
 
   color: var(--bolao-c-red-l3);
-  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100%
-    0 / calc(2 * var(--f)) var(--f) no-repeat border-box;
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0 / calc(2 * var(--f)) var(--f) no-repeat
+    border-box;
   background-color: var(--c);
 }
 
 .grey-bg {
   --c: var(--bolao-c-grey4);
 
-  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100%
-    0 / calc(2 * var(--f)) var(--f) no-repeat border-box;
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0 / calc(2 * var(--f)) var(--f) no-repeat
+    border-box;
   background-color: var(--c);
 }
 </style>

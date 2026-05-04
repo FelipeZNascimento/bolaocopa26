@@ -2,14 +2,17 @@
   <PaginatorComponent />
   <div class="outer">
     <div class="ranking-outer">
-      <RankingTable column-config="complete" row-spacing-config="normal" />
+      <RankingTable
+        column-config="complete"
+        row-spacing-config="normal"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import PaginatorComponent from "@/components/PaginatorComponent.vue";
-import RankingTable from "@/components/Ranking/RankingTable.vue";
+import PaginatorComponent from '@/components/PaginatorComponent.vue';
+import RankingTable from '@/components/Ranking/RankingTable.vue';
 </script>
 <style lang="scss" scoped>
 .outer {

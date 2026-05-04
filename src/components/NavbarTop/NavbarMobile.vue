@@ -9,19 +9,25 @@
         </div>
         <div class="right-section">
           <!-- Profile indicator when logged in -->
-          <div v-if="activeProfile && !isLoading" class="profile-indicator">
+          <div
+            v-if="activeProfile && !isLoading"
+            class="profile-indicator"
+          >
             <div class="profile-avatar">
               {{ getUserInitials(activeProfile.name) }}
             </div>
           </div>
-          <div v-else-if="isLoading" class="profile-indicator">
+          <div
+            v-else-if="isLoading"
+            class="profile-indicator"
+          >
             <i class="pi pi-spin pi-spinner" />
           </div>
           <button
             class="hamburger-btn"
             :class="{ open: isMenuOpen }"
-            @click="toggleMenu"
             aria-label="Menu"
+            @click="toggleMenu"
           >
             <span class="hamburger-line" />
             <span class="hamburger-line" />
@@ -32,21 +38,39 @@
 
       <!-- Wave decoration -->
       <div class="wave-background">
-        <svg class="wave-svg" viewBox="0 0 375 40" preserveAspectRatio="none">
-          <path :d="wavePath" fill="var(--bolao-c-green-t3)" />
+        <svg
+          class="wave-svg"
+          viewBox="0 0 375 40"
+          preserveAspectRatio="none"
+        >
+          <path
+            :d="wavePath"
+            fill="var(--bolao-c-green-t3)"
+          />
         </svg>
       </div>
     </nav>
 
     <!-- Overlay -->
-    <div v-if="isMenuOpen" class="overlay" @click="closeMenu" />
+    <div
+      v-if="isMenuOpen"
+      class="overlay"
+      @click="closeMenu"
+    />
 
     <!-- Side drawer -->
     <Transition name="drawer">
-      <div v-if="isMenuOpen" class="drawer">
+      <div
+        v-if="isMenuOpen"
+        class="drawer"
+      >
         <div class="drawer-header">
           <h3>Menu</h3>
-          <button class="close-btn" @click="closeMenu" aria-label="Fechar">
+          <button
+            class="close-btn"
+            aria-label="Fechar"
+            @click="closeMenu"
+          >
             <i class="pi pi-times" />
           </button>
         </div>
@@ -65,8 +89,7 @@
                 active: routeItem.id === activeRoute,
               }"
               @click="
-                routeItem.id === ROUTE_ID.PROFILE ||
-                  routeItem.id === ROUTE_ID.LOGIN
+                routeItem.id === ROUTE_ID.PROFILE || routeItem.id === ROUTE_ID.LOGIN
                   ? handleSpecialRoute($event, routeItem, navigate)
                   : handleRouteClick(routeItem, navigate)
               "
@@ -80,13 +103,19 @@
             </a>
           </RouterLink>
           <PrimeDivider />
-          <div v-if="isLoading" class="profile-section">
+          <div
+            v-if="isLoading"
+            class="profile-section"
+          >
             <i
               class="pi pi-spin pi-spinner"
               style="font-size: var(--xl-font-size)"
             />
           </div>
-          <div v-else-if="activeProfile" class="profile-section">
+          <div
+            v-else-if="activeProfile"
+            class="profile-section"
+          >
             <div>
               <i :class="getIconClass(profileRoute.id)" />
               <span class="label">{{ profileRoute.label }}</span>
@@ -116,16 +145,6 @@
                 variant="text"
                 severity="secondary"
                 size="small"
-                label="Configurações"
-                @click="
-                  isConfigModalOpen = true;
-                  closeMenu();
-                "
-              />
-              <PrimeButton
-                variant="text"
-                severity="secondary"
-                size="small"
                 label="Favoritos"
                 @click="
                   isFavoritesModalOpen = true;
@@ -134,6 +153,19 @@
               />
             </div>
             <PrimeButton
+              severity="secondary"
+              variant="link"
+              size="small"
+              @click="handleThemeConfig(theme === 'dark' ? 'light' : 'dark')"
+            >
+              <i
+                :class="theme === 'dark' ? 'pi pi-sun' : 'pi pi-moon'"
+                :style="{ color: theme === 'dark' ? 'var(--bolao-c-gold)' : 'var(--bolao-c-grey2)' }"
+                style="font-size: var(--l-font-size)"
+              />
+            </PrimeButton>
+
+            <PrimeButton
               style="margin: var(--s-spacing)"
               severity="danger"
               size="small"
@@ -141,7 +173,11 @@
               @click="handleLogout"
             />
           </div>
-          <div v-else class="profile-section" style="align-items: center">
+          <div
+            v-else
+            class="profile-section"
+            style="align-items: center"
+          >
             <PrimeButton
               style="margin: var(--s-spacing)"
               severity="info"
@@ -170,11 +206,6 @@
     :is-open="isPasswordModalOpen"
     :handle-close-modal="handleClosePasswordModal"
   />
-  <ConfigModal
-    :active-profile="activeProfile"
-    :is-open="isConfigModalOpen"
-    :handle-close-modal="handleCloseConfigModal"
-  />
   <RankingModal
     :is-open="isRankingModalOpen"
     :handle-close-modal="handleCloseRankingModal"
@@ -186,23 +217,23 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { computed, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
-import ConfigModal from "@/components/NavbarTop/ConfigModal.vue";
-import LoginModal from "@/components/NavbarTop/LoginModal.vue";
-import ManageFavoritesModal from "@/components/Ranking/ManageFavoritesModal.vue";
-import UserService from "@/services/user";
-import { useActiveProfileStore } from "@/stores/activeProfile";
+import type { TThemeValue } from '@/stores/configuration.types';
 
-import RankingModal from "../Ranking/RankingModal.vue";
-import PasswordModal from "./ChangePasswordModal.vue";
-import ProfileModal from "./ProfileModal.vue";
-import { ROUTE_ID, ROUTES, type TROUTE } from "./routes";
+import LoginModal from '@/components/NavbarTop/LoginModal.vue';
+import ManageFavoritesModal from '@/components/Ranking/ManageFavoritesModal.vue';
+import UserService from '@/services/user';
+import { useActiveProfileStore } from '@/stores/activeProfile';
+import { useConfigurationStore } from '@/stores/configuration';
 
-type ExtendedRoute =
-  | TROUTE
-  | { id: number; label: string; needCredentials: boolean; url: string };
+import RankingModal from '../Ranking/RankingModal.vue';
+import PasswordModal from './ChangePasswordModal.vue';
+import ProfileModal from './ProfileModal.vue';
+import { ROUTE_ID, ROUTES, type TROUTE } from './routes';
+
+type ExtendedRoute = TROUTE | { id: number; label: string; needCredentials: boolean; url: string };
 
 // ------ Refs ------
 const isMenuOpen = ref(false);
@@ -210,19 +241,19 @@ const isLoginModalOpen = ref(false);
 const isProfileModalOpen = ref(false);
 const isPasswordModalOpen = ref(false);
 const isRankingModalOpen = ref(false);
-const isConfigModalOpen = ref(false);
 const isFavoritesModalOpen = ref(false);
 const activeRoute = ref<number>(ROUTES[0].id);
 
 const profileRoute = computed(() => ({
   id: ROUTE_ID.PROFILE,
-  label: activeProfile.value ? activeProfile.value.name : "Perfil",
+  label: activeProfile.value ? activeProfile.value.name : 'Perfil',
   needCredentials: true,
-  url: "",
+  url: '',
 }));
 
 // ------ Initializations ------
 const activeProfileStore = useActiveProfileStore();
+const configurationStore = useConfigurationStore();
 const userService = new UserService();
 const route = useRoute();
 
@@ -236,6 +267,7 @@ if (matchingRoute) {
 // ------ Computed Properties ------
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 const isLoading = computed(() => activeProfileStore.isLoading);
+const theme = computed(() => configurationStore.theme);
 
 const allRoutes = computed(() => {
   const routes: ExtendedRoute[] = [...ROUTES];
@@ -288,39 +320,34 @@ watch(
 // ------ Functions ------
 function closeMenu() {
   isMenuOpen.value = false;
-  document.body.style.overflow = "";
+  document.body.style.overflow = '';
 }
 
 function getIconClass(routeId: number): string {
   const iconMap: Record<number, string> = {
-    [ROUTE_ID.BET]: "pi pi-money-bill",
-    [ROUTE_ID.EXTRAS]: "pi pi-star",
-    [ROUTE_ID.HOME]: "pi pi-home",
-    [ROUTE_ID.LOGIN]: "pi pi-user",
-    [ROUTE_ID.MATCHES]: "pi pi-list",
-    [ROUTE_ID.PROFILE]: "pi pi-user",
-    [ROUTE_ID.RANKING]: "pi pi-trophy",
-    [ROUTE_ID.RECORDS]: "pi pi-chart-bar",
-    [ROUTE_ID.RULES]: "pi pi-book",
-    [ROUTE_ID.TEAMS]: "pi pi-globe",
+    [ROUTE_ID.BET]: 'pi pi-money-bill',
+    [ROUTE_ID.EXTRAS]: 'pi pi-star',
+    [ROUTE_ID.HOME]: 'pi pi-home',
+    [ROUTE_ID.LOGIN]: 'pi pi-user',
+    [ROUTE_ID.MATCHES]: 'pi pi-list',
+    [ROUTE_ID.PROFILE]: 'pi pi-user',
+    [ROUTE_ID.RANKING]: 'pi pi-trophy',
+    [ROUTE_ID.RECORDS]: 'pi pi-chart-bar',
+    [ROUTE_ID.RULES]: 'pi pi-book',
+    [ROUTE_ID.TEAMS]: 'pi pi-globe',
   };
-  return iconMap[routeId] || "pi pi-circle";
+  return iconMap[routeId] || 'pi pi-circle';
 }
 
 function getUserInitials(name: string): string {
-  if (!name) return "?";
+  if (!name) return '?';
 
-  const parts = name.trim().split(" ");
+  const parts = name.trim().split(' ');
   if (parts.length === 1) {
     return parts[0].substring(0, 2).toUpperCase();
   }
 
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-}
-
-function handleCloseConfigModal() {
-  isConfigModalOpen.value = false;
-  syncActiveRouteWithPath();
 }
 
 function handleCloseFavoritesModal() {
@@ -366,11 +393,7 @@ function handleRouteClick(route: ExtendedRoute, navigate: () => void) {
   closeMenu();
 }
 
-function handleSpecialRoute(
-  event: Event,
-  route: ExtendedRoute,
-  navigate: () => void,
-) {
+function handleSpecialRoute(event: Event, route: ExtendedRoute, navigate: () => void) {
   if (route.needCredentials && !activeProfile.value) {
     closeMenu();
     return;
@@ -389,6 +412,10 @@ function handleSpecialRoute(
   }
 }
 
+function handleThemeConfig(newOption: TThemeValue) {
+  configurationStore.setTheme(newOption);
+}
+
 function syncActiveRouteWithPath() {
   const currentPath = window.location.pathname;
   const matchingRoute = ROUTES.find((route) => route.url === currentPath);
@@ -401,9 +428,9 @@ function toggleMenu() {
   isMenuOpen.value = !isMenuOpen.value;
   // Prevent body scroll when menu is open
   if (isMenuOpen.value) {
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow = 'hidden';
   } else {
-    document.body.style.overflow = "";
+    document.body.style.overflow = '';
   }
 }
 </script>
@@ -477,7 +504,7 @@ function toggleMenu() {
 .telstar-ball {
   width: 32px;
   height: 32px;
-  background: url("/soccer_ball.svg") center center / cover no-repeat;
+  background: url('/soccer_ball.svg') center center / cover no-repeat;
   border-radius: 50%;
   box-shadow:
     0 4px 8px rgb(0 0 0 / 20%),

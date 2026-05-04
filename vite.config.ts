@@ -10,9 +10,7 @@ export default defineConfig({
     vue(),
     vueDevTools(),
     VitePWA({
-      devOptions: {
-        enabled: true,
-      },
+      devOptions: { enabled: true },
       includeAssets: ['favicon.svg', 'robots.txt', 'sitemap.xml'],
       manifest: {
         background_color: '#1b2f42',
@@ -66,11 +64,7 @@ export default defineConfig({
       },
     }),
   ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-    },
-  },
+  resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
   server: {
     // host: '127.0.0.1',
     // host: 'localhost',

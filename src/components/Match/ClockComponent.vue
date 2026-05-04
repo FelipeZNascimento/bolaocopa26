@@ -1,10 +1,19 @@
 <template>
   <div class="left-aligned outer-clock">
-    <RibbonComponent v-if="activeProfile && hitLevel" :hit-level="hitLevel" />
+    <RibbonComponent
+      v-if="activeProfile && hitLevel"
+      :hit-level="hitLevel"
+    />
     <span v-if="isClockStopped">{{ MATCH_STATUS_LABELS[status] }}</span>
     <span v-if="isMatchStarted && !isClockStopped">0' {{ MATCH_STATUS_LABELS[status] }}</span>
-    <span v-if="!isMatchStarted" class="clock-future">
-      <i class="pi pi-clock" style="font-size: var(--m2-font-size)" />
+    <span
+      v-if="!isMatchStarted"
+      class="clock-future"
+    >
+      <i
+        class="pi pi-clock"
+        style="font-size: var(--m2-font-size)"
+      />
       <div class="date">
         <p style="font-weight: bold">
           {{ clockStore.getFormattedDate(timestamp) }}
@@ -17,19 +26,15 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed } from 'vue';
 
-import type { HitLevel } from "@/constants/bets";
+import type { HitLevel } from '@/constants/bets';
 
-import {
-  MATCH_STATUS_LABELS,
-  STOPPED_GAME,
-  type TMatchStatus,
-} from "@/constants/match";
-import { useActiveProfileStore } from "@/stores/activeProfile";
-import { useClockStore } from "@/stores/clock";
+import { MATCH_STATUS_LABELS, STOPPED_GAME, type TMatchStatus } from '@/constants/match';
+import { useActiveProfileStore } from '@/stores/activeProfile';
+import { useClockStore } from '@/stores/clock';
 
-import RibbonComponent from "./RibbonComponent.vue";
+import RibbonComponent from './RibbonComponent.vue';
 
 const props = defineProps<{
   hitLevel?: HitLevel | null;

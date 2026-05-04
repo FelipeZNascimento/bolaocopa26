@@ -21,5 +21,12 @@ export const useActiveProfileStore = defineStore('activeProfile', () => {
     error.value = newError;
   }
 
-  return { activeProfile, error, isLoading, setActiveProfile, setError, setLoading };
+  return {
+    activeProfile,
+    error,
+    isLoading,
+    setActiveProfile,
+    setError,
+    setLoading,
+  };
 });

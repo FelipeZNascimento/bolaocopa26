@@ -9,7 +9,7 @@
  * debounced('test');
  * cancel(); // Cancels the pending execution
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export function createCancellableDebounce<T extends (...args: any[]) => any>(
   func: T,
   delay: number,
@@ -35,7 +35,10 @@ export function createCancellableDebounce<T extends (...args: any[]) => any>(
     }, delay);
   };
 
-  return { cancel, debounced };
+  return {
+    cancel,
+    debounced,
+  };
 }
 
 /**
@@ -48,11 +51,8 @@ export function createCancellableDebounce<T extends (...args: any[]) => any>(
  *
  * debouncedSearch('test'); // Will execute after 300ms of inactivity
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function debounce<T extends (...args: any[]) => any>(
-  func: T,
-  delay: number,
-): (...args: Parameters<T>) => void {
+
+export function debounce<T extends (...args: any[]) => any>(func: T, delay: number): (...args: Parameters<T>) => void {
   let timerId: null | ReturnType<typeof setTimeout> = null;
 
   return function debounced(...args: Parameters<T>): void {

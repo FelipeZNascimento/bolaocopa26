@@ -1,9 +1,12 @@
 <template>
   <div class="outer">
-    <h2 style="text-align: center;">Minhas Apostas</h2>
-    <div style="position: relative; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+    <h2 style="text-align: center">Minhas Apostas</h2>
+    <div style="position: relative; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center">
       <!-- Overlay spinner when updating -->
-      <div v-if="isLoadingExtras || isLoadingTeams || isUpdatingExtras" class="update-overlay">
+      <div
+        v-if="isLoadingExtras || isLoadingTeams || isUpdatingExtras"
+        class="update-overlay"
+      >
         <PrimeProgressSpinner
           style="width: 50px; height: 50px"
           strokeWidth="4"
@@ -20,14 +23,20 @@
           {{ option.label }}
         </div>
 
-        <div class="flag-container" v-if="option.selectedTeam">
+        <div
+          v-if="option.selectedTeam"
+          class="flag-container"
+        >
           <img
             :src="`https://assets.omegafox.me/copa/countries_flags/${option.selectedTeam?.isoCode.toLowerCase()}.png`"
             :alt="`${option.selectedTeam?.name} Flag`"
             class="team-flag"
           />
         </div>
-        <div class="team-name" v-if="option.selectedTeam">
+        <div
+          v-if="option.selectedTeam"
+          class="team-name"
+        >
           {{ option.selectedTeam?.name }}
         </div>
       </div>
@@ -40,15 +49,27 @@
         :label="item.label"
         variant="outlined"
         size="small"
-        :severity="
-          selectedToggle.value === item.value ? 'primary' : 'secondary'
-        "
-        @click="selectedToggle.value = item.value"
+        :severity="selectedToggle.value === item.value ? 'primary' : 'secondary'"
         rounded
+        @click="selectedToggle.value = item.value"
       />
     </div>
     <h2>{{ currentSelectedToggle?.label }}</h2>
-    <div class="teams-grid" v-if="currentSelectedToggle?.value != EXTRA_BETS_VALUES.TOP_SCORER && currentSelectedToggle?.value != EXTRA_BETS_VALUES.BEST_PLAYER">
+    <h3
+      v-if="
+        currentSelectedToggle?.value === EXTRA_BETS_VALUES.DEFENSE ||
+        currentSelectedToggle?.value === EXTRA_BETS_VALUES.OFFENSE
+      "
+    >
+      Oi
+    </h3>
+    <div
+      v-if="
+        currentSelectedToggle?.value != EXTRA_BETS_VALUES.TOP_SCORER &&
+        currentSelectedToggle?.value != EXTRA_BETS_VALUES.BEST_PLAYER
+      "
+      class="teams-grid"
+    >
       <div
         v-for="team in teams"
         :key="team.id"
@@ -68,6 +89,11 @@
         </div>
       </div>
     </div>
+    <div v-else>
+      <p style="color: var(--bolao-c-grey1-t2); text-align: center">
+        Essa aposta estará disponível assim que as escalações de todas as seleções forem divulgadas!
+      </p>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -75,7 +101,12 @@ import { computed, onMounted, ref, watch } from 'vue';
 
 import type { IPlayer, ITeam } from '@/stores/teams.types';
 
-import { EXTRA_BETS_LABELS, EXTRA_BETS_VALUES, type TEXTRA_BETS_LABELS, type TEXTRA_BETS_VALUES } from '@/constants/bets';
+import {
+  EXTRA_BETS_LABELS,
+  EXTRA_BETS_VALUES,
+  type TEXTRA_BETS_LABELS,
+  type TEXTRA_BETS_VALUES,
+} from '@/constants/bets';
 import ExtraBetService from '@/services/extra_bet';
 import TeamService from '@/services/team';
 import { useExtraBetStore } from '@/stores/extraBet';
@@ -139,10 +170,10 @@ const isLoadingExtras = computed(() => extraBetStore.isLoading);
 const isUpdatingExtras = computed(() => extraBetStore.isUpdating);
 const activeProfileBets = computed(() => extraBetStore.activeProfileBets);
 const isLoadingTeams = computed(() => teamsStore.isLoading);
-const teams = computed(() => teamsStore.teams.filter(team => team.id !== 33)); // Filter out placeholder team
-const currentSelectedToggle = computed(() => buttonOptions.value.find(
-  (option) => option.value === selectedToggle.value.value,
-));
+const teams = computed(() => teamsStore.teams.filter((team) => team.id !== 33)); // Filter out placeholder team
+const currentSelectedToggle = computed(() =>
+  buttonOptions.value.find((option) => option.value === selectedToggle.value.value),
+);
 
 // ------ Initialization ------
 teamsService.fetch();
@@ -161,9 +192,13 @@ function initializeButtonOptions() {
 }
 
 // Watch for changes in activeProfileBets to initialize selections
-watch(activeProfileBets, () => {
-  initializeButtonOptions();
-}, { immediate: true });
+watch(
+  activeProfileBets,
+  () => {
+    initializeButtonOptions();
+  },
+  { immediate: true },
+);
 
 onMounted(() => {
   initializeButtonOptions();
@@ -193,7 +228,7 @@ async function handleClick(team: ITeam) {
           extraBetService.fetch();
           notificationStore.success(
             `${currentSelectedToggle.value?.label}: ${currentSelectedToggle.value?.selectedTeam?.name || 'Nenhum'}`,
-            'Aposta feita com sucesso'
+            'Aposta feita com sucesso',
           );
         } else {
           console.error('Failed to update extra bet:', error);
@@ -207,7 +242,6 @@ async function handleClick(team: ITeam) {
     );
   }
 }
-
 </script>
 <style lang="scss" scoped>
 .outer {
@@ -336,5 +370,4 @@ async function handleClick(team: ITeam) {
   border-radius: var(--border-radius);
   backdrop-filter: blur(2px);
 }
-
 </style>

@@ -151,7 +151,7 @@ const countdown = computed(() => {
 });
 
 // Template
-<div>{{ countdown }}</div>
+<div>{{ countdown }}</div>;
 ```
 
 ## Example: Display Match Date and Time
@@ -168,7 +168,9 @@ const matchTime = clockStore.getFormattedTime(match.startTimestamp);
 const roundName = clockStore.getRoundName(match.round);
 
 // Template
-<div>{{ roundName }} - {{ matchDate }} às {{ matchTime }}</div>
+<div>
+  {{ roundName }} - {{ matchDate }} às {{ matchTime }}
+</div>;
 ```
 
 ## Implementation Details

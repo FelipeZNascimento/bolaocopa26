@@ -17,13 +17,13 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed } from 'vue';
 
-import type { IBet, IMatch } from "@/stores/matches.types";
+import type { IBet, IMatch } from '@/stores/matches.types';
 
-import { PENALTIES } from "@/constants/match";
+import { PENALTIES } from '@/constants/match';
 
-import TeamComponent from "./TeamComponent.vue";
+import TeamComponent from './TeamComponent.vue';
 const props = withDefaults(
   defineProps<{
     activeUserBet: IBet | null;
@@ -31,9 +31,7 @@ const props = withDefaults(
     isScoreModalOpen?: boolean;
     match: IMatch;
   }>(),
-  {
-    isScoreModalOpen: false,
-  },
+  { isScoreModalOpen: false },
 );
 
 const isHomeTeamWinning = computed(() => {
@@ -84,6 +82,5 @@ const sortedEvents = computed(() => {
   @media (width <=768px) {
     gap: var(--xs-spacing);
   }
-
 }
 </style>

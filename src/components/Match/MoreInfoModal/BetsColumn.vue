@@ -12,25 +12,41 @@
       {{ HIT_LEVELS_LABELS[props.hitLevel] }}
     </p>
     <!-- Render active user bet first -->
-    <div v-for="bet in activeUserBet" :key="bet.id" class="bets-line active">
-      <NameTag :is-clickable="true" :user="bet.user" :is-short="isMobile" />
+    <div
+      v-for="bet in activeUserBet"
+      :key="bet.id"
+      class="bets-line active"
+    >
+      <NameTag
+        :is-clickable="true"
+        :user="bet.user"
+        :is-short="isMobile"
+      />
       <div class="scores">{{ bet.scoreHome }} x {{ bet.scoreAway }}</div>
     </div>
     <!-- Render remaining bets -->
-    <div v-for="bet in bets" :key="bet.id" class="bets-line">
-      <NameTag :is-clickable="true" :user="bet.user" :is-short="isMobile" />
+    <div
+      v-for="bet in bets"
+      :key="bet.id"
+      class="bets-line"
+    >
+      <NameTag
+        :is-clickable="true"
+        :user="bet.user"
+        :is-short="isMobile"
+      />
       <div class="scores">{{ bet.scoreHome }} x {{ bet.scoreAway }}</div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed } from 'vue';
 
-import type { IBet } from "@/stores/matches.types";
+import type { IBet } from '@/stores/matches.types';
 
-import NameTag from "@/components/NameTag.vue";
-import { HIT_LEVELS_LABELS, type HitLevel } from "@/constants/bets";
-import { useViewport } from "@/services/viewport";
+import NameTag from '@/components/NameTag.vue';
+import { HIT_LEVELS_LABELS, type HitLevel } from '@/constants/bets';
+import { useViewport } from '@/services/viewport';
 
 const props = defineProps<{
   activeUserBet: IBet[];
@@ -42,10 +58,10 @@ const props = defineProps<{
 const { isMobile } = useViewport();
 
 // ------ Computed Properties ------
-const isExactColumn = computed(() => props.hitLevel === "exact");
-const isOneScoreColumn = computed(() => props.hitLevel === "oneScore");
-const isWinnerOnlyColumn = computed(() => props.hitLevel === "winnerOnly");
-const isMissColumn = computed(() => props.hitLevel === "miss");
+const isExactColumn = computed(() => props.hitLevel === 'exact');
+const isOneScoreColumn = computed(() => props.hitLevel === 'oneScore');
+const isWinnerOnlyColumn = computed(() => props.hitLevel === 'winnerOnly');
+const isMissColumn = computed(() => props.hitLevel === 'miss');
 </script>
 
 <style lang="scss" scoped>

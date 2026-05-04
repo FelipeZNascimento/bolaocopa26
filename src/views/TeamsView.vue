@@ -1,14 +1,20 @@
 <template>
   <div class="outer-teams">
     <h1>Equipes</h1>
-    <div v-if="isLoading" style="display: flex; flex-direction: row; gap: var(--l-spacing); align-items: center; width: 100%;">
+    <div
+      v-if="isLoading"
+      style="display: flex; flex-direction: row; gap: var(--l-spacing); align-items: center; width: 100%"
+    >
       <PrimeSkeleton
         v-for="value in 3"
         :key="value"
         class="skeleton-outer"
       />
     </div>
-    <div v-else class="groups-container">
+    <div
+      v-else
+      class="groups-container"
+    >
       <div
         v-for="group in groupedTeams"
         :key="group.groupName"
@@ -37,16 +43,20 @@
     </div>
   </div>
   <!-- Team Details Modal -->
-  <TeamDetailsModal :is-open="isModalOpen" :team="selectedTeam" :handle-close-modal="closeTeamModal" />
+  <TeamDetailsModal
+    :is-open="isModalOpen"
+    :team="selectedTeam"
+    :handle-close-modal="closeTeamModal"
+  />
 </template>
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref } from 'vue';
 
-import type { ITeam } from "@/stores/teams.types";
+import type { ITeam } from '@/stores/teams.types';
 
-import TeamDetailsModal from "@/components/TeamDetailsModal.vue";
-import TeamService from "@/services/team";
-import { useTeamsStore } from "@/stores/teams";
+import TeamDetailsModal from '@/components/TeamDetailsModal.vue';
+import TeamService from '@/services/team';
+import { useTeamsStore } from '@/stores/teams';
 
 // ------ Services & Stores ------
 const teamService = new TeamService();
@@ -66,7 +76,7 @@ const groupedTeams = computed(() => {
 
   // Group teams by their group property
   teams.value.forEach((team) => {
-    if(team.id === 33) {
+    if (team.id === 33) {
       return; // Skip placeholder team
     }
 
@@ -173,7 +183,6 @@ teamService.fetch();
   @media (width <=768px) {
     height: 160px;
     font-size: var(--s-font-size);
-
   }
 
   @media (width <=480px) {
@@ -222,106 +231,198 @@ teamService.fetch();
 
 // Group colors
 .group-a {
-  background: linear-gradient(90deg,
-  color-mix(in srgb, var(--bolao-c-fifa-green1) 15%, transparent) 0%,
-  transparent 100%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-green1) 15%, transparent) 0%,
+    transparent 100%
+  );
 
   .group-header {
-    background: linear-gradient(90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-green1) 15%, transparent) 0%,
-    transparent 100%);
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bolao-c-fifa-green1) 15%, transparent) 0%,
+      transparent 100%
+    );
     border-left: 4px solid var(--bolao-c-fifa-green1);
   }
 }
 
 .group-b {
-  background: linear-gradient(90deg,
-  color-mix(in srgb, var(--bolao-c-fifa-red) 15%, transparent) 0%,
-  transparent 100%);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--bolao-c-fifa-red) 15%, transparent) 0%, transparent 100%);
 
   .group-header {
-    background: linear-gradient(90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-red) 15%, transparent) 0%,
-    transparent 100%);
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bolao-c-fifa-red) 15%, transparent) 0%,
+      transparent 100%
+    );
     border-left: 4px solid var(--bolao-c-fifa-red);
   }
 }
 
 .group-c {
-  background: linear-gradient(90deg,
-  color-mix(in srgb, var(--bolao-c-fifa-yellow) 15%, transparent) 0%,
-  transparent 100%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-yellow) 15%, transparent) 0%,
+    transparent 100%
+  );
 
   .group-header {
-    background: linear-gradient(90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-yellow) 15%, transparent) 0%,
-    transparent 100%);
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bolao-c-fifa-yellow) 15%, transparent) 0%,
+      transparent 100%
+    );
     border-left: 4px solid var(--bolao-c-fifa-yellow);
   }
 }
 
 .group-d {
-  background: linear-gradient(90deg,
-  color-mix(in srgb, var(--bolao-c-fifa-blue) 15%, transparent) 0%,
-  transparent 100%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-blue) 15%, transparent) 0%,
+    transparent 100%
+  );
 
   .group-header {
-    background: linear-gradient(90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-blue) 15%, transparent) 0%,
-    transparent 100%);
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bolao-c-fifa-blue) 15%, transparent) 0%,
+      transparent 100%
+    );
     border-left: 4px solid var(--bolao-c-fifa-blue);
   }
 }
 
 .group-e {
-  background: linear-gradient(90deg,
-  color-mix(in srgb, var(--bolao-c-orange) 15%, transparent) 0%,
-  transparent 100%);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--bolao-c-orange) 15%, transparent) 0%, transparent 100%);
 
   .group-header {
-    background: linear-gradient(90deg,
-    color-mix(in srgb, var(--bolao-c-orange) 15%, transparent) 0%,
-    transparent 100%);
+    background: linear-gradient(90deg, color-mix(in srgb, var(--bolao-c-orange) 15%, transparent) 0%, transparent 100%);
     border-left: 4px solid var(--bolao-c-orange);
   }
 }
 
 .group-f {
-  background: linear-gradient(90deg,
-  color-mix(in srgb, var(--bolao-c-fifa-green2) 15%, transparent) 0%,
-  transparent 100%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-green2) 15%, transparent) 0%,
+    transparent 100%
+  );
 
   .group-header {
-    background: linear-gradient(90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-green2) 15%, transparent) 0%,
-    transparent 100%);
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bolao-c-fifa-green2) 15%, transparent) 0%,
+      transparent 100%
+    );
     border-left: 4px solid var(--bolao-c-fifa-green2);
   }
 }
 
 .group-g {
-  background: linear-gradient(90deg,
-  color-mix(in srgb, var(--bolao-c-fifa-lilac) 15%, transparent) 0%,
-  transparent 100%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-lilac) 15%, transparent) 0%,
+    transparent 100%
+  );
 
   .group-header {
-    background: linear-gradient(90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-lilac) 15%, transparent) 0%,
-    transparent 100%);
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bolao-c-fifa-lilac) 15%, transparent) 0%,
+      transparent 100%
+    );
     border-left: 4px solid var(--bolao-c-fifa-lilac);
   }
 }
 
 .group-h {
-  background: linear-gradient(90deg,
-  color-mix(in srgb, var(--bolao-c-fifa-purple) 15%, transparent) 0%,
-  transparent 100%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-purple) 15%, transparent) 0%,
+    transparent 100%
+  );
 
   .group-header {
-    background: linear-gradient(90deg,
-    color-mix(in srgb, var(--bolao-c-fifa-purple) 15%, transparent) 0%,
-    transparent 100%);
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bolao-c-fifa-purple) 15%, transparent) 0%,
+      transparent 100%
+    );
     border-left: 4px solid var(--bolao-c-fifa-purple);
+  }
+}
+
+.group-i {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-purple) 15%, transparent) 0%,
+    transparent 100%
+  );
+  border-color: var(--bolao-c-fifa-purple);
+
+  .group-header {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bolao-c-fifa-purple) 15%, transparent) 0%,
+      transparent 100%
+    );
+    border-left: 4px solid var(--bolao-c-fifa-purple);
+  }
+}
+
+.group-j {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-lightpink) 15%, transparent) 0%,
+    transparent 100%
+  );
+  border-color: var(--bolao-c-fifa-lightpink);
+
+  .group-header {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bolao-c-fifa-lightpink) 15%, transparent) 0%,
+      transparent 100%
+    );
+    border-left: 4px solid var(--bolao-c-fifa-lightpink);
+  }
+}
+
+.group-k {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
+    transparent 100%
+  );
+  border-color: var(--bolao-c-fifa-pink);
+
+  .group-header {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bolao-c-fifa-pink) 15%, transparent) 0%,
+      transparent 100%
+    );
+    border-left: 4px solid var(--bolao-c-fifa-pink);
+  }
+}
+
+.group-l {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bolao-c-fifa-darkred) 15%, transparent) 0%,
+    transparent 100%
+  );
+  border-color: var(--bolao-c-fifa-darkred);
+
+  .group-header {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bolao-c-fifa-darkred) 15%, transparent) 0%,
+      transparent 100%
+    );
+    border-left: 4px solid var(--bolao-c-fifa-darkred);
   }
 }
 </style>

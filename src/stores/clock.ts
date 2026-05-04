@@ -1,13 +1,11 @@
-import { defineStore } from "pinia";
-import { ref } from "vue";
+import { defineStore } from 'pinia';
+import { ref } from 'vue';
 
-import { ROUNDS } from "@/constants/rounds";
+import { ROUNDS } from '@/constants/rounds';
 
-export const useClockStore = defineStore("clock", () => {
+export const useClockStore = defineStore('clock', () => {
   const currentTime = ref<Date>(new Date());
-  const currentTimestamp = ref<number>(
-    Math.floor(currentTime.value.getTime() / 1000),
-  );
+  const currentTimestamp = ref<number>(Math.floor(currentTime.value.getTime() / 1000));
   let timer: null | number = null;
 
   function startClock() {
@@ -32,9 +30,9 @@ export const useClockStore = defineStore("clock", () => {
   function getFormattedTime(customTimestamp?: number) {
     if (customTimestamp) {
       const customDate = new Date(customTimestamp * 1000);
-      return customDate.toLocaleTimeString("pt-BR", {
-        hour: "2-digit",
-        minute: "2-digit",
+      return customDate.toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
       });
     }
 
@@ -44,9 +42,9 @@ export const useClockStore = defineStore("clock", () => {
   function getFormattedDate(customTimestamp?: number) {
     if (customTimestamp) {
       const customDate = new Date(customTimestamp * 1000);
-      return customDate.toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "2-digit",
+      return customDate.toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
       });
     }
 
@@ -62,7 +60,7 @@ export const useClockStore = defineStore("clock", () => {
     const secondsUntil = targetTimestamp - currentTimestamp.value;
 
     if (secondsUntil <= 0) {
-      return "";
+      return '';
     }
 
     const days = Math.floor(secondsUntil / 86400);
@@ -72,16 +70,16 @@ export const useClockStore = defineStore("clock", () => {
     const parts: string[] = [];
 
     if (days > 0) {
-      parts.push(`${days} ${days === 1 ? "dia" : "dias"}`);
+      parts.push(`${days} ${days === 1 ? 'dia' : 'dias'}`);
     }
     if (hours > 0) {
-      parts.push(`${hours} ${hours === 1 ? "hora" : "horas"}`);
+      parts.push(`${hours} ${hours === 1 ? 'hora' : 'horas'}`);
     }
     if (minutes > 0 || parts.length === 0) {
-      parts.push(`${minutes} ${minutes === 1 ? "minuto" : "minutos"}`);
+      parts.push(`${minutes} ${minutes === 1 ? 'minuto' : 'minutos'}`);
     }
 
-    return parts.join(", ");
+    return parts.join(', ');
   }
 
   return {

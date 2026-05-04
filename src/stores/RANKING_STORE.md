@@ -25,11 +25,15 @@ const rankingStore = useRankingStore();
 
 ```typescript
 // Set season-wide ranking
-const seasonData: IRankingLine[] = [/* ... */];
+const seasonData: IRankingLine[] = [
+  /* ... */
+];
 rankingStore.setSeason(seasonData);
 
 // Set round-by-round rankings
-const roundsData: IRoundRanking[] = [/* ... */];
+const roundsData: IRoundRanking[] = [
+  /* ... */
+];
 rankingStore.setRounds(roundsData);
 ```
 
@@ -151,6 +155,7 @@ Sets the error state for rounds ranking.
 #### `setInitialState()`
 
 Resets all preferences to default values and clears related localStorage entries:
+
 - `columnsOption` → `'complete'`
 - `rowSpacing` → `'small'`
 - Removes: `'ranking-columns'`, `'ranking-spacing'`, `'ranking-position'`
@@ -172,7 +177,7 @@ const error = computed(() => rankingStore.errorSeason);
 async function loadSeasonRanking() {
   rankingStore.setLoadingSeason(true);
   rankingStore.setErrorSeason(null);
-  
+
   try {
     await rankingService.fetchSeason(); // Service handles store updates
   } catch (error) {
@@ -239,11 +244,11 @@ onMounted(() => {
   // Load preferences from localStorage
   const savedColumns = localStorage.getItem('ranking-columns') as TColumnsValue;
   const savedSpacing = localStorage.getItem('ranking-spacing') as TRowSpacingValue;
-  
+
   if (savedColumns) {
     rankingStore.setColumnsOption(savedColumns);
   }
-  
+
   if (savedSpacing) {
     rankingStore.setRowSpacing(savedSpacing);
   }

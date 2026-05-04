@@ -9,26 +9,26 @@
     v-if="!isLoading && activeProfile && !activeProfile.isActive"
     class="not-active"
   >
-    Clique <a href="">aqui</a> para saber como ativar seu perfil e participar do
-    bolão!
+    Clique <a href="">aqui</a> para saber como ativar seu perfil e participar do bolão!
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from "vue";
-import { RouterView } from "vue-router";
+import { computed, onBeforeUnmount, onMounted, watch } from 'vue';
+import { RouterView } from 'vue-router';
 
-import NavbarMobile from "./components/NavbarTop/NavbarMobile.vue";
-import NavbarTop from "./components/NavbarTop/NavbarTop.vue";
-import ExtraBetService from "./services/extra_bet";
-import MatchService from "./services/match";
-import RankingService from "./services/ranking";
-import StartupService from "./services/startup";
-import { useViewport } from "./services/viewport";
-import { useActiveProfileStore } from "./stores/activeProfile";
-import { useClockStore } from "./stores/clock";
-import { useConfigurationStore } from "./stores/configuration";
-import { useExtraBetStore } from "./stores/extraBet";
+import NavbarMobile from './components/NavbarTop/NavbarMobile.vue';
+import NavbarTop from './components/NavbarTop/NavbarTop.vue';
+import ExtraBetService from './services/extra_bet';
+import MatchService from './services/match';
+import RankingService from './services/ranking';
+import StartupService from './services/startup';
+import { useViewport } from './services/viewport';
+import { useActiveProfileStore } from './stores/activeProfile';
+import { useClockStore } from './stores/clock';
+import { useConfigurationStore } from './stores/configuration';
+import { useExtraBetStore } from './stores/extraBet';
+import { useMatchesStore } from './stores/matches';
 
 const startupService = new StartupService();
 const matchService = new MatchService();
@@ -38,6 +38,7 @@ const clockStore = useClockStore();
 const configurationStore = useConfigurationStore();
 const activeProfileStore = useActiveProfileStore();
 const extraBetStore = useExtraBetStore();
+const matchesStore = useMatchesStore();
 const { isMobile } = useViewport();
 
 function initializationCallback(isSuccess: boolean) {
@@ -50,6 +51,22 @@ function initializationCallback(isSuccess: boolean) {
 startupService.initialize(initializationCallback).then(() => {
   clockStore.startClock();
   rankingService.fetch();
+});
+
+// Warn user before closing tab with unsaved changes
+const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+  if (matchesStore.hasAnyChanges()) {
+    event.preventDefault();
+    event.returnValue = ''; // Chrome requires returnValue to be set
+  }
+};
+
+onMounted(() => {
+  window.addEventListener('beforeunload', handleBeforeUnload);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('beforeunload', handleBeforeUnload);
 });
 
 // ------ Computed ------

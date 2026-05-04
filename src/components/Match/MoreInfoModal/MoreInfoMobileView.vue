@@ -2,11 +2,9 @@
   <div class="outer">
     <ClockComponent
       style="width: 100%"
-      :timestamp="match.timestamp"
+      :timestamp="parseInt(match.timestamp, 10)"
       :status="match.status"
-      :clock="
-        match.timestamp ? clockStore.getFormattedTime(match.timestamp) : null
-      "
+      :clock="match.timestamp ? clockStore.getFormattedTime(parseInt(match.timestamp, 10)) : null"
       :hit-level="hitLevel"
       :is-match-started="isMatchStarted"
     />
@@ -27,19 +25,22 @@
       @click="toggleMatchInfo"
     />
   </div>
-  <MoreInfoDetails :match="match" :showMatchInfo="showMatchInfo" />
+  <MoreInfoDetails
+    :match="match"
+    :showMatchInfo="showMatchInfo"
+  />
 </template>
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref } from 'vue';
 
-import type { HitLevel } from "@/constants/bets";
-import type { IMatch } from "@/stores/matches.types";
+import type { HitLevel } from '@/constants/bets';
+import type { IMatch } from '@/stores/matches.types';
 
-import { useClockStore } from "@/stores/clock";
+import { useClockStore } from '@/stores/clock';
 
-import ClockComponent from "../ClockComponent.vue";
-import ScoreComponent from "../ScoreComponent.vue";
-import MoreInfoDetails from "./MoreInfoDetails.vue";
+import ClockComponent from '../ClockComponent.vue';
+import ScoreComponent from '../ScoreComponent.vue';
+import MoreInfoDetails from './MoreInfoDetails.vue';
 
 defineProps<{
   hitLevel: HitLevel | null;
@@ -55,7 +56,6 @@ const clockStore = useClockStore();
 function toggleMatchInfo() {
   showMatchInfo.value = !showMatchInfo.value;
 }
-
 </script>
 <style lang="scss" scoped>
 .outer {
@@ -71,6 +71,4 @@ function toggleMatchInfo() {
   height: var(--match-list-height-mobile);
   border-radius: var(--border-radius) !important;
 }
-
-
 </style>

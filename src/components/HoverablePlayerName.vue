@@ -18,14 +18,14 @@
   </PrimePopover>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref } from 'vue';
 
-import type { IPlayer } from "@/stores/teams.types";
+import type { IPlayer } from '@/stores/teams.types';
 
-import PlayerStickerComponent from "@/components/PlayerStickerComponent.vue";
+import PlayerStickerComponent from '@/components/PlayerStickerComponent.vue';
 defineProps<{
   player: IPlayer;
-  textAlign?: "left" | "right";
+  textAlign?: 'left' | 'right';
 }>();
 
 // ------ Refs ------
