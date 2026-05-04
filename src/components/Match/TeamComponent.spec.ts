@@ -88,6 +88,7 @@ const createMatch = (overrides = {}): IMatch => ({
   awayTeam: createTeam(2, 'Team B', 'AR'),
   bets: [],
   events: [],
+  group: 'A',
   homeTeam: createTeam(1, 'Team A', 'BR'),
   id: 1,
   idFifa: 1,
