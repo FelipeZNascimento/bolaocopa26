@@ -95,12 +95,18 @@
       </p>
     </div>
   </div>
+  <!-- Modals -->
+  <LoginModal
+    :is-open="isLoginModalOpen"
+    :handle-close-modal="handleCloseLoginModal"
+  />
 </template>
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 
 import type { IPlayer, ITeam } from '@/stores/teams.types';
 
+import LoginModal from '@/components/NavbarTop/LoginModal.vue';
 import {
   EXTRA_BETS_LABELS,
   EXTRA_BETS_VALUES,
@@ -109,6 +115,7 @@ import {
 } from '@/constants/bets';
 import ExtraBetService from '@/services/extra_bet';
 import TeamService from '@/services/team';
+import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useExtraBetStore } from '@/stores/extraBet';
 import { useNotificationStore } from '@/stores/notification';
 import { useTeamsStore } from '@/stores/teams';
@@ -127,9 +134,10 @@ const extraBetStore = useExtraBetStore();
 const teamsService = new TeamService();
 const extraBetService = new ExtraBetService();
 const notificationStore = useNotificationStore();
+const activeProfileStore = useActiveProfileStore();
 
 // ------ Refs ------
-// const selectedTeam = ref<ITeam | null>(null);
+const isLoginModalOpen = ref(false);
 const selectedToggle = ref<IToggleOption>({
   label: EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.CHAMPION],
   value: EXTRA_BETS_VALUES.CHAMPION,
@@ -166,6 +174,7 @@ const buttonOptions = ref<IToggleOption[]>([
 ]);
 
 // ------ Computed Properties ------
+const activeProfile = computed(() => activeProfileStore.activeProfile);
 const isLoadingExtras = computed(() => extraBetStore.isLoading);
 const isUpdatingExtras = computed(() => extraBetStore.isUpdating);
 const activeProfileBets = computed(() => extraBetStore.activeProfileBets);
@@ -203,9 +212,13 @@ watch(
 onMounted(() => {
   initializeButtonOptions();
 });
-
 // ------ Functions ------
 async function handleClick(team: ITeam) {
+  if (!activeProfile.value) {
+    isLoginModalOpen.value = true;
+    return;
+  }
+
   if (currentSelectedToggle.value) {
     // Save the previous state for potential rollback
     const previousTeam = currentSelectedToggle.value.selectedTeam;
@@ -241,6 +254,10 @@ async function handleClick(team: ITeam) {
       },
     );
   }
+}
+
+function handleCloseLoginModal() {
+  isLoginModalOpen.value = false;
 }
 </script>
 <style lang="scss" scoped>
