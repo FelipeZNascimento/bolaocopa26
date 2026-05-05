@@ -9,7 +9,7 @@
       <h2 class="group-header">
         {{ group.groupName }}
       </h2>
-      <div class="outer-line">
+      <div class="outer-line grouped">
         <MatchComponent
           v-for="match in group.matches"
           :key="match.id"
@@ -40,12 +40,11 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed } from 'vue';
 
 import type { IMatch } from '@/stores/matches.types';
 
 import MatchComponent from '@/components/Match/MatchComponent.vue';
-import { useViewport } from '@/services/viewport';
 import { useConfigurationStore } from '@/stores/configuration';
 
 const props = withDefaults(
@@ -57,29 +56,8 @@ const props = withDefaults(
   { isTeamClickable: false },
 );
 
-// ------ Refs ------
-const isScrolled = ref(false);
-
 // ------ Initialization ------
-const { isDesktop } = useViewport();
 const configurationStore = useConfigurationStore();
-
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll);
-});
-
-// ------ Functions ------
-const handleScroll = () => {
-  if (!isDesktop) {
-    return;
-  }
-
-  isScrolled.value = window.scrollY > 100;
-};
 
 // ------ Computed Properties ------
 const sortedMatches = computed(() => {
@@ -144,6 +122,14 @@ const groupedMatches = computed(() => {
   @media (width <=768px) {
     gap: var(--xs-spacing);
     padding: var(--xs-spacing);
+  }
+
+  &.grouped {
+    padding: var(--m-spacing);
+
+    @media (width <=768px) {
+      padding: var(--xs-spacing);
+    }
   }
 }
 

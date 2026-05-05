@@ -43,7 +43,11 @@
           min="0"
           max="99"
           class="score-input"
-          :class="{ 'is-loading': isLoadingMatch, 'has-unsaved-changes': hasUnsavedChanges }"
+          :class="{
+            'is-loading': isLoadingMatch,
+            'has-invalid-changes': hasUnsavedChanges && !isBetValid,
+            'has-valid-changes': hasUnsavedChanges && isBetValid,
+          }"
           placeholder="_"
           :readonly="isMatchStarted || !activeProfile || isLoadingMatch"
           :style="{
@@ -182,6 +186,12 @@ const inputValue = computed({
 });
 
 const hasUnsavedChanges = computed(() => matchesStore.hasWorkingBetChanged(props.match.id));
+const isBetValid = computed(
+  () =>
+    hasUnsavedChanges.value &&
+    matchesStore.getWorkingBet(props.match.id)?.scoreHome !== null &&
+    matchesStore.getWorkingBet(props.match.id)?.scoreAway !== null,
+);
 
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 const isMatchStarted = computed(() => {
@@ -245,6 +255,14 @@ function handleInput(event: Event) {
 
 function handleKeydown(event: KeyboardEvent) {
   const target = event.target as HTMLInputElement;
+
+  // Handle Enter key to trigger save
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault();
+    matchesStore.requestSave();
+    target.blur(); // Remove focus from input
+    return;
+  }
 
   // Allow: backspace, delete, tab, escape, enter
   if ([8, 9, 13, 27, 46].includes(event.keyCode)) {
@@ -372,6 +390,7 @@ function openTeamModal(team: ITeam) {
 .team-alias {
   position: relative;
   z-index: 99;
+  max-width: 50%;
   padding: var(--l-spacing);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -439,10 +458,16 @@ function openTeamModal(team: ITeam) {
     opacity: 0.7;
   }
 
-  &.has-unsaved-changes {
-    background: color-mix(in srgb, var(--bolao-c-fifa-yellow), transparent 95%);
-    border-color: var(--bolao-c-fifa-yellow);
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--bolao-c-fifa-yellow), transparent 70%);
+  &.has-valid-changes {
+    background: color-mix(in srgb, var(--bolao-c-mint), transparent 95%);
+    border-color: var(--bolao-c-mint);
+    box-shadow: 0 0 5px 3px color-mix(in srgb, var(--bolao-c-mint), transparent 10%);
+  }
+
+  &.has-invalid-changes {
+    background: color-mix(in srgb, var(--bolao-c-orange), transparent 95%);
+    border-color: var(--bolao-c-orange);
+    box-shadow: 0 0 5px 3px color-mix(in srgb, var(--bolao-c-orange), transparent 10%);
   }
 
   &::-webkit-inner-spin-button,

@@ -20,6 +20,7 @@ export default class RankingService {
     try {
       const rankingResponse = await this.apiRequest.get<IRankingResponse>(`ranking/edition/`);
       this.rankingStore.setLoadingSeason(false);
+      this.rankingStore.setSeasonWithoutExtras(rankingResponse.seasonWithoutExtras);
       this.rankingStore.setSeason(rankingResponse.season);
       this.rankingStore.setRounds(rankingResponse.round);
       this.rankingStore.setErrorSeason(null);

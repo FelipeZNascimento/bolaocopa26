@@ -16,7 +16,10 @@
         />
       </div>
     </div>
-    <RankingComponent v-if="isDesktop && rankingPosition === 'active'" />
+    <RankingComponent
+      v-if="isDesktop && rankingPosition === 'active'"
+      :is-full-page="false"
+    />
   </div>
 </template>
 <script setup lang="ts">

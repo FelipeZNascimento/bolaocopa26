@@ -1,9 +1,10 @@
 <template>
-  <div :class="{ outer: !isModal }">
+  <div class="outer">
     <div class="ranking-container">
       <RankingTable
         column-config="compact"
         row-spacing-config="small"
+        :is-full-page="isFullPage"
       />
     </div>
     <RouterLink
@@ -28,9 +29,9 @@ import RankingTable from './RankingTable.vue';
 
 withDefaults(
   defineProps<{
-    isModal?: boolean;
+    isFullPage?: boolean;
   }>(),
-  { isModal: false },
+  { isFullPage: true },
 );
 
 // ------ Refs ------

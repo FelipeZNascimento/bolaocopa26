@@ -62,6 +62,7 @@ export default class MatchService {
     const { ranking } = JSON.parse(ev.data as string) as {
       ranking: {
         seasonRanking: IRankingLine[];
+        seasonRankingWithoutExtras: IRankingLine[];
         weeklyRanking: IRoundRanking[];
       };
     };
@@ -73,6 +74,7 @@ export default class MatchService {
     // }
 
     const rankingStore = useRankingStore();
+    rankingStore.setSeasonWithoutExtras(ranking.seasonRankingWithoutExtras);
     rankingStore.setSeason(ranking.seasonRanking);
     rankingStore.setRounds(ranking.weeklyRanking);
   }

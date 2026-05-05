@@ -15,6 +15,7 @@ export const useRankingStore = defineStore('ranking', () => {
   const errorRounds = ref<Error | null>(null);
   const errorSeason = ref<Error | null>(null);
   const seasonRanking = ref<IRankingLine[]>([]);
+  const seasonRankingWithoutExtras = ref<IRankingLine[]>([]);
   const roundsRanking = ref<IRoundRanking[]>([]);
   const columnsOption = ref<TColumnsValue>(initialState.columnsOption);
   const rowSpacing = ref<TRowSpacingValue>(initialState.rowSpacing);
@@ -25,6 +26,10 @@ export const useRankingStore = defineStore('ranking', () => {
     localStorage.removeItem('ranking-columns');
     localStorage.removeItem('ranking-spacing');
     localStorage.removeItem('ranking-position');
+  }
+
+  function setSeasonWithoutExtras(newSeasonRanking: IRankingLine[]) {
+    seasonRankingWithoutExtras.value = Array.isArray(newSeasonRanking) ? newSeasonRanking : [];
   }
 
   function setSeason(newSeasonRanking: IRankingLine[]) {
@@ -70,6 +75,7 @@ export const useRankingStore = defineStore('ranking', () => {
     roundsRanking,
     rowSpacing,
     seasonRanking,
+    seasonRankingWithoutExtras,
     setColumnsOption,
     setErrorRounds,
     setErrorSeason,
@@ -79,5 +85,6 @@ export const useRankingStore = defineStore('ranking', () => {
     setRounds,
     setRowSpacing,
     setSeason,
+    setSeasonWithoutExtras,
   };
 });

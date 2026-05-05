@@ -6,15 +6,21 @@
           label="Geral"
           class="toggle"
           :class="{ activeToggle: !isRound }"
-          :size="isMobile ? 'small' : 'normal'"
-          @click="isRound = false"
+          size="small"
+          @click="
+            isRound = false;
+            isExtrasActive = true;
+          "
         />
         <PrimeButton
           :label="`Rodada ${selectedRound}`"
           class="toggle"
           :class="{ activeToggle: isRound }"
-          :size="isMobile ? 'small' : 'normal'"
-          @click="isRound = true"
+          size="small"
+          @click="
+            isRound = true;
+            isExtrasActive = null;
+          "
         />
       </PrimeButtonGroup>
       <PrimeButtonGroup>
@@ -23,7 +29,7 @@
           class="toggle"
           icon="pi pi-list"
           :class="{ activeToggle: !showFavoritesOnly }"
-          :size="isMobile ? 'small' : 'normal'"
+          size="small"
           @click="showFavoritesOnly = false"
         />
         <PrimeButton
@@ -31,8 +37,28 @@
           :icon="showFavoritesOnly ? 'pi pi-star-fill' : 'pi pi-star'"
           class="toggle"
           :class="{ activeToggle: showFavoritesOnly }"
-          :size="isMobile ? 'small' : 'normal'"
+          size="small"
           @click="showFavoritesOnly = true"
+        />
+      </PrimeButtonGroup>
+      <PrimeButtonGroup v-if="isDesktop && isFullPage">
+        <PrimeButton
+          label="Com Extras"
+          :disabled="isRound"
+          class="toggle"
+          icon="pi pi-plus"
+          :class="{ activeToggle: isExtrasActive === true }"
+          size="small"
+          @click="isExtrasActive = true"
+        />
+        <PrimeButton
+          label="Sem Extras"
+          :disabled="isRound"
+          icon="pi pi-minus"
+          class="toggle"
+          :class="{ activeToggle: isExtrasActive === false }"
+          size="small"
+          @click="isExtrasActive = false"
         />
       </PrimeButtonGroup>
     </div>
@@ -194,7 +220,7 @@
       </template>
     </PrimeColumn>
     <PrimeColumn
-      v-if="columnConfig === 'complete'"
+      v-if="columnConfig === 'complete' && isExtrasActive && !isRound"
       field="score.extras.points"
       style="text-align: center"
       sortable
@@ -260,17 +286,21 @@ import { useRankingStore } from '@/stores/ranking';
 
 import UserTrackingModal from '../UserTrackingModal.vue';
 import EmptyFavorites from './EmptyFavorites.vue';
-
-defineProps<{
-  columnConfig: TColumnsValue;
-  rowSpacingConfig: TRowSpacingValue;
-}>();
+withDefaults(
+  defineProps<{
+    columnConfig: TColumnsValue;
+    isFullPage?: boolean;
+    rowSpacingConfig: TRowSpacingValue;
+  }>(),
+  { isFullPage: true },
+);
 
 // ------ Refs ------
 const isUserTrackingModalOpen = ref<boolean>(false);
 const selectedUser = ref<IUser | null>(null);
 const isRound = ref(false);
 const showFavoritesOnly = ref(false);
+const isExtrasActive = ref<boolean | null>(false);
 const isFavoritesModalOpen = ref(false);
 
 // ------ Initialization ------
@@ -278,7 +308,7 @@ const userService = new UserService();
 const configurationStore = useConfigurationStore();
 const rankingStore = useRankingStore();
 const activeProfileStore = useActiveProfileStore();
-const { isDesktop, isMobile } = useViewport();
+const { isDesktop } = useViewport();
 
 // ------ Computed Properties ------
 const activeProfile = computed(() => activeProfileStore.activeProfile);
@@ -294,11 +324,12 @@ const selectedRoundRanking = computed(
   () => rankingStore.roundsRanking?.find((roundRanking) => roundRanking.round === selectedRound.value)?.ranking || [],
 );
 const selectedRanking = computed(() => (isRound.value ? selectedRoundRanking.value : seasonRanking.value));
+const seasonRankingWithoutExtras = computed(() => rankingStore.seasonRankingWithoutExtras);
 const selectedRound = computed(() => configurationStore.selectedRound);
 
 const filteredRankingData = computed(() => {
   if (!showFavoritesOnly.value) {
-    return selectedRanking.value;
+    return isExtrasActive.value ? seasonRankingWithoutExtras.value : selectedRanking.value;
   }
 
   if (showFavoritesOnly.value && favorites.value.length === 0) {

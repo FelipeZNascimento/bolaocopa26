@@ -18,6 +18,9 @@ export const useMatchesStore = defineStore('matches', () => {
   const workingBets = ref<Map<number, IWorkingBet>>(new Map());
   const originalBets = ref<IBet[]>([]);
 
+  // Save trigger for keyboard shortcuts
+  const saveTrigger = ref<number>(0);
+
   function resetLoggedUserBets() {
     matches.value.forEach((match) => {
       match.loggedUserBets = null;
@@ -71,11 +74,7 @@ export const useMatchesStore = defineStore('matches', () => {
     const working = workingBets.value.get(matchId);
     const original = originalBets.value.find((b) => b?.matchId === matchId);
 
-    if (!working && !original) {
-      return false;
-    }
-
-    if (!working && original) {
+    if (!working) {
       return false;
     }
 
@@ -107,6 +106,11 @@ export const useMatchesStore = defineStore('matches', () => {
   function commitWorkingBets() {
     // Update original bets to match working bets
     workingBets.value.forEach((working, matchId) => {
+      if (working.scoreAway === null || working.scoreHome === null) {
+        // If either score is null, do not save this bet
+        return;
+      }
+
       const originalIndex = originalBets.value.findIndex((b) => b?.matchId === matchId);
 
       if (originalIndex !== -1) {
@@ -128,6 +132,11 @@ export const useMatchesStore = defineStore('matches', () => {
     // Also update the matches' loggedUserBets
     matches.value.forEach((match) => {
       const working = workingBets.value.get(match.id);
+      if (working?.scoreAway === null || working?.scoreHome === null) {
+        // If either score is null, do not save this bet
+        return;
+      }
+
       if (working && match.loggedUserBets) {
         match.loggedUserBets.scoreHome = working.scoreHome;
         match.loggedUserBets.scoreAway = working.scoreAway;
@@ -148,22 +157,6 @@ export const useMatchesStore = defineStore('matches', () => {
     });
   }
 
-  // function updateMatches(updatedMatches: IMatch[]) {
-  //   updatedMatches.forEach((updatedMatch) => {
-  //     const index = matches.value.findIndex((m) => m.id === updatedMatch.id);
-  //     if (index !== -1) {
-  //       matches.value[index].away.possession = updatedMatch.away.possession;
-  //       matches.value[index].away.score = updatedMatch.away.score;
-  //       matches.value[index].home.possession = updatedMatch.home.possession;
-  //       matches.value[index].home.score = updatedMatch.home.score;
-  //       matches.value[index].status = updatedMatch.status;
-  //       matches.value[index].overUnder = updatedMatch.overUnder;
-  //       matches.value[index].homeTeamOdds = updatedMatch.homeTeamOdds;
-  //       matches.value[index].bets = updatedMatch.bets;
-  //     }
-  //   });
-  // }
-
   function setUpdatingMatch(loadingState: boolean, matchId: null | number) {
     if (loadingState && matchId !== null) {
       updatingMatches.value.push(matchId);
@@ -183,6 +176,10 @@ export const useMatchesStore = defineStore('matches', () => {
     error.value = newError;
   }
 
+  function requestSave() {
+    saveTrigger.value++;
+  }
+
   return {
     commitWorkingBets,
     error,
@@ -193,8 +190,10 @@ export const useMatchesStore = defineStore('matches', () => {
     isLoading,
     matches,
     originalBets,
+    requestSave,
     resetLoggedUserBets,
     resetWorkingBets,
+    saveTrigger,
     setError,
     setLoading,
     setMatches,

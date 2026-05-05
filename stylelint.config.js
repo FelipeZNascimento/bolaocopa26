@@ -6,8 +6,11 @@ export default {
     // Enforce consistent indentation
     '@stylistic/indentation': 2,
 
+    // Allow both short and long hex colors (#fff or #ffffff)
+    'color-hex-length': null,
     // Allow unknown CSS variables and functions
     'function-no-unknown': null,
+
     // Allow empty sources (e.g., <style> blocks with just imports)
     'no-empty-source': null,
 
