@@ -124,7 +124,10 @@
     >
       <template #header>
         <div class="flexHeader">
-          <i class="pi pi-trophy" />
+          <i
+            class="pi pi-trophy"
+            style="color: var(--bolao-c-gold-l2)"
+          />
           Acerto
         </div>
       </template>
@@ -137,7 +140,10 @@
     >
       <template #header>
         <div class="flexHeader">
-          <i class="pi pi-verified" />
+          <i
+            class="pi pi-verified"
+            style="color: var(--bolao-c-green-l3)"
+          />
           Parcial
         </div>
       </template>
@@ -150,7 +156,10 @@
     >
       <template #header>
         <div class="flexHeader">
-          <i class="pi pi-check-circle" />
+          <i
+            class="pi pi-check-circle"
+            style="color: var(--bolao-c-blue-l2)"
+          />
           Mínimo
         </div>
       </template>
@@ -163,7 +172,10 @@
     >
       <template #header>
         <div class="flexHeader">
-          <i class="pi pi-times" />
+          <i
+            class="pi pi-times"
+            style="color: var(--bolao-c-red-l2)"
+          />
           Erros
         </div>
       </template>
@@ -402,7 +414,8 @@ function isActiveProfile(userId: number): boolean {
 
 .prime-data-table {
   display: flex;
-  flex: 1;
+
+  // flex: 1;
   flex-direction: column;
   width: 100%;
   height: unset;
@@ -562,6 +575,7 @@ function isActiveProfile(userId: number): boolean {
 }
 
 .flexHeader {
+  position: relative;
   display: flex;
   gap: var(--xs-spacing);
   align-items: center;
