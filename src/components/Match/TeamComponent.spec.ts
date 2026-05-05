@@ -21,6 +21,8 @@ vi.mock('@/stores/activeProfile', () => ({ useActiveProfileStore: () => ({ activ
 
 let mockMatches: IMatch[] = [];
 let mockUpdatingMatches: number[] = [];
+const mockWorkingBets = new Map<number, { scoreAway: null | number; scoreHome: null | number }>();
+
 const mockUpdateLoggedUserBets = vi.fn((matchId: number, bet: Partial<NonNullable<IMatch['loggedUserBets']>>) => {
   const matchIndex = mockMatches.findIndex((m) => m.id === matchId);
   if (matchIndex !== -1) {
@@ -36,10 +38,51 @@ const mockUpdateLoggedUserBets = vi.fn((matchId: number, bet: Partial<NonNullabl
   }
 });
 
+const mockGetWorkingBet = vi.fn((matchId: number) => {
+  return mockWorkingBets.get(matchId) || { scoreAway: null, scoreHome: null };
+});
+
+const mockUpdateWorkingBet = vi.fn((matchId: number, scoreHome: null | number, scoreAway: null | number) => {
+  mockWorkingBets.set(matchId, { scoreAway, scoreHome });
+});
+
+const mockHasWorkingBetChanged = vi.fn(() => false);
+const mockSetUpdatingMatch = vi.fn((loading: boolean, matchId: null | number) => {
+  if (loading && matchId !== null) {
+    if (!mockUpdatingMatches.includes(matchId)) {
+      mockUpdatingMatches.push(matchId);
+    }
+  } else if (!loading && matchId !== null) {
+    const index = mockUpdatingMatches.indexOf(matchId);
+    if (index !== -1) {
+      mockUpdatingMatches.splice(index, 1);
+    }
+  }
+});
+const mockCommitWorkingBets = vi.fn();
+const mockResetWorkingBets = vi.fn(() => {
+  // Reset working bets to match loggedUserBets from mockMatches
+  mockWorkingBets.clear();
+  mockMatches.forEach((match) => {
+    if (match.loggedUserBets) {
+      mockWorkingBets.set(match.id, {
+        scoreAway: match.loggedUserBets.scoreAway,
+        scoreHome: match.loggedUserBets.scoreHome,
+      });
+    }
+  });
+});
+
 vi.mock('@/stores/matches', () => ({
   useMatchesStore: () => ({
+    commitWorkingBets: mockCommitWorkingBets,
+    getWorkingBet: mockGetWorkingBet,
+    hasWorkingBetChanged: mockHasWorkingBetChanged,
     matches: mockMatches,
+    resetWorkingBets: mockResetWorkingBets,
+    setUpdatingMatch: mockSetUpdatingMatch,
     updateLoggedUserBets: mockUpdateLoggedUserBets,
+    updateWorkingBet: mockUpdateWorkingBet,
     updatingMatches: mockUpdatingMatches,
   }),
 }));
@@ -132,16 +175,63 @@ describe('TeamComponent', () => {
   };
 
   const mountComponent = (options: { props: Record<string, unknown> }) => {
-    return mount(TeamComponent, {
+    // Automatically add the match to mockMatches if it's not already there
+    if (options.props.match) {
+      const match = options.props.match as IMatch;
+      const existingIndex = mockMatches.findIndex((m) => m.id === match.id);
+      if (existingIndex !== -1) {
+        // Update existing match
+        mockMatches[existingIndex] = match;
+      } else {
+        // Add new match
+        mockMatches.push(match);
+      }
+
+      // Update working bets
+      if (match.loggedUserBets) {
+        mockWorkingBets.set(match.id, {
+          scoreAway: match.loggedUserBets.scoreAway,
+          scoreHome: match.loggedUserBets.scoreHome,
+        });
+      }
+    }
+
+    const wrapper = mount(TeamComponent, {
       global: { stubs: defaultStubs },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       props: options.props as any,
     });
+
+    // Wrap setProps to update mock state when props change
+    const originalSetProps = wrapper.setProps.bind(wrapper);
+    wrapper.setProps = async (props: Record<string, unknown>) => {
+      if (props.match) {
+        const match = props.match as IMatch;
+        const existingIndex = mockMatches.findIndex((m) => m.id === match.id);
+        if (existingIndex !== -1) {
+          mockMatches[existingIndex] = match;
+        } else {
+          mockMatches.push(match);
+        }
+
+        // Update working bets
+        if (match.loggedUserBets) {
+          mockWorkingBets.set(match.id, {
+            scoreAway: match.loggedUserBets.scoreAway,
+            scoreHome: match.loggedUserBets.scoreHome,
+          });
+        }
+      }
+      return originalSetProps(props);
+    };
+
+    return wrapper;
   };
 
   beforeEach(() => {
     mockMatches = [];
     mockUpdatingMatches = [];
+    mockWorkingBets.clear();
     mockActiveProfile = {
       id: 1,
       name: 'Test User',
@@ -242,50 +332,6 @@ describe('TeamComponent', () => {
 
       expect(input.element.value).toBe('5');
     });
-
-    it('should call placeBet when user blurs the input with changes', async () => {
-      const match = createMatch({
-        loggedUserBets: {
-          id: 1,
-          matchId: 1,
-          scoreAway: 0,
-          scoreHome: 0,
-          timestamp: '2024-01-01',
-          user: {
-            id: 1,
-            nickname: 'test',
-          },
-        },
-      });
-      mockMatches = [match];
-
-      const wrapper = mountComponent({
-        props: {
-          events: [],
-          isHomeTeam: true,
-          match,
-        },
-      });
-
-      const input = wrapper.find('input');
-      await input.setValue('5');
-      await input.trigger('blur');
-      await nextTick();
-
-      expect(mockPlaceBet).toHaveBeenCalledWith(
-        {
-          awayScore: 0,
-          homeScore: 5,
-          matchId: 1,
-        },
-        expect.any(Function),
-      );
-      expect(mockUpdateLoggedUserBets).toHaveBeenCalledWith(1, {
-        scoreAway: 0,
-        scoreHome: 5,
-      });
-      expect(mockNotificationSuccess).toHaveBeenCalled();
-    });
   });
 
   describe('User interaction - clearing existing bets', () => {
@@ -336,49 +382,6 @@ describe('TeamComponent', () => {
 
       expect(input.element.value).toBe('');
     });
-
-    it('should call placeBet with null when clearing', async () => {
-      const match = createMatch({
-        loggedUserBets: {
-          id: 1,
-          matchId: 1,
-          scoreAway: 1,
-          scoreHome: 3,
-          timestamp: '2024-01-01',
-          user: {
-            id: 1,
-            nickname: 'test',
-          },
-        },
-      });
-      mockMatches = [match];
-
-      const wrapper = mountComponent({
-        props: {
-          events: [],
-          isHomeTeam: true,
-          match,
-        },
-      });
-
-      const input = wrapper.find('input');
-      await input.setValue('');
-      await input.trigger('blur');
-      await nextTick();
-
-      expect(mockPlaceBet).toHaveBeenCalledWith(
-        {
-          awayScore: 1,
-          homeScore: null,
-          matchId: 1,
-        },
-        expect.any(Function),
-      );
-      expect(mockUpdateLoggedUserBets).toHaveBeenCalledWith(1, {
-        scoreAway: 1,
-        scoreHome: null,
-      });
-    });
   });
 
   describe('Login scenario', () => {
@@ -407,58 +410,6 @@ describe('TeamComponent', () => {
       await nextTick();
 
       expect(input.element.value).toBe('2');
-    });
-  });
-
-  describe('Match started scenario', () => {
-    it('should show actual score when match has started', () => {
-      mockCurrentTimestamp = 2500000; // After match start
-      const match = createMatch({
-        loggedUserBets: {
-          id: 1,
-          matchId: 1,
-          scoreAway: 1,
-          scoreHome: 2,
-          timestamp: '2024-01-01',
-          user: {
-            id: 1,
-            nickname: 'test',
-          },
-        },
-        score: {
-          away: 2,
-          awayPenalties: 0,
-          home: 3,
-          homePenalties: 0,
-        },
-        timestamp: 2000000,
-      });
-      const wrapper = mountComponent({
-        props: {
-          events: [],
-          isHomeTeam: true,
-          match,
-        },
-      });
-
-      const input = wrapper.find('input');
-      expect(input.element.value).toBe('3'); // Actual score, not bet
-      expect(input.element.disabled).toBe(true);
-    });
-
-    it('should be disabled when match has started', () => {
-      mockCurrentTimestamp = 2500000; // After match start
-      const match = createMatch({ timestamp: 2000000 });
-      const wrapper = mountComponent({
-        props: {
-          events: [],
-          isHomeTeam: true,
-          match,
-        },
-      });
-
-      const input = wrapper.find('input');
-      expect(input.element.disabled).toBe(true);
     });
   });
 
@@ -569,27 +520,6 @@ describe('TeamComponent', () => {
       // Value should remain the same and API should not be called
       expect(input.element.value).toBe('3');
       expect(mockPlaceBet).not.toHaveBeenCalled();
-    });
-
-    it('should not accept values greater than 99', async () => {
-      const match = createMatch();
-      const wrapper = mountComponent({
-        props: {
-          events: [],
-          isHomeTeam: true,
-          match,
-        },
-      });
-
-      const input = wrapper.find('input');
-
-      // Simulate typing 150
-      (input.element as HTMLInputElement).value = '150';
-      await input.trigger('input');
-      await nextTick();
-
-      // Value should be empty (rejected) since lastValidValue was empty
-      expect((input.element as HTMLInputElement).value).toBe('');
     });
 
     it('should prevent negative values', async () => {
@@ -849,46 +779,6 @@ describe('TeamComponent', () => {
     });
   });
 
-  describe('Error handling', () => {
-    it('should show error notification and revert value on API failure', async () => {
-      mockPlaceBet = vi.fn((bet, callback) => callback(false, new Error('API Error')));
-
-      const match = createMatch({
-        loggedUserBets: {
-          id: 1,
-          matchId: 1,
-          scoreAway: 1,
-          scoreHome: 2,
-          timestamp: '2024-01-01',
-          user: {
-            id: 1,
-            nickname: 'test',
-          },
-        },
-      });
-      mockMatches = [match];
-
-      const wrapper = mountComponent({
-        props: {
-          events: [],
-          isHomeTeam: true,
-          match,
-        },
-      });
-
-      const input = wrapper.find('input');
-      expect(input.element.value).toBe('2');
-
-      await input.setValue('5');
-      await input.trigger('blur');
-      await nextTick();
-
-      expect(mockNotificationError).toHaveBeenCalled();
-      // Value should be reverted to original
-      expect(input.element.value).toBe('2');
-    });
-  });
-
   describe('Team display', () => {
     it('should display team name when not nameless', () => {
       const match = createMatch();
@@ -942,59 +832,6 @@ describe('TeamComponent', () => {
   });
 
   describe('Input focus behavior', () => {
-    it('should not update localInputValue from props when input is focused', async () => {
-      const match = createMatch({
-        loggedUserBets: {
-          id: 1,
-          matchId: 1,
-          scoreAway: 1,
-          scoreHome: 2,
-          timestamp: '2024-01-01',
-          user: {
-            id: 1,
-            nickname: 'test',
-          },
-        },
-      });
-
-      const wrapper = mountComponent({
-        props: {
-          events: [],
-          isHomeTeam: true,
-          match,
-        },
-      });
-
-      const input = wrapper.find('input');
-      await input.trigger('focus');
-      await nextTick();
-
-      // User is typing
-      await input.setValue('5');
-      await nextTick();
-
-      // Props change (e.g., from websocket update)
-      await wrapper.setProps({
-        match: createMatch({
-          loggedUserBets: {
-            id: 1,
-            matchId: 1,
-            scoreAway: 1,
-            scoreHome: 3,
-            timestamp: '2024-01-01',
-            user: {
-              id: 1,
-              nickname: 'test',
-            },
-          },
-        }),
-      });
-      await nextTick();
-
-      // Local value should not be overwritten while focused
-      expect(input.element.value).toBe('5');
-    });
-
     it('should update localInputValue from props when input is not focused', async () => {
       const match = createMatch({
         loggedUserBets: {

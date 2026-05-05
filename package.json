@@ -13,6 +13,7 @@
     "test:unit": "vitest",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
+    "test": "npm run type-check && vitest run",
     "lint": "npm run format && npm run lint:js && npm run lint:style",
     "lint:js": "eslint . --fix",
     "lint:style": "stylelint '**/*.{vue,css,scss}' --fix",

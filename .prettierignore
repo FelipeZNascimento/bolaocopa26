@@ -1,1 +1,17 @@
+# Build outputs
 dist
+dist-ssr
+coverage
+dev-dist
+
+# Don't format SCSS files - let Stylelint handle them to preserve color format preferences
+*.scss
+
+# Dependencies
+node_modules
+
+# Lock files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
