@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-import type { TRankingPositionValue, TThemeValue } from './configuration.types';
+import type { TMatchListSorting, TRankingPositionValue, TThemeValue } from './configuration.types';
 
 const initialState = {
+  matchListSorting: 'group' as TMatchListSorting,
   rankingPosition: 'active' as TRankingPositionValue,
   theme: 'dark' as TThemeValue,
 };
@@ -16,11 +17,13 @@ export const useConfigurationStore = defineStore('configuration', () => {
   const isLoading = ref<boolean>(true);
   const error = ref<Error | null>(null);
   const theme = ref<TThemeValue>(initialState.theme);
+  const matchListSorting = ref<TMatchListSorting>(initialState.matchListSorting);
   const rankingPosition = ref<TRankingPositionValue>(initialState.rankingPosition);
 
   function setInitialState() {
     theme.value = initialState.theme;
     rankingPosition.value = initialState.rankingPosition;
+    matchListSorting.value = initialState.matchListSorting;
     localStorage.removeItem('ranking-columns');
     localStorage.removeItem('theme-preference');
     localStorage.removeItem('ranking-position');
@@ -35,7 +38,6 @@ export const useConfigurationStore = defineStore('configuration', () => {
   }
 
   function setTheme(newTheme: TThemeValue) {
-    console.log('Setting theme to', newTheme);
     theme.value = newTheme;
     document.documentElement.setAttribute('data-theme', newTheme);
     if (newTheme === 'light') {
@@ -47,7 +49,9 @@ export const useConfigurationStore = defineStore('configuration', () => {
   }
 
   function setRankingPosition(newValue: TRankingPositionValue) {
+    console.log('Setting ranking position to:', newValue);
     rankingPosition.value = newValue;
+    document.documentElement.setAttribute('ranking-position', newValue);
     localStorage.setItem('ranking-position', newValue);
   }
 
@@ -71,6 +75,11 @@ export const useConfigurationStore = defineStore('configuration', () => {
     error.value = newError;
   }
 
+  function setMatchListSorting(newSorting: TMatchListSorting) {
+    matchListSorting.value = newSorting;
+    localStorage.setItem('match-list-sorting', newSorting);
+  }
+
   return {
     currentEdition,
     currentRound,
@@ -78,6 +87,7 @@ export const useConfigurationStore = defineStore('configuration', () => {
     error,
     isDarkMode,
     isLoading,
+    matchListSorting,
     rankingPosition,
     selectedRound,
     setCurrentEdition,
@@ -86,6 +96,7 @@ export const useConfigurationStore = defineStore('configuration', () => {
     setError,
     setInitialState,
     setLoading,
+    setMatchListSorting,
     setRankingPosition,
     setSelectedRound,
     setTheme,

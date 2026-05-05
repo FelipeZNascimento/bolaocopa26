@@ -47,14 +47,14 @@
 
     <button
       v-if="selectedRound === 1 || selectedRound === 2 || selectedRound === 3"
-      v-tooltip.right="groupToggleState ? 'Por horário' : 'Por grupos'"
+      v-tooltip.right="matchListSorting === 'group' ? 'Por horário' : 'Por grupos'"
       class="action-btn"
-      :class="{ active: groupToggleState }"
-      :aria-label="groupToggleState ? 'Desagrupar times' : 'Agrupar por grupos'"
-      :title="groupToggleState ? 'Desagrupar times' : 'Agrupar por grupos'"
+      :class="{ active: matchListSorting === 'group' }"
+      :aria-label="matchListSorting === 'group' ? 'Desagrupar times' : 'Agrupar por grupos'"
+      :title="matchListSorting === 'group' ? 'Desagrupar times' : 'Agrupar por grupos'"
       @click="handleListToggle"
     >
-      <i :class="groupToggleState ? 'pi pi-objects-column' : 'pi pi-list'" />
+      <i :class="matchListSorting === 'group' ? 'pi pi-objects-column' : 'pi pi-list'" />
     </button>
   </div>
 </template>
@@ -67,9 +67,7 @@ import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
 import { useNotificationStore } from '@/stores/notification';
 
-const props = defineProps<{
-  groupToggleState: boolean;
-  onToggleGroupView: () => void;
+defineProps<{
   selectedRound: null | number;
 }>();
 
@@ -86,6 +84,7 @@ const { isDesktop } = useViewport();
 
 // ------ Computed Properties ------
 const rankingPosition = computed(() => configurationStore.rankingPosition);
+const matchListSorting = computed(() => configurationStore.matchListSorting);
 const hasChanges = computed(() => matchesStore.hasAnyChanges());
 
 // ------ Functions ------
@@ -140,7 +139,8 @@ const handleHideRanking = () => {
 };
 
 const handleListToggle = () => {
-  props.onToggleGroupView();
+  const newOption = matchListSorting.value === 'group' ? 'time' : 'group';
+  configurationStore.setMatchListSorting(newOption);
 };
 </script>
 <style scoped lang="scss">

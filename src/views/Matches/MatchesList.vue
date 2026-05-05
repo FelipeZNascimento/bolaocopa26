@@ -1,9 +1,4 @@
 <template>
-  <FloatingButtons
-    :selectedRound="selectedRound"
-    :groupToggleState="groupToggleState"
-    @toggle-group-view="groupToggleState = !groupToggleState"
-  />
   <template v-if="shouldGroupByGroup">
     <div
       v-for="group in groupedMatches"
@@ -51,7 +46,7 @@ import type { IMatch } from '@/stores/matches.types';
 
 import MatchComponent from '@/components/Match/MatchComponent.vue';
 import { useViewport } from '@/services/viewport';
-import FloatingButtons from '@/views/Matches/FloatingButtons.vue';
+import { useConfigurationStore } from '@/stores/configuration';
 
 const props = withDefaults(
   defineProps<{
@@ -63,11 +58,11 @@ const props = withDefaults(
 );
 
 // ------ Refs ------
-const groupToggleState = ref(true);
 const isScrolled = ref(false);
 
 // ------ Initialization ------
 const { isDesktop } = useViewport();
+const configurationStore = useConfigurationStore();
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
@@ -97,7 +92,7 @@ const sortedMatches = computed(() => {
 const shouldGroupByGroup = computed(() => {
   const round = props.selectedRound;
   const isGroupStage = round === 1 || round === 2 || round === 3;
-  return isGroupStage && groupToggleState.value;
+  return isGroupStage && configurationStore.matchListSorting === 'group';
 });
 
 const roundLabel = computed(() => {
