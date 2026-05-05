@@ -1,4 +1,5 @@
 <template>
+  <FloatingButtons :selectedRound="selectedRound" />
   <div style="display: flex">
     <div class="outer-matches">
       <PaginatorComponent />
@@ -28,6 +29,7 @@ import RankingComponent from '@/components/Ranking/RankingComponent.vue';
 import { useViewport } from '@/services/viewport';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
+import FloatingButtons from '@/views/Matches/FloatingButtons.vue';
 import MatchesList from '@/views/Matches/MatchesList.vue';
 
 // ------ Initialization ------

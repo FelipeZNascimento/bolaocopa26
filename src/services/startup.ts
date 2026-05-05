@@ -1,5 +1,5 @@
 import type { IUser } from '@/stores/activeProfile.types';
-import type { TRankingPositionValue } from '@/stores/configuration.types';
+import type { TMatchListSorting, TRankingPositionValue } from '@/stores/configuration.types';
 import type { ITeam } from '@/stores/teams.types';
 
 import { useActiveProfileStore } from '@/stores/activeProfile';
@@ -78,6 +78,13 @@ export default class StartupService {
   initializeLocalStoragePreferences() {
     const themePreference = localStorage.getItem('theme-preference');
     const rankingPositionPreference = localStorage.getItem('ranking-position') as TRankingPositionValue;
+    const matchListSortingPreference = localStorage.getItem('match-list-sorting') as TMatchListSorting;
+
+    if (matchListSortingPreference) {
+      this.configurationStore.setMatchListSorting(matchListSortingPreference);
+    } else {
+      localStorage.setItem('match-list-sorting', 'group');
+    }
 
     if (rankingPositionPreference) {
       this.configurationStore.setRankingPosition(rankingPositionPreference);
