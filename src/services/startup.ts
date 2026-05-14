@@ -103,8 +103,10 @@ export default class StartupService {
       }
     } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       this.configurationStore.setTheme('dark');
+      document.documentElement.classList.add('dark-mode');
     } else {
       this.configurationStore.setTheme('light');
+      document.documentElement.classList.remove('dark-mode');
     }
   }
 }

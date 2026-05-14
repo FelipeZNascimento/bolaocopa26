@@ -300,7 +300,7 @@ const isUserTrackingModalOpen = ref<boolean>(false);
 const selectedUser = ref<IUser | null>(null);
 const isRound = ref(false);
 const showFavoritesOnly = ref(false);
-const isExtrasActive = ref<boolean | null>(false);
+const isExtrasActive = ref<boolean | null>(true);
 const isFavoritesModalOpen = ref(false);
 
 // ------ Initialization ------

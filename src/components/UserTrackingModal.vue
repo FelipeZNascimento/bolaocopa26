@@ -26,6 +26,9 @@
       :style="{ height: '300px', backgroundColor: 'var(--surface-card)', borderRadius: 'var(--border-radius)' }"
       :options="chartOptions"
     />
+    <p style="text-align: center">
+      A pontuação no gráfico não inclui pontos extras, apenas os pontos acumulados das apostas normais.
+    </p>
     <PrimeDivider />
     <h2 style="text-align: center">Apostas Extras</h2>
     <div style="display: flex; justify-content: center; padding: var(--s-spacing)">
@@ -50,7 +53,7 @@ import { computed, ref, watch } from 'vue';
 
 import type { IUser } from '@/stores/activeProfile.types';
 
-import LoginModal from '@/components/NavbarTop/LoginModal.vue';
+import LoginModal from '@/components/LoginModal.vue';
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useExtraBetStore } from '@/stores/extraBet';
@@ -97,6 +100,25 @@ function isFavorite(): boolean {
   }
 
   return userService.isFavorite(props.selectedUser.id);
+}
+
+function returnLabelForRound(round: null | number): string {
+  if (round === null) {
+    return '';
+  }
+
+  const labels: Record<number, string> = {
+    1: 'Grupos 1',
+    2: 'Grupos 2',
+    3: 'Grupos 3',
+    4: '16 Avos',
+    5: 'Oitavas',
+    6: 'Quartas',
+    7: 'Semi Finais',
+    8: 'Disputa 3º Lugar',
+    9: 'Final',
+  };
+  return labels[round] || `Rodada ${round}`;
 }
 
 function toggleFavorite() {
@@ -178,15 +200,8 @@ const chartData = computed(() => {
         type: 'bar',
         yAxisID: 'y',
       },
-      // {
-      //   backgroundColor: '#03a9f450',
-      //   data: userRoundsRanking.map((round) => round.ranking?.score.winner),
-      //   label: '% Pontos Vencedores',
-      //   type: 'bar',
-      //   yAxisID: 'y',
-      // },
     ],
-    labels: userRoundsRanking.map((round) => `Rodada ${round.round}`),
+    labels: userRoundsRanking.map((round) => returnLabelForRound(round.round)),
   };
 });
 

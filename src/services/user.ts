@@ -9,17 +9,20 @@ import { useMatchesStore } from '@/stores/matches';
 import { useRankingStore } from '@/stores/ranking';
 
 import ApiService from './api_request';
+import StartupService from './startup';
 
 export default class UserService {
   private activeProfileStore;
-  private apiRequest;
+  private apiService;
   private configurationStore;
   private extraBetStore;
   private matchesStore;
   private rankingStore;
+  private startupService;
 
   constructor() {
-    this.apiRequest = new ApiService();
+    this.apiService = new ApiService();
+    this.startupService = new StartupService();
     this.activeProfileStore = useActiveProfileStore();
     this.rankingStore = useRankingStore();
     this.extraBetStore = useExtraBetStore();
@@ -32,7 +35,7 @@ export default class UserService {
     const forgotPasswordObject = { email };
 
     try {
-      const response = await this.apiRequest.post<IUser>('user/forgot-password', forgotPasswordObject);
+      const response = await this.apiService.post<IUser>('user/forgot-password', forgotPasswordObject);
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setActiveProfile(response);
       this.activeProfileStore.setError(null);
@@ -58,10 +61,12 @@ export default class UserService {
     };
 
     try {
-      const response = await this.apiRequest.post<IUser>('user/login', loginObject);
+      const response = await this.apiService.post<IUser>('user/login', loginObject);
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setActiveProfile(response);
       this.activeProfileStore.setError(null);
+      this.startupService.initialize(() => {}); // Re-initialize to refresh data after password reset
+
       return callback(true);
     } catch (error: unknown) {
       this.activeProfileStore.setLoading(false);
@@ -73,7 +78,6 @@ export default class UserService {
   public async logout() {
     this.activeProfileStore.setLoading(true);
     try {
-      await this.apiRequest.get<IUser>('user/logout');
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setActiveProfile(null);
       this.activeProfileStore.setError(null);
@@ -81,6 +85,7 @@ export default class UserService {
       this.configurationStore.setInitialState();
       this.matchesStore.resetLoggedUserBets();
       this.extraBetStore.resetActiveProfileBets();
+      await this.apiService.get<IUser>('user/logout');
     } catch (error: unknown) {
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setError(new Error(error instanceof Error ? error.message : String(error)));
@@ -105,11 +110,12 @@ export default class UserService {
     };
 
     try {
-      const response = await this.apiRequest.post<IUser>('user/register', registerObject);
+      const response = await this.apiService.post<IUser>('user/register', registerObject);
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setActiveProfile(response);
       this.activeProfileStore.setError(null);
 
+      console.log('User registered successfully:', response);
       return callback(true);
     } catch (error: unknown) {
       this.activeProfileStore.setLoading(false);
@@ -127,7 +133,7 @@ export default class UserService {
 
     try {
       activeProfile.favorites = newFavorites;
-      await this.apiRequest.post<IUser>('user/update-favorites', { favorites: newFavorites });
+      await this.apiService.post<IUser>('user/update-favorites', { favorites: newFavorites });
       return callback(true);
     } catch (error: unknown) {
       console.error('Failed to update favorites:', error);
@@ -144,7 +150,7 @@ export default class UserService {
         newPassword: sha1(newPassword).toString(),
       };
 
-      await this.apiRequest.post<IUser>('user/update-password', updatedProfile);
+      await this.apiService.post<IUser>('user/update-password', updatedProfile);
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setError(null);
 
@@ -166,7 +172,7 @@ export default class UserService {
     };
 
     try {
-      const response = await this.apiRequest.post<IUser>('user/update-password', resetPasswordObject);
+      const response = await this.apiService.post<IUser>('user/update-password', resetPasswordObject);
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setError(null);
       return response;
@@ -186,7 +192,7 @@ export default class UserService {
     };
 
     try {
-      const response = await this.apiRequest.post<IUser>('user/update-profile', updatedProfile);
+      const response = await this.apiService.post<IUser>('user/update-profile', updatedProfile);
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setActiveProfile(response);
       this.activeProfileStore.setError(null);

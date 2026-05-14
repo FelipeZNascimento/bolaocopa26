@@ -49,8 +49,7 @@
     >
       <button
         v-tooltip.right="rankingPosition === 'active' ? 'Esconder ranking' : 'Mostrar ranking'"
-        class="action-btn ranking-btn"
-        :class="{ active: rankingPosition === 'modal' }"
+        class="action-btn active"
         :aria-label="'Esconder ranking'"
         @click="handleHideRanking"
       >
@@ -68,8 +67,7 @@
     >
       <button
         v-tooltip.right="matchListSorting === 'group' ? 'Por horário' : 'Por grupos'"
-        class="action-btn"
-        :class="{ active: matchListSorting === 'group' }"
+        class="action-btn active"
         :aria-label="matchListSorting === 'group' ? 'Desagrupar times' : 'Agrupar por grupos'"
         :title="matchListSorting === 'group' ? 'Desagrupar times' : 'Agrupar por grupos'"
         @click="handleListToggle"

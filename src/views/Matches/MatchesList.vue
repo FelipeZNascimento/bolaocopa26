@@ -87,7 +87,8 @@ const roundLabel = computed(() => {
     5: 'Oitavas',
     6: 'Quartas',
     7: 'Semi Finais',
-    8: 'Final',
+    8: 'Disputa 3º Lugar',
+    9: 'Final',
   };
   return labels[round] || `Rodada ${round}`;
 });

@@ -11,13 +11,13 @@
       :is-match-started="isMatchStarted"
     />
     <ScoreComponent
-      :is-team-clickable="isTeamClickable"
       :match="match"
       :active-user-bet="match.loggedUserBets ?? null"
       :is-match-started="isMatchStarted"
       :hit-level="hitLevel"
     />
     <div
+      v-if="!isDemo"
       class="more-info"
       @click="handleMatchClick"
     >
@@ -49,13 +49,11 @@ const props = withDefaults(
   defineProps<{
     isDemo?: boolean;
     isMatchClickable?: boolean;
-    isTeamClickable?: boolean;
     match: IMatch;
   }>(),
   {
     isDemo: false,
     isMatchClickable: false,
-    isTeamClickable: false,
   },
 );
 
