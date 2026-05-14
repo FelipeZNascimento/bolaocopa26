@@ -1,4 +1,5 @@
 export enum ROUTE_ID {
+  ADMIN,
   HOME,
   BET,
   MATCHES,
@@ -31,12 +32,6 @@ export const ROUTES = [
     needCredentials: false,
     url: '/jogos',
   },
-  // {
-  //   id: ROUTE_ID.BET,
-  //   label: 'Apostar',
-  //   needCredentials: true,
-  //   url: '/apostar',
-  // },
   {
     id: ROUTE_ID.EXTRAS,
     label: 'Extras',

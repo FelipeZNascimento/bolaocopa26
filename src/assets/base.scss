@@ -55,6 +55,12 @@
   line-gap-override: 0%;
 }
 
+@font-face {
+  font-family: primeicons;
+  src: url('/assets/primeicons-C6QP2o4f.woff2') format('woff2');
+  font-display: swap;   /* override block → swap */
+}
+
 /* ------------------- */
 
 /* ---- VARIABLES ---- */
@@ -289,8 +295,6 @@ $colors: (
   --color-main: var(--bolao-c-black);
   --color-contrast: var(--bolao-c-white);
   --color-match-overlay: var(--bolao-c-black);
-
-  // --color-background: var(--vt-c-black-soft);
   --color-background: linear-gradient(135deg, #0a0e14 0%, #141c2c 50%, #1a2738 100%);
   --color-background-soft: var(--vt-c-black-soft);
   --color-background-mute: var(--vt-c-black-mute);
@@ -298,12 +302,6 @@ $colors: (
   --color-border-hover: var(--vt-c-divider-dark-1);
   --color-heading: var(--vt-c-text-dark-1);
   --color-text: var(--vt-c-text-dark-2);
-
-  // PrimeVue component overrides
-  // --p-button-secondary-background: var(--bolao-c-fifa-green3) !important;
-  // --p-button-secondary-border-color: var(--bolao-c-fifa-green3) !important;
-  // --p-button-secondary-hover-background: var(--bolao-c-fifa-green1) !important;
-  // --p-button-secondary-hover-border-color: var(--bolao-c-fifa-green3) !important;
 }
 
 *,

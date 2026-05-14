@@ -8,6 +8,7 @@
             <img
               src="/logo-mobile.png"
               style="width: auto; height: 100%; object-fit: contain"
+              alt="Logo do Bolão Copa 2026"
             />
           </div>
           <span class="app-title">Bolão Copa 2026</span>

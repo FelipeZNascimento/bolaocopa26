@@ -218,7 +218,7 @@ function setRound(num: null | number) {
   }
 
   .page-btn--active {
-    color: var(--bolao-c-blue3) !important;
+    color: var(--bolao-c-blue4) !important;
     background-color: var(--bolao-c-gold) !important;
     border-color: var(--bolao-c-gold) !important;
 

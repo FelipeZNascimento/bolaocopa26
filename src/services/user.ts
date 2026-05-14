@@ -3,6 +3,7 @@ import { sha1 } from 'js-sha1';
 import type { IUser } from '@/stores/activeProfile.types';
 
 import { useActiveProfileStore } from '@/stores/activeProfile';
+import { useAdminStore } from '@/stores/admin';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useExtraBetStore } from '@/stores/extraBet';
 import { useMatchesStore } from '@/stores/matches';
@@ -13,6 +14,7 @@ import StartupService from './startup';
 
 export default class UserService {
   private activeProfileStore;
+  private adminStore;
   private apiService;
   private configurationStore;
   private extraBetStore;
@@ -23,11 +25,56 @@ export default class UserService {
   constructor() {
     this.apiService = new ApiService();
     this.startupService = new StartupService();
+    this.adminStore = useAdminStore();
     this.activeProfileStore = useActiveProfileStore();
     this.rankingStore = useRankingStore();
     this.extraBetStore = useExtraBetStore();
     this.matchesStore = useMatchesStore();
     this.configurationStore = useConfigurationStore();
+  }
+
+  public async activateUser(userId: number, newStatus: boolean, callback: (isSuccess: boolean) => void) {
+    const activeProfile = this.activeProfileStore.activeProfile;
+    if (!activeProfile || !activeProfile.admin) {
+      console.error('Unauthorized: Only admins can activate users.');
+      return callback(false);
+    }
+
+    this.adminStore.setLoading(true);
+
+    try {
+      const response = await this.apiService.post<IUser[]>('user/activate', { newStatus, userId });
+      this.adminStore.setUsers(response);
+      this.adminStore.setLoading(false);
+      return callback(true);
+    } catch (error: unknown) {
+      console.error('Failed to activate user:', error);
+      this.adminStore.setError(error as Error);
+      this.adminStore.setLoading(false);
+      return callback(false);
+    }
+  }
+
+  public async deleteUser(userId: number, callback: (isSuccess: boolean) => void) {
+    const activeProfile = this.activeProfileStore.activeProfile;
+    if (!activeProfile || !activeProfile.admin) {
+      console.error('Unauthorized: Only admins can delete users.');
+      return callback(false);
+    }
+
+    this.adminStore.setLoading(true);
+
+    try {
+      const response = await this.apiService.post<IUser[]>('user/delete-from-edition', { userId });
+      this.adminStore.setUsers(response);
+      this.adminStore.setLoading(false);
+      return callback(true);
+    } catch (error: unknown) {
+      console.error('Failed to delete user:', error);
+      this.adminStore.setError(error as Error);
+      this.adminStore.setLoading(false);
+      return callback(false);
+    }
   }
 
   public async forgotPassword(email: string, callback: (isSuccess: boolean) => void) {
@@ -43,6 +90,27 @@ export default class UserService {
     } catch (error: unknown) {
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setError(error as Error);
+      return callback(false);
+    }
+  }
+  public async getAll(callback: (isSuccess: boolean) => void) {
+    const activeProfile = this.activeProfileStore.activeProfile;
+    if (!activeProfile || !activeProfile.admin) {
+      console.error('Unauthorized: Only admins can fetch all users.');
+      return callback(false);
+    }
+
+    this.adminStore.setLoading(true);
+
+    try {
+      const response = await this.apiService.get<IUser[]>('user/all');
+      this.adminStore.setUsers(response);
+      this.adminStore.setLoading(false);
+      return callback(true);
+    } catch (error: unknown) {
+      console.error('Failed to fetch users:', error);
+      this.adminStore.setError(error as Error);
+      this.adminStore.setLoading(false);
       return callback(false);
     }
   }
