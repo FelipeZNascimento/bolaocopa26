@@ -3,6 +3,8 @@ import { ref } from 'vue';
 
 import type { IBet, IMatch } from './matches.types';
 
+import { useActiveProfileStore } from './activeProfile';
+
 interface IWorkingBet {
   scoreAway: null | number;
   scoreHome: null | number;
@@ -36,9 +38,7 @@ export const useMatchesStore = defineStore('matches', () => {
 
   function initializeBets(matches: IMatch[]) {
     // Store original bets (filter out null and undefined)
-    originalBets.value = matches
-      .filter((match) => match.loggedUserBets != null)
-      .map((match) => match.loggedUserBets as IBet);
+    originalBets.value = matches.map((match) => match.loggedUserBets as IBet);
 
     // Initialize working bets from original
     workingBets.value.clear();
@@ -54,11 +54,32 @@ export const useMatchesStore = defineStore('matches', () => {
 
   function updateLoggedUserBets(matchId: number, bet: { scoreAway: null | number; scoreHome: null | number }) {
     const match = matches.value.find((m) => m.id === matchId);
-    if (match && match.loggedUserBets) {
-      match.loggedUserBets = {
-        ...match.loggedUserBets,
-        ...bet,
-      };
+    if (match) {
+      if (match.loggedUserBets) {
+        // Update existing bet
+        match.loggedUserBets = {
+          ...match.loggedUserBets,
+          ...bet,
+        };
+      } else {
+        // Create new bet if it doesn't exist
+        const activeProfileStore = useActiveProfileStore();
+        const currentUser = activeProfileStore.activeProfile;
+
+        if (currentUser) {
+          match.loggedUserBets = {
+            id: 0, // Temporary ID
+            matchId,
+            scoreAway: bet.scoreAway,
+            scoreHome: bet.scoreHome,
+            timestamp: new Date().toISOString(),
+            user: {
+              id: currentUser.id,
+              nickname: currentUser.nickname,
+            },
+          };
+        }
+      }
     }
   }
 
@@ -104,6 +125,9 @@ export const useMatchesStore = defineStore('matches', () => {
   }
 
   function commitWorkingBets() {
+    const activeProfileStore = useActiveProfileStore();
+    const currentUser = activeProfileStore.activeProfile;
+
     // Update original bets to match working bets
     workingBets.value.forEach((working, matchId) => {
       if (working.scoreAway === null || working.scoreHome === null) {
@@ -117,14 +141,28 @@ export const useMatchesStore = defineStore('matches', () => {
         originalBets.value[originalIndex].scoreHome = working.scoreHome;
         originalBets.value[originalIndex].scoreAway = working.scoreAway;
       } else {
-        // New bet
+        // New bet - create the entire bet object
         const match = matches.value.find((m) => m.id === matchId);
-        if (match && match.loggedUserBets) {
-          originalBets.value.push({
-            ...match.loggedUserBets,
+        if (match && currentUser) {
+          const newBet: IBet = {
+            id: 0, // Temporary ID, will be replaced by server response
+            matchId,
             scoreAway: working.scoreAway,
             scoreHome: working.scoreHome,
-          });
+            timestamp: new Date().toISOString(),
+            user: {
+              id: currentUser.id,
+              nickname: currentUser.nickname,
+            },
+          };
+
+          // Add to original bets array
+          originalBets.value.push(newBet);
+
+          // Create loggedUserBets on the match if it doesn't exist
+          if (!match.loggedUserBets) {
+            match.loggedUserBets = newBet;
+          }
         }
       }
     });
@@ -137,9 +175,25 @@ export const useMatchesStore = defineStore('matches', () => {
         return;
       }
 
-      if (working && match.loggedUserBets) {
-        match.loggedUserBets.scoreHome = working.scoreHome;
-        match.loggedUserBets.scoreAway = working.scoreAway;
+      if (working) {
+        if (match.loggedUserBets) {
+          // Update existing bet
+          match.loggedUserBets.scoreHome = working.scoreHome;
+          match.loggedUserBets.scoreAway = working.scoreAway;
+        } else if (currentUser) {
+          // Create new bet object
+          match.loggedUserBets = {
+            id: 0, // Temporary ID
+            matchId: match.id,
+            scoreAway: working.scoreAway,
+            scoreHome: working.scoreHome,
+            timestamp: new Date().toISOString(),
+            user: {
+              id: currentUser.id,
+              nickname: currentUser.nickname,
+            },
+          };
+        }
       }
     });
   }

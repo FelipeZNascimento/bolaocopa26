@@ -6,16 +6,17 @@
     <RouterView />
   </div>
   <div
-    v-if="!isLoading && activeProfile && !activeProfile.isActive"
+    v-if="!isLoading && activeProfile && !activeProfile.isActive && route.path !== '/regras'"
     class="not-active"
   >
-    Clique <a href="">aqui</a> para saber como ativar seu perfil e participar do bolão!
+    Clique <RouterLink to="regras?section=inscricoes">aqui</RouterLink> para saber como ativar seu perfil e participar
+    do bolão!
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, watch } from 'vue';
-import { RouterView } from 'vue-router';
+import { RouterLink, RouterView, useRoute } from 'vue-router';
 
 import NavbarMobile from './components/NavbarTop/NavbarMobile.vue';
 import NavbarTop from './components/NavbarTop/NavbarTop.vue';
@@ -31,6 +32,7 @@ import { useExtraBetStore } from './stores/extraBet';
 import { useMatchesStore } from './stores/matches';
 
 const startupService = new StartupService();
+const route = useRoute();
 const matchService = new MatchService();
 const rankingService = new RankingService();
 const extraBetService = new ExtraBetService();
@@ -92,7 +94,7 @@ watch(activeProfile, async (newValue) => {
   if (newValue) {
     extraBetService.fetch();
   } else {
-    extraBetStore.setActiveProfileBets([]);
+    extraBetStore.resetActiveProfileBets();
   }
 
   // Week is possibly zero (preseason)

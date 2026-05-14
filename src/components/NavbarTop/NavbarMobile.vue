@@ -4,7 +4,12 @@
       <!-- Top bar with logo/title and hamburger -->
       <div class="top-bar">
         <div class="logo-section">
-          <div class="telstar-ball" />
+          <div class="logo-container">
+            <img
+              src="/logo-mobile.png"
+              style="width: auto; height: 100%; object-fit: contain"
+            />
+          </div>
           <span class="app-title">Bolão Copa 2026</span>
         </div>
         <div class="right-section">
@@ -222,7 +227,7 @@ import { useRoute } from 'vue-router';
 
 import type { TThemeValue } from '@/stores/configuration.types';
 
-import LoginModal from '@/components/NavbarTop/LoginModal.vue';
+import LoginModal from '@/components/LoginModal.vue';
 import ManageFavoritesModal from '@/components/Ranking/ManageFavoritesModal.vue';
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
@@ -459,7 +464,7 @@ function toggleMenu() {
   align-items: center;
   justify-content: space-between;
   height: 100%;
-  padding: 0 var(--m-spacing);
+  padding: 0;
 }
 
 .logo-section {
@@ -501,14 +506,14 @@ function toggleMenu() {
     0 4px 12px rgb(0 0 0 / 30%);
 }
 
-.telstar-ball {
-  width: 32px;
-  height: 32px;
-  background: url('/soccer_ball.svg') center center / cover no-repeat;
-  border-radius: 50%;
+.logo-container {
+  height: calc(var(--navbar-height-mobile) - 4px);
+  margin-left: var(--xs-spacing);
+
+  // border-right: 1px solid white;
   box-shadow:
-    0 4px 8px rgb(0 0 0 / 20%),
-    0 2px 4px rgb(0 0 0 / 10%);
+    0 0 0 2px var(--bolao-c-white),
+    0 4px 12px rgb(0 0 0 / 30%);
 }
 
 .app-title {

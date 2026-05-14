@@ -8,7 +8,7 @@
     :breakpoints="{ '1280px': '75vw', '575px': '90vw' }"
   >
     <template #header>
-      <h2>{{ formMode === 'signup' ? 'Cadastro' : 'Login' }}</h2>
+      <h2>{{ formTitle }}</h2>
     </template>
     <Form
       v-slot="$form"
@@ -131,7 +131,7 @@
         />
       </p>
     </Form>
-    <template #footer>
+    <div style="padding-top: var(--l-spacing); text-align: center">
       <PrimeButton
         v-if="formMode !== 'login'"
         rounded
@@ -146,7 +146,6 @@
       <PrimeButton
         v-else
         rounded
-        class="signup-button"
         type="submit"
         label="Faça aqui o seu cadastro"
         variant="link"
@@ -154,7 +153,7 @@
         :disabled="isLoading"
         @click="setFormMode('signup')"
       />
-    </template>
+    </div>
   </PrimeDialog>
 </template>
 <script setup lang="ts">
@@ -165,6 +164,7 @@ import { z } from 'zod';
 
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
+import { useNotificationStore } from '@/stores/notification';
 
 const props = defineProps<{
   handleCloseModal: () => void;
@@ -219,11 +219,30 @@ const signupResolver = ref(
 // ------ Initializations ------
 const userService = new UserService();
 const activeProfileStore = useActiveProfileStore();
+const notificationStore = useNotificationStore();
 
 // ------ Computed Properties ------
 const isLoading = computed(() => activeProfileStore.isLoading);
 const loginError = computed(() => activeProfileStore.error);
+const formTitle = computed(() => {
+  if (formMode.value === 'signup') {
+    return 'Cadastro';
+  } else if (formMode.value === 'login') {
+    return 'Login';
+  } else if (formMode.value === 'forgotPassword') {
+    return 'Esqueci minha senha';
+  }
+  return 'Login';
+});
 
+// ------ Functions  ------
+function forgotPasswordCallback(isSuccess: boolean) {
+  if (isSuccess) {
+    isVisible.value = false;
+    props.handleCloseModal();
+    notificationStore.success('Um email foi enviado para a sua conta.');
+  }
+}
 function loginCallback(isSuccess: boolean) {
   if (isSuccess) {
     isVisible.value = false;
@@ -231,7 +250,6 @@ function loginCallback(isSuccess: boolean) {
   }
 }
 
-// ------ Functions  ------
 function onForgotPasswordSubmit(formData: FormSubmitEvent<Record<string, string>>) {
   activeProfileStore.setError(null);
   if (!formData.values) {
@@ -239,7 +257,7 @@ function onForgotPasswordSubmit(formData: FormSubmitEvent<Record<string, string>
   }
 
   const { email } = formData.values;
-  userService.forgotPassword(email, loginCallback);
+  userService.forgotPassword(email, forgotPasswordCallback);
 }
 
 function onFormSubmit(formData: FormSubmitEvent<Record<string, string>>) {
@@ -268,7 +286,7 @@ function onSignupSubmit(formData: FormSubmitEvent<Record<string, string>>) {
   }
 
   const { email, name, nickname, password } = formData.values;
-  userService.signup(email, password, name, nickname, loginCallback);
+  userService.signup(email, password, name, nickname, submitCallback);
 }
 
 function resetState() {
@@ -279,6 +297,14 @@ function resetState() {
 function setFormMode(mode: 'forgotPassword' | 'login' | 'signup') {
   formMode.value = mode;
   activeProfileStore.setError(null);
+}
+
+function submitCallback(isSuccess: boolean) {
+  if (isSuccess) {
+    isVisible.value = false;
+    props.handleCloseModal();
+    notificationStore.success('Um email foi enviado para a sua conta.', 'Cadastro feito com sucesso!');
+  }
 }
 
 // ------ Watches  ------
@@ -298,7 +324,7 @@ watch(isVisible, async (newValue) => {
   }
 });
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .input {
   padding-bottom: var(--m-spacing);
 }
@@ -311,5 +337,9 @@ watch(isVisible, async (newValue) => {
 
 .signup-button {
   width: 100%;
+}
+
+:deep(.p-dialog-footer) {
+  justify-content: center;
 }
 </style>

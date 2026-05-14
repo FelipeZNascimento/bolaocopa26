@@ -102,11 +102,11 @@
   />
 </template>
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 
 import type { IPlayer, ITeam } from '@/stores/teams.types';
 
-import LoginModal from '@/components/NavbarTop/LoginModal.vue';
+import LoginModal from '@/components/LoginModal.vue';
 import {
   EXTRA_BETS_LABELS,
   EXTRA_BETS_VALUES,
@@ -143,36 +143,6 @@ const selectedToggle = ref<IToggleOption>({
   value: EXTRA_BETS_VALUES.CHAMPION,
 });
 
-const buttonOptions = ref<IToggleOption[]>([
-  {
-    label: EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.CHAMPION],
-    selectedTeam: null,
-    value: EXTRA_BETS_VALUES.CHAMPION,
-  },
-  {
-    label: EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.TOP_SCORER],
-    selectedPlayer: null,
-    selectedTeam: null,
-    value: EXTRA_BETS_VALUES.TOP_SCORER,
-  },
-  {
-    label: EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.OFFENSE],
-    selectedTeam: null,
-    value: EXTRA_BETS_VALUES.OFFENSE,
-  },
-  {
-    label: EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.DEFENSE],
-    selectedTeam: null,
-    value: EXTRA_BETS_VALUES.DEFENSE,
-  },
-  {
-    label: EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.BEST_PLAYER],
-    selectedPlayer: null,
-    selectedTeam: null,
-    value: EXTRA_BETS_VALUES.BEST_PLAYER,
-  },
-]);
-
 // ------ Computed Properties ------
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 const isLoadingExtras = computed(() => extraBetStore.isLoading);
@@ -183,14 +153,41 @@ const teams = computed(() => teamsStore.teams.filter((team) => team.id !== 33));
 const currentSelectedToggle = computed(() =>
   buttonOptions.value.find((option) => option.value === selectedToggle.value.value),
 );
+const buttonOptions = computed<IToggleOption[]>(() => {
+  // Create fresh base options every time
+  const options: IToggleOption[] = [
+    {
+      label: EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.CHAMPION],
+      selectedTeam: null,
+      value: EXTRA_BETS_VALUES.CHAMPION,
+    },
+    {
+      label: EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.TOP_SCORER],
+      selectedPlayer: null,
+      selectedTeam: null,
+      value: EXTRA_BETS_VALUES.TOP_SCORER,
+    },
+    {
+      label: EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.OFFENSE],
+      selectedTeam: null,
+      value: EXTRA_BETS_VALUES.OFFENSE,
+    },
+    {
+      label: EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.DEFENSE],
+      selectedTeam: null,
+      value: EXTRA_BETS_VALUES.DEFENSE,
+    },
+    {
+      label: EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.BEST_PLAYER],
+      selectedPlayer: null,
+      selectedTeam: null,
+      value: EXTRA_BETS_VALUES.BEST_PLAYER,
+    },
+  ];
 
-// ------ Initialization ------
-teamsService.fetch();
-
-// Initialize button options from activeProfileBets
-function initializeButtonOptions() {
+  // Populate from activeProfileBets
   activeProfileBets.value.forEach((bet) => {
-    const option = buttonOptions.value.find((opt) => opt.value === bet.extraType);
+    const option = options.find((opt) => opt.value === bet.extraType);
     if (option) {
       option.selectedTeam = bet.team;
       if (bet.extraType === EXTRA_BETS_VALUES.TOP_SCORER || bet.extraType === EXTRA_BETS_VALUES.BEST_PLAYER) {
@@ -198,20 +195,13 @@ function initializeButtonOptions() {
       }
     }
   });
-}
 
-// Watch for changes in activeProfileBets to initialize selections
-watch(
-  activeProfileBets,
-  () => {
-    initializeButtonOptions();
-  },
-  { immediate: true },
-);
-
-onMounted(() => {
-  initializeButtonOptions();
+  return options;
 });
+
+// ------ Initialization ------
+teamsService.fetch();
+
 // ------ Functions ------
 async function handleClick(team: ITeam) {
   if (!activeProfile.value) {

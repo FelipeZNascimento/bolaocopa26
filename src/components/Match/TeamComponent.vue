@@ -39,6 +39,7 @@
       >
         <input
           v-model="inputValue"
+          name="score"
           type="number"
           min="0"
           max="99"
@@ -126,7 +127,7 @@ import { computed, ref } from 'vue';
 import type { IMatch, IMatchEvent } from '@/stores/matches.types';
 import type { ITeam } from '@/stores/teams.types';
 
-import LoginModal from '@/components/NavbarTop/LoginModal.vue';
+import LoginModal from '@/components/LoginModal.vue';
 import TeamDetailsModal from '@/components/TeamDetailsModal.vue';
 import { MATCH_EVENT, PENALTIES } from '@/constants/match';
 import { useViewport } from '@/services/viewport';
@@ -172,6 +173,9 @@ const isLoadingMatch = computed(() => matchesStore.updatingMatches.includes(prop
 
 const inputValue = computed({
   get() {
+    if (isMatchStarted.value) {
+      return props.isHomeTeam ? props.match.score.home : props.match.score.away;
+    }
     const working = matchesStore.getWorkingBet(props.match.id);
     return props.isHomeTeam ? working.scoreHome : working.scoreAway;
   },

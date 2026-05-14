@@ -21,7 +21,7 @@
       >
         <!-- Soccer ball that moves between items -->
         <RouterLink
-          v-for="(routeItem, index) in allRoutes"
+          v-for="(routeItem, index) in ROUTES"
           :key="routeItem.id"
           v-slot="{ navigate }"
           :to="routeItem.url || ''"
@@ -35,17 +35,65 @@
         >
           <a
             :autohide="false"
-            @click="
-              routeItem.id === ROUTE_ID.PROFILE || routeItem.id === ROUTE_ID.LOGIN
-                ? handleNavigate($event, index, navigate, routeItem)
-                : handleRouteClick(routeItem, index, navigate)
-            "
+            @click="handleRouteClick(routeItem, index, navigate)"
           >
             <span
               class="nav-label"
               :class="{ 'active-label': routeItem.id === activeRoute }"
             >
               {{ routeItem.label }}
+            </span>
+          </a>
+        </RouterLink>
+        <!-- Handles login / profile routes -->
+        <RouterLink
+          v-if="activeProfile"
+          v-slot="{ navigate }"
+          :to="''"
+          class="nav-link"
+          :style="{ '--item-index': profileRoute.id }"
+          custom
+        >
+          <a
+            :autohide="false"
+            @click="handleNavigate($event, navigate, profileRoute)"
+          >
+            <span class="nav-label">
+              <i
+                class="pi pi-star-fill"
+                style="color: var(--bolao-c-mint)"
+              />
+              {{ profileRoute.label }}
+            </span>
+          </a>
+        </RouterLink>
+        <RouterLink
+          v-else
+          v-slot="{ navigate }"
+          :to="loginRoute.url || ''"
+          :class="{
+            'nav-link': true,
+            active: loginRoute.id === activeRoute,
+            disabled: isLoadingProfile,
+          }"
+          :style="{ '--item-index': loginRoute.id }"
+          custom
+        >
+          <a
+            :autohide="false"
+            @click="handleNavigate($event, navigate, loginRoute)"
+          >
+            <PrimeProgressSpinner
+              v-if="isLoadingProfile"
+              style="width: 30px; height: 30px; color: var(--bolao-c-white)"
+              strokeWidth="6"
+            />
+            <span
+              v-else
+              class="nav-label"
+              :class="{ 'active-label': loginRoute.id === activeRoute }"
+            >
+              {{ loginRoute.label }}
             </span>
           </a>
         </RouterLink>
@@ -149,7 +197,7 @@ import { useRoute } from 'vue-router';
 
 import type { TThemeValue } from '@/stores/configuration.types';
 
-import LoginModal from '@/components/NavbarTop/LoginModal.vue';
+import LoginModal from '@/components/LoginModal.vue';
 import ManageFavoritesModal from '@/components/Ranking/ManageFavoritesModal.vue';
 import UserService from '@/services/user';
 import { useViewport } from '@/services/viewport';
@@ -204,7 +252,7 @@ onMounted(() => {
   const currentPath = window.location.pathname;
   const matchingRoute = ROUTES.find((route) => route.url === currentPath);
   if (matchingRoute) {
-    const index = allRoutes.value.findIndex((r) => r.id === matchingRoute.id);
+    const index = ROUTES.findIndex((r) => r.id === matchingRoute.id);
     activeRoute.value = matchingRoute.id;
     activeItemIndex.value = index >= 0 ? index : 0;
     animatedItemIndex.value = index >= 0 ? index : 0;
@@ -222,21 +270,8 @@ onUnmounted(() => {
 
 // ------ Computed Properties ------
 const activeProfile = computed(() => activeProfileStore.activeProfile);
+const isLoadingProfile = computed(() => activeProfileStore.isLoading);
 const theme = computed(() => configurationStore.theme);
-
-const allRoutes = computed(() => {
-  const routes: ExtendedRoute[] = [...ROUTES];
-
-  if (activeProfile.value) {
-    routes.push(profileRoute.value);
-  } else {
-    routes.push(loginRoute);
-  }
-
-  // routes.push(configRoute);
-
-  return routes;
-});
 
 const ballPosition = computed(() => {
   return `${ballPositionPx.value}px`;
@@ -245,7 +280,7 @@ const ballPosition = computed(() => {
 const wavePath = computed(() => {
   const width = 1400;
   const height = 100;
-  const items = allRoutes.value.length;
+  const items = ROUTES.length;
   const activeIndex = animatedItemIndex.value; // Use animated index instead of actual
 
   // Calculate position for dip
@@ -278,9 +313,9 @@ const wavePath = computed(() => {
 });
 
 // Watch for route changes (e.g., when user logs in and new routes are added)
-watch(allRoutes, () => {
+watch(activeRoute, () => {
   // Recalculate active item index in case route positions changed
-  const index = allRoutes.value.findIndex((r) => r.id === activeRoute.value);
+  const index = ROUTES.findIndex((r) => r.id === activeRoute.value);
   if (index >= 0) {
     activeItemIndex.value = index;
     animatedItemIndex.value = index;
@@ -296,7 +331,7 @@ watch(
   (newPath) => {
     const matchingRoute = ROUTES.find((r) => r.url === newPath);
     if (matchingRoute) {
-      const index = allRoutes.value.findIndex((r) => r.id === matchingRoute.id);
+      const index = ROUTES.findIndex((r) => r.id === matchingRoute.id);
       if (index >= 0 && activeRoute.value !== matchingRoute.id) {
         activeRoute.value = matchingRoute.id;
         activeItemIndex.value = index;
@@ -395,15 +430,10 @@ function handleLogout() {
   profilePopover.value.toggle();
 }
 
-function handleNavigate(event: Event, index: number, navigate: () => void, route: ExtendedRoute) {
+function handleNavigate(event: Event, navigate: () => void, route: ExtendedRoute) {
   if (route.needCredentials && !activeProfile.value) {
     return;
   }
-
-  // Update state before animating
-  activeRoute.value = route.id;
-  activeItemIndex.value = index;
-  animateWave(index);
 
   if (route.id === ROUTE_ID.PROFILE) {
     togglePopover(event);
@@ -441,7 +471,7 @@ function syncActiveRouteWithPath() {
   const currentPath = window.location.pathname;
   const matchingRoute = ROUTES.find((route) => route.url === currentPath);
   if (matchingRoute) {
-    const index = allRoutes.value.findIndex((r) => r.id === matchingRoute.id);
+    const index = ROUTES.findIndex((r) => r.id === matchingRoute.id);
     if (index >= 0 && activeRoute.value !== matchingRoute.id) {
       activeRoute.value = matchingRoute.id;
       activeItemIndex.value = index;
