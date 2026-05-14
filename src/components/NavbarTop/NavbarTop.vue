@@ -115,6 +115,14 @@
     >
       <div class="outer-profile-popover">
         <PrimeButton
+          v-if="activeProfile?.admin"
+          variant="text"
+          severity="secondary"
+          size="small"
+          label="Admin"
+          @click="handleNavigate($event, () => {}, adminRoute)"
+        />
+        <PrimeButton
           variant="text"
           severity="secondary"
           size="small"
@@ -193,7 +201,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 import type { TThemeValue } from '@/stores/configuration.types';
 
@@ -241,11 +249,19 @@ const loginRoute: ExtendedRoute = {
   url: '',
 };
 
+const adminRoute: ExtendedRoute = {
+  id: ROUTE_ID.ADMIN,
+  label: 'Admin',
+  needCredentials: true,
+  url: '/admin',
+};
+
 // ------ Initializations ------
 const activeProfileStore = useActiveProfileStore();
 const configurationStore = useConfigurationStore();
 const userService = new UserService();
 const route = useRoute();
+const router = useRouter();
 const { isDesktop } = useViewport();
 
 onMounted(() => {
@@ -444,7 +460,8 @@ function handleNavigate(event: Event, navigate: () => void, route: ExtendedRoute
   }
 
   if (route.url) {
-    navigate();
+    profilePopover.value?.hide();
+    router.push(route.url);
   }
 }
 

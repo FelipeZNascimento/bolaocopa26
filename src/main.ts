@@ -1,11 +1,5 @@
 import './assets/main.scss';
 
-/* ---- FontAwesome Config ---- */
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { fab } from '@fortawesome/free-brands-svg-icons';
-import { far } from '@fortawesome/free-regular-svg-icons';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { definePreset } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura';
 import { createPinia } from 'pinia';
@@ -16,10 +10,11 @@ import PrimeAvatar from 'primevue/avatar';
 import PrimeButton from 'primevue/button';
 import PrimeButtonGroup from 'primevue/buttongroup';
 import PrimeCard from 'primevue/card';
-import PrimeChart from 'primevue/chart';
 import PrimeColorPicker from 'primevue/colorpicker';
 import PrimeColumn from 'primevue/column';
 import PrimeVue from 'primevue/config';
+import PrimeConfirmationService from 'primevue/confirmationservice';
+import PrimeConfirmDialog from 'primevue/confirmdialog';
 import PrimeDataTable from 'primevue/datatable';
 import PrimeDialog from 'primevue/dialog';
 import PrimeDivider from 'primevue/divider';
@@ -49,10 +44,6 @@ import { createApp } from 'vue';
 
 import App from './App.vue';
 import router from './router';
-
-library.add(fas, fab, far);
-/* ---- FontAwesome Config ---- */
-
 const app = createApp(App);
 
 app.use(createPinia());
@@ -85,6 +76,9 @@ app.use(PrimeVue, {
 });
 
 app.use(PrimeToastService);
+app.use(PrimeConfirmationService);
+
+app.component('PrimeConfirmDialog', PrimeConfirmDialog);
 
 app.component('PrimeButton', PrimeButton);
 app.component('PrimeDialog', PrimeDialog);
@@ -113,7 +107,6 @@ app.component('PrimeAvatar', PrimeAvatar);
 app.component('PrimeKnob', PrimeKnob);
 app.component('PrimeOverlayBadge', PrimeOverlayBadge);
 app.component('PrimePanel', PrimePanel);
-app.component('PrimeChart', PrimeChart);
 app.component('PrimeCard', PrimeCard);
 app.component('PrimeProgressSpinner', PrimeProgressSpinner);
 
@@ -121,5 +114,4 @@ app.directive('tooltip', PrimeTooltip);
 
 /* ---- PrimeVue ---- */
 
-app.component('FontAwesomeIcon', FontAwesomeIcon);
 app.mount('#app');

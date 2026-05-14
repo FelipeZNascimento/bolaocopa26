@@ -2,6 +2,7 @@
   <NavbarMobile v-if="isMobile" />
   <NavbarTop v-else />
   <PrimeToast />
+  <PrimeConfirmDialog />
   <div class="outer-view">
     <RouterView />
   </div>
@@ -101,7 +102,6 @@ watch(activeProfile, async (newValue) => {
   if (!selectedRound.value) {
     return;
   }
-  // rankingService.fetch();
 });
 </script>
 

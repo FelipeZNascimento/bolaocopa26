@@ -55,6 +55,7 @@ import type { IUser } from '@/stores/activeProfile.types';
 
 import LoginModal from '@/components/LoginModal.vue';
 import UserService from '@/services/user';
+import PrimeChart from 'primevue/chart';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useExtraBetStore } from '@/stores/extraBet';
 import { useNotificationStore } from '@/stores/notification';
