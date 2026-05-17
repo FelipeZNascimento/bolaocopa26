@@ -12,8 +12,8 @@ export default class ApiService {
   private baseUrl: string;
 
   constructor() {
-    // this.baseUrl = import.meta.env.PROD ? 'https://apicopa.omegafox.me/' : 'http://localhost:63768/';
-    this.baseUrl = import.meta.env.VITE_BOLAO_BASE_URL;
+    this.baseUrl = import.meta.env.PROD ? 'https://apicopa.omegafox.me/' : 'http://localhost:63768/';
+    // this.baseUrl = import.meta.env.VITE_BOLAO_BASE_URL;
   }
 
   public async get<T>(
