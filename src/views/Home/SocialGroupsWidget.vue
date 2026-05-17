@@ -5,7 +5,7 @@
     <div class="links">
       <a
         class="social-link social-link--whatsapp"
-        href="https://chat.whatsapp.com/placeholder"
+        href="https://chat.whatsapp.com/EsOlEuAXMeIB6rf8Rq2oBc"
         target="_blank"
         rel="noopener noreferrer"
       >

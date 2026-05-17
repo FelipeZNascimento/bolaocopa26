@@ -11,7 +11,7 @@
           <li>
             <a
               class="contact-link"
-              href="https://chat.whatsapp.com/placeholder"
+              href="https://chat.whatsapp.com/EsOlEuAXMeIB6rf8Rq2oBc"
               target="_blank"
               rel="noopener noreferrer"
             >
