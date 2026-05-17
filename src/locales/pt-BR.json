@@ -19,6 +19,48 @@
     "round": "Rodada",
     "countdown": "Faltam {countdown}"
   },
+  "profileModal": {
+    "title": "Meu Perfil",
+    "email": "Email",
+    "name": "Nome Completo",
+    "nickname": "Apelido",
+    "saveButton": "Salvar Alterações",
+    "successMessage": "Perfil atualizado com sucesso!",
+    "errorMessage": "Ocorreu um erro ao atualizar seu perfil. Por favor, tente novamente."
+  },
+  "changePasswordModal": {
+    "title": "Alterar Senha",
+    "currentPassword": "Senha Atual",
+    "newPassword": "Nova Senha",
+    "confirmPassword": "Confirmar Senha",
+    "saveButton": "Salvar Alterações",
+    "successMessage": "Senha alterada com sucesso!",
+    "errorMessage": "Ocorreu um erro ao alterar sua senha. Por favor, tente novamente."
+  },
+  "favoritesModal": {
+    "title": "Favoritos",
+    "clearButton": "Remover Todos",
+    "successMessage": "Favoritos atualizados com sucesso!",
+    "errorMessage": "Ocorreu um erro ao atualizar seus favoritos. Por favor, tente novamente."
+  },
+  "userTrackingModal": {
+    "addFavoriteNotificationError": {
+      "title": "Erro",
+      "message": "Ocorreu um erro ao atualizar seus favoritos. Por favor, tente novamente."
+    },
+    "addFavoriteNotification": {
+      "title": "Favorito Adicionado",
+      "message": " agora é um favorito! Você pode acompanhar suas apostas e desempenho no ranking mais facilmente."
+    },
+    "removeFavoriteNotification": {
+      "title": "Favorito Removido",
+      "message": " agora não é mais um favorito."
+    },
+    "addFavoriteTooltip": "Adicionar aos Favoritos",
+    "removeFavoriteTooltip": "Remover dos Favoritos",
+    "chartExplanation": "A pontuação no gráfico não inclui pontos extras, apenas os pontos acumulados das apostas normais.",
+    "extraBets": "Apostas Extras"
+  },
   "profilePopover": {
     "admin": "Admin",
     "profile": "Perfil",
@@ -155,7 +197,9 @@
       "extras": "Apostas Extras",
       "welcome": "Bem-vinde",
       "logo": "Bolão da Copa 2026",
-      "betStatus": "Próxima Aposta"
+      "betStatus": "Próxima Aposta",
+      "countdown": "Próxima Partida",
+      "socialGroups": "Grupos de Redes Sociais"
     },
     "nextMatches": {
       "empty": "Sem próximas partidas",
@@ -180,6 +224,10 @@
     },
     "ranking": {
       "seeAll": "Ver ranking completo"
+    },
+    "socialGroups": {
+      "tagline": "Entre nos nossos grupos para acompanhar os resultados, torcer junto e não perder nenhuma novidade do bolão!",
+      "joinGroup": "Entrar no grupo"
     },
     "nextMatchCountdown": {
       "nextMatch": "Próxima partida",
@@ -215,7 +263,7 @@
       "title": "Contato",
       "whatsapp": "Grupo do WhatsApp",
       "telegram": "Grupo do Telegram",
-      "email": "placeholder@example.com"
+      "email": "E-mail"
     },
     "copyright": "© {year} Bolão da Copa 2026"
   },

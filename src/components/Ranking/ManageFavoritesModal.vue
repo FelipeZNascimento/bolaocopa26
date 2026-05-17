@@ -10,7 +10,7 @@
     <template #header>
       <h3 class="favorites-title">
         <i class="pi pi-star-fill" />
-        Favoritos
+        {{ t('favoritesModal.title') }}
       </h3>
     </template>
 
@@ -43,7 +43,7 @@
     <PrimeButton
       v-if="favoriteUsers.length > 0"
       style="margin-top: var(--l-spacing)"
-      label="Remover Todos"
+      :label="t('favoritesModal.clearButton')"
       severity="danger"
       icon="pi pi-trash"
       @click="handleClearFavorites"
@@ -53,6 +53,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import type { IUser } from '@/stores/activeProfile.types';
 
@@ -79,6 +80,7 @@ const rankingStore = useRankingStore();
 const configurationStore = useConfigurationStore();
 const userService = new UserService();
 const notificationStore = useNotificationStore();
+const { t } = useI18n();
 
 // ------ Computed ------
 const favorites = computed(() => activeProfileStore.activeProfile?.favorites || []);
@@ -118,10 +120,10 @@ function removeFavorite(userId: number) {
 
 function updateCallback(isSuccess: boolean) {
   if (isSuccess) {
-    notificationStore.success('Favoritos atualizados com sucesso', 'success');
+    notificationStore.success(t('favoritesModal.successMessage'), 'success');
     console.log('Favorites updated successfully');
   } else {
-    notificationStore.error('Falha ao atualizar favoritos', 'error');
+    notificationStore.error(t('favoritesModal.errorMessage'), 'error');
     console.error('Failed to update favorites');
   }
 }

@@ -44,6 +44,7 @@
         <WelcomeWidget v-else-if="widgetId === 'welcome'" />
         <LogoWidget v-else-if="widgetId === 'logo'" />
         <RulesWidget v-else-if="widgetId === 'rules'" />
+        <SocialGroupsWidget v-else-if="widgetId === 'social-groups'" />
         <ExtrasWidget v-else-if="widgetId === 'extras'" />
         <RankingWidget v-else-if="widgetId === 'ranking'" />
       </WidgetCard>
@@ -65,10 +66,20 @@ import NextMatchBetStatusWidget from './Home/NextMatchBetStatusWidget.vue';
 import NextMatchesWidget from './Home/NextMatchesWidget.vue';
 import RankingWidget from './Home/RankingWidget.vue';
 import RulesWidget from './Home/RulesWidget.vue';
+import SocialGroupsWidget from './Home/SocialGroupsWidget.vue';
 import WelcomeWidget from './Home/WelcomeWidget.vue';
 import WidgetCard from './Home/WidgetCard.vue';
 
-type WidgetId = 'betStatus' | 'extras' | 'live-matches' | 'logo' | 'next-matches' | 'ranking' | 'rules' | 'welcome';
+type WidgetId =
+  | 'betStatus'
+  | 'extras'
+  | 'live-matches'
+  | 'logo'
+  | 'next-matches'
+  | 'ranking'
+  | 'rules'
+  | 'social-groups'
+  | 'welcome';
 
 const WIDGET_TITLES = computed<Record<WidgetId, string>>(() => ({
   betStatus: t('home.widgets.betStatus'),
@@ -78,6 +89,7 @@ const WIDGET_TITLES = computed<Record<WidgetId, string>>(() => ({
   'next-matches': t('home.widgets.nextMatches'),
   ranking: t('home.widgets.ranking'),
   rules: t('home.widgets.rules'),
+  'social-groups': t('home.widgets.socialGroups'),
   welcome: t('home.widgets.welcome'),
 }));
 
@@ -85,6 +97,7 @@ const ALL_WIDGET_IDS: WidgetId[] = [
   'logo',
   'welcome',
   'rules',
+  'social-groups',
   'next-matches',
   'live-matches',
   'betStatus',
@@ -259,7 +272,7 @@ onUnmounted(() => {
   padding: var(--l-spacing);
 
   @media (width <= 768px) {
-    padding: var(--xxl-spacing) var(--s-spacing) var(--s-spacing);
+    padding: var(--s-spacing) var(--s-spacing) var(--s-spacing);
   }
 }
 

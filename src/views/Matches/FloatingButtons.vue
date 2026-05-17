@@ -1,7 +1,7 @@
 <template>
   <div
     class="floating-actions"
-    :class="{ scrolled: isScrolled }"
+    :class="{ scrolled: isScrolled, 'near-bottom': isNearBottom }"
   >
     <div class="button-outer">
       <button
@@ -59,6 +59,7 @@ defineProps<{
 }>();
 
 // ------ Refs ------
+const isNearBottom = ref(false);
 const isScrolled = ref(false);
 const isSaving = ref(false);
 
@@ -102,11 +103,12 @@ const saveButtonTooltip = computed(() => {
 
 // ------ Functions ------
 const handleScroll = () => {
-  if (!isDesktop) {
-    return;
+  if (isDesktop.value) {
+    isScrolled.value = window.scrollY > 100;
+  } else {
+    const distanceFromBottom = document.documentElement.scrollHeight - window.scrollY - window.innerHeight;
+    isNearBottom.value = distanceFromBottom < 200;
   }
-
-  isScrolled.value = window.scrollY > 100;
 };
 const handleSave = async () => {
   const changes = matchesStore.getChangedBets().filter((bet) => bet.scoreAway !== null && bet.scoreHome !== null);
@@ -209,7 +211,7 @@ const handleReset = () => {
   gap: var(--xl-spacing);
   width: 70px;
   padding: var(--m-spacing) var(--xs-spacing);
-  background-color: var(--bolao-c-blue3-t3);
+  background-color: var(--bolao-c-blue3);
   border-radius: var(--border-radius);
   transition: top 0.3s ease;
 
@@ -222,14 +224,19 @@ const handleReset = () => {
     flex-direction: row;
     justify-content: center;
     width: unset;
-    padding: var(--m-spacing) 0 0 0;
+    padding: var(--s-spacing) 0 0 0;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
+    transition: transform 0.3s ease;
 
     // background-color: var(--bolao-c-blue5-t3);
 
     &.scrolled {
       top: auto;
+    }
+
+    &.near-bottom {
+      transform: translateY(100%);
     }
   }
 }

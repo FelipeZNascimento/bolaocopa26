@@ -246,11 +246,11 @@ function pad(n: number): string {
 }
 
 .clock-value {
-  font-size: 3rem;
+  font-size: var(--xl-font-size);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   line-height: 1;
-  color: var(--p-text-color);
+  color: var(--bolao-c-grey2);
 }
 
 .clock-key {
@@ -304,7 +304,7 @@ function pad(n: number): string {
 .team-name {
   font-size: var(--xs-font-size);
   font-weight: 600;
-  color: var(--p-text-color);
+  color: var(--bolao-c-grey2);
 }
 
 .vs {

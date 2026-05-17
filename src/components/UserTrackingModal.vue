@@ -12,7 +12,9 @@
       <p class="modal-title">
         <i
           v-if="!isUserActive"
-          v-tooltip.top="isFavorite() ? 'Remover favorito' : 'Adicionar aos favoritos'"
+          v-tooltip.top="
+            isFavorite() ? t('userTrackingModal.removeFavoriteTooltip') : t('userTrackingModal.addFavoriteTooltip')
+          "
           :class="isFavorite() ? 'pi pi-star-fill' : 'pi pi-star'"
           class="favorite-star"
           @click="toggleFavorite"
@@ -27,10 +29,10 @@
       :options="chartOptions"
     />
     <p style="text-align: center">
-      A pontuação no gráfico não inclui pontos extras, apenas os pontos acumulados das apostas normais.
+      {{ t('userTrackingModal.chartExplanation') }}
     </p>
     <PrimeDivider />
-    <h2 style="text-align: center">Apostas Extras</h2>
+    <h2 style="text-align: center">{{ t('userTrackingModal.extraBets') }}</h2>
     <div style="display: flex; justify-content: center; padding: var(--s-spacing)">
       <PrimeSkeleton
         v-if="isLoadingExtras"
@@ -49,13 +51,14 @@
   />
 </template>
 <script setup lang="ts">
+import PrimeChart from 'primevue/chart';
 import { computed, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import type { IUser } from '@/stores/activeProfile.types';
 
 import LoginModal from '@/components/LoginModal.vue';
 import UserService from '@/services/user';
-import PrimeChart from 'primevue/chart';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useExtraBetStore } from '@/stores/extraBet';
 import { useNotificationStore } from '@/stores/notification';
@@ -79,6 +82,7 @@ const activeProfileStore = useActiveProfileStore();
 const notificationStore = useNotificationStore();
 const extraBetStore = useExtraBetStore();
 const userService = new UserService();
+const { t } = useI18n();
 
 // ------ Computed Properties  ------
 const activeProfile = computed(() => activeProfileStore.activeProfile);
@@ -131,26 +135,38 @@ function toggleFavorite() {
   if (!props.selectedUser) return;
 
   if (props.selectedUser.id === activeProfile.value.id) {
-    notificationStore.error('You cannot favorite yourself', 'Invalid Action');
+    notificationStore.error(
+      t('userTrackingModal.addFavoriteNotificationError.message'),
+      t('userTrackingModal.addFavoriteNotificationError.title'),
+    );
     return;
   }
 
   const userId = props.selectedUser.id;
-  const newFavorites = favorites.value.includes(userId)
-    ? favorites.value.filter((id) => id !== userId)
-    : [...favorites.value, userId];
+  const isRemoving = favorites.value.includes(userId);
+  const newFavorites = isRemoving ? favorites.value.filter((id) => id !== userId) : [...favorites.value, userId];
 
   userService.updateFavorites(newFavorites, (isSuccess) =>
-    updateCallback(isSuccess, props.selectedUser?.nickname ?? ''),
+    updateCallback(isSuccess, isRemoving, props.selectedUser?.nickname ?? ''),
   );
 }
 
-function updateCallback(isSuccess: boolean, selectedUser: string) {
+function updateCallback(isSuccess: boolean, isRemoving: boolean, selectedUser: string) {
   if (isSuccess) {
-    notificationStore.success(`${selectedUser} agora é um favorito!`, 'Favorito Adicionado');
+    const messageKey = isRemoving
+      ? 'userTrackingModal.removeFavoriteNotification.message'
+      : 'userTrackingModal.addFavoriteNotification.message';
+    const titleKey = isRemoving
+      ? 'userTrackingModal.removeFavoriteNotification.title'
+      : 'userTrackingModal.addFavoriteNotification.title';
+
+    notificationStore.success(`${selectedUser} ${t(messageKey)}`, t(titleKey));
     console.log('Favorites updated successfully');
   } else {
-    notificationStore.error('Falha ao atualizar favoritos', 'error');
+    notificationStore.error(
+      t('userTrackingModal.addFavoriteNotificationError.message'),
+      t('userTrackingModal.addFavoriteNotificationError.title'),
+    );
     console.error('Failed to update favorites');
   }
 }

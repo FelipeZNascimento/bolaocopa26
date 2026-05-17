@@ -19,7 +19,7 @@
       <PrimeSelect
         :model-value="selectedRound"
         :options="visibleRounds"
-        option-label="displayShort"
+        :option-label="(round: { num: number }) => t(`rounds.${round.num}.short`)"
         option-value="num"
         @update:model-value="setRound"
       />

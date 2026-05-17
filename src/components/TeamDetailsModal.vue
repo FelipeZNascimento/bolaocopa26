@@ -113,7 +113,7 @@ const props = defineProps<{
 
 // ------ Initialization ------
 const { isMobile } = useViewport();
-const { locale } = useI18n();
+const { locale, t } = useI18n();
 
 // ------ Refs ------
 const isVisible = ref(false);

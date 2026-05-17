@@ -19,6 +19,48 @@
     "round": "Round",
     "countdown": "There are {countdown} left"
   },
+  "profileModal": {
+    "title": "My Profile",
+    "email": "Email",
+    "name": "Full Name",
+    "nickname": "Nickname",
+    "saveButton": "Save Changes",
+    "successMessage": "Profile updated successfully!",
+    "errorMessage": "An error occurred while updating your profile. Please try again."
+  },
+  "changePasswordModal": {
+    "title": "Change Password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "saveButton": "Save Changes",
+    "successMessage": "Password changed successfully!",
+    "errorMessage": "An error occurred while changing your password. Please try again."
+  },
+  "favoritesModal": {
+    "title": "Favorites",
+    "clearButton": "Remove All",
+    "successMessage": "Favorites updated successfully!",
+    "errorMessage": "An error occurred while updating your favorites. Please try again."
+  },
+  "userTrackingModal": {
+    "addFavoriteNotificationError": {
+      "title": "Error",
+      "message": "An error occurred while updating your favorites. Please try again."
+    },
+    "addFavoriteNotification": {
+      "title": "Favorite Added",
+      "message": " is now a favorite! You can track your bets and performance in the ranking more easily."
+    },
+    "removeFavoriteNotification": {
+      "title": "Favorite Removed",
+      "message": " is no longer a favorite."
+    },
+    "addFavoriteTooltip": "Add to Favorites",
+    "removeFavoriteTooltip": "Remove from Favorites",
+    "chartExplanation": "The score in the chart does not include extra points, only the accumulated points from regular bets.",
+    "extraBets": "Extra Bets"
+  },
   "profilePopover": {
     "admin": "Admin",
     "profile": "Profile",
@@ -155,7 +197,9 @@
       "extras": "Extra Bets",
       "welcome": "Welcome",
       "logo": "Bolão World Cup 2026",
-      "betStatus": "Next Bet"
+      "betStatus": "Next Bet",
+      "countdown": "Next Match",
+      "socialGroups": "Social Groups"
     },
     "nextMatches": {
       "empty": "No upcoming matches",
@@ -180,6 +224,10 @@
     },
     "ranking": {
       "seeAll": "See full ranking"
+    },
+    "socialGroups": {
+      "tagline": "Join our groups to follow results, cheer together and never miss a pool update!",
+      "joinGroup": "Join the group"
     },
     "nextMatchCountdown": {
       "nextMatch": "Next match",
@@ -215,7 +263,7 @@
       "title": "Contact",
       "whatsapp": "WhatsApp Group",
       "telegram": "Telegram Group",
-      "email": "placeholder@example.com"
+      "email": "Email"
     },
     "copyright": "© {year} Bolão World Cup 2026"
   },

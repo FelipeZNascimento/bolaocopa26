@@ -13,7 +13,7 @@
     Clique <RouterLink to="regras?section=inscricoes">aqui</RouterLink> para saber como ativar seu perfil e participar
     do bolão!
   </div>
-  <!-- <FooterComponent /> -->
+  <FooterComponent />
 </template>
 
 <script setup lang="ts">
@@ -111,6 +111,7 @@ watch(activeProfile, async (newValue) => {
 .outer-view {
   width: 100%;
   min-height: calc(100vh - var(--navbar-height));
+  padding-bottom: var(--xl-spacing);
   margin-top: var(--navbar-height);
 
   @media (width <= 1024px) {

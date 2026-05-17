@@ -5,7 +5,6 @@
         <h3 class="section-title">{{ t('footer.about.title') }}</h3>
         <p class="about-text">{{ t('footer.about.description') }}</p>
       </div>
-
       <div class="footer-section">
         <h3 class="section-title">{{ t('footer.contact.title') }}</h3>
         <ul class="contact-list">
@@ -23,7 +22,7 @@
           <li>
             <a
               class="contact-link"
-              href="https://t.me/placeholder"
+              href="https://t.me/+rVP220dgf2o0ZDJh"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -34,7 +33,7 @@
           <li>
             <a
               class="contact-link"
-              href="mailto:placeholder@example.com"
+              href="mailto:bolaocopa@omegafox.me"
             >
               <i class="pi pi-envelope" />
               {{ t('footer.contact.email') }}
@@ -60,10 +59,12 @@ const currentYear = computed(() => new Date().getFullYear());
 
 <style lang="scss" scoped>
 .app-footer {
-  margin-top: var(--xl-spacing);
+  width: 100vw;
+  margin-top: auto;
+  margin-left: calc(50% - 50vw);
   color: var(--bolao-c-grey2);
   background-color: var(--bolao-c-navbar);
-  border-top: 1px solid var(--bolao-c-blue3);
+  border-top: 8px solid var(--bolao-c-gold);
 }
 
 .footer-inner {
