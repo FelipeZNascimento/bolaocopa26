@@ -18,19 +18,14 @@
         <img
           class="team-shield-image"
           :src="`https://assets.omegafox.me/copa/countries_flags/${match.homeTeam.isoCode.toLowerCase()}.png`"
-          :alt="`${match.homeTeam.name} Shield`"
+          :alt="`${locale === 'pt-BR' ? match.homeTeam.name : match.homeTeam.nameEn} Shield`"
           style="height: 20px"
         />
-        {{
-          match
-            ? `${match.homeTeam.abbreviation} ${match.score?.home ?? 0} x ${match.score?.away ?? 0}
-        ${match.awayTeam.abbreviation}`
-            : ''
-        }}
+        {{ modalHeader() }}
         <img
           class="team-shield-image"
           :src="`https://assets.omegafox.me/copa/countries_flags/${match.awayTeam.isoCode.toLowerCase()}.png`"
-          :alt="`${match.awayTeam.name} Shield`"
+          :alt="`${locale === 'pt-BR' ? match.awayTeam.name : match.awayTeam.nameEn} Shield`"
           style="height: 20px"
         />
       </div>
@@ -111,9 +106,9 @@
             v-else
             class="no-bets-message"
           >
-            <p v-if="countdown">Você tem {{ countdown }} para fazer sua aposta nesse jogo.</p>
+            <p v-if="countdown">{{ t('moreInfoModal.countdownMessage', { countdown }) }}</p>
             <i class="pi pi-clock" />
-            <p>As apostas de todos os participantes estarão disponíveis quando a partida começar.</p>
+            <p>{{ t('moreInfoModal.betsAvailable') }}</p>
           </div>
         </div>
       </div>
@@ -122,6 +117,7 @@
 </template>
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import type { IBet, IMatch } from '@/stores/matches.types';
 
@@ -149,6 +145,7 @@ const isVisible = ref(false);
 const showFavoritesOnly = ref(false);
 const { isMobile } = useViewport();
 const userService = new UserService();
+const { locale, t } = useI18n();
 
 // ------ Computed Properties ------
 const activeProfile = computed(() => activeProfileStore.activeProfile);
@@ -160,7 +157,6 @@ const countdown = computed(() => {
   return clockStore.getCountdown(parseInt(props.match.timestamp, 10));
 });
 
-// ------ Functions ------
 function filterBets(bets: IBet[] | null, hitLevel: HitLevel) {
   if (!bets) return [];
 
@@ -218,9 +214,20 @@ function filterBets(bets: IBet[] | null, hitLevel: HitLevel) {
 
   return filteredBets;
 }
-
 function isFavorite(userId: number): boolean {
   return userService.isFavorite(userId);
+}
+
+// ------ Functions ------
+function modalHeader() {
+  if (!props.match) return '';
+
+  const homeTeamAbbr =
+    locale.value === 'pt-BR' ? props.match.homeTeam.abbreviation : props.match.homeTeam.abbreviationEn;
+  const awayTeamAbbr =
+    locale.value === 'pt-BR' ? props.match.awayTeam.abbreviation : props.match.awayTeam.abbreviationEn;
+
+  return `${homeTeamAbbr} ${props.match.score?.home ?? 0} x ${props.match.score?.away ?? 0} ${awayTeamAbbr}`;
 }
 
 // ------ Watches ------

@@ -49,7 +49,6 @@ export const useConfigurationStore = defineStore('configuration', () => {
   }
 
   function setRankingPosition(newValue: TRankingPositionValue) {
-    console.log('Setting ranking position to:', newValue);
     rankingPosition.value = newValue;
     document.documentElement.setAttribute('ranking-position', newValue);
     localStorage.setItem('ranking-position', newValue);

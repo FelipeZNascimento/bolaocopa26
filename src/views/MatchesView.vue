@@ -55,6 +55,7 @@ const selectedRound = computed(() => configurationStore.selectedRound);
   flex-direction: column;
   gap: var(--m-spacing);
   align-items: flex-start;
+  margin-top: 10px;
 
   @media (width <= 1024px) {
     margin-bottom: 80px;

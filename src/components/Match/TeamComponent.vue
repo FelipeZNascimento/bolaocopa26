@@ -2,7 +2,7 @@
   <div style="width: 100%">
     <div
       class="outer-team"
-      :class="[isNameless ? 'outer-team-nameless' : '']"
+      :class="[isNameless ? 'outer-team-nameless' : '', isMini ? 'is-mini' : '']"
       :style="{
         flexDirection: isHomeTeam ? 'row' : 'row-reverse',
       }"
@@ -13,6 +13,7 @@
         :class="{
           'team-shield--left': isHomeTeam,
           'team-shield--right': !isHomeTeam,
+          'is-mini': isMini,
         }"
       >
         <img
@@ -25,18 +26,27 @@
       <div
         v-if="!isNameless"
         class="team-alias clickable"
+        :class="{ 'is-mini': isMini }"
         :style="{ textAlign: isHomeTeam ? 'right' : 'left' }"
         @click="openTeamModal(team)"
       >
-        {{ team.name }}
+        {{ locale === 'pt-BR' ? team.name : team.nameEn }}
       </div>
       <div
+        v-if="!isMini || isMatchStarted"
         class="team-score"
+        :class="{ 'is-mini': isMini }"
         :style="{
           cursor: activeProfile ? 'default' : 'pointer',
         }"
         @click="handleScoreClick($event)"
       >
+        <span
+          v-if="!isMatchStarted"
+          class="score-type-label"
+        >
+          {{ t('score.bet') }}
+        </span>
         <input
           v-model="inputValue"
           name="score"
@@ -45,16 +55,18 @@
           max="99"
           class="score-input"
           :class="{
+            'is-empty': isEmpty,
             'is-loading': isLoadingMatch,
             'has-invalid-changes': hasUnsavedChanges && !isBetValid,
             'has-valid-changes': hasUnsavedChanges && isBetValid,
+            'is-mini': isMini,
           }"
           placeholder="_"
-          :readonly="isMatchStarted || !activeProfile || isLoadingMatch"
+          :readonly="isMatchStarted || !activeProfile || isLoadingMatch || isMini"
           :style="{
             fontWeight: isWinning ? 'bold' : 'normal',
             textAlign: isOnPenalties && !isMobile ? 'left' : 'center',
-            pointerEvents: activeProfile && !isMatchStarted ? 'auto' : 'none',
+            pointerEvents: activeProfile && !isMatchStarted && !isMini ? 'auto' : 'none',
           }"
           @input="handleInput($event)"
           @keydown="handleKeydown($event)"
@@ -123,6 +135,7 @@
 </template>
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import type { IMatch, IMatchEvent } from '@/stores/matches.types';
 import type { ITeam } from '@/stores/teams.types';
@@ -142,6 +155,7 @@ const props = withDefaults(
     events: IMatchEvent[];
     isAlias?: boolean;
     isHomeTeam?: boolean;
+    isMini?: boolean;
     isNameless?: boolean;
     isWinning?: boolean;
     match: IMatch;
@@ -150,6 +164,7 @@ const props = withDefaults(
   {
     isAlias: false,
     isHomeTeam: false,
+    isMini: false,
     isNameless: false,
     isWinning: false,
     score: null,
@@ -167,9 +182,17 @@ const clockStore = useClockStore();
 const { isMobile } = useViewport();
 const activeProfileStore = useActiveProfileStore();
 const matchesStore = useMatchesStore();
+const { locale, t } = useI18n();
 
 // ------ Computed Properties ------
 const isLoadingMatch = computed(() => matchesStore.updatingMatches.includes(props.match.id));
+const isEmpty = computed(
+  () =>
+    activeProfileStore.activeProfile &&
+    (!props.match.loggedUserBets ||
+      props.match.loggedUserBets?.scoreAway === null ||
+      props.match.loggedUserBets?.scoreHome === null),
+);
 
 const inputValue = computed({
   get() {
@@ -330,8 +353,16 @@ function openTeamModal(team: ITeam) {
   background-color: var(--bolao-c-white-t1);
   border-radius: var(--border-radius);
 
+  &.is-mini {
+    height: 48px;
+  }
+
   @media (width <=768px) {
     height: var(--match-list-height-mobile);
+
+    &.is-mini {
+      height: 40px;
+    }
   }
 }
 
@@ -354,6 +385,10 @@ function openTeamModal(team: ITeam) {
     max-width: 90px;
     height: 100%;
     transform: translate(0, -50%);
+
+    &.is-mini {
+      max-width: 44px;
+    }
 
     @media (width <=1024px) {
       top: 0%;
@@ -378,10 +413,19 @@ function openTeamModal(team: ITeam) {
   width: 100px;
   object-fit: cover;
 
+  .is-mini & {
+    width: 44px;
+  }
+
   @media (width <=768px) {
     width: 32px;
     margin: 0 var(--xs-spacing);
     object-fit: contain;
+
+    .is-mini & {
+      width: 24px;
+      margin: 0 var(--xxs-spacing);
+    }
   }
 
   @media (width <=360px) {
@@ -400,6 +444,12 @@ function openTeamModal(team: ITeam) {
   text-overflow: ellipsis;
   font-size: var(--m-font-size);
   line-height: var(--xl-spacing);
+
+  &.is-mini {
+    padding: var(--xs-spacing);
+    font-size: var(--xs-font-size);
+    line-height: var(--l-spacing);
+  }
 
   @media (width <768px) {
     max-width: 50%;
@@ -430,9 +480,19 @@ function openTeamModal(team: ITeam) {
   background-color: color-mix(in srgb, var(--color-main), transparent 50%);
   border-radius: var(--border-radius);
 
+  &.is-mini {
+    min-width: 36px;
+    font-size: var(--m-font-size);
+  }
+
   @media (width <=768px) {
     min-width: 28px;
     font-size: var(--m-font-size);
+
+    &.is-mini {
+      min-width: 26px;
+      font-size: var(--s-font-size);
+    }
   }
 }
 
@@ -451,6 +511,13 @@ function openTeamModal(team: ITeam) {
   border-radius: calc(var(--border-radius) / 2);
   transition: all 0.2s ease;
 
+  &.is-mini {
+    max-width: 36px;
+    padding: var(--xxs-spacing) var(--xs-spacing) var(--xxs-spacing);
+    font-size: var(--m-font-size);
+    pointer-events: none;
+  }
+
   &:focus {
     border-color: var(--color-contrast);
     box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-contrast), transparent 80%);
@@ -460,6 +527,10 @@ function openTeamModal(team: ITeam) {
     color: var(--bolao-c-grey4);
     text-shadow: 0 0 0 var(--color-contrast);
     opacity: 0.7;
+  }
+
+  &.is-empty {
+    background: color-mix(in srgb, var(--bolao-c-red), transparent 85%);
   }
 
   &.has-valid-changes {
@@ -493,6 +564,21 @@ function openTeamModal(team: ITeam) {
     max-width: 28px;
     font-size: var(--s-font-size);
   }
+}
+
+.score-type-label {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 1;
+  font-size: 7px;
+  font-weight: 700;
+  color: var(--color-contrast);
+  text-transform: uppercase;
+  letter-spacing: 0;
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translateX(-50%);
 }
 
 .loading-spinner-wrapper {

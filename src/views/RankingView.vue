@@ -23,10 +23,12 @@ import RankingTable from '@/components/Ranking/RankingTable.vue';
   width: 100%;
   height: calc(100vh - var(--paginator-height) - var(--navbar-height));
   padding: 0;
+  margin-top: 20px;
   overflow-y: auto;
 
   @media (width <= 1024px) {
     height: calc(100vh - var(--paginator-height) - var(--navbar-height-mobile));
+    margin-top: 10px;
   }
 }
 

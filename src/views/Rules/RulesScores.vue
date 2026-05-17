@@ -10,25 +10,52 @@
       :pt="panelPt"
       @update:collapsed="(val: boolean) => (isOpen = !val)"
     >
-      <template #header><h2>Pontuação</h2></template>
-      <p class="subtitle">Como funciona</p>
-      <p>Cada jogo tem três possíveis resultados de aposta:</p>
+      <template #header
+        ><h2>{{ t('rules.scores.title') }}</h2></template
+      >
+      <p class="subtitle">{{ t('rules.scores.howItWorks') }}</p>
+      <p>{{ t('rules.scores.intro') }}</p>
       <p class="padded">
-        <span style="font-weight: bold; color: var(--bolao-c-gold-l2)">Acerto Total:</span> acertou o placar completo.
+        <span style="font-weight: bold; color: var(--bolao-c-gold-l2)">{{ t('rules.scores.exactScore') }}:</span>
+        {{ t('rules.scores.exactScoreDesc') }}
       </p>
       <p class="padded">
-        <span style="font-weight: bold; color: var(--bolao-c-green-l3)">Acerto Parcial:</span> acertou o vencedor do
-        jogo e o número de gols de apenas uma das equipes.
+        <span style="font-weight: bold; color: var(--bolao-c-green-l3)">{{ t('rules.scores.partialScore') }}:</span>
+        {{ t('rules.scores.partialScoreDesc') }}
       </p>
       <p class="padded">
-        <span style="font-weight: bold; color: var(--bolao-c-blue-l2)">Acerto Mínimo:</span> acertou apenas o vencedor
-        do jogo, mas errou o número de gols das duas equipes.
+        <span style="font-weight: bold; color: var(--bolao-c-blue-l2)">{{ t('rules.scores.minimumScore') }}:</span>
+        {{ t('rules.scores.minimumScoreDesc') }}
       </p>
-      <p class="padded">
-        <span style="font-weight: bold; color: var(--bolao-c-red-l2)">Erro:</span> errou o vencedor da partida.
+      <p
+        class="padded"
+        style="padding-bottom: var(--s-spacing)"
+      >
+        <span style="font-weight: bold; color: var(--bolao-c-red-l2)">{{ t('rules.scores.miss') }}:</span>
+        {{ t('rules.scores.missDesc') }}
       </p>
+      <i18n-t
+        keypath="rules.scores.drawNote"
+        tag="span"
+      >
+        <template #draw
+          ><span style="font-weight: bold">{{ t('rules.scores.drawWord') }}</span></template
+        >
+        <template #exact
+          ><span style="color: var(--bolao-c-gold-l2)">{{ t('rules.scores.exactScore') }}</span></template
+        >
+        <template #minimum
+          ><span style="color: var(--bolao-c-blue-l2)">{{ t('rules.scores.minimumScore') }}</span></template
+        >
+        <template #miss
+          ><span style="color: var(--bolao-c-red-l2)">{{ t('rules.scores.miss') }}</span></template
+        >
+        <template #partial
+          ><span style="color: var(--bolao-c-green-l3)">{{ t('rules.scores.partialScore') }}</span></template
+        >
+      </i18n-t>
       <PrimeDivider />
-      <p class="subtitle">Pontuação por fase</p>
+      <p class="subtitle">{{ t('rules.scores.scoresByPhase') }}</p>
       <PrimeDataTable
         :value="scoresData"
         striped-rows
@@ -38,54 +65,59 @@
       >
         <PrimeColumn
           field="fase"
-          header="Fase"
+          :header="t('rules.scores.tableHeaders.phase')"
           class="column"
         />
         <PrimeColumn
           field="numJogos"
-          header="Nº de Jogos"
+          :header="t('rules.scores.tableHeaders.numMatches')"
           class="column"
         />
         <PrimeColumn
           field="acertoTotal"
-          header="Acerto Total"
+          :header="t('rules.scores.tableHeaders.exactScore')"
           class="column"
           style="color: var(--bolao-c-gold-l2)"
         />
         <PrimeColumn
           field="acertoParcial"
-          header="Acerto Parcial"
+          :header="t('rules.scores.tableHeaders.partialScore')"
           class="column"
           style="color: var(--bolao-c-green-l3)"
         />
         <PrimeColumn
           field="acertoMinimo"
-          header="Acerto Mínimo"
+          :header="t('rules.scores.tableHeaders.minimumScore')"
           class="column"
           style="color: var(--bolao-c-blue-l2)"
         />
       </PrimeDataTable>
-      <p style="margin-top: var(--m-spacing); font-size: var(--s-font-size); font-weight: bold">
-        ● <span style="font-weight: bold; color: var(--bolao-c-red-l2)">Erros</span> valem sempre 0 (zero) pontos.
+      <p style="margin-top: var(--m-spacing); font-weight: bold">
+        <i18n-t
+          keypath="rules.scores.missNote"
+          tag="span"
+        >
+          <template #miss>
+            <span style="font-weight: bold; color: var(--bolao-c-red-l2)">{{ t('rules.scores.miss') }}s</span>
+          </template>
+        </i18n-t>
       </p>
       <p>
-        ● <span style="font-weight: bold">Empate</span> pode ser
-        <span style="color: var(--bolao-c-gold-l2)">Acerto Total</span>,
-        <span style="color: var(--bolao-c-blue-l2)">Acerto Mínimo</span> ou
-        <span style="color: var(--bolao-c-red-l2)">Erro</span> - mas nunca
-        <span style="color: var(--bolao-c-green-l3)">Acerto Parcial</span>.
-      </p>
-      <p>
-        ● No mata-mata (a partir dos 16 Avos de Final), o resultado que vale para pontuação é aquele ao final do tempo
-        extra (se houver). Resultados de disputa por
-        <span style="font-weight: bold">pênaltis não são considerados</span>.
+        <i18n-t
+          keypath="rules.scores.knockoutNote"
+          tag="span"
+        >
+          <template #highlight>
+            <span style="font-weight: bold">{{ t('rules.scores.penaltiesHighlight') }}</span>
+          </template>
+        </i18n-t>
       </p>
       <PrimeDivider />
       <p
         class="subtitle"
         style="padding-bottom: var(--s-spacing)"
       >
-        Exemplos
+        {{ t('rules.scores.examples') }}
       </p>
       <MatchComponent
         :is-demo="true"
@@ -99,11 +131,11 @@
       >
         <PrimeColumn
           field="aposta"
-          header="Aposta"
+          :header="t('rules.scores.exampleTableHeaders.bet')"
           class="column"
         />
         <PrimeColumn
-          header="Pontos"
+          :header="t('rules.scores.exampleTableHeaders.points')"
           class="column"
         >
           <template #body="slotProps">
@@ -124,11 +156,11 @@
       >
         <PrimeColumn
           field="aposta"
-          header="Aposta"
+          :header="t('rules.scores.exampleTableHeaders.bet')"
           class="column"
         />
         <PrimeColumn
-          header="Pontos"
+          :header="t('rules.scores.exampleTableHeaders.points')"
           class="column"
         >
           <template #body="slotProps">
@@ -140,55 +172,102 @@
   </div>
 </template>
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+import MatchComponent from '@/components/Match/MatchComponent.vue';
 import { useRulesPanel } from '@/composables/useRulesPanel';
 
-const { isOpen, panelPt } = useRulesPanel('pontuacao');
-import MatchComponent from '@/components/Match/MatchComponent.vue';
-
 import { firstExample, secondExample } from './examples';
-const scoresData = [
-  { acertoMinimo: '4 pt', acertoParcial: '6 pts', acertoTotal: '10 pts', fase: 'Fase de Grupos', numJogos: 72 },
-  { acertoMinimo: '6 pts', acertoParcial: '9 pts', acertoTotal: '15 pts', fase: '16 Avos de Final', numJogos: 16 },
-  { acertoMinimo: '8 pts', acertoParcial: '12 pts', acertoTotal: '20 pts', fase: 'Oitavas de Final', numJogos: 8 },
-  { acertoMinimo: '12 pts', acertoParcial: '18 pts', acertoTotal: '30 pts', fase: 'Quartas de Final', numJogos: 4 },
-  { acertoMinimo: '16 pts', acertoParcial: '24 pts', acertoTotal: '40 pts', fase: 'Semifinais', numJogos: 2 },
-  { acertoMinimo: '8 pts', acertoParcial: '12 pts', acertoTotal: '20 pts', fase: 'Disputa de 3º lugar', numJogos: 1 },
-  { acertoMinimo: '20 pts', acertoParcial: '30 pts', acertoTotal: '50 pts', fase: 'Final', numJogos: 1 },
-];
 
-const firstExampleData = [
-  {
-    aposta: 'Brasil 2 x 1 Argentina',
-    pontos: `<span style="color: var(--bolao-c-gold-l2); font-weight: bold">10 pts (Acerto Total)</span>`,
-  },
-  {
-    aposta: 'Brasil 3 x 1 Argentina',
-    pontos: `<span style="color: var(--bolao-c-blue-l2); font-weight: bold">6 pts (Acerto Parcial)</span>`,
-  },
-  {
-    aposta: 'Brasil 1 x 1 Argentina',
-    pontos: `<span style="color: var(--bolao-c-green-l3); font-weight: bold">4 pts (Acerto Mínimo)</span>`,
-  },
-  {
-    aposta: 'Brasil 0 x 2 Argentina',
-    pontos: `<span style="color: var(--bolao-c-red-l2); font-weight: bold">0 pts (Erro)</span>`,
-  },
-];
+const { isOpen, panelPt } = useRulesPanel('pontuacao');
+const { t } = useI18n();
 
-const secondExampleData = [
+const scoresData = computed(() => [
   {
-    aposta: 'Inglaterra 1 x 1 Alemanha',
-    pontos: `<span style="color: var(--bolao-c-gold-l2); font-weight: bold">10 pts (Acerto Total)</span>`,
+    acertoMinimo: '4 pt',
+    acertoParcial: '6 pts',
+    acertoTotal: '10 pts',
+    fase: t('rules.scores.phases.groups'),
+    numJogos: 72,
   },
   {
-    aposta: 'Inglaterra 2 x 2 Alemanha',
-    pontos: `<span style="color: var(--bolao-c-green-l3); font-weight: bold">4 pts (Acerto Mínimo)</span>`,
+    acertoMinimo: '6 pts',
+    acertoParcial: '9 pts',
+    acertoTotal: '15 pts',
+    fase: t('rules.scores.phases.r16'),
+    numJogos: 16,
   },
   {
-    aposta: 'Inglaterra 1 x 0 Alemanha',
-    pontos: `<span style="color: var(--bolao-c-red-l2); font-weight: bold">0 pts (Erro)</span>`,
+    acertoMinimo: '8 pts',
+    acertoParcial: '12 pts',
+    acertoTotal: '20 pts',
+    fase: t('rules.scores.phases.r8'),
+    numJogos: 8,
   },
-];
+  {
+    acertoMinimo: '12 pts',
+    acertoParcial: '18 pts',
+    acertoTotal: '30 pts',
+    fase: t('rules.scores.phases.qf'),
+    numJogos: 4,
+  },
+  {
+    acertoMinimo: '16 pts',
+    acertoParcial: '24 pts',
+    acertoTotal: '40 pts',
+    fase: t('rules.scores.phases.sf'),
+    numJogos: 2,
+  },
+  {
+    acertoMinimo: '8 pts',
+    acertoParcial: '12 pts',
+    acertoTotal: '20 pts',
+    fase: t('rules.scores.phases.third'),
+    numJogos: 1,
+  },
+  {
+    acertoMinimo: '20 pts',
+    acertoParcial: '30 pts',
+    acertoTotal: '50 pts',
+    fase: t('rules.scores.phases.final'),
+    numJogos: 1,
+  },
+]);
+
+const firstExampleData = computed(() => [
+  {
+    aposta: t('rules.scores.example1.bet1'),
+    pontos: `<span style="color: var(--bolao-c-gold-l2); font-weight: bold">${t('rules.scores.exactScorePoints')}</span>`,
+  },
+  {
+    aposta: t('rules.scores.example1.bet2'),
+    pontos: `<span style="color: var(--bolao-c-green-l3); font-weight: bold">${t('rules.scores.partialScorePoints')}</span>`,
+  },
+  {
+    aposta: t('rules.scores.example1.bet3'),
+    pontos: `<span style="color: var(--bolao-c-blue-l2); font-weight: bold">${t('rules.scores.minimumScorePoints')}</span>`,
+  },
+  {
+    aposta: t('rules.scores.example1.bet4'),
+    pontos: `<span style="color: var(--bolao-c-red-l2); font-weight: bold">${t('rules.scores.missPoints')}</span>`,
+  },
+]);
+
+const secondExampleData = computed(() => [
+  {
+    aposta: t('rules.scores.example2.bet1'),
+    pontos: `<span style="color: var(--bolao-c-gold-l2); font-weight: bold">${t('rules.scores.exactScorePoints')}</span>`,
+  },
+  {
+    aposta: t('rules.scores.example2.bet2'),
+    pontos: `<span style="color: var(--bolao-c-blue-l2); font-weight: bold">${t('rules.scores.minimumScorePoints')}</span>`,
+  },
+  {
+    aposta: t('rules.scores.example2.bet3'),
+    pontos: `<span style="color: var(--bolao-c-red-l2); font-weight: bold">${t('rules.scores.missPoints')}</span>`,
+  },
+]);
 </script>
 <style lang="scss" scoped>
 .outer {

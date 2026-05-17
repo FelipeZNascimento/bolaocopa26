@@ -7,16 +7,15 @@
       @click="copyText"
       >{{ text }}</span
     >
-    <PrimeButton
-      :icon="copied ? 'pi pi-check' : 'pi pi-copy'"
-      :severity="copied ? 'success' : 'secondary'"
-      variant="text"
-      rounded
-      size="small"
-      :aria-label="copied ? 'Copiado!' : 'Copiar'"
-      @click="copyText"
-    />
   </div>
+  <PrimeButton
+    :icon="copied ? 'pi pi-check' : 'pi pi-copy'"
+    :severity="copied ? 'success' : 'secondary'"
+    variant="text"
+    rounded
+    :aria-label="copied ? 'Copiado!' : 'Copiar'"
+    @click="copyText"
+  />
 </template>
 
 <script setup lang="ts">

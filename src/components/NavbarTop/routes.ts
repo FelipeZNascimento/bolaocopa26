@@ -14,7 +14,8 @@ export enum ROUTE_ID {
 
 export interface TROUTE {
   id: ROUTE_ID;
-  label: string;
+  mobileOnly?: boolean;
+  name: string;
   needCredentials: boolean;
   url?: string;
 }
@@ -27,32 +28,39 @@ export const ROUTES = [
   //   needCredentials: false,
   // },
   {
-    id: ROUTE_ID.MATCHES,
-    label: 'Jogos',
+    id: ROUTE_ID.HOME,
+    name: 'home',
     needCredentials: false,
-    url: '/jogos',
+    url: '/',
+  },
+  {
+    id: ROUTE_ID.MATCHES,
+    name: 'matches',
+    needCredentials: false,
+    url: '/partidas',
   },
   {
     id: ROUTE_ID.EXTRAS,
-    label: 'Extras',
+    name: 'extras',
     needCredentials: false,
     url: '/extras',
   },
   {
     id: ROUTE_ID.RANKING,
-    label: 'Ranking',
+    mobileOnly: true,
+    name: 'ranking',
     needCredentials: false,
     url: '/ranking',
   },
   {
     id: ROUTE_ID.RULES,
-    label: 'Regras',
+    name: 'rules',
     needCredentials: false,
     url: '/regras',
   },
   {
     id: ROUTE_ID.TEAMS,
-    label: 'Equipes',
+    name: 'teams',
     needCredentials: false,
     url: '/equipes',
   },

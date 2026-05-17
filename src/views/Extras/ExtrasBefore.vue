@@ -20,7 +20,7 @@
         @click="selectedToggle.value = option.value"
       >
         <div class="team-name">
-          {{ option.label }}
+          {{ t(option.label) }}
         </div>
 
         <div
@@ -37,7 +37,7 @@
           v-if="option.selectedTeam"
           class="team-name"
         >
-          {{ option.selectedTeam?.name }}
+          {{ locale === 'pt-BR' ? option.selectedTeam?.name : option.selectedTeam?.nameEn }}
         </div>
       </div>
     </div>
@@ -46,7 +46,7 @@
       <PrimeButton
         v-for="item in buttonOptions"
         :key="item.value"
-        :label="item.label"
+        :label="t(item.label)"
         variant="outlined"
         size="small"
         :severity="selectedToggle.value === item.value ? 'primary' : 'secondary'"
@@ -54,15 +54,8 @@
         @click="selectedToggle.value = item.value"
       />
     </div>
-    <h2>{{ currentSelectedToggle?.label }}</h2>
-    <h3
-      v-if="
-        currentSelectedToggle?.value === EXTRA_BETS_VALUES.DEFENSE ||
-        currentSelectedToggle?.value === EXTRA_BETS_VALUES.OFFENSE
-      "
-    >
-      Oi
-    </h3>
+    <h2>{{ currentSelectedToggle ? t(currentSelectedToggle.label) : '' }}</h2>
+
     <div
       v-if="
         currentSelectedToggle?.value != EXTRA_BETS_VALUES.TOP_SCORER &&
@@ -80,19 +73,17 @@
         <div class="flag-container">
           <img
             :src="`https://assets.omegafox.me/copa/countries_flags/${team.isoCode.toLowerCase()}.png`"
-            :alt="`${team.name} Flag`"
+            :alt="`${locale === 'pt-BR' ? team.name : team.nameEn} Flag`"
             class="team-flag"
           />
         </div>
         <div class="team-name">
-          {{ team.name }}
+          {{ locale === 'pt-BR' ? team.name : team.nameEn }}
         </div>
       </div>
     </div>
     <div v-else>
-      <p style="color: var(--bolao-c-grey1-t2); text-align: center">
-        Essa aposta estará disponível assim que as escalações de todas as seleções forem divulgadas!
-      </p>
+      <p style="color: var(--bolao-c-grey1-t2); text-align: center">{{ t('extraBets.playersWarning') }}</p>
     </div>
   </div>
   <!-- Modals -->
@@ -103,6 +94,7 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import type { IPlayer, ITeam } from '@/stores/teams.types';
 
@@ -135,6 +127,7 @@ const teamsService = new TeamService();
 const extraBetService = new ExtraBetService();
 const notificationStore = useNotificationStore();
 const activeProfileStore = useActiveProfileStore();
+const { locale, t } = useI18n();
 
 // ------ Refs ------
 const isLoginModalOpen = ref(false);

@@ -3,8 +3,8 @@
     v-if="isLoadingConfig"
     class="skeleton-outer"
   />
-  <ExtrasBefore v-else-if="!isLoadingConfig && !isSeasonStarted" />
-  <ExtrasAfter v-else-if="!isLoadingConfig && isSeasonStarted" />
+  <ExtrasBefore v-else-if="!isLoadingConfig && !isEditionStarted" />
+  <ExtrasAfter v-else-if="!isLoadingConfig && isEditionStarted" />
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
@@ -21,7 +21,7 @@ const configurationStore = useConfigurationStore();
 
 // ------ Computed Properties ------
 const isLoadingConfig = computed(() => configurationStore.isLoading);
-const isSeasonStarted = computed(
+const isEditionStarted = computed(
   () => configurationStore.editionStart && clockStore.currentTimestamp >= configurationStore.editionStart,
 );
 </script>

@@ -36,11 +36,11 @@ export const EXTRA_BETS_VALUES = {
 };
 
 export const EXTRA_BETS_LABELS: Record<TEXTRA_BETS_VALUES, string> = {
-  [EXTRA_BETS_VALUES.CHAMPION]: 'Campeão',
-  [EXTRA_BETS_VALUES.TOP_SCORER]: 'Artilheiro',
-  [EXTRA_BETS_VALUES.OFFENSE]: 'Melhor Ataque',
-  [EXTRA_BETS_VALUES.DEFENSE]: 'Melhor Defesa',
-  [EXTRA_BETS_VALUES.BEST_PLAYER]: 'Melhor Jogador',
+  [EXTRA_BETS_VALUES.CHAMPION]: 'extraBets.champion',
+  [EXTRA_BETS_VALUES.TOP_SCORER]: 'extraBets.topScorer',
+  [EXTRA_BETS_VALUES.OFFENSE]: 'extraBets.bestOffense',
+  [EXTRA_BETS_VALUES.DEFENSE]: 'extraBets.bestDefense',
+  [EXTRA_BETS_VALUES.BEST_PLAYER]: 'extraBets.bestPlayer',
 };
 
 export type BetsValues = (typeof BETS_VALUES)[keyof typeof BETS_VALUES];

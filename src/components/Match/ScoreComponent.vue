@@ -6,6 +6,7 @@
       :is-winning="isHomeTeamWinning"
       :events="sortedEvents"
       :match="match"
+      :is-mini="isMini"
     />
     <TeamComponent
       :is-home-team="false"
@@ -13,6 +14,7 @@
       :is-winning="isAwayTeamWinning"
       :match="match"
       :events="sortedEvents"
+      :is-mini="isMini"
     />
   </div>
 </template>
@@ -28,10 +30,11 @@ const props = withDefaults(
   defineProps<{
     activeUserBet: IBet | null;
     isMatchStarted: boolean;
+    isMini?: boolean;
     isScoreModalOpen?: boolean;
     match: IMatch;
   }>(),
-  { isScoreModalOpen: false },
+  { isMini: false, isScoreModalOpen: false },
 );
 
 const isHomeTeamWinning = computed(() => {

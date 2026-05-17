@@ -10,13 +10,21 @@
       :pt="panelPt"
       @update:collapsed="(val: boolean) => (isOpen = !val)"
     >
-      <template #header><h2>Apostas Extras</h2></template>
-      <p class="subtitle">Equipe</p>
+      <template #header
+        ><h2>{{ t('rules.extras.title') }}</h2></template
+      >
+      <p class="subtitle">{{ t('rules.extras.teamSubtitle') }}</p>
+      <p>{{ t('rules.extras.teamIntro') }}</p>
       <p>
-        Cada participante escolhe uma equipe para apostar. Os pontos ganhos dependem de quão longe essa equipe chegar na
-        Copa.
+        <i18n-t
+          keypath="rules.extras.teamExclusive"
+          tag="span"
+        >
+          <template #highlight
+            ><span style="font-weight: bold">{{ t('rules.extras.teamExclusiveWord') }}</span></template
+          >
+        </i18n-t>
       </p>
-      <p>As pontuações extras são <span style="font-weight: bold">exclusivas</span>, ou seja, não se acumulam:</p>
       <PrimeDataTable
         :value="championData"
         show-gridlines
@@ -25,26 +33,24 @@
       >
         <PrimeColumn
           field="stage"
-          header="Fase"
+          :header="t('rules.extras.tableHeaders.phase')"
           class="column"
         />
         <PrimeColumn
-          header="Pontos Base"
+          :header="t('rules.extras.tableHeaders.basePoints')"
           class="column"
           field="points"
         />
       </PrimeDataTable>
       <p>
-        <span style="font-weight: bold">Novidade:</span> os participantes terão a oportunidade de trocar a aposta extra
-        de time. Quanto mais tarde a aposta for alterada, menor o fator de pontuação, mas maior a informação disponível.
-        Os fatores abaixo serão aplicados à pontuação base de acordo com o momento em que a aposta extra de time for
-        feita:
+        <span style="font-weight: bold">{{ t('rules.extras.teamFactorsNew') }}</span>
+        {{ t('rules.extras.teamFactors') }}
       </p>
-      <p class="padded">• Antes do Início da Copa: 100% → até 11/06/2026, às 16h, horário de Brasília.</p>
-      <p class="padded">• Antes do Mata-Mata: 60% → até 28/06/2026, às 16h, horário de Brasília</p>
-      <p class="padded">• Antes das Oitavas: 30% → até 04/07/2026, às 14h, horário de Brasília</p>
+      <p class="padded">{{ t('rules.extras.factor1') }}</p>
+      <p class="padded">{{ t('rules.extras.factor2') }}</p>
+      <p class="padded">{{ t('rules.extras.factor3') }}</p>
       <PrimeDivider />
-      <p class="subtitle">Jogadores</p>
+      <p class="subtitle">{{ t('rules.extras.othersSubtitle') }}</p>
       <PrimeDataTable
         :value="playerData"
         show-gridlines
@@ -53,21 +59,18 @@
       >
         <PrimeColumn
           field="type"
-          header="Tipo de Aposta"
+          :header="t('rules.extras.tableHeaders.betType')"
           class="column"
         />
         <PrimeColumn
-          header="Pontos"
+          :header="t('rules.extras.tableHeaders.points')"
           class="column"
           field="points"
         />
       </PrimeDataTable>
-      <p>
-        Essas apostas extras não podem ser trocadas ao longo da Copa. Em caso de empate nessas categorias, todos os
-        empatados contam para a pontuação extra.
-      </p>
+      <p>{{ t('rules.extras.othersNote') }}</p>
       <PrimeDivider />
-      <p class="subtitle">Tabela-Guia</p>
+      <p class="subtitle">{{ t('rules.extras.guideSubtitle') }}</p>
       <PrimeDataTable
         :value="guideData"
         show-gridlines
@@ -76,21 +79,21 @@
       >
         <PrimeColumn
           field="type"
-          header="Tipo de Aposta"
+          :header="t('rules.extras.tableHeaders.betType')"
           class="column"
         />
         <PrimeColumn
-          header="Antes dos Grupos"
+          :header="t('rules.extras.tableHeaders.beforeGroups')"
           class="column"
           field="beforeGroups"
         />
         <PrimeColumn
-          header="Antes do Mata-Mata"
+          :header="t('rules.extras.tableHeaders.beforePlayoffs')"
           class="column"
           field="beforePlayoffs"
         />
         <PrimeColumn
-          header="Antes das Oitavas"
+          :header="t('rules.extras.tableHeaders.beforeQuarter')"
           class="column"
           field="beforeQuarter"
         />
@@ -99,101 +102,21 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+
 import { useRulesPanel } from '@/composables/useRulesPanel';
 
 const { isOpen, panelPt } = useRulesPanel('extras');
-const championData = [
-  {
-    points: '50 pontos',
-    stage: 'Campeão',
-  },
-  {
-    points: '30 pontos',
-    stage: 'Vice-Campeão',
-  },
-  {
-    points: '20 pontos',
-    stage: 'Semifinalista',
-  },
-  {
-    points: '10 pontos',
-    stage: 'Quadrifinalista',
-  },
-  {
-    points: '0 pontos',
-    stage: 'Eliminado antes das Quartas',
-  },
-];
+const { t, tm } = useI18n();
 
-const playerData = [
-  {
-    points: '15 pontos',
-    type: 'Artilheiro',
-  },
-  {
-    points: '15 pontos',
-    type: 'Melhor Jogador (Bola de Ouro)',
-  },
-  {
-    points: '10 pontos',
-    type: 'Melhor Ataque (Grupos)',
-  },
-  {
-    points: '10 pontos',
-    type: 'Melhor Defesa (Grupos)',
-  },
-];
-
-const guideData = [
-  {
-    beforeGroups: '50 pontos',
-    beforePlayoffs: '30 pontos',
-    beforeQuarter: '15 pontos',
-    type: 'Time Campeão',
-  },
-  {
-    beforeGroups: '30 pontos',
-    beforePlayoffs: '18 pontos',
-    beforeQuarter: '9 pontos',
-    type: 'Time Vice-Campeão',
-  },
-  {
-    beforeGroups: '20 pontos',
-    beforePlayoffs: '12 pontos',
-    beforeQuarter: '6 pontos',
-    type: 'Time Semifinalista',
-  },
-  {
-    beforeGroups: '10 pontos',
-    beforePlayoffs: '6 pontos',
-    beforeQuarter: '3 pontos',
-    type: 'Time Quadrifinalista',
-  },
-  {
-    beforeGroups: '15 pontos',
-    beforePlayoffs: '-',
-    beforeQuarter: '-',
-    type: 'Artilheiro',
-  },
-  {
-    beforeGroups: '15 pontos',
-    beforePlayoffs: '-',
-    beforeQuarter: '-',
-    type: 'Melhor Jogador',
-  },
-  {
-    beforeGroups: '10 pontos',
-    beforePlayoffs: '-',
-    beforeQuarter: '-',
-    type: 'Melhor Ataque (Grupos)',
-  },
-  {
-    beforeGroups: '10 pontos',
-    beforePlayoffs: '-',
-    beforeQuarter: '-',
-    type: 'Melhor Defesa (Grupos)',
-  },
-];
+const championData = tm('rules.extras.championData') as { points: string; stage: string }[];
+const playerData = tm('rules.extras.playerData') as { points: string; type: string }[];
+const guideData = tm('rules.extras.guideData') as {
+  beforeGroups: string;
+  beforePlayoffs: string;
+  beforeQuarter: string;
+  type: string;
+}[];
 </script>
 <style lang="scss" scoped>
 .outer {

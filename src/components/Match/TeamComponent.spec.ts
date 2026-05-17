@@ -5,6 +5,7 @@ import { nextTick } from 'vue';
 import type { IMatch } from '@/stores/matches.types';
 
 import { MATCH_STATUS } from '@/constants/match';
+import i18n from '@/i18n';
 
 import TeamComponent from './TeamComponent.vue';
 
@@ -197,7 +198,7 @@ describe('TeamComponent', () => {
     }
 
     const wrapper = mount(TeamComponent, {
-      global: { stubs: defaultStubs },
+      global: { plugins: [i18n], stubs: defaultStubs },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       props: options.props as any,
     });

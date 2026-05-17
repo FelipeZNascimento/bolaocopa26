@@ -21,7 +21,7 @@
       >
         <!-- Soccer ball that moves between items -->
         <RouterLink
-          v-for="(routeItem, index) in ROUTES"
+          v-for="(routeItem, index) in filteredRoutes"
           :key="routeItem.id"
           v-slot="{ navigate }"
           :to="routeItem.url || ''"
@@ -41,7 +41,7 @@
               class="nav-label"
               :class="{ 'active-label': routeItem.id === activeRoute }"
             >
-              {{ routeItem.label }}
+              {{ t(`navigation.${routeItem.name}`) }}
             </span>
           </a>
         </RouterLink>
@@ -63,7 +63,7 @@
                 class="pi pi-star-fill"
                 style="color: var(--bolao-c-mint)"
               />
-              {{ profileRoute.label }}
+              {{ activeProfile.nickname }}
             </span>
           </a>
         </RouterLink>
@@ -109,71 +109,10 @@
     </nav>
 
     <!-- Profile Popover -->
-    <PrimePopover
+    <ProfilePopover
       ref="profilePopover"
-      @hide="syncActiveRouteWithPath"
-    >
-      <div class="outer-profile-popover">
-        <PrimeButton
-          v-if="activeProfile?.admin"
-          variant="text"
-          severity="secondary"
-          size="small"
-          label="Admin"
-          @click="handleNavigate($event, () => {}, adminRoute)"
-        />
-        <PrimeButton
-          variant="text"
-          severity="secondary"
-          size="small"
-          label="Perfil"
-          @click="
-            isProfileModalOpen = true;
-            profilePopover.toggle();
-          "
-        />
-        <PrimeButton
-          variant="text"
-          severity="secondary"
-          size="small"
-          label="Senha"
-          @click="
-            isPasswordModalOpen = true;
-            profilePopover.toggle();
-          "
-        />
-        <PrimeButton
-          variant="text"
-          severity="secondary"
-          size="small"
-          label="Favoritos"
-          @click="
-            isFavoritesModalOpen = true;
-            profilePopover.toggle();
-          "
-        />
-        <PrimeButton
-          severity="secondary"
-          variant="link"
-          size="small"
-          @click="handleThemeConfig(theme === 'dark' ? 'light' : 'dark')"
-        >
-          <i
-            :class="theme === 'dark' ? 'pi pi-sun' : 'pi pi-moon'"
-            :style="{ color: theme === 'dark' ? 'var(--bolao-c-gold)' : 'var(--bolao-c-grey2)' }"
-            style="font-size: var(--l-font-size)"
-          />
-        </PrimeButton>
-        <PrimeDivider />
-
-        <PrimeButton
-          severity="secondary"
-          size="small"
-          label="Sair"
-          @click="handleLogout"
-        />
-      </div>
-    </PrimePopover>
+      @sync="syncActiveRouteWithPath"
+    />
   </header>
 
   <!-- Modals -->
@@ -181,49 +120,24 @@
     :is-open="isLoginModalOpen"
     :handle-close-modal="handleCloseLoginModal"
   />
-  <ProfileModal
-    :is-open="isProfileModalOpen"
-    :handle-close-modal="handleCloseProfileModal"
-  />
-  <PasswordModal
-    :is-open="isPasswordModalOpen"
-    :handle-close-modal="handleClosePasswordModal"
-  />
-  <RankingModal
-    :is-open="isRankingModalOpen"
-    :handle-close-modal="handleCloseRankingModal"
-  />
-  <ManageFavoritesModal
-    :is-open="isFavoritesModalOpen"
-    :handle-close-modal="handleCloseFavoritesModal"
-  />
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 
-import type { TThemeValue } from '@/stores/configuration.types';
-
 import LoginModal from '@/components/LoginModal.vue';
-import ManageFavoritesModal from '@/components/Ranking/ManageFavoritesModal.vue';
-import UserService from '@/services/user';
 import { useViewport } from '@/services/viewport';
 import { useActiveProfileStore } from '@/stores/activeProfile';
-import { useConfigurationStore } from '@/stores/configuration';
 
-import RankingModal from '../Ranking/RankingModal.vue';
-import PasswordModal from './ChangePasswordModal.vue';
-import ProfileModal from './ProfileModal.vue';
+import ProfilePopover from './ProfilePopover.vue';
 import { ROUTE_ID, ROUTES, type TROUTE } from './routes';
 
-type ExtendedRoute = TROUTE | { id: number; label: string; needCredentials: boolean; url: string };
+type ExtendedRoute = TROUTE | { id: number; label: string; name: string; needCredentials: boolean; url: string };
 
 // ------ Refs ------
 const isLoginModalOpen = ref(false);
-const isProfileModalOpen = ref(false);
-const isPasswordModalOpen = ref(false);
-const isRankingModalOpen = ref(false);
 const profilePopover = ref();
 const activeRoute = ref<number>(ROUTES[0].id);
 const activeItemIndex = ref(0);
@@ -231,13 +145,14 @@ const animatedItemIndex = ref(0);
 const ballRotation = ref(0);
 const ballPositionPx = ref(0);
 const navWrapper = ref<HTMLElement | null>(null);
-const isFavoritesModalOpen = ref(false);
 
 let animationFrame: null | number = null;
+let resizeObserver: ResizeObserver | null = null;
 
 const profileRoute = computed(() => ({
   id: ROUTE_ID.PROFILE,
   label: activeProfile.value ? activeProfile.value.nickname : 'Perfil',
+  name: 'profile',
   needCredentials: true,
   url: '',
 }));
@@ -245,21 +160,14 @@ const profileRoute = computed(() => ({
 const loginRoute: ExtendedRoute = {
   id: ROUTE_ID.LOGIN,
   label: 'Login',
+  name: 'login',
   needCredentials: false,
   url: '',
 };
 
-const adminRoute: ExtendedRoute = {
-  id: ROUTE_ID.ADMIN,
-  label: 'Admin',
-  needCredentials: true,
-  url: '/admin',
-};
-
 // ------ Initializations ------
+const { t } = useI18n();
 const activeProfileStore = useActiveProfileStore();
-const configurationStore = useConfigurationStore();
-const userService = new UserService();
 const route = useRoute();
 const router = useRouter();
 const { isDesktop } = useViewport();
@@ -276,18 +184,42 @@ onMounted(() => {
 
   // Initial ball position after DOM is ready
   setTimeout(() => updateBallPosition(), 0);
+
+  // Recalculate ball position whenever the nav wrapper resizes (e.g., scrollbar appearing)
+  resizeObserver = new ResizeObserver(() => {
+    if (animationFrame === null) {
+      updateBallPosition();
+    }
+  });
+  if (navWrapper.value) {
+    resizeObserver.observe(navWrapper.value);
+  }
+  resizeObserver.observe(document.documentElement);
 });
 
 onUnmounted(() => {
   if (animationFrame !== null) {
     cancelAnimationFrame(animationFrame);
   }
+  if (resizeObserver !== null) {
+    resizeObserver.disconnect();
+  }
 });
 
 // ------ Computed Properties ------
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 const isLoadingProfile = computed(() => activeProfileStore.isLoading);
-const theme = computed(() => configurationStore.theme);
+const filteredRoutes = computed(() =>
+  ROUTES.filter((route) => {
+    if (route.needCredentials && !activeProfile.value) {
+      return false;
+    }
+    if (route.mobileOnly && !isDesktop.value) {
+      return false;
+    }
+    return true;
+  }),
+);
 
 const ballPosition = computed(() => {
   return `${ballPositionPx.value}px`;
@@ -296,7 +228,7 @@ const ballPosition = computed(() => {
 const wavePath = computed(() => {
   const width = 1400;
   const height = 100;
-  const items = ROUTES.length;
+  const items = ROUTES.length + 1; // +1 for profile/login
   const activeIndex = animatedItemIndex.value; // Use animated index instead of actual
 
   // Calculate position for dip
@@ -417,33 +349,9 @@ function animateWave(targetIndex: number) {
   animationFrame = requestAnimationFrame(animate);
 }
 
-function handleCloseFavoritesModal() {
-  isFavoritesModalOpen.value = false;
-}
-
 function handleCloseLoginModal() {
   isLoginModalOpen.value = false;
   syncActiveRouteWithPath();
-}
-
-function handleClosePasswordModal() {
-  isPasswordModalOpen.value = false;
-  syncActiveRouteWithPath();
-}
-
-function handleCloseProfileModal() {
-  isProfileModalOpen.value = false;
-  syncActiveRouteWithPath();
-}
-
-function handleCloseRankingModal() {
-  isRankingModalOpen.value = false;
-  syncActiveRouteWithPath();
-}
-
-function handleLogout() {
-  userService.logout();
-  profilePopover.value.toggle();
 }
 
 function handleNavigate(event: Event, navigate: () => void, route: ExtendedRoute) {
@@ -478,10 +386,6 @@ function handleRouteClick(route: ExtendedRoute, index: number, navigate: () => v
   if (route.url) {
     navigate();
   }
-}
-
-function handleThemeConfig(newOption: TThemeValue) {
-  configurationStore.setTheme(newOption);
 }
 
 function syncActiveRouteWithPath() {
@@ -641,13 +545,6 @@ function updateBallPosition() {
     opacity: 1;
     transform: scale(1) rotate(0deg);
   }
-}
-
-.outer-profile-popover {
-  display: flex;
-  flex-direction: column;
-  gap: var(--m-spacing);
-  padding: var(--s-spacing);
 }
 
 /* Responsive */

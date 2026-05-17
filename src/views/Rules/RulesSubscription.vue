@@ -10,35 +10,61 @@
       :pt="panelPt"
       @update:collapsed="(val: boolean) => (isOpen = !val)"
     >
-      <template #header><h2>Inscrições</h2></template>
-      <p>● As inscrições estão abertas até 10/06/2026, às 23h59, horário de Brasília.</p>
-      <p>● Após fazer o cadastro, sua participação estará condicionada ao pagamento da inscrição:</p>
-      <div
-        class="pix-container"
-        style="display: flex; width: 100%"
+      <template #header
+        ><h2>{{ t('rules.subscription.title') }}</h2></template
       >
-        <div class="pix-section">
-          <h3>PIX QR Code</h3>
+      <p>{{ t('rules.subscription.deadline') }}</p>
+      <p>{{ t('rules.subscription.paymentRequired') }}</p>
+      <div
+        class="payments-container"
+        style=""
+      >
+        <div class="payment-section">
+          <h3>🇧🇷 {{ t('rules.subscription.pixQrCode') }}</h3>
           <img
             src="https://assets.omegafox.me/copa/misc/qr-code.png"
             height="200"
           />
         </div>
-        <div class="pix-section">
-          <h3>PIX Copia &amp; Cola</h3>
+        <div class="payment-section">
+          <h3>🇧🇷 {{ t('rules.subscription.pixCopyPaste') }}</h3>
           <ClipboardText
             text="00020126580014BR.GOV.BCB.PIX0136395.825.028-945204000053039865802BR5925Nelson Gimenez da Motta6009Sao Paulo62070503***6304"
           />
         </div>
-        <div class="pix-section">
-          <h3>PIX Info</h3>
-          <p class="padded"><span style="font-weight: bold">Valor</span>: R$100,00</p>
+        <div class="payment-section">
+          <h3>🇧🇷 {{ t('rules.subscription.pixInfo') }}</h3>
+          <p class="padded">
+            <span style="font-weight: bold">{{ t('rules.subscription.pixValue') }}</span
+            >: R$100,00
+          </p>
           <p class="padded">395.825.028-94</p>
           <p class="padded">Nelson Gimenez da Motta</p>
         </div>
+        <div class="payment-section">
+          <h3>🇵🇹 {{ t('rules.subscription.mbWayInfo') }}</h3>
+          <p class="padded">
+            <span style="font-weight: bold">{{ t('rules.subscription.pixValue') }}</span
+            >: €20.00
+          </p>
+          <p class="padded">916 166 514</p>
+          <p class="padded">Felipe Zanon do Nascimento</p>
+        </div>
+        <div class="payment-section">
+          <h3>🌏 {{ t('rules.subscription.payPalInfo') }}</h3>
+          <p class="padded">
+            <span style="font-weight: bold">{{ t('rules.subscription.pixValue') }}</span
+            >: €20.00
+          </p>
+          <p class="padded">
+            <span style="font-weight: bold">{{ t('rules.subscription.pixValue') }}</span
+            >: $25.00
+          </p>
+          <p class="padded">felipe@omegafox.me</p>
+        </div>
       </div>
 
-      <p style="padding-top: var(--s-spacing)">● Após pagamento, envie o comprovante para um dos contatos abaixo:</p>
+      <p style="padding-top: var(--s-spacing)">{{ t('rules.subscription.sendProof') }}</p>
       <p class="padded">Nelson Gimenez da Motta:</p>
       <p class="double-padded">
         <i class="pi pi-envelope"></i> <a href="mailto:ngm.motta@gmail.com">ngm.motta@gmail.com</a>
@@ -51,6 +77,15 @@
           >+55 (11) 96603-1088</a
         >
       </p>
+      <p class="double-padded">
+        <i class="pi pi-telegram"></i>
+        <a
+          href="https://t.me/NelsonMotta"
+          target="_blank"
+          >@NelsonMotta</a
+        >
+      </p>
+
       <p class="padded">Felipe Zanon do Nascimento:</p>
 
       <p class="double-padded">
@@ -73,17 +108,21 @@
         >
       </p>
       <p style="padding-top: var(--s-spacing)">
-        ● O usuário será liberado para realizar as apostas somente
-        <span style="font-weight: bold">após a confirmação da transferência</span>.
+        {{ t('rules.subscription.activationNote') }}
+        <span style="font-weight: bold">{{ t('rules.subscription.activationNoteHighlight') }}</span
+        >{{ t('rules.subscription.activationNoteSuffix') }}
       </p>
     </PrimePanel>
   </div>
 </template>
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+
 import ClipboardText from '@/components/ClipboardText.vue';
 import { useRulesPanel } from '@/composables/useRulesPanel';
 
 const { isOpen, panelPt } = useRulesPanel('inscricoes');
+const { t } = useI18n();
 </script>
 <style lang="scss" scoped>
 .outer {
@@ -108,22 +147,31 @@ const { isOpen, panelPt } = useRulesPanel('inscricoes');
   }
 }
 
-.pix-container {
-  display: flex;
+.payments-container {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--l-spacing);
-  justify-content: space-around;
   width: 100%;
   padding: var(--l-spacing);
   background-color: var(--bolao-c-black-t1);
 
   @media (width <= 768px) {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
 
-  .pix-section {
-    flex: 1;
+  .payment-section {
+    padding: var(--m-spacing);
     font-size: var(--s-font-size);
     text-align: center;
+    background-color: var(--bolao-c-grey5-t1);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 55%);
+
+    h3 {
+      padding-bottom: var(--s-spacing);
+      font-weight: bold;
+    }
   }
 }
 

@@ -101,7 +101,7 @@
               "
             >
               <i :class="getIconClass(routeItem.id)" />
-              <span class="link-label">{{ routeItem.label }}</span>
+              <span class="link-label">{{ t(`navigation.${routeItem.name}`) }}</span>
               <div
                 v-if="routeItem.id === activeRoute"
                 class="active-indicator"
@@ -194,6 +194,22 @@
               "
             />
           </div>
+          <div class="language-switcher">
+            <button
+              class="flag-btn"
+              :class="{ 'flag-btn--active': locale === 'pt-BR' }"
+              @click="locale = 'pt-BR'"
+            >
+              🇧🇷
+            </button>
+            <button
+              class="flag-btn"
+              :class="{ 'flag-btn--active': locale === 'en' }"
+              @click="locale = 'en'"
+            >
+              🇺🇸
+            </button>
+          </div>
         </nav>
       </div>
     </Transition>
@@ -212,10 +228,6 @@
     :is-open="isPasswordModalOpen"
     :handle-close-modal="handleClosePasswordModal"
   />
-  <RankingModal
-    :is-open="isRankingModalOpen"
-    :handle-close-modal="handleCloseRankingModal"
-  />
   <ManageFavoritesModal
     :is-open="isFavoritesModalOpen"
     :handle-close-modal="handleCloseFavoritesModal"
@@ -224,6 +236,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 
 import type { TThemeValue } from '@/stores/configuration.types';
@@ -234,19 +247,17 @@ import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
 
-import RankingModal from '../Ranking/RankingModal.vue';
 import PasswordModal from './ChangePasswordModal.vue';
 import ProfileModal from './ProfileModal.vue';
 import { ROUTE_ID, ROUTES, type TROUTE } from './routes';
 
-type ExtendedRoute = TROUTE | { id: number; label: string; needCredentials: boolean; url: string };
+type ExtendedRoute = TROUTE | { id: number; name: string; needCredentials: boolean; url: string };
 
 // ------ Refs ------
 const isMenuOpen = ref(false);
 const isLoginModalOpen = ref(false);
 const isProfileModalOpen = ref(false);
 const isPasswordModalOpen = ref(false);
-const isRankingModalOpen = ref(false);
 const isFavoritesModalOpen = ref(false);
 const activeRoute = ref<number>(ROUTES[0].id);
 
@@ -262,6 +273,7 @@ const activeProfileStore = useActiveProfileStore();
 const configurationStore = useConfigurationStore();
 const userService = new UserService();
 const route = useRoute();
+const { locale, t } = useI18n();
 
 // Set initial active route
 const currentPath = window.location.pathname;
@@ -372,11 +384,6 @@ function handleClosePasswordModal() {
 
 function handleCloseProfileModal() {
   isProfileModalOpen.value = false;
-  syncActiveRouteWithPath();
-}
-
-function handleCloseRankingModal() {
-  isRankingModalOpen.value = false;
   syncActiveRouteWithPath();
 }
 
@@ -744,5 +751,32 @@ function toggleMenu() {
 .drawer-enter-from,
 .drawer-leave-to {
   transform: translateX(100%);
+}
+
+.language-switcher {
+  display: flex;
+  gap: var(--s-spacing);
+  justify-content: center;
+}
+
+.flag-btn {
+  padding: 4px 8px;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  background: none;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  opacity: 0.45;
+  transition: all 0.2s;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &--active {
+    border-color: var(--bolao-c-blue);
+    opacity: 1;
+  }
 }
 </style>

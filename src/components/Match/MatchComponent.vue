@@ -1,7 +1,7 @@
 <template>
   <div
     class="outer-match line"
-    :class="{ clickable: isMatchStarted }"
+    :class="{ clickable: isMatchStarted, 'is-mini': isMini }"
   >
     <ClockComponent
       v-if="isDesktop && !isDemo"
@@ -9,20 +9,21 @@
       :timestamp="parseInt(match.timestamp, 10)"
       :status="match.status"
       :is-match-started="isMatchStarted"
+      :is-mini="isMini"
     />
     <ScoreComponent
       :match="match"
       :active-user-bet="match.loggedUserBets ?? null"
       :is-match-started="isMatchStarted"
       :hit-level="hitLevel"
+      :is-mini="isMini"
     />
     <div
-      v-if="!isDemo"
+      v-if="!isDemo && isDesktop"
       class="more-info"
       @click="handleMatchClick"
     >
       <i class="pi pi-plus-circle" />
-      <span v-if="!isMobile">Ver Mais</span>
     </div>
   </div>
   <MoreInfoModal
@@ -49,11 +50,13 @@ const props = withDefaults(
   defineProps<{
     isDemo?: boolean;
     isMatchClickable?: boolean;
+    isMini?: boolean;
     match: IMatch;
   }>(),
   {
     isDemo: false,
     isMatchClickable: false,
+    isMini: false,
   },
 );
 
@@ -62,7 +65,7 @@ const isMoreInfoModalOpen = ref(false);
 
 // ------ Initialization ------
 const clockStore = useClockStore();
-const { isDesktop, isMobile } = useViewport();
+const { isDesktop } = useViewport();
 
 // ------ Computed Properties ------
 // const correctBets = { bullseye: [], half: [] };
@@ -122,6 +125,11 @@ function handleMatchClick() {
   gap: var(--m-spacing);
   opacity: 1;
 
+  &.is-mini {
+    gap: var(--xs-spacing);
+    height: unset;
+  }
+
   @media (width <=768px) {
     gap: var(--xs-spacing);
   }
@@ -134,8 +142,8 @@ function handleMatchClick() {
   gap: var(--xxs-spacing);
   align-items: center;
   justify-content: center;
+  width: 60px;
   padding: var(--s-spacing);
-  font-size: var(--xs-font-size);
   font-weight: 600;
   cursor: pointer;
   background-color: var(--bolao-c-white-t1);
@@ -144,7 +152,7 @@ function handleMatchClick() {
   transition: all 0.2s ease;
 
   i {
-    font-size: var(--m-font-size);
+    font-size: var(--l-font-size);
     transition: transform 0.2s ease;
   }
 
