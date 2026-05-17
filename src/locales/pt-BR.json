@@ -1,0 +1,507 @@
+{
+  "title": "Bolão da Copa 2026",
+  "navigation": {
+    "home": "Início",
+    "matches": "Partidas",
+    "extras": "Extras",
+    "ranking": "Ranking",
+    "rules": "Regras",
+    "teams": "Equipes",
+    "profile": "Perfil"
+  },
+  "matches": {
+    "group": "Grupo {group}",
+    "moreDetails": "Ficha Técnica",
+    "capacity": "Capacidade: {capacity} pessoas",
+    "stadium": "Estádio",
+    "referee": "Árbitro",
+    "dateAndTime": "Data e Hora",
+    "round": "Rodada",
+    "countdown": "Faltam {countdown}"
+  },
+  "profileModal": {
+    "title": "Meu Perfil",
+    "email": "Email",
+    "name": "Nome Completo",
+    "nickname": "Apelido",
+    "saveButton": "Salvar Alterações",
+    "successMessage": "Perfil atualizado com sucesso!",
+    "errorMessage": "Ocorreu um erro ao atualizar seu perfil. Por favor, tente novamente."
+  },
+  "changePasswordModal": {
+    "title": "Alterar Senha",
+    "currentPassword": "Senha Atual",
+    "newPassword": "Nova Senha",
+    "confirmPassword": "Confirmar Senha",
+    "saveButton": "Salvar Alterações",
+    "successMessage": "Senha alterada com sucesso!",
+    "errorMessage": "Ocorreu um erro ao alterar sua senha. Por favor, tente novamente."
+  },
+  "favoritesModal": {
+    "title": "Favoritos",
+    "clearButton": "Remover Todos",
+    "successMessage": "Favoritos atualizados com sucesso!",
+    "errorMessage": "Ocorreu um erro ao atualizar seus favoritos. Por favor, tente novamente."
+  },
+  "userTrackingModal": {
+    "addFavoriteNotificationError": {
+      "title": "Erro",
+      "message": "Ocorreu um erro ao atualizar seus favoritos. Por favor, tente novamente."
+    },
+    "addFavoriteNotification": {
+      "title": "Favorito Adicionado",
+      "message": " agora é um favorito! Você pode acompanhar suas apostas e desempenho no ranking mais facilmente."
+    },
+    "removeFavoriteNotification": {
+      "title": "Favorito Removido",
+      "message": " agora não é mais um favorito."
+    },
+    "addFavoriteTooltip": "Adicionar aos Favoritos",
+    "removeFavoriteTooltip": "Remover dos Favoritos",
+    "chartExplanation": "A pontuação no gráfico não inclui pontos extras, apenas os pontos acumulados das apostas normais.",
+    "extraBets": "Apostas Extras"
+  },
+  "profilePopover": {
+    "admin": "Admin",
+    "profile": "Perfil",
+    "password": "Senha",
+    "favorites": "Favoritos",
+    "logout": "Sair"
+  },
+  "floatingButton": {
+    "save": {
+      "label": "Salvar",
+      "tooltip": {
+        "valid": "Salvar todas as alterações",
+        "noChanges": "Nenhuma alteração para salvar",
+        "incompleteChanges": "{count} aposta(s) inválida(s)"
+      }
+    },
+    "discard": {
+      "label": "Descartar",
+      "tooltip": "Descartar todas as alterações"
+    },
+    "notifications": {
+      "success": {
+        "title": "Apostas Salvas",
+        "saved": "{count} aposta salva | {count} apostas salvas"
+      },
+      "incomplete": {
+        "title": "Apostas Incompletas",
+        "message": "Apostas incompletas (laranja) não podem ser salvas."
+      },
+      "error": {
+        "title": "Erro",
+        "message": "Ocorreu um erro ao salvar suas apostas. Por favor, tente novamente."
+      },
+      "discard": {
+        "title": "Alterações Descartadas",
+        "message": "Todas as suas alterações foram descartadas."
+      }
+    }
+  },
+  "ranking": {
+    "completeRankingButton": "Ver ranking completo",
+    "toggle": {
+      "general": "Geral",
+      "round": "Rodada {round}",
+      "all": "Todos",
+      "favorites": "Favoritos",
+      "withExtras": "Com Extras",
+      "withoutExtras": "Sem Extras"
+    },
+    "columns": {
+      "position": "Posição",
+      "points": "Pontos",
+      "pointsShort": "Pts.",
+      "exacts": "Acerto",
+      "partial": "Parcial",
+      "minimum": "Mínimo",
+      "errors": "Erros",
+      "performance": "Aproveitamento",
+      "performanceShort": "Aprov.",
+      "extras": "Extras"
+    },
+    "positionVariation": "Variação no ranking geral: {variation}",
+    "findMe": "Me encontrar no ranking",
+    "manageFavorites": "Gerenciar favoritos",
+    "error": {
+      "message": "Ops, houve um problema de comunicação com o servidor para buscar o ranking.",
+      "details": "Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir, entre em contato com os administradores do Bolão."
+    }
+  },
+  "countdown": {
+    "day": "{count} dia | {count} dias",
+    "hour": "{count} hora | {count} horas",
+    "minute": "{count} minuto | {count} minutos"
+  },
+  "moreInfoModal": {
+    "countdownMessage": "Você tem {countdown} para fazer sua aposta nesse jogo.",
+    "betsAvailable": "As apostas de todos os participantes estarão disponíveis quando a partida começar."
+  },
+  "rounds": {
+    "1": {
+      "short": "G1",
+      "long": "Fase de Grupos - Rodada 1"
+    },
+    "2": {
+      "short": "G2",
+      "long": "Fase de Grupos - Rodada 2"
+    },
+    "3": {
+      "short": "G3",
+      "long": "Fase de Grupos - Rodada 3"
+    },
+    "4": {
+      "short": "16A",
+      "long": "16 Avos de Final"
+    },
+    "5": {
+      "short": "8F",
+      "long": "Oitavas de Final"
+    },
+    "6": {
+      "short": "QF",
+      "long": "Quartas de Final"
+    },
+    "7": {
+      "short": "SF",
+      "long": "Semifinais"
+    },
+    "8": {
+      "short": "3ºL",
+      "long": "Terceiro Lugar"
+    },
+    "9": {
+      "short": "F",
+      "long": "Final"
+    }
+  },
+  "home": {
+    "dashboard": "Esse é o seu dashboard da Copa 2026. Use a função de arrastar e soltar para organizar os widgets como preferir. Todos os seus ajustes serão salvos automaticamente para a próxima vez que você acessar o Bolão!",
+    "welcome": {
+      "headline": "Seu bolão, sua Copa!",
+      "description": "Chute os placares, acerte os campões e suba no ranking! O Bolão da Copa 2026 traz apostas em todas as partidas, confrontos entre amigos, apostas extras (artilheiro, melhor jogador e muito mais) e um ranking em tempo real para você acompanhar cada virada. Vai perder essa?",
+      "features": {
+        "champion": "Aposte nos placares de cada partida",
+        "extras": "Acerte o campeão, artilheiro e muito mais",
+        "live": "Acompanhe os jogos ao vivo",
+        "ranking": "Suba no ranking e deixe seus amigos para trás"
+      }
+    },
+    "widgets": {
+      "nextMatches": "Próximas Partidas",
+      "liveMatches": "Ao Vivo",
+      "ranking": "Ranking",
+      "rules": "Participação",
+      "extras": "Apostas Extras",
+      "welcome": "Bem-vinde",
+      "logo": "Bolão da Copa 2026",
+      "betStatus": "Próxima Aposta",
+      "countdown": "Próxima Partida",
+      "socialGroups": "Grupos de Redes Sociais"
+    },
+    "nextMatches": {
+      "empty": "Sem próximas partidas",
+      "seeAll": "Ver todas as partidas"
+    },
+    "rules": {
+      "messageGuest": "Participe do Bolão da Copa 2026! Saiba como se inscrever e apostar nas partidas.",
+      "messageInactive": "Seu perfil ainda não está ativo. Veja como participar nas regras de inscrição.",
+      "messageActive": "Seu perfil está ativo! Veja as regras de pontuação para saber como apostar nas partidas.",
+      "ctaInactive": "Ver como participar",
+      "ctaActive": "Ver regras de pontuação"
+    },
+    "extras": {
+      "countdownLabel": "Apostas extras fecham em",
+      "days": "dias",
+      "hours": "horas",
+      "minutes": "min",
+      "seconds": "seg",
+      "noBets": "Nenhuma aposta extra feita ainda",
+      "loginPrompt": "Entre para ver suas apostas extras",
+      "seeAll": "Ver apostas extras"
+    },
+    "ranking": {
+      "seeAll": "Ver ranking completo"
+    },
+    "socialGroups": {
+      "tagline": "Entre nos nossos grupos para acompanhar os resultados, torcer junto e não perder nenhuma novidade do bolão!",
+      "joinGroup": "Entrar no grupo"
+    },
+    "nextMatchCountdown": {
+      "nextMatch": "Próxima partida",
+      "simultaneous": "{count} partidas ao mesmo tempo",
+      "days": "dias",
+      "hours": "horas",
+      "minutes": "min",
+      "seconds": "seg",
+      "betSet": "Aposta feita!",
+      "betMissing": "Sem aposta ainda",
+      "noMatches": "Nenhuma partida prevista",
+      "seeAll": "Faça suas apostas"
+    }
+  },
+  "score": {
+    "bet": "Aposta",
+    "live": "Placar"
+  },
+  "extraBets": {
+    "champion": "Campeão",
+    "topScorer": "Artilheiro",
+    "bestPlayer": "Melhor Jogador",
+    "bestDefense": "Melhor Defesa",
+    "bestOffense": "Melhor Ataque",
+    "playersWarning": "Essa aposta estará disponível assim que as escalações de todas as seleções forem divulgadas!"
+  },
+  "footer": {
+    "about": {
+      "title": "Sobre",
+      "description": "Bolão da Copa 2026 — Compita com amigos e família apostando nos resultados da Copa do Mundo."
+    },
+    "contact": {
+      "title": "Contato",
+      "whatsapp": "Grupo do WhatsApp",
+      "telegram": "Grupo do Telegram",
+      "email": "E-mail"
+    },
+    "copyright": "© {year} Bolão da Copa 2026"
+  },
+  "paginator": {
+    "sortByTime": "Por horário",
+    "sortByGroup": "Por grupos",
+    "unsavedBets": {
+      "header": "Apostas não salvas",
+      "message": "Tem certeza que deseja prosseguir sem salvar suas apostas?",
+      "confirm": "Prosseguir",
+      "cancel": "Cancelar"
+    }
+  },
+  "teams": {
+    "title": "Equipes",
+    "group": "Grupo {group}"
+  },
+  "teamDetailsModal": {
+    "coach": "Técnico",
+    "players": "Jogadores"
+  },
+  "rules": {
+    "title": "Regras",
+    "faq": "Perguntas Frequentes",
+    "subscription": {
+      "title": "Inscrições",
+      "deadline": "● As inscrições estão abertas até 10/06/2026, às 23h59, horário de Brasília.",
+      "paymentRequired": "● Após fazer o cadastro, sua participação estará condicionada ao pagamento da inscrição:",
+      "pixQrCode": "PIX QR Code",
+      "pixCopyPaste": "PIX Copia & Cola",
+      "pixInfo": "PIX Info",
+      "payPalInfo": "PayPal",
+      "mbWayInfo": "MB Way",
+      "pixValue": "Valor",
+      "sendProof": "● Após pagamento, envie o comprovante para um dos contatos abaixo:",
+      "activationNote": "● O usuário será liberado para realizar as apostas somente",
+      "activationNoteHighlight": "após a confirmação da transferência",
+      "activationNoteSuffix": "."
+    },
+    "scores": {
+      "title": "Pontuação",
+      "howItWorks": "Como funciona",
+      "intro": "Cada jogo tem três possíveis resultados de aposta:",
+      "exactScore": "Acerto Total",
+      "exactScoreDesc": "acertou o placar completo.",
+      "partialScore": "Acerto Parcial",
+      "partialScoreDesc": "acertou o vencedor do jogo e o número de gols de apenas uma das equipes.",
+      "minimumScore": "Acerto Mínimo",
+      "minimumScoreDesc": "acertou apenas o vencedor do jogo, mas errou o número de gols das duas equipes.",
+      "miss": "Erro",
+      "missDesc": "errou o vencedor da partida.",
+      "scoresByPhase": "Pontuação por fase",
+      "tableHeaders": {
+        "phase": "Fase",
+        "numMatches": "Nº de Jogos",
+        "exactScore": "Acerto Total",
+        "partialScore": "Acerto Parcial",
+        "minimumScore": "Acerto Mínimo"
+      },
+      "phases": {
+        "groups": "Fase de Grupos",
+        "r16": "16 Avos de Final",
+        "r8": "Oitavas de Final",
+        "qf": "Quartas de Final",
+        "sf": "Semifinais",
+        "third": "Disputa de 3º lugar",
+        "final": "Final"
+      },
+      "missNote": "● {miss} valem sempre 0 (zero) pontos.",
+      "drawNote": "{draw} pode ser {exact}, {minimum} ou {miss} - mas nunca {partial}.",
+      "drawWord": "Empate",
+      "knockoutNote": "● No mata-mata (a partir dos 16 Avos de Final), o resultado que vale para pontuação é aquele ao final do tempo extra (se houver). Resultados de disputa por {highlight} não são considerados.",
+      "penaltiesHighlight": "pênaltis não são considerados",
+      "examples": "Exemplos",
+      "exampleTableHeaders": {
+        "bet": "Aposta",
+        "points": "Pontos"
+      },
+      "example1": {
+        "bet1": "Brasil 2 x 1 Argentina",
+        "bet2": "Brasil 3 x 1 Argentina",
+        "bet3": "Brasil 3 x 0 Argentina",
+        "bet4": "Brasil 0 x 2 Argentina"
+      },
+      "example2": {
+        "bet1": "Inglaterra 1 x 1 Alemanha",
+        "bet2": "Inglaterra 2 x 2 Alemanha",
+        "bet3": "Inglaterra 1 x 0 Alemanha"
+      },
+      "pointsSuffix": "pts",
+      "exactScorePoints": "10 pts (Acerto Total)",
+      "partialScorePoints": "6 pts (Acerto Parcial)",
+      "minimumScorePoints": "4 pts (Acerto Mínimo)",
+      "missPoints": "0 pts (Erro)"
+    },
+    "betting": {
+      "title": "Apostas",
+      "rule1": "● As apostas poderão ser feitas até o horário de início de cada jogo. Nesse momento, o bloqueio de apostas para aquela partida será automático e as apostas de todos os usuários ficarão disponíveis.",
+      "rule2": "● Todos os horários dos jogos obedecem ao fuso horário do usuário.",
+      "rule3": "● Os resultados dos jogos, os gols e as pontuações serão atualizados, no mínimo, diariamente.",
+      "emailFallback": "Caso o participante não consiga acessar o site do bolão para realizar suas apostas, serão aceitas apostas enviadas para o {emailLink} até o horário de início do jogo. Apostas que não estejam claras ou que não respeitem o horário serão ignoradas.",
+      "emailLinkLabel": "email"
+    },
+    "extras": {
+      "title": "Apostas Extras",
+      "teamSubtitle": "Equipe",
+      "teamIntro": "Cada participante escolhe uma equipe para apostar. Os pontos ganhos dependem de quão longe essa equipe chegar.",
+      "teamExclusive": "As pontuações extras são {highlight}, ou seja, não se acumulam:",
+      "teamExclusiveWord": "exclusivas",
+      "teamFactors": "os participantes terão a oportunidade de trocar a aposta extra de equipe. Quanto mais tarde a aposta for alterada, menor o fator de pontuação, mas maior a informação disponível. Os fatores abaixo serão aplicados à pontuação base de acordo com o momento em que a aposta extra de equipe for feita:",
+      "teamFactorsNew": "Novidade:",
+      "factor1": "• Antes do Início da Copa: 100% → até 11/06/2026, às 16h, horário de Brasília.",
+      "factor2": "• Antes do Mata-Mata: 60% → até 28/06/2026, às 16h, horário de Brasília",
+      "factor3": "• Antes das Oitavas: 30% → até 04/07/2026, às 14h, horário de Brasília",
+      "othersSubtitle": "Demais Extras",
+      "othersNote": "Essas apostas extras não podem ser trocadas ao longo da Copa. Em caso de empate nessas categorias, todos os empatados contam para a pontuação extra.",
+      "guideSubtitle": "Tabela-Guia",
+      "tableHeaders": {
+        "phase": "Fase",
+        "betType": "Tipo de Aposta",
+        "basePoints": "Pontos Base",
+        "points": "Pontos",
+        "beforeGroups": "Antes dos Grupos",
+        "beforePlayoffs": "Antes do Mata-Mata",
+        "beforeQuarter": "Antes das Oitavas"
+      },
+      "championData": [
+        { "stage": "Campeão", "points": "50 pontos" },
+        { "stage": "Vice-Campeão", "points": "30 pontos" },
+        { "stage": "Semifinalista", "points": "20 pontos" },
+        { "stage": "Quadrifinalista", "points": "10 pontos" },
+        { "stage": "Eliminado antes das Quartas", "points": "0 pontos" }
+      ],
+      "playerData": [
+        { "type": "Artilheiro", "points": "15 pontos" },
+        { "type": "Melhor Jogador (Bola de Ouro)", "points": "15 pontos" },
+        { "type": "Melhor Ataque (Grupos)", "points": "10 pontos" },
+        { "type": "Melhor Defesa (Grupos)", "points": "10 pontos" }
+      ],
+      "guideData": [
+        {
+          "type": "Equipe Campeã",
+          "beforeGroups": "50 pontos",
+          "beforePlayoffs": "30 pontos",
+          "beforeQuarter": "15 pontos"
+        },
+        {
+          "type": "Equipe Vice-Campeã",
+          "beforeGroups": "30 pontos",
+          "beforePlayoffs": "18 pontos",
+          "beforeQuarter": "9 pontos"
+        },
+        {
+          "type": "Equipe Semifinalista",
+          "beforeGroups": "20 pontos",
+          "beforePlayoffs": "12 pontos",
+          "beforeQuarter": "6 pontos"
+        },
+        {
+          "type": "Equipe Quadrifinalista",
+          "beforeGroups": "10 pontos",
+          "beforePlayoffs": "6 pontos",
+          "beforeQuarter": "3 pontos"
+        },
+        { "type": "Artilheiro", "beforeGroups": "15 pontos", "beforePlayoffs": "-", "beforeQuarter": "-" },
+        { "type": "Melhor Jogador", "beforeGroups": "15 pontos", "beforePlayoffs": "-", "beforeQuarter": "-" },
+        { "type": "Melhor Ataque (Grupos)", "beforeGroups": "10 pontos", "beforePlayoffs": "-", "beforeQuarter": "-" },
+        { "type": "Melhor Defesa (Grupos)", "beforeGroups": "10 pontos", "beforePlayoffs": "-", "beforeQuarter": "-" }
+      ]
+    },
+    "prize": {
+      "title": "Premiação",
+      "distributionSubtitle": "Distribuição de Prêmios",
+      "distributionIntro": "10% do valor arrecadado será destinado a custos do site (domínio, hospedagem e desenvolvimento), mais R$ 200,00 em prêmios adicionais descritos abaixo. O restante será distribuído entre os colocados conforme as tabelas abaixo:",
+      "upTo114": "Até 114 Participantes",
+      "plus115": "115+ Participantes",
+      "tableHeaders": {
+        "position": "Colocação",
+        "percentage": "% da Arrecadação"
+      },
+      "shortData": [
+        { "position": "1º Lugar", "percentage": "45%" },
+        { "position": "2º Lugar", "percentage": "25%" },
+        { "position": "3º Lugar", "percentage": "15%" },
+        { "position": "4º Lugar", "percentage": "10%" },
+        { "position": "5º Lugar", "percentage": "5%" }
+      ],
+      "longData": [
+        { "position": "1º Lugar", "percentage": "35%" },
+        { "position": "2º Lugar", "percentage": "20%" },
+        { "position": "3º Lugar", "percentage": "15%" },
+        { "position": "4º Lugar", "percentage": "9%" },
+        { "position": "5º Lugar", "percentage": "6%" },
+        { "position": "6º Lugar", "percentage": "5%" },
+        { "position": "7º Lugar", "percentage": "4%" },
+        { "position": "8º Lugar", "percentage": "3%" },
+        { "position": "9º Lugar", "percentage": "2%" },
+        { "position": "10º Lugar", "percentage": "1%" }
+      ],
+      "additionalSubtitle": "Prêmios Adicionais",
+      "additional1": "● 1º colocado após os 72 jogos da fase de grupos (sem apostas extras): devolução da inscrição (R$100,00).",
+      "additional2": "● 1º colocado geral ao fim de todos os jogos (sem apostas extras): devolução da inscrição (R$100,00).",
+      "tiebreakSubtitle": "Critério de Desempate",
+      "tiebreak1": "1. Maior número de pontos conquistados;",
+      "tiebreak2": "2. Maior número de {highlight} acertos totais;",
+      "tiebreak3": "3. Aposta extra no campeão correta;",
+      "tiebreak4": "4. Maior número de {highlight} acertos parciais;",
+      "tiebreak5": "5. Aposta extra no artilheiro correta;",
+      "tiebreak6": "6. Aposta extra no melhor jogador correta;",
+      "tiebreak7": "7. Sorteio."
+    },
+    "faqItems": {
+      "changeAfterBet": {
+        "question": "Posso alterar minhas apostas depois de feitas?",
+        "answer1": "As apostas podem ser alteradas a qualquer momento antes do início de cada jogo. Para alterar uma aposta, basta encontrar a partida na seção ",
+        "answerLink": "Jogos",
+        "answer2": " e fazer as alterações desejadas. Lembre-se de salvar as alterações para que elas sejam registradas. Após o início do jogo, as apostas ficam bloqueadas e não podem mais ser modificadas."
+      },
+      "missedBet": {
+        "question": "Se eu não apostar numa partida, posso apostar nas próximas?",
+        "answer": "Sim! Somente as partidas já finalizadas não poderão mais receber apostas. Para as partidas futuras, você pode fazer suas apostas normalmente, mesmo que tenha perdido a oportunidade de apostar em uma partida anterior."
+      },
+      "cantBet": {
+        "question": "Não consigo fazer minhas apostas, e agora?",
+        "answer": "Se você está logado e já confirmou o seu pagamento com os administradores, mas ainda não consegue fazer suas apostas, por favor, entre em contato com um dos administradores para que possamos resolver o problema o mais rápido possível. Em último caso, você pode enviar suas apostas por email, conforme descrito na seção de Apostas."
+      },
+      "drawBet": {
+        "question": "Posso apostar em um empate?",
+        "answer": "Sim! Um empate pode render pontos a partir de um placar exato ou de um placar mínimo. No entanto, um empate nunca pode ser um placar parcial, pois os placares parciais exigem prever corretamente o vencedor. Se houver um vencedor em um jogo em que você apostou em um empate, você receberá zero pontos (erro)."
+      },
+      "removeBet": {
+        "question": "Posso remover uma aposta?",
+        "answer": "Não. Você pode alterar suas apostas a qualquer momento antes do início de cada jogo, mas não pode removê-las completamente."
+      },
+      "emptyBet": {
+        "question": "Se eu não apostar numa partida, ela conta como uma aposta em 0x0?",
+        "answer": "Não. Se você não apostar numa partida, ela será considerada como não realizada e, portanto, não afetará sua pontuação."
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 <template>
   <div
     class="floating-actions"
-    :class="{ scrolled: isScrolled }"
+    :class="{ scrolled: isScrolled, 'near-bottom': isNearBottom }"
   >
     <div class="button-outer">
       <button
@@ -14,7 +14,7 @@
           disabled: isSaving,
         }"
         :disabled="isSaving"
-        :aria-label="'Salvar apostas'"
+        :aria-label="saveButtonTooltip"
         @click="handleSave"
       >
         <i
@@ -29,61 +29,28 @@
           {{ allChangesAreValid ? '✓' : invalidBetsCount }}
         </span>
       </button>
-      <p style="font-size: var(--xs-font-size)">Salvar</p>
+      <p style="font-size: var(--xs-font-size)">{{ t('floatingButton.save.label') }}</p>
     </div>
     <div class="button-outer">
       <button
-        v-tooltip.right="'Descartar alterações'"
+        v-tooltip.right="t('floatingButton.discard.tooltip')"
         class="action-btn reset-btn"
         :disabled="isSaving || !hasChanges"
-        :aria-label="'Descartar alterações'"
+        :aria-label="t('floatingButton.discard.tooltip')"
         @click="handleReset"
       >
         <i class="pi pi-undo" />
       </button>
-      <p style="font-size: var(--xs-font-size)">Descartar</p>
-    </div>
-    <div
-      v-if="isDesktop"
-      class="button-outer"
-    >
-      <button
-        v-tooltip.right="rankingPosition === 'active' ? 'Esconder ranking' : 'Mostrar ranking'"
-        class="action-btn active"
-        :aria-label="'Esconder ranking'"
-        @click="handleHideRanking"
-      >
-        <i
-          class="pi"
-          :class="{ 'pi-eye-slash': rankingPosition === 'modal', 'pi-eye': rankingPosition !== 'modal' }"
-        />
-      </button>
-      <p style="font-size: var(--xs-font-size)">Ranking</p>
-    </div>
-
-    <div
-      v-if="selectedRound === 1 || selectedRound === 2 || selectedRound === 3"
-      class="button-outer"
-    >
-      <button
-        v-tooltip.right="matchListSorting === 'group' ? 'Por horário' : 'Por grupos'"
-        class="action-btn active"
-        :aria-label="matchListSorting === 'group' ? 'Desagrupar times' : 'Agrupar por grupos'"
-        :title="matchListSorting === 'group' ? 'Desagrupar times' : 'Agrupar por grupos'"
-        @click="handleListToggle"
-      >
-        <i :class="matchListSorting === 'group' ? 'pi pi-objects-column' : 'pi pi-list'" />
-      </button>
-      <p style="font-size: var(--xs-font-size)">Listar</p>
+      <p style="font-size: var(--xs-font-size)">{{ t('floatingButton.discard.label') }}</p>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import BetService from '@/services/bet';
 import { useViewport } from '@/services/viewport';
-import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
 import { useNotificationStore } from '@/stores/notification';
 
@@ -92,15 +59,16 @@ defineProps<{
 }>();
 
 // ------ Refs ------
+const isNearBottom = ref(false);
 const isScrolled = ref(false);
 const isSaving = ref(false);
 
 // ------ Initialization ------
-const configurationStore = useConfigurationStore();
 const matchesStore = useMatchesStore();
 const notificationStore = useNotificationStore();
 const betService = new BetService();
 const { isDesktop } = useViewport();
+const { t } = useI18n();
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
@@ -119,8 +87,6 @@ watch(
 );
 
 // ------ Computed Properties ------
-const rankingPosition = computed(() => configurationStore.rankingPosition);
-const matchListSorting = computed(() => configurationStore.matchListSorting);
 const hasChanges = computed(() => matchesStore.hasAnyChanges());
 const allChangesAreValid = computed(() =>
   matchesStore.getChangedBets().every((bet) => bet.scoreAway !== null && bet.scoreHome !== null),
@@ -130,28 +96,35 @@ const invalidBetsCount = computed(() => {
   return changes.filter((bet) => bet.scoreAway === null || bet.scoreHome === null).length;
 });
 const saveButtonTooltip = computed(() => {
-  if (!hasChanges.value) return 'Nenhuma alteração para salvar';
-  if (allChangesAreValid.value) return 'Salvar apostas';
-  return `${invalidBetsCount.value} ${invalidBetsCount.value === 1 ? 'aposta incompleta' : 'apostas incompletas'} - preencha todos os placares`;
+  if (!hasChanges.value) return t('floatingButton.save.tooltip.noChanges');
+  if (allChangesAreValid.value) return t('floatingButton.save.tooltip.valid');
+  return t('floatingButton.save.tooltip.incompleteChanges', { count: invalidBetsCount.value });
 });
 
 // ------ Functions ------
 const handleScroll = () => {
-  if (!isDesktop) {
-    return;
+  if (isDesktop.value) {
+    isScrolled.value = window.scrollY > 100;
+  } else {
+    const distanceFromBottom = document.documentElement.scrollHeight - window.scrollY - window.innerHeight;
+    isNearBottom.value = distanceFromBottom < 200;
   }
-
-  isScrolled.value = window.scrollY > 100;
 };
 const handleSave = async () => {
   const changes = matchesStore.getChangedBets().filter((bet) => bet.scoreAway !== null && bet.scoreHome !== null);
 
   if (hasChanges.value && !allChangesAreValid.value) {
-    notificationStore.error('Apostas incompletas (em laranja) não podem ser salvas.', 'Apostas incompletas');
+    notificationStore.error(
+      t('floatingButton.notifications.incomplete.message'),
+      t('floatingButton.notifications.incomplete.title'),
+    );
   }
 
   if (invalidBetsCount.value === 0 && changes.length === 0) {
-    notificationStore.message('Nenhuma alteração para salvar', 'Sem alterações');
+    notificationStore.message(
+      t('floatingButton.notifications.noChanges.message'),
+      t('floatingButton.notifications.noChanges.title'),
+    );
     return;
   }
 
@@ -184,11 +157,14 @@ const handleSave = async () => {
     matchesStore.commitWorkingBets();
 
     notificationStore.success(
-      `${changes.length} ${changes.length === 1 ? 'aposta salva' : 'apostas salvas'} com sucesso!`,
-      'Sucesso',
+      t('floatingButton.notifications.success.saved', { count: changes.length }),
+      t('floatingButton.notifications.success.title'),
     );
   } catch (error) {
-    notificationStore.error(error instanceof Error ? error.message : 'Ocorreu um erro ao salvar as apostas', 'Erro');
+    notificationStore.error(
+      error instanceof Error ? error.message : t('floatingButton.notifications.error.message'),
+      t('floatingButton.notifications.error.title'),
+    );
   } finally {
     isSaving.value = false;
   }
@@ -196,18 +172,16 @@ const handleSave = async () => {
 
 const handleReset = () => {
   matchesStore.resetWorkingBets();
-  notificationStore.message('Todas as alterações foram descartadas', 'Alterações descartadas');
+  notificationStore.message(
+    t('floatingButton.notifications.discard.message'),
+    t('floatingButton.notifications.discard.title'),
+  );
 };
 
-const handleHideRanking = () => {
-  const newOption = rankingPosition.value === 'active' ? 'modal' : 'active';
-  configurationStore.setRankingPosition(newOption);
-};
-
-const handleListToggle = () => {
-  const newOption = matchListSorting.value === 'group' ? 'time' : 'group';
-  configurationStore.setMatchListSorting(newOption);
-};
+// const handleHideRanking = () => {
+//   const newOption = rankingPosition.value === 'active' ? 'modal' : 'active';
+//   configurationStore.setRankingPosition(newOption);
+// };
 </script>
 <style scoped lang="scss">
 @keyframes pulse {
@@ -229,7 +203,7 @@ const handleListToggle = () => {
 
 .floating-actions {
   position: fixed;
-  top: 100px;
+  top: 80px;
   left: 10px;
   z-index: 100;
   display: flex;
@@ -237,7 +211,7 @@ const handleListToggle = () => {
   gap: var(--xl-spacing);
   width: 70px;
   padding: var(--m-spacing) var(--xs-spacing);
-  background-color: var(--bolao-c-blue3-t3);
+  background-color: var(--bolao-c-blue3);
   border-radius: var(--border-radius);
   transition: top 0.3s ease;
 
@@ -250,14 +224,19 @@ const handleListToggle = () => {
     flex-direction: row;
     justify-content: center;
     width: unset;
-    padding: var(--m-spacing) 0 0 0;
+    padding: var(--s-spacing) 0 0 0;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
+    transition: transform 0.3s ease;
 
     // background-color: var(--bolao-c-blue5-t3);
 
     &.scrolled {
       top: auto;
+    }
+
+    &.near-bottom {
+      transform: translateY(100%);
     }
   }
 }
@@ -267,6 +246,7 @@ const handleListToggle = () => {
   flex-direction: column;
   gap: var(--s-spacing);
   align-items: center;
+  color: var(--bolao-c-grey1);
 }
 
 // ============================================

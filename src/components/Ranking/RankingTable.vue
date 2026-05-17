@@ -1,9 +1,17 @@
 <template>
   <div class="ranking-header">
     <div class="button-container">
+      <PrimeButton
+        v-if="activeProfile && activeProfile.isActive"
+        v-tooltip.bottom="t('ranking.findMe')"
+        icon="pi pi-star-fill"
+        style="color: var(--bolao-c-mint); background-color: transparent"
+        size="small"
+        @click="scrollToMe"
+      />
       <PrimeButtonGroup>
         <PrimeButton
-          label="Geral"
+          :label="t('ranking.toggle.general')"
           class="toggle"
           :class="{ activeToggle: !isRound }"
           size="small"
@@ -13,9 +21,10 @@
           "
         />
         <PrimeButton
-          :label="`Rodada ${selectedRound}`"
+          :label="getRoundLabel(selectedRound)"
           class="toggle"
           :class="{ activeToggle: isRound }"
+          :loading="isLoading"
           size="small"
           @click="
             isRound = true;
@@ -25,7 +34,7 @@
       </PrimeButtonGroup>
       <PrimeButtonGroup>
         <PrimeButton
-          label="Todos"
+          :label="t('ranking.toggle.all')"
           class="toggle"
           icon="pi pi-list"
           :class="{ activeToggle: !showFavoritesOnly }"
@@ -33,7 +42,7 @@
           @click="showFavoritesOnly = false"
         />
         <PrimeButton
-          label="Favoritos"
+          :label="t('ranking.toggle.favorites')"
           :icon="showFavoritesOnly ? 'pi pi-star-fill' : 'pi pi-star'"
           class="toggle"
           :class="{ activeToggle: showFavoritesOnly }"
@@ -43,7 +52,7 @@
       </PrimeButtonGroup>
       <PrimeButtonGroup v-if="isDesktop && isFullPage">
         <PrimeButton
-          label="Com Extras"
+          :label="t('ranking.toggle.withExtras')"
           :disabled="isRound"
           class="toggle"
           icon="pi pi-plus"
@@ -52,7 +61,7 @@
           @click="isExtrasActive = true"
         />
         <PrimeButton
-          label="Sem Extras"
+          :label="t('ranking.toggle.withoutExtras')"
           :disabled="isRound"
           icon="pi pi-minus"
           class="toggle"
@@ -66,7 +75,7 @@
 
   <PrimeDataTable
     class="prime-data-table"
-    :value="filteredRankingData"
+    :value="[...filteredRankingData]"
     :size="isDesktop ? rowSpacingConfig : 'small'"
     :loading="isLoading"
     scrollable
@@ -76,7 +85,7 @@
   >
     <PrimeColumn
       field="score.position"
-      header="Posição"
+      :header="t('ranking.columns.position')"
       :frozen="!isDesktop"
       sortable
     >
@@ -101,7 +110,10 @@
             </div>
             <div
               v-tooltip.top="
-                `Variação no ranking geral: ${getPositionVariation(slotProps.data) > 0 ? '+' : ''}${getPositionVariation(slotProps.data)}`
+                t('ranking.positionVariation', {
+                  variation:
+                    (getPositionVariation(slotProps.data) > 0 ? '+' : '') + getPositionVariation(slotProps.data),
+                })
               "
               class="position-variation"
               :class="{
@@ -139,7 +151,7 @@
     </PrimeColumn>
     <PrimeColumn
       field="score.points"
-      :header="isDesktop ? 'Pontos' : 'Pts.'"
+      :header="isDesktop ? t('ranking.columns.points') : t('ranking.columns.pointsShort')"
       style="text-align: center"
       sortable
     />
@@ -154,7 +166,7 @@
             class="pi pi-trophy"
             style="color: var(--bolao-c-gold-l2)"
           />
-          Acerto
+          {{ t('ranking.columns.exacts') }}
         </div>
       </template>
     </PrimeColumn>
@@ -170,7 +182,7 @@
             class="pi pi-verified"
             style="color: var(--bolao-c-green-l3)"
           />
-          Parcial
+          {{ t('ranking.columns.partial') }}
         </div>
       </template>
     </PrimeColumn>
@@ -186,7 +198,7 @@
             class="pi pi-check-circle"
             style="color: var(--bolao-c-blue-l2)"
           />
-          Mínimo
+          {{ t('ranking.columns.minimum') }}
         </div>
       </template>
     </PrimeColumn>
@@ -202,7 +214,7 @@
             class="pi pi-times"
             style="color: var(--bolao-c-red-l2)"
           />
-          Erros
+          {{ t('ranking.columns.errors') }}
         </div>
       </template>
     </PrimeColumn>
@@ -215,7 +227,7 @@
       <template #header>
         <div class="flexHeader">
           <i class="pi pi-percentage" />
-          {{ isDesktop ? 'Aproveitamento' : 'Aprov.' }}
+          {{ isDesktop ? t('ranking.columns.performance') : t('ranking.columns.performanceShort') }}
         </div>
       </template>
     </PrimeColumn>
@@ -228,7 +240,7 @@
       <template #header>
         <div class="flexHeader">
           <i class="pi pi-plus" />
-          Extras
+          {{ t('ranking.columns.extras') }}
         </div>
       </template>
     </PrimeColumn>
@@ -239,7 +251,7 @@
     class="centralized-content"
   >
     <PrimeButton
-      label="Gerenciar favoritos"
+      :label="t('ranking.manageFavorites')"
       @click="isFavoritesModalOpen = true"
     />
   </div>
@@ -249,10 +261,9 @@
     severity="error"
     variant="outlined"
   >
-    Ops, houve um problema de comunicação com o servidor para buscar o ranking.
+    {{ t('ranking.error.message') }}
     <p>
-      Certifique-se de que sua conexão está estável e tente novamente. Se o erro persistir, entre em contato com os
-      administradores do Bolão.
+      {{ t('ranking.error.details') }}
     </p>
     <p>{{ error }}</p>
   </PrimeMessage>
@@ -271,6 +282,7 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import type { IUser } from '@/stores/activeProfile.types';
 import type { TColumnsValue, TRowSpacingValue } from '@/stores/configuration.types';
@@ -278,6 +290,7 @@ import type { IRankingLine } from '@/stores/ranking.types';
 
 import NameTag from '@/components/NameTag.vue';
 import ManageFavoritesModal from '@/components/Ranking/ManageFavoritesModal.vue';
+import { ROUNDS } from '@/constants/rounds';
 import UserService from '@/services/user';
 import { useViewport } from '@/services/viewport';
 import { useActiveProfileStore } from '@/stores/activeProfile';
@@ -286,6 +299,8 @@ import { useRankingStore } from '@/stores/ranking';
 
 import UserTrackingModal from '../UserTrackingModal.vue';
 import EmptyFavorites from './EmptyFavorites.vue';
+const { t } = useI18n();
+
 withDefaults(
   defineProps<{
     columnConfig: TColumnsValue;
@@ -343,9 +358,18 @@ const filteredRankingData = computed(() => {
   });
 });
 
-// ------ Functions ------
 function getPositionVariation(data: IRankingLine): number {
   return isRound.value ? data.accumulatedScore.positionVariation : data.score.positionVariation;
+}
+
+// ------ Functions ------
+function getRoundLabel(round: null | number): string {
+  if (round === null) {
+    return '';
+  }
+
+  const roundNum = ROUNDS.find((r) => r.num === round)?.num;
+  return roundNum ? t('ranking.toggle.round', { round: t(`rounds.${roundNum}.short`) }) : '';
 }
 
 function handleCloseFavoritesModal() {
@@ -354,6 +378,17 @@ function handleCloseFavoritesModal() {
 
 function isActiveProfile(userId: number): boolean {
   return activeProfile.value?.id === userId;
+}
+
+function scrollToMe() {
+  const innerRow = document.querySelector<HTMLElement>('.active-user-row');
+  innerRow?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  const tr = innerRow?.closest('tr');
+  if (!tr) return;
+  tr.classList.remove('is-pulsing');
+  void tr.offsetWidth;
+  tr.classList.add('is-pulsing');
+  setTimeout(() => tr.classList.remove('is-pulsing'), 3000);
 }
 </script>
 <style lang="scss" scoped>
@@ -445,11 +480,8 @@ function isActiveProfile(userId: number): boolean {
 
 .prime-data-table {
   display: flex;
-
-  // flex: 1;
   flex-direction: column;
   width: 100%;
-  height: unset;
   min-height: 0;
 
   @media (width <= 1024px) {
@@ -479,6 +511,16 @@ function isActiveProfile(userId: number): boolean {
     transparent 100%
   );
   box-shadow: inset 3px 0 0 var(--bolao-c-green);
+}
+
+:deep(tr.is-pulsing) {
+  animation: row-ping 1s ease-in-out 3;
+}
+
+@keyframes row-ping {
+  50% {
+    filter: brightness(1.2) saturate(0.8);
+  }
 }
 
 .outer-position {

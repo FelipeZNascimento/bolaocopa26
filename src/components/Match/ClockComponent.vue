@@ -1,5 +1,8 @@
 <template>
-  <div class="left-aligned outer-clock">
+  <div
+    class="left-aligned outer-clock"
+    :class="{ 'is-mini': isMini }"
+  >
     <RibbonComponent
       v-if="activeProfile && hitLevel"
       :hit-level="hitLevel"
@@ -9,8 +12,10 @@
     <span
       v-if="!isMatchStarted"
       class="clock-future"
+      :class="{ 'is-mini': isMini }"
     >
       <i
+        v-if="!isMini"
         class="pi pi-clock"
         style="font-size: var(--m2-font-size)"
       />
@@ -39,6 +44,7 @@ import RibbonComponent from './RibbonComponent.vue';
 const props = defineProps<{
   hitLevel?: HitLevel | null;
   isMatchStarted: boolean;
+  isMini?: boolean;
   status: TMatchStatus;
   timestamp: number;
 }>();
@@ -71,6 +77,16 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
   color: var(--color-contrast);
   background-color: var(--bolao-c-white-t1);
   border-radius: var(--border-radius);
+
+  &.is-mini {
+    height: unset;
+
+    @media (width >= 769px) {
+      width: 72px;
+      padding: 0 var(--s-spacing);
+      font-size: var(--xs-font-size);
+    }
+  }
 
   @media (width <=768px) {
     height: var(--match-list-height-mobile);
@@ -106,6 +122,17 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
   align-items: center;
   justify-content: center;
   font-size: var(--m-font-size);
+
+  &.is-mini {
+    gap: var(--xxs-spacing);
+    font-size: var(--xs-font-size);
+
+    .date {
+      flex-direction: column;
+      gap: 0;
+      font-size: var(--xs-font-size);
+    }
+  }
 
   @media (width <=1024px) {
     font-size: var(--s-font-size);

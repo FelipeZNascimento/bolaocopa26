@@ -9,7 +9,7 @@
     :breakpoints="{ '1280px': '75vw', '575px': '90vw' }"
   >
     <template #header>
-      <h2>Perfil</h2>
+      <h2>{{ t('profileModal.title') }}</h2>
     </template>
     <Form
       v-slot="$form"
@@ -29,7 +29,7 @@
           fluid
           autofocus
         />
-        <label for="email">Email</label>
+        <label for="email">{{ t('profileModal.email') }}</label>
       </PrimeFloatLabel>
       <PrimeFloatLabel
         variant="in"
@@ -49,7 +49,7 @@
         >
           {{ $form.name.error?.message }}
         </PrimeMessage>
-        <label for="name">Nome</label>
+        <label for="name">{{ t('profileModal.name') }}</label>
       </PrimeFloatLabel>
       <PrimeFloatLabel
         variant="in"
@@ -69,13 +69,13 @@
         >
           {{ $form.nickname.error?.message }}
         </PrimeMessage>
-        <label for="nickname">Apelido</label>
+        <label for="nickname">{{ t('profileModal.nickname') }}</label>
       </PrimeFloatLabel>
       <div class="buttons-container">
         <PrimeButton
           rounded
           type="submit"
-          label="Confirmar"
+          :label="t('profileModal.saveButton')"
           variant="primary"
           severity="secondary"
           icon="pi pi-check"
@@ -85,7 +85,7 @@
           <PrimeTag
             severity="success"
             icon="pi pi-check"
-            value="Alterações salvas com sucesso"
+            :value="t('profileModal.successMessage')"
           />
         </p>
         <p
@@ -95,7 +95,7 @@
           <PrimeTag
             severity="contrast"
             icon="pi pi-exclamation-triangle"
-            :value="error?.message"
+            :value="t('profileModal.errorMessage')"
           />
         </p>
       </div>
@@ -105,6 +105,7 @@
 <script setup lang="ts">
 import { Form, type FormSubmitEvent } from '@primevue/forms';
 import { computed, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
@@ -122,6 +123,7 @@ const isVisible = ref(false);
 // ------ Initializations ------
 const userService = new UserService();
 const activeProfileStore = useActiveProfileStore();
+const { t } = useI18n();
 
 // ------ Computed Properties ------
 const isLoading = computed(() => activeProfileStore.isLoading);

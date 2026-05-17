@@ -8,10 +8,10 @@ export function useRulesPanel(slug: string) {
 
   const panelPt = {
     header: {
-      style: 'cursor: pointer',
       onClick: () => {
         isOpen.value = !isOpen.value;
       },
+      style: 'cursor: pointer',
     },
     pcToggleButton: {
       root: { onClick: (e: MouseEvent) => e.stopPropagation() },

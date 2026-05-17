@@ -1,0 +1,507 @@
+{
+  "title": "Bolão World Cup 2026",
+  "navigation": {
+    "home": "Home",
+    "matches": "Matches",
+    "extras": "Extras",
+    "ranking": "Ranking",
+    "rules": "Rules",
+    "teams": "Teams",
+    "profile": "Profile"
+  },
+  "matches": {
+    "group": "Group {group}",
+    "moreDetails": "Details",
+    "capacity": "Capacity: {capacity} people",
+    "stadium": "Stadium",
+    "referee": "Referee",
+    "dateAndTime": "Date and Time",
+    "round": "Round",
+    "countdown": "There are {countdown} left"
+  },
+  "profileModal": {
+    "title": "My Profile",
+    "email": "Email",
+    "name": "Full Name",
+    "nickname": "Nickname",
+    "saveButton": "Save Changes",
+    "successMessage": "Profile updated successfully!",
+    "errorMessage": "An error occurred while updating your profile. Please try again."
+  },
+  "changePasswordModal": {
+    "title": "Change Password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "saveButton": "Save Changes",
+    "successMessage": "Password changed successfully!",
+    "errorMessage": "An error occurred while changing your password. Please try again."
+  },
+  "favoritesModal": {
+    "title": "Favorites",
+    "clearButton": "Remove All",
+    "successMessage": "Favorites updated successfully!",
+    "errorMessage": "An error occurred while updating your favorites. Please try again."
+  },
+  "userTrackingModal": {
+    "addFavoriteNotificationError": {
+      "title": "Error",
+      "message": "An error occurred while updating your favorites. Please try again."
+    },
+    "addFavoriteNotification": {
+      "title": "Favorite Added",
+      "message": " is now a favorite! You can track your bets and performance in the ranking more easily."
+    },
+    "removeFavoriteNotification": {
+      "title": "Favorite Removed",
+      "message": " is no longer a favorite."
+    },
+    "addFavoriteTooltip": "Add to Favorites",
+    "removeFavoriteTooltip": "Remove from Favorites",
+    "chartExplanation": "The score in the chart does not include extra points, only the accumulated points from regular bets.",
+    "extraBets": "Extra Bets"
+  },
+  "profilePopover": {
+    "admin": "Admin",
+    "profile": "Profile",
+    "password": "Password",
+    "favorites": "Favorites",
+    "logout": "Logout"
+  },
+  "floatingButton": {
+    "save": {
+      "label": "Save",
+      "tooltip": {
+        "valid": "Save all changes",
+        "noChanges": "No changes to save",
+        "incompleteChanges": "{count} invalid bet(s)"
+      }
+    },
+    "discard": {
+      "label": "Discard",
+      "tooltip": "Discard all changes"
+    },
+    "notifications": {
+      "success": {
+        "title": "Bets Saved",
+        "saved": "{count} bet saved | {count} bets saved"
+      },
+      "incomplete": {
+        "title": "Incomplete Bets",
+        "message": "Incomplete bets (orange) cannot be saved."
+      },
+      "error": {
+        "title": "Error",
+        "message": "An error occurred while saving your bets. Please try again."
+      },
+      "discard": {
+        "title": "Changes Discarded",
+        "message": "All your changes have been discarded."
+      }
+    }
+  },
+  "ranking": {
+    "completeRankingButton": "Check full ranking",
+    "toggle": {
+      "general": "General",
+      "round": "Round {round}",
+      "all": "All",
+      "favorites": "Favorites",
+      "withExtras": "With Extras",
+      "withoutExtras": "Without Extras"
+    },
+    "columns": {
+      "position": "Position",
+      "points": "Points",
+      "pointsShort": "Pts.",
+      "exacts": "Exact",
+      "partial": "Partial",
+      "minimum": "Minimum",
+      "errors": "Errors",
+      "performance": "Performance",
+      "performanceShort": "Perf.",
+      "extras": "Extras"
+    },
+    "positionVariation": "Overall ranking variation: {variation}",
+    "findMe": "Find me in the ranking",
+    "manageFavorites": "Manage favorites",
+    "error": {
+      "message": "Oops, there was a communication problem with the server while fetching the ranking.",
+      "details": "Make sure your connection is stable and try again. If the error persists, contact the administrators."
+    }
+  },
+  "countdown": {
+    "day": "{count} day | {count} days",
+    "hour": "{count} hour | {count} hours",
+    "minute": "{count} minute | {count} minutes"
+  },
+  "moreInfoModal": {
+    "countdownMessage": "You have {countdown} to place your bet on this match.",
+    "betsAvailable": "All participants' bets will be available once the match starts."
+  },
+  "rounds": {
+    "1": {
+      "short": "G1",
+      "long": "Group Stage - Round 1"
+    },
+    "2": {
+      "short": "G2",
+      "long": "Group Stage - Round 2"
+    },
+    "3": {
+      "short": "G3",
+      "long": "Group Stage - Round 3"
+    },
+    "4": {
+      "short": "R16",
+      "long": "Round of 16"
+    },
+    "5": {
+      "short": "R8",
+      "long": "Round of 8"
+    },
+    "6": {
+      "short": "QF",
+      "long": "Quarter Finals"
+    },
+    "7": {
+      "short": "SF",
+      "long": "Semi Finals"
+    },
+    "8": {
+      "short": "3rd",
+      "long": "Third Place"
+    },
+    "9": {
+      "short": "F",
+      "long": "Final"
+    }
+  },
+  "home": {
+    "dashboard": "This is your World Cup 2026 dashboard. Use the drag and drop feature to organize the widgets as you like. All your adjustments will be saved automatically for the next time you access the Bolão!",
+    "welcome": {
+      "headline": "Your bracket, your Cup!",
+      "description": "Predict scores, crown the champion and climb the leaderboard! Bolão World Cup 2026 lets you bet on every single match, challenge your friends, unlock extra bets (top scorer, best player & more) and watch a live ranking update with every goal. Think you’ve got what it takes?",
+      "features": {
+        "champion": "Predict the score of every match",
+        "extras": "Nail the champion, top scorer & more",
+        "live": "Watch every match unfold live",
+        "ranking": "Climb the leaderboard and humble your friends"
+      }
+    },
+    "widgets": {
+      "nextMatches": "Next Matches",
+      "liveMatches": "Live",
+      "ranking": "Ranking",
+      "rules": "Participation",
+      "extras": "Extra Bets",
+      "welcome": "Welcome",
+      "logo": "Bolão World Cup 2026",
+      "betStatus": "Next Bet",
+      "countdown": "Next Match",
+      "socialGroups": "Social Groups"
+    },
+    "nextMatches": {
+      "empty": "No upcoming matches",
+      "seeAll": "See all matches"
+    },
+    "rules": {
+      "messageGuest": "Join the Bolão (Pick'em Pool format)! Learn how to register and bet on matches.",
+      "messageInactive": "Your profile is not active yet. See how to participate in the registration rules.",
+      "messageActive": "Your profile is active! See the scoring rules to know how to bet on matches.",
+      "ctaInactive": "See how it works",
+      "ctaActive": "See scoring rules"
+    },
+    "extras": {
+      "countdownLabel": "Extra bets close in",
+      "days": "days",
+      "hours": "hours",
+      "minutes": "min",
+      "seconds": "sec",
+      "noBets": "No extra bets placed yet",
+      "loginPrompt": "Sign in to see your extra bets",
+      "seeAll": "See extra bets"
+    },
+    "ranking": {
+      "seeAll": "See full ranking"
+    },
+    "socialGroups": {
+      "tagline": "Join our groups to follow results, cheer together and never miss a pool update!",
+      "joinGroup": "Join the group"
+    },
+    "nextMatchCountdown": {
+      "nextMatch": "Next match",
+      "simultaneous": "{count} matches at the same time",
+      "days": "days",
+      "hours": "hours",
+      "minutes": "min",
+      "seconds": "sec",
+      "betSet": "Bet placed!",
+      "betMissing": "No bet yet",
+      "noMatches": "No upcoming matches",
+      "seeAll": "Place your bets"
+    }
+  },
+  "score": {
+    "bet": "Bet",
+    "live": "Score"
+  },
+  "extraBets": {
+    "champion": "Champion",
+    "topScorer": "Top Scorer",
+    "bestPlayer": "Best Player",
+    "bestDefense": "Best Defense",
+    "bestOffense": "Best Offense",
+    "playersWarning": "This bet will be available once the lineups of all teams are announced!"
+  },
+  "footer": {
+    "about": {
+      "title": "About",
+      "description": "Bolão (Pick'em Pool format) World Cup 2026 — Compete with friends and family by betting on World Cup match results."
+    },
+    "contact": {
+      "title": "Contact",
+      "whatsapp": "WhatsApp Group",
+      "telegram": "Telegram Group",
+      "email": "Email"
+    },
+    "copyright": "© {year} Bolão World Cup 2026"
+  },
+  "paginator": {
+    "sortByTime": "Sort by time",
+    "sortByGroup": "Sort by group",
+    "unsavedBets": {
+      "header": "Unsaved bets",
+      "message": "Are you sure you want to continue without saving your bets?",
+      "confirm": "Continue",
+      "cancel": "Cancel"
+    }
+  },
+  "teams": {
+    "title": "Teams",
+    "group": "Group {group}"
+  },
+  "teamDetailsModal": {
+    "coach": "Coach",
+    "players": "Players"
+  },
+  "rules": {
+    "title": "Rules",
+    "faq": "Frequently Asked Questions",
+    "subscription": {
+      "title": "Registration",
+      "deadline": "● Registration is open until 11/06/2026 at 03:59 AM (GMT+1).",
+      "paymentRequired": "● After signing up, your participation is subject to payment of the registration fee:",
+      "pixQrCode": "PIX QR Code",
+      "pixCopyPaste": "PIX Copy & Paste",
+      "mbWayInfo": "MB Way",
+      "payPalInfo": "PayPal",
+      "pixInfo": "PIX Info",
+      "pixValue": "Amount",
+      "sendProof": "● After payment, send the receipt to one of the contacts below:",
+      "activationNote": "● Your account will be unlocked for betting only",
+      "activationNoteHighlight": "after the payment is confirmed",
+      "activationNoteSuffix": "."
+    },
+    "scores": {
+      "title": "Scoring",
+      "howItWorks": "How it works",
+      "intro": "Each match has three possible bet outcomes:",
+      "exactScore": "Exact Score",
+      "exactScoreDesc": "the exact final score was predicted.",
+      "partialScore": "Partial Score",
+      "partialScoreDesc": "the winner and the number of goals for exactly one of the teams.",
+      "minimumScore": "Minimum Score",
+      "minimumScoreDesc": "only the winner was predicted, but the goal count for both teams was missed.",
+      "miss": "Miss",
+      "missDesc": "predicted the wrong winner.",
+      "scoresByPhase": "Points by phase",
+      "tableHeaders": {
+        "phase": "Phase",
+        "numMatches": "No. of Matches",
+        "exactScore": "Exact Score",
+        "partialScore": "Partial Score",
+        "minimumScore": "Minimum Score"
+      },
+      "phases": {
+        "groups": "Group Stage",
+        "r16": "Round of 16",
+        "r8": "Round of 8",
+        "qf": "Quarter Finals",
+        "sf": "Semi Finals",
+        "third": "Third Place Play-off",
+        "final": "Final"
+      },
+      "missNote": "● {miss} always award 0 (zero) points.",
+      "drawNote": "A {draw} can be {exact}, {minimum} or {miss} — but never {partial}.",
+      "drawWord": "Draw",
+      "knockoutNote": "● In the knockout stage (from the Round of 16 onwards), the score that counts is the one at the end of extra time (if played). {highlight}.",
+      "penaltiesHighlight": "Penalty shootout results are not considered",
+      "examples": "Examples",
+      "exampleTableHeaders": {
+        "bet": "Bet",
+        "points": "Points"
+      },
+      "example1": {
+        "bet1": "Brazil 2 x 1 Argentina",
+        "bet2": "Brazil 3 x 1 Argentina",
+        "bet3": "Brazil 3 x 0 Argentina",
+        "bet4": "Brazil 0 x 2 Argentina"
+      },
+      "example2": {
+        "bet1": "England 1 x 1 Germany",
+        "bet2": "England 2 x 2 Germany",
+        "bet3": "England 1 x 0 Germany"
+      },
+      "pointsSuffix": "pts",
+      "exactScorePoints": "10 pts (Exact Score)",
+      "partialScorePoints": "6 pts (Partial Score)",
+      "minimumScorePoints": "4 pts (Minimum Score)",
+      "missPoints": "0 pts (Miss)"
+    },
+    "betting": {
+      "title": "Bets",
+      "rule1": "● Bets can be placed up until kick-off. At that point, betting is automatically locked for that specific match and all users' bets become visible.",
+      "rule2": "● All match times follow the user's local timezone.",
+      "rule3": "● Match results, goals, and scores will be updated at least daily.",
+      "emailFallback": "If a participant cannot access the website to place their bets, bets sent to the {emailLink} will be accepted up to kick-off time. Bets that are unclear or submitted after the deadline will be ignored.",
+      "emailLinkLabel": "email"
+    },
+    "extras": {
+      "title": "Extra Bets",
+      "teamSubtitle": "Team",
+      "teamIntro": "Each participant picks a team to back. Points earned depend on how far that team goes.",
+      "teamExclusive": "Extra scores are {highlight}, meaning they do not stack:",
+      "teamExclusiveWord": "exclusive",
+      "teamFactors": "participants will have the opportunity to change their team extra bet. The later the change, the lower the scoring factor, but the more information available. The factors below will be applied to the base score depending on when the team extra bet is made:",
+      "teamFactorsNew": "New:",
+      "factor1": "• Before the World Cup starts: 100% → until 11/06/2026 at 4 PM (Brasília time).",
+      "factor2": "• Before the Knockout stage: 60% → until 28/06/2026 at 4 PM (Brasília time)",
+      "factor3": "• Before the Round of 8: 30% → until 04/07/2026 at 2 PM (Brasília time)",
+      "othersSubtitle": "Other Extras",
+      "othersNote": "These extra bets cannot be changed during the Cup. In case of a tie in these categories, all tied entries count towards the extra score.",
+      "guideSubtitle": "Reference Table",
+      "tableHeaders": {
+        "phase": "Phase",
+        "betType": "Bet Type",
+        "basePoints": "Base Points",
+        "points": "Points",
+        "beforeGroups": "Before Groups",
+        "beforePlayoffs": "Before Knockout",
+        "beforeQuarter": "Before Round of 8"
+      },
+      "championData": [
+        { "stage": "Champion", "points": "50 points" },
+        { "stage": "Runner-up", "points": "30 points" },
+        { "stage": "Semi-finalist", "points": "20 points" },
+        { "stage": "Quarter-finalist", "points": "10 points" },
+        { "stage": "Eliminated before quarter-finals", "points": "0 points" }
+      ],
+      "playerData": [
+        { "type": "Top Scorer", "points": "15 points" },
+        { "type": "Best Player (Golden Ball)", "points": "15 points" },
+        { "type": "Best Attack (Groups)", "points": "10 points" },
+        { "type": "Best Defense (Groups)", "points": "10 points" }
+      ],
+      "guideData": [
+        {
+          "type": "Champion Team",
+          "beforeGroups": "50 points",
+          "beforePlayoffs": "30 points",
+          "beforeQuarter": "15 points"
+        },
+        {
+          "type": "Runner-up Team",
+          "beforeGroups": "30 points",
+          "beforePlayoffs": "18 points",
+          "beforeQuarter": "9 points"
+        },
+        {
+          "type": "Semi-finalist Team",
+          "beforeGroups": "20 points",
+          "beforePlayoffs": "12 points",
+          "beforeQuarter": "6 points"
+        },
+        {
+          "type": "Quarter-finalist Team",
+          "beforeGroups": "10 points",
+          "beforePlayoffs": "6 points",
+          "beforeQuarter": "3 points"
+        },
+        { "type": "Top Scorer", "beforeGroups": "15 points", "beforePlayoffs": "-", "beforeQuarter": "-" },
+        { "type": "Best Player", "beforeGroups": "15 points", "beforePlayoffs": "-", "beforeQuarter": "-" },
+        { "type": "Best Attack (Groups)", "beforeGroups": "10 points", "beforePlayoffs": "-", "beforeQuarter": "-" },
+        { "type": "Best Defense (Groups)", "beforeGroups": "10 points", "beforePlayoffs": "-", "beforeQuarter": "-" }
+      ]
+    },
+    "prize": {
+      "title": "Prizes",
+      "distributionSubtitle": "Prize Distribution",
+      "distributionIntro": "10% of the total collected will cover website costs (domain, hosting and development), plus additional prizes described below. The remainder will be distributed among the top finishers as shown in the tables below:",
+      "upTo114": "Up to 114 Participants",
+      "plus115": "115+ Participants",
+      "tableHeaders": {
+        "position": "Place",
+        "percentage": "% of Total Pool"
+      },
+      "shortData": [
+        { "position": "1st Place", "percentage": "45%" },
+        { "position": "2nd Place", "percentage": "25%" },
+        { "position": "3rd Place", "percentage": "15%" },
+        { "position": "4th Place", "percentage": "10%" },
+        { "position": "5th Place", "percentage": "5%" }
+      ],
+      "longData": [
+        { "position": "1st Place", "percentage": "35%" },
+        { "position": "2nd Place", "percentage": "20%" },
+        { "position": "3rd Place", "percentage": "15%" },
+        { "position": "4th Place", "percentage": "9%" },
+        { "position": "5th Place", "percentage": "6%" },
+        { "position": "6th Place", "percentage": "5%" },
+        { "position": "7th Place", "percentage": "4%" },
+        { "position": "8th Place", "percentage": "3%" },
+        { "position": "9th Place", "percentage": "2%" },
+        { "position": "10th Place", "percentage": "1%" }
+      ],
+      "additionalSubtitle": "Additional Prizes",
+      "additional1": "● 1st place after the 72 group stage matches (excluding extra bets): registration refund.",
+      "additional2": "● 1st place overall at the end of all matches (excluding extra bets): registration refund.",
+      "tiebreakSubtitle": "Tiebreaker Criteria",
+      "tiebreak1": "1. Highest number of points earned;",
+      "tiebreak2": "2. Highest number of {highlight} exact scores;",
+      "tiebreak3": "3. Correct extra bet on the champion;",
+      "tiebreak4": "4. Highest number of {highlight} partial scores;",
+      "tiebreak5": "5. Correct extra bet on the top scorer;",
+      "tiebreak6": "6. Correct extra bet on the best player;",
+      "tiebreak7": "7. Draw."
+    },
+    "faqItems": {
+      "changeAfterBet": {
+        "question": "Can I change my bets after placing them?",
+        "answer1": "Bets can be changed at any time before kick-off. To change a bet, just find the match in the ",
+        "answerLink": "Matches",
+        "answer2": " section and make the desired changes. Remember to save your changes for them to be recorded. Once the match starts, bets are locked and can no longer be modified."
+      },
+      "missedBet": {
+        "question": "If I miss a match, can I still bet on the next ones?",
+        "answer": "Yes! Only matches that have already finished can no longer receive bets. For future matches, you can place your bets normally, even if you missed the chance to bet on a previous one."
+      },
+      "cantBet": {
+        "question": "I can't place my bets — what now?",
+        "answer": "If you are logged in and have already confirmed your payment with the administrators but still cannot place your bets, please contact one of the administrators so we can resolve the issue as quickly as possible. As a last resort, you can send your bets by email as described in the Bets section."
+      },
+      "drawBet": {
+        "question": "Can I bet on a draw?",
+        "answer": "Yes! A draw can reward you points from an exact score or a minimum score. However, a draw can never be a partial score, since partial scores require correctly predicting the winner. If there's a winner in a game you placed a draw bet on, you'll be rewarded zero points though (miss)."
+      },
+      "removeBet": {
+        "question": "Can I remove a bet?",
+        "answer": "No. You can change your bets at any time before the start of each game, but you cannot remove them completely."
+      },
+      "emptyBet": {
+        "question": "If I don't bet on a match, does it count as a 0x0 bet?",
+        "answer": "No. If you don't bet on a match, it will be considered as not placed and, therefore, will not affect your score."
+      }
+    }
+  }
+}

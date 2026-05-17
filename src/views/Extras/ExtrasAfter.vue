@@ -32,7 +32,7 @@
       <PrimeButton
         v-for="item in buttonOptions"
         :key="item.value"
-        :label="item.label"
+        :label="t(item.label)"
         variant="outlined"
         size="small"
         :severity="selectedToggle.value === item.value ? 'primary' : 'secondary'"
@@ -96,6 +96,7 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import type { IExtraBet, IPlayerWithExtras, ITeamWithExtras } from '@/stores/extraBet.types';
 import type { IPlayer, ITeam } from '@/stores/teams.types';
@@ -117,6 +118,7 @@ import ExtraBetsTeamCard from './After/ExtraBetsTeamCard.vue';
 // ------ Services & Stores ------
 const extraBetService = new ExtraBetService();
 const activeProfileStore = useActiveProfileStore();
+const { t } = useI18n();
 
 // ------ Types & Interfaces ------
 interface IToggleOption {

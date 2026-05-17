@@ -10,7 +10,6 @@
     />
     <ScoreComponent
       :is-score-modal-open="true"
-      :is-team-clickable="true"
       :match="match"
       :active-user-bet="match.loggedUserBets"
       :is-match-started="isMatchStarted"
@@ -18,7 +17,7 @@
     <PrimeButton
       :icon="showMatchInfo ? 'pi pi-minus' : 'pi pi-plus'"
       class="match-info-toggle"
-      label="Ficha Técnica"
+      :label="t('matches.moreDetails')"
       severity="secondary"
       aria-label="Search"
       size="small"
@@ -32,6 +31,7 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import type { HitLevel } from '@/constants/bets';
 import type { IMatch } from '@/stores/matches.types';
@@ -51,6 +51,7 @@ defineProps<{
 // ------ Initialization ------
 const showMatchInfo = ref(false);
 const clockStore = useClockStore();
+const { t } = useI18n();
 
 // ------ Functions ------
 function toggleMatchInfo() {

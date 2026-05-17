@@ -15,7 +15,7 @@
         class="header-flag"
       />
       <h2>
-        {{ team.name }}
+        {{ locale === 'pt-BR' ? team.name : team.nameEn }}
       </h2>
     </template>
 
@@ -37,10 +37,10 @@
             />
             <div class="team-info">
               <h2 class="team-name">
-                {{ team.name }}
+                {{ locale === 'pt-BR' ? team.name : team.nameEn }}
               </h2>
               <p class="team-name-en">
-                {{ team.nameEn }}
+                {{ locale === 'pt-BR' ? team.name : team.nameEn }}
               </p>
               <p class="team-name-en">
                 {{ team.confederation.abbreviation }}
@@ -53,20 +53,20 @@
           >
             <img
               :src="`https://assets.omegafox.me/copa/countries_flags/${team.isoCode.toLowerCase()}.png`"
-              :alt="`${team.name} Flag`"
+              :alt="`${locale === 'pt-BR' ? team.name : team.nameEn} Flag`"
               class="team-flag"
             />
           </div>
         </div>
       </div>
       <p>
-        Técnico:
+        {{ t('teamDetailsModal.coach') }}:
         <HoverablePlayerName
           v-if="coach"
           :player="coach"
         />
       </p>
-      <h3 class="players-title">Jogadores ({{ sortedPlayers.length }})</h3>
+      <h3 class="players-title">{{ t('teamDetailsModal.players') }} ({{ sortedPlayers.length }})</h3>
       <div class="players-grid">
         <div
           v-for="player in sortedPlayers"
@@ -84,7 +84,9 @@
               />
             </div>
             <div class="player-details">
-              <span class="player-position">{{ player.position.abbreviation }}</span>
+              <span class="player-position">{{
+                locale === 'pt-BR' ? player.position.abbreviation : player.position.abbreviationEn
+              }}</span>
               <span class="player-club">{{ player.club.name }}</span>
             </div>
           </div>
@@ -96,6 +98,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import type { ITeam } from '@/stores/teams.types';
 
@@ -110,6 +113,7 @@ const props = defineProps<{
 
 // ------ Initialization ------
 const { isMobile } = useViewport();
+const { locale, t } = useI18n();
 
 // ------ Refs ------
 const isVisible = ref(false);

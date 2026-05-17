@@ -13,12 +13,14 @@
     Clique <RouterLink to="regras?section=inscricoes">aqui</RouterLink> para saber como ativar seu perfil e participar
     do bolão!
   </div>
+  <FooterComponent />
 </template>
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, watch } from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
 
+import FooterComponent from './components/FooterComponent.vue';
 import NavbarMobile from './components/NavbarTop/NavbarMobile.vue';
 import NavbarTop from './components/NavbarTop/NavbarTop.vue';
 import ExtraBetService from './services/extra_bet';
@@ -109,11 +111,12 @@ watch(activeProfile, async (newValue) => {
 .outer-view {
   width: 100%;
   min-height: calc(100vh - var(--navbar-height));
+  padding-bottom: var(--xl-spacing);
   margin-top: var(--navbar-height);
 
   @media (width <= 1024px) {
-    min-height: calc(100vh - var(--navbar-height-mobile));
-    margin-top: var(--navbar-height-mobile);
+    min-height: calc(100vh - var(--navbar-height-mobile) - 10px);
+    margin-top: calc(var(--navbar-height-mobile) + 10px);
   }
 }
 

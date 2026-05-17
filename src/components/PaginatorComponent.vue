@@ -1,5 +1,8 @@
 <template>
-  <div class="outer-paginator">
+  <div
+    class="outer-paginator"
+    :class="{ 'outer-paginator--sticky': isDesktop, scrolled: isScrolled }"
+  >
     <!-- Mobile: Prev + Select (displayShort) + Next -->
     <div
       v-if="isMobile"
@@ -16,7 +19,7 @@
       <PrimeSelect
         :model-value="selectedRound"
         :options="visibleRounds"
-        option-label="displayShort"
+        :option-label="(round: { num: number }) => t(`rounds.${round.num}.short`)"
         option-value="num"
         @update:model-value="setRound"
       />
@@ -56,7 +59,7 @@
         :key="round.num"
         class="page-btn"
         :class="{ 'page-btn--active': round.num === selectedRound }"
-        :label="round.displayShort"
+        :label="t(`rounds.${round.num}.short`)"
         text
         rounded
         :aria-label="`Page ${round.num}`"
@@ -82,30 +85,60 @@
       <PrimeSelect
         :model-value="selectedRound"
         :options="visibleRounds"
-        option-label="displayShort"
+        :option-label="(round: { num: number }) => t(`rounds.${round.num}.short`)"
         option-value="num"
         @update:model-value="setRound"
       />
     </div>
+    <div
+      v-if="selectedRound === 1 || selectedRound === 2 || selectedRound === 3"
+      class="match-sorting-toggle"
+    >
+      <button
+        v-tooltip.right="matchListSorting === 'group' ? t('paginator.sortByTime') : t('paginator.sortByGroup')"
+        class="action-btn"
+        :aria-label="matchListSorting === 'group' ? t('paginator.sortByTime') : t('paginator.sortByGroup')"
+        :title="matchListSorting === 'group' ? t('paginator.sortByTime') : t('paginator.sortByGroup')"
+        @click="handleListToggle"
+      >
+        <i :class="matchListSorting === 'group' ? 'pi pi-sort-numeric-down' : 'pi pi-sort-alpha-down'" />
+      </button>
+      <!-- <p style="font-size: var(--xs-font-size)">{{ matchListSorting === 'group' ? 'Horário' : 'Grupos' }}</p> -->
+    </div>
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { useConfirm } from 'primevue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import { ROUNDS } from '@/constants/rounds';
 import { useViewport } from '@/services/viewport';
 import { useConfigurationStore } from '@/stores/configuration';
+import { useMatchesStore } from '@/stores/matches';
 
 // ------ Refs ------
 const rounds = ref(ROUNDS);
+const isScrolled = ref(false);
 
 // ------ Initialization ------
+const { t } = useI18n();
 const configurationStore = useConfigurationStore();
-const { isMobile } = useViewport();
+const { isDesktop, isMobile } = useViewport();
+const confirm = useConfirm();
+const matchesStore = useMatchesStore();
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
 
 // ------ Computed Properties ------
 const selectedRound = computed(() => configurationStore.selectedRound);
 const visibleRounds = computed(() => rounds.value.filter((r) => !r.hidden));
+const matchListSorting = computed(() => configurationStore.matchListSorting);
 
 const PAGE_LINK_SIZE = 5;
 const windowedRounds = computed(() => {
@@ -131,6 +164,7 @@ const isLast = computed(() => {
   return !selectedRound.value || selectedRound.value === last;
 });
 
+// ------ Functions ------
 function firstPage() {
   const first = visibleRounds.value[0];
   if (first) setRound(first.num);
@@ -151,36 +185,65 @@ function prevPage() {
   if (idx > 0) setRound(visibleRounds.value[idx - 1].num);
 }
 
-// ------ Functions ------
+const handleListToggle = () => {
+  const newOption = matchListSorting.value === 'group' ? 'time' : 'group';
+  configurationStore.setMatchListSorting(newOption);
+};
+
+const handleScroll = () => {
+  if (!isDesktop) {
+    return;
+  }
+
+  isScrolled.value = window.scrollY > 100;
+};
+
 function setRound(num: null | number) {
-  if (num != null) configurationStore.setSelectedRound(num);
+  if (num != null && matchesStore.hasAnyChanges()) {
+    confirm.require({
+      accept: () => {
+        matchesStore.resetWorkingBets();
+        configurationStore.setSelectedRound(num);
+      },
+      acceptProps: { label: t('paginator.unsavedBets.confirm'), severity: 'danger' },
+      header: t('paginator.unsavedBets.header'),
+      icon: 'pi pi-exclamation-triangle',
+      message: t('paginator.unsavedBets.message'),
+      rejectProps: { label: t('paginator.unsavedBets.cancel'), severity: 'secondary', variant: 'text' },
+    });
+  } else if (num != null) configurationStore.setSelectedRound(num);
 }
 </script>
 <style lang="scss" scoped>
 .outer-paginator {
+  z-index: 10;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  gap: var(--s-spacing);
   align-items: center;
   justify-content: center;
   width: 100%;
   height: var(--paginator-height);
-
-  // background: var(--color-background);
   border-radius: var(--border-radius);
 
-  // @media (width <= 1024px) {
-  //   gap: var(--xs-spacing);
-  // }
+  @media (width <= 1024px) {
+    height: var(--paginator-height-mobile);
+  }
 
-  // @media (width >= 1025px) {
-  //   gap: var(--l-spacing);
-  // }
+  &--sticky {
+    position: sticky;
+    top: 80px;
+    height: unset;
+    transition: top 0.3s ease;
+
+    &.scrolled {
+      top: 20px;
+    }
+  }
 
   h3 {
     padding: 0;
     margin: 0;
-
-    // line-height: var(--xxs-font-size);
   }
 }
 
@@ -235,6 +298,52 @@ function setRound(num: null | number) {
 
   :deep(.p-select-dropdown-icon) {
     color: white;
+  }
+}
+
+.match-sorting-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: var(--s-spacing);
+  border-radius: var(--border-radius);
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  cursor: pointer;
+  background: linear-gradient(135deg, var(--bolao-c-fifa-green1), var(--bolao-c-fifa-blue));
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+  transition: all 0.3s ease;
+
+  .pi {
+    font-size: var(--m-font-size);
+    color: white;
+    transition: color 0.3s ease;
+  }
+
+  // Interaction states
+  &:hover:not(:disabled) {
+    box-shadow: 0 6px 16px rgb(0 0 0 / 25%);
+    transform: scale(1.05);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+
+  &.disabled,
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
   }
 }
 </style>

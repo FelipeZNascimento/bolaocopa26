@@ -14,7 +14,6 @@
           v-for="match in group.matches"
           :key="match.id"
           :is-match-clickable="!isTeamClickable"
-          :is-team-clickable="isTeamClickable"
           :match="match"
         />
       </div>
@@ -33,7 +32,6 @@
         v-for="match in sortedMatches"
         :key="match.id"
         :is-match-clickable="!isTeamClickable"
-        :is-team-clickable="isTeamClickable"
         :match="match"
       />
     </div>
@@ -41,10 +39,12 @@
 </template>
 <script lang="ts" setup>
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import type { IMatch } from '@/stores/matches.types';
 
 import MatchComponent from '@/components/Match/MatchComponent.vue';
+import { useClockStore } from '@/stores/clock';
 import { useConfigurationStore } from '@/stores/configuration';
 
 const props = withDefaults(
@@ -58,6 +58,8 @@ const props = withDefaults(
 
 // ------ Initialization ------
 const configurationStore = useConfigurationStore();
+const clockStore = useClockStore();
+const { t } = useI18n();
 
 // ------ Computed Properties ------
 const sortedMatches = computed(() => {
@@ -74,23 +76,13 @@ const shouldGroupByGroup = computed(() => {
 });
 
 const roundLabel = computed(() => {
-  const round = props.selectedRound;
-  if (round === null) {
-    return '';
-  }
+  return clockStore.getRoundName(props.selectedRound);
+  // const round = props.selectedRound;
+  // if (round === null) {
+  //   return '';
+  // }
 
-  const labels: Record<number, string> = {
-    1: 'Fase de Grupos - Rodada 1',
-    2: 'Fase de Grupos - Rodada 2',
-    3: 'Fase de Grupos - Rodada 3',
-    4: '16 Avos',
-    5: 'Oitavas',
-    6: 'Quartas',
-    7: 'Semi Finais',
-    8: 'Disputa 3º Lugar',
-    9: 'Final',
-  };
-  return labels[round] || `Rodada ${round}`;
+  // return t(`rounds.${round}.long`);
 });
 
 const groupedMatches = computed(() => {
@@ -108,7 +100,7 @@ const groupedMatches = computed(() => {
   return Array.from(groups.entries())
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([groupName, matches]) => ({
-      groupName: `Grupo ${groupName}`,
+      groupName: t('matches.group', { group: groupName }),
       matches,
     }));
 });

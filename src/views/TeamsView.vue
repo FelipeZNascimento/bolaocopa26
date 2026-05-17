@@ -1,6 +1,6 @@
 <template>
   <div class="outer-teams">
-    <h1>Equipes</h1>
+    <h1>{{ t('teams.title') }}</h1>
     <div
       v-if="isLoading"
       style="display: flex; flex-direction: row; gap: var(--l-spacing); align-items: center; width: 100%"
@@ -35,7 +35,7 @@
               :alt="`${team.name} Flag`"
             />
             <div class="team-name">
-              {{ team.name }}
+              {{ locale === 'pt-BR' ? team.name : team.nameEn }}
             </div>
           </div>
         </div>
@@ -51,6 +51,7 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import type { ITeam } from '@/stores/teams.types';
 
@@ -91,7 +92,7 @@ const groupedTeams = computed(() => {
   return Array.from(groups.entries())
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([groupName, teams]) => ({
-      groupName: `Grupo ${groupName}`,
+      groupName: t(`teams.group`, { group: groupName }),
       teams: teams.sort((a, b) => a.name.localeCompare(b.name)),
     }));
 });
@@ -109,6 +110,7 @@ function openTeamModal(team: ITeam) {
 
 // ------ Initialization ------
 teamService.fetch();
+const { locale, t } = useI18n();
 </script>
 <style lang="scss" scoped>
 .outer-teams {

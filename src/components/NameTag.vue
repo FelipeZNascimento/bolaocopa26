@@ -75,13 +75,7 @@ function isFavorite(): boolean {
 <style lang="scss" scoped>
 .outer-short {
   min-width: 0;
-  max-width: 100%;
-
-  .username {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+  max-width: 100px;
 }
 
 .outer {
@@ -89,7 +83,13 @@ function isFavorite(): boolean {
   display: flex;
   flex-direction: row;
   align-items: center;
-  max-width: 100%;
+  max-width: 120px;
+}
+
+.username {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .usericon {
@@ -101,7 +101,6 @@ function isFavorite(): boolean {
 }
 
 .active-profile-badge {
-  z-index: 1;
   padding-right: var(--xs-spacing);
   font-size: var(--xs-font-size);
   color: var(--bolao-c-mint);
@@ -110,7 +109,6 @@ function isFavorite(): boolean {
 }
 
 .favorite-badge {
-  z-index: 1;
   padding-right: var(--xs-spacing);
   font-size: var(--xs-font-size);
   color: var(--bolao-c-gold);

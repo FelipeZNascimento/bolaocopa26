@@ -10,28 +10,26 @@
       :pt="panelPt"
       @update:collapsed="(val: boolean) => (isOpen = !val)"
     >
-      <template #header><h2>Premiação</h2></template>
-      <p class="subtitle">Distribuição de Prêmios</p>
-      <p>
-        10% do valor arrecadado será destinado a custos do bolão (domínio, hospedagem e desenvolvimento do site), mais
-        R$ 200,00 em prêmios adicionais descritos abaixo. O restante será distribuído entre os colocados conforme as
-        tabelas abaixo:
-      </p>
+      <template #header
+        ><h2>{{ t('rules.prize.title') }}</h2></template
+      >
+      <p class="subtitle">{{ t('rules.prize.distributionSubtitle') }}</p>
+      <p>{{ t('rules.prize.distributionIntro') }}</p>
       <PrimeDataTable
         :value="prizeDistributionShort"
         show-gridlines
         scrollable
         class="bets-table"
       >
-        <template #header>Até 114 Participantes</template>
+        <template #header>{{ t('rules.prize.upTo114') }}</template>
         <PrimeColumn
           field="position"
-          header="Colocação"
+          :header="t('rules.prize.tableHeaders.position')"
           class="column"
         />
         <PrimeColumn
           field="percentage"
-          header="% da Arrecadação"
+          :header="t('rules.prize.tableHeaders.percentage')"
           class="column"
         />
       </PrimeDataTable>
@@ -41,58 +39,58 @@
         scrollable
         class="bets-table"
       >
-        <template #header>115+ Participantes</template>
+        <template #header>{{ t('rules.prize.plus115') }}</template>
         <PrimeColumn
           field="position"
-          header="Colocação"
+          :header="t('rules.prize.tableHeaders.position')"
           class="column"
         />
         <PrimeColumn
           field="percentage"
-          header="% da Arrecadação"
+          :header="t('rules.prize.tableHeaders.percentage')"
           class="column"
         />
       </PrimeDataTable>
       <PrimeDivider />
-      <p class="subtitle">Prêmios Adicionais</p>
-      <p>● 1º colocado após os 72 jogos da fase de grupos (sem apostas extras): devolução da inscrição (R$100,00).</p>
-      <p>● 1º colocado geral ao fim de todos os jogos (sem apostas extras): devolução da inscrição (R$100,00).</p>
+      <p class="subtitle">{{ t('rules.prize.additionalSubtitle') }}</p>
+      <p>{{ t('rules.prize.additional1') }}</p>
+      <p>{{ t('rules.prize.additional2') }}</p>
       <PrimeDivider />
-      <p class="subtitle">Critério de Desempate</p>
-      <p class="padded">1. Maior número de pontos conquistados;</p>
-      <p class="padded">2. Maior número de <span style="color: var(--bolao-c-gold-l2)">acertos totais</span>;</p>
-      <p class="padded">3. Aposta extra no campeão correta;</p>
-      <p class="padded">4. Maior número de <span style="color: var(--bolao-c-green-l3)">acertos parciais</span>;</p>
-      <p class="padded">5. Aposta extra no artilheiro correta;</p>
-      <p class="padded">6. Aposta extra no melhor jogador correta;</p>
-      <p class="padded">7. Sorteio.</p>
+      <p class="subtitle">{{ t('rules.prize.tiebreakSubtitle') }}</p>
+      <p class="padded">{{ t('rules.prize.tiebreak1') }}</p>
+      <p class="padded">
+        <i18n-t
+          keypath="rules.prize.tiebreak2"
+          tag="span"
+        >
+          <template #highlight><span style="color: var(--bolao-c-gold-l2)"></span></template>
+        </i18n-t>
+      </p>
+      <p class="padded">{{ t('rules.prize.tiebreak3') }}</p>
+      <p class="padded">
+        <i18n-t
+          keypath="rules.prize.tiebreak4"
+          tag="span"
+        >
+          <template #highlight><span style="color: var(--bolao-c-green-l3)"></span></template>
+        </i18n-t>
+      </p>
+      <p class="padded">{{ t('rules.prize.tiebreak5') }}</p>
+      <p class="padded">{{ t('rules.prize.tiebreak6') }}</p>
+      <p class="padded">{{ t('rules.prize.tiebreak7') }}</p>
     </PrimePanel>
   </div>
 </template>
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+
 import { useRulesPanel } from '@/composables/useRulesPanel';
 
 const { isOpen, panelPt } = useRulesPanel('premiacao');
-const prizeDistributionShort = [
-  { percentage: '45%', position: '1º Lugar' },
-  { percentage: '25%', position: '2º Lugar' },
-  { percentage: '15%', position: '3º Lugar' },
-  { percentage: '10%', position: '4º Lugar' },
-  { percentage: '5%', position: '5º Lugar' },
-];
+const { t, tm } = useI18n();
 
-const prizeDistributionLong = [
-  { percentage: '35%', position: '1º Lugar' },
-  { percentage: '20%', position: '2º Lugar' },
-  { percentage: '15%', position: '3º Lugar' },
-  { percentage: '9%', position: '4º Lugar' },
-  { percentage: '6%', position: '5º Lugar' },
-  { percentage: '5%', position: '6º Lugar' },
-  { percentage: '4%', position: '7º Lugar' },
-  { percentage: '3%', position: '8º Lugar' },
-  { percentage: '2%', position: '9º Lugar' },
-  { percentage: '1%', position: '10º Lugar' },
-];
+const prizeDistributionShort = tm('rules.prize.shortData') as { percentage: string; position: string }[];
+const prizeDistributionLong = tm('rules.prize.longData') as { percentage: string; position: string }[];
 </script>
 <style lang="scss" scoped>
 .outer {

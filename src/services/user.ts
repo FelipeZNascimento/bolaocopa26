@@ -133,7 +133,7 @@ export default class UserService {
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setActiveProfile(response);
       this.activeProfileStore.setError(null);
-      this.startupService.initialize(() => {}); // Re-initialize to refresh data after password reset
+      // this.startupService.initialize(() => {}); // Re-initialize to refresh data after password reset
 
       return callback(true);
     } catch (error: unknown) {

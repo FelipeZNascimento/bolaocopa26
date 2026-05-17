@@ -10,7 +10,7 @@
       class="bets-card"
     >
       <div class="top-text">
-        {{ EXTRA_BETS_LABELS[extraBet.extraType] }}
+        {{ t(EXTRA_BETS_LABELS[extraBet.extraType]) }}
       </div>
       <div class="image-container">
         <img
@@ -46,7 +46,7 @@
         class="bets-card"
       >
         <div class="top-text">
-          {{ EXTRA_BETS_LABELS[value.extraType] }}
+          {{ t(EXTRA_BETS_LABELS[value.extraType]) }}
         </div>
         <div class="image-container">
           <img
@@ -69,6 +69,8 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+
 import type { IExtraBet, IExtraResults } from '@/stores/extraBet.types';
 
 import ClickableTeamName from '@/components/ClickableTeamName.vue';
@@ -79,6 +81,8 @@ defineProps<{
   extraBets?: IExtraBet[];
   results?: IExtraResults[];
 }>();
+
+const { t } = useI18n();
 </script>
 
 <style lang="scss" scoped>

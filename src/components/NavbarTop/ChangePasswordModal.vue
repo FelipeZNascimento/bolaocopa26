@@ -9,7 +9,7 @@
     :breakpoints="{ '1280px': '75vw', '575px': '90vw' }"
   >
     <template #header>
-      <h2>Alterar Senha</h2>
+      <h2>{{ t('changePasswordModal.title') }}</h2>
     </template>
 
     <Form
@@ -38,7 +38,7 @@
         >
           {{ $form.currentPassword.error?.message }}
         </PrimeMessage>
-        <label for="currentPassword">Senha atual</label>
+        <label for="currentPassword">{{ t('changePasswordModal.currentPassword') }}</label>
       </PrimeFloatLabel>
 
       <PrimeFloatLabel
@@ -60,7 +60,7 @@
         >
           {{ $form.newPassword.error?.message }}
         </PrimeMessage>
-        <label for="currentPassword">Nova senha</label>
+        <label for="newPassword">{{ t('changePasswordModal.newPassword') }}</label>
       </PrimeFloatLabel>
 
       <PrimeFloatLabel
@@ -82,14 +82,14 @@
         >
           {{ $form.newPasswordConfirmation.error?.message }}
         </PrimeMessage>
-        <label for="currentPassword">Confirme a nova senha</label>
+        <label for="newPasswordConfirmation">{{ t('changePasswordModal.confirmPassword') }}</label>
       </PrimeFloatLabel>
 
       <div class="buttons-container">
         <PrimeButton
           rounded
           type="submit"
-          label="Confirmar"
+          :label="t('changePasswordModal.saveButton')"
           variant="primary"
           severity="secondary"
           icon="pi pi-check"
@@ -99,7 +99,7 @@
           <PrimeTag
             severity="success"
             icon="pi pi-check"
-            value="Alterações salvas com sucesso"
+            :value="t('changePasswordModal.successMessage')"
           />
         </p>
         <p
@@ -109,7 +109,7 @@
           <PrimeTag
             severity="contrast"
             icon="pi pi-exclamation-triangle"
-            :value="error?.message"
+            :value="t('changePasswordModal.errorMessage')"
           />
         </p>
       </div>
@@ -119,6 +119,7 @@
 <script setup lang="ts">
 import { Form, type FormSubmitEvent } from '@primevue/forms';
 import { computed, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
@@ -136,6 +137,7 @@ const isVisible = ref(false);
 // ------ Initializations ------
 const userService = new UserService();
 const activeProfileStore = useActiveProfileStore();
+const { t } = useI18n();
 
 // ------ Computed Properties ------
 const isLoading = computed(() => activeProfileStore.isLoading);

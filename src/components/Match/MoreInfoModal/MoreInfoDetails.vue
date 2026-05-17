@@ -13,13 +13,12 @@
             </p>
             <p class="info-detail">{{ match.stadium.city }}, {{ match.stadium.country }}</p>
             <p class="info-detail">
-              Capacidade:
-              {{ match.stadium.capacity.toLocaleString('pt-BR') }} pessoas
+              {{ t('matches.capacity', { capacity: match.stadium.capacity.toLocaleString('pt-BR') }) }}
             </p>
           </div>
 
           <div class="info-section">
-            <h3><i class="pi pi-user" /> Árbitro</h3>
+            <h3><i class="pi pi-user" /> {{ t('matches.referee') }}</h3>
             <p class="info-title">
               {{ match.referee.name }}
             </p>
@@ -29,7 +28,7 @@
           </div>
 
           <div class="info-section">
-            <h3><i class="pi pi-calendar" /> Data e Hora</h3>
+            <h3><i class="pi pi-calendar" /> {{ t('matches.dateAndTime') }}</h3>
             <p class="info-title">
               {{ clockStore.getFormattedDate(parseInt(match.timestamp, 10)) }}
             </p>
@@ -41,16 +40,16 @@
               class="countdown"
             >
               <i class="pi pi-clock" />
-              Faltam {{ countdown }}
+              {{ t('matches.countdown', { countdown }) }}
             </p>
           </div>
 
           <div class="info-section">
-            <h3><i class="pi pi-flag" /> Rodada</h3>
+            <h3><i class="pi pi-flag" /> {{ t('matches.round') }}</h3>
             <p class="info-title">
               {{ clockStore.getRoundName(match.round) }}
             </p>
-            <p class="info-title">{{ match.group ? `Grupo ${match.group}` : '' }}</p>
+            <p class="info-title">{{ match.group ? `${t('matches.group', { group: match.group })}` : '' }}</p>
           </div>
         </div>
       </div>
@@ -59,6 +58,7 @@
 </template>
 <script lang="ts" setup>
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import type { IMatch } from '@/stores/matches.types';
 
@@ -71,6 +71,7 @@ const props = defineProps<{
 
 // ------ Initialization ------
 const clockStore = useClockStore();
+const { t } = useI18n();
 
 // ------ Computed Properties ------
 const countdown = computed(() => {

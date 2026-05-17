@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-
-import { ROUNDS } from '@/constants/rounds';
+import { useI18n } from 'vue-i18n';
 
 export const useClockStore = defineStore('clock', () => {
   const currentTime = ref<Date>(new Date());
   const currentTimestamp = ref<number>(Math.floor(currentTime.value.getTime() / 1000));
+  const { t } = useI18n();
+
   let timer: null | number = null;
 
   function startClock() {
@@ -51,9 +52,12 @@ export const useClockStore = defineStore('clock', () => {
     return currentTime.value.toLocaleDateString();
   }
 
-  function getRoundName(round: number): string {
-    const roundObj = ROUNDS.find((r) => r.num === round);
-    return roundObj ? roundObj.display : `Rodada ${round}`;
+  function getRoundName(round: null | number): string {
+    if (round === null) {
+      return '';
+    }
+
+    return t(`rounds.${round}.long`);
   }
 
   function getCountdown(targetTimestamp: number): string {
@@ -70,13 +74,13 @@ export const useClockStore = defineStore('clock', () => {
     const parts: string[] = [];
 
     if (days > 0) {
-      parts.push(`${days} ${days === 1 ? 'dia' : 'dias'}`);
+      parts.push(t('countdown.day', { count: days }));
     }
     if (hours > 0) {
-      parts.push(`${hours} ${hours === 1 ? 'hora' : 'horas'}`);
+      parts.push(t('countdown.hour', { count: hours }));
     }
     if (minutes > 0 || parts.length === 0) {
-      parts.push(`${minutes} ${minutes === 1 ? 'minuto' : 'minutos'}`);
+      parts.push(t('countdown.minute', { count: minutes }));
     }
 
     return parts.join(', ');
