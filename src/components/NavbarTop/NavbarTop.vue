@@ -147,7 +147,7 @@ const ballPositionPx = ref(0);
 const navWrapper = ref<HTMLElement | null>(null);
 
 let animationFrame: null | number = null;
-let resizeObserver: ResizeObserver | null = null;
+let resizeObserver: null | ResizeObserver = null;
 
 const profileRoute = computed(() => ({
   id: ROUTE_ID.PROFILE,
