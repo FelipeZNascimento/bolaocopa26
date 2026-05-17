@@ -102,7 +102,7 @@
       </div>
     </div>
     <div v-else>
-      <p style="color: var(--bolao-c-grey1-t2); text-align: center">{{ t('extraBets.playersWarning') }}</p>
+      <p style="color: var(--color-text); text-align: center">{{ t('extraBets.playersWarning') }}</p>
     </div>
   </div>
   <!-- Modals -->
@@ -173,12 +173,7 @@ const buttonOptions = computed<IToggleOption[]>(() => {
       selectedTeam: null,
       value: EXTRA_BETS_VALUES.CHAMPION,
     },
-    {
-      label: EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.TOP_SCORER],
-      selectedPlayer: null,
-      selectedTeam: null,
-      value: EXTRA_BETS_VALUES.TOP_SCORER,
-    },
+
     {
       label: EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.OFFENSE],
       selectedTeam: null,
@@ -188,6 +183,12 @@ const buttonOptions = computed<IToggleOption[]>(() => {
       label: EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.DEFENSE],
       selectedTeam: null,
       value: EXTRA_BETS_VALUES.DEFENSE,
+    },
+    {
+      label: EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.TOP_SCORER],
+      selectedPlayer: null,
+      selectedTeam: null,
+      value: EXTRA_BETS_VALUES.TOP_SCORER,
     },
     {
       label: EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.BEST_PLAYER],

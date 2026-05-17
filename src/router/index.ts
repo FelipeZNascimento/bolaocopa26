@@ -72,6 +72,7 @@ const router = createRouter({
   ],
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) return savedPosition; // browser back/forward
+    if (to.path === '/regras') return false; // let useRulesPanel handle scrolling
     return { behavior: 'smooth', top: 0 };
   },
 });

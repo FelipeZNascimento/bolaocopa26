@@ -7,7 +7,7 @@
       >
         <div class="match-info">
           <div class="info-section">
-            <h3><i class="pi pi-building" /> Estádio</h3>
+            <h3><i class="pi pi-building" /> {{ t('matches.stadium') }}</h3>
             <p class="info-title">
               {{ match.stadium.name }}
             </p>

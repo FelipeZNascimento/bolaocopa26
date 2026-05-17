@@ -70,11 +70,42 @@
     "chartExplanation": "The score in the chart does not include extra points, only the accumulated points from regular bets.",
     "extraBets": "Extra Bets"
   },
+  "loginModal": {
+    "titles": {
+      "login": "Login",
+      "signup": "Sign Up",
+      "forgotPassword": "Forgot my password"
+    },
+    "fields": {
+      "email": "Email",
+      "password": "Password",
+      "name": "Full Name",
+      "nickname": "Nickname"
+    },
+    "validation": {
+      "emailInvalid": "Invalid email",
+      "passwordEmpty": "Password is empty",
+      "nameEmpty": "Name is empty",
+      "nicknameLength": "Nickname must be between 4 and 12 characters"
+    },
+    "buttons": {
+      "forgotPassword": "Forgot password",
+      "confirm": "Confirm",
+      "backToLogin": "Back to login",
+      "signup": "Create an account here"
+    },
+    "notifications": {
+      "forgotPasswordSent": "An email has been sent to your account.",
+      "signupSuccess": "An email has been sent to your account.",
+      "signupSuccessTitle": "Account created successfully!"
+    }
+  },
   "profilePopover": {
     "admin": "Admin",
     "profile": "Profile",
     "password": "Password",
     "favorites": "Favorites",
+    "login": "Login",
     "logout": "Logout"
   },
   "floatingButton": {
@@ -356,7 +387,7 @@
         "third": "Third Place Match",
         "final": "Final"
       },
-      "missNote": "● {miss} always award 0 (zero) points.",
+      "missNote": "● {miss} always awards 0 (zero) points.",
       "drawNote": "A {draw} can be {exact}, {minimum} or {miss} — but never {partial}.",
       "drawWord": "Draw",
       "knockoutNote": "● In the knockout stage (from the Round of 16 onwards), the score that counts is the one at the end of extra time (if played). {highlight}.",

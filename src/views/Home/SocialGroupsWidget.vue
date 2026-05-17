@@ -170,7 +170,7 @@ const { t } = useI18n();
 .link-title {
   font-size: var(--s-font-size);
   font-weight: 700;
-  color: var(--p-text-color);
+  color: var(--bolao-c-grey2);
 }
 
 .link-sub {

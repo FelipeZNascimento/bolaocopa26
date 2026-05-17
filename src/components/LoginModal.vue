@@ -35,7 +35,7 @@
         >
           {{ $form.email.error?.message }}
         </PrimeMessage>
-        <label for="email">Email</label>
+        <label for="email">{{ t('loginModal.fields.email') }}</label>
       </PrimeFloatLabel>
       <PrimeFloatLabel
         v-if="formMode !== 'forgotPassword'"
@@ -57,7 +57,7 @@
         >
           {{ $form.password.error?.message }}
         </PrimeMessage>
-        <label for="password">Senha</label>
+        <label for="password">{{ t('loginModal.fields.password') }}</label>
       </PrimeFloatLabel>
       <PrimeFloatLabel
         v-if="formMode === 'signup'"
@@ -77,7 +77,7 @@
         >
           {{ $form.name.error?.message }}
         </PrimeMessage>
-        <label for="name">Nome Completo</label>
+        <label for="name">{{ t('loginModal.fields.name') }}</label>
       </PrimeFloatLabel>
       <PrimeFloatLabel
         v-if="formMode === 'signup'"
@@ -97,23 +97,23 @@
         >
           {{ $form.nickname.error?.message }}
         </PrimeMessage>
-        <label for="nickname">Apelido</label>
+        <label for="nickname">{{ t('loginModal.fields.nickname') }}</label>
       </PrimeFloatLabel>
       <div class="buttons-container">
         <PrimeButton
           rounded
           :disabled="isLoading"
-          label="Esqueci a senha"
+          :label="t('loginModal.buttons.forgotPassword')"
           variant="text"
           severity="secondary"
           @click="setFormMode('forgotPassword')"
         >
-          Esqueci a senha
+          {{ t('loginModal.buttons.forgotPassword') }}
         </PrimeButton>
         <PrimeButton
           rounded
           type="submit"
-          label="Confirmar"
+          :label="t('loginModal.buttons.confirm')"
           variant="primary"
           severity="primary"
           icon="pi pi-check"
@@ -137,7 +137,7 @@
         rounded
         class="signup-button"
         type="submit"
-        label="Voltar para o login"
+        :label="t('loginModal.buttons.backToLogin')"
         variant="link"
         severity="secondary"
         :disabled="isLoading"
@@ -147,7 +147,7 @@
         v-else
         rounded
         type="submit"
-        label="Faça aqui o seu cadastro"
+        :label="t('loginModal.buttons.signup')"
         variant="link"
         severity="secondary"
         :disabled="isLoading"
@@ -160,6 +160,7 @@
 import { Form, type FormSubmitEvent } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { computed, ref, type Ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { z } from 'zod';
 
 import UserService from '@/services/user';
@@ -170,6 +171,8 @@ const props = defineProps<{
   handleCloseModal: () => void;
   isOpen: boolean;
 }>();
+
+const { t } = useI18n();
 
 // ------ Refs ------
 const isVisible = ref(false);
@@ -191,13 +194,15 @@ const resolverDecider = () => {
   return loginResolver.value;
 };
 
-const forgotPasswordResolver = ref(zodResolver(z.object({ email: z.email({ error: 'Email inválido' }) })));
+const forgotPasswordResolver = ref(
+  zodResolver(z.object({ email: z.email({ error: t('loginModal.validation.emailInvalid') }) })),
+);
 
 const loginResolver = ref(
   zodResolver(
     z.object({
-      email: z.email({ error: 'Email inválido' }),
-      password: z.string().min(1, { message: 'Senha está vazia' }),
+      email: z.email({ error: t('loginModal.validation.emailInvalid') }),
+      password: z.string().min(1, { message: t('loginModal.validation.passwordEmpty') }),
     }),
   ),
 );
@@ -205,13 +210,13 @@ const loginResolver = ref(
 const signupResolver = ref(
   zodResolver(
     z.object({
-      email: z.email({ error: 'Email inválido' }),
-      name: z.string().min(1, { message: 'Nome está vazio' }),
+      email: z.email({ error: t('loginModal.validation.emailInvalid') }),
+      name: z.string().min(1, { message: t('loginModal.validation.nameEmpty') }),
       nickname: z
         .string()
-        .min(4, { message: 'Apelido tem que ter entre 4 e 12 caracteres' })
-        .max(12, { message: 'Apelido tem que ter entre 4 e 12 caracteres' }),
-      password: z.string().min(1, { message: 'Senha está vazia' }),
+        .min(4, { message: t('loginModal.validation.nicknameLength') })
+        .max(12, { message: t('loginModal.validation.nicknameLength') }),
+      password: z.string().min(1, { message: t('loginModal.validation.passwordEmpty') }),
     }),
   ),
 );
@@ -226,13 +231,13 @@ const isLoading = computed(() => activeProfileStore.isLoading);
 const loginError = computed(() => activeProfileStore.error);
 const formTitle = computed(() => {
   if (formMode.value === 'signup') {
-    return 'Cadastro';
+    return t('loginModal.titles.signup');
   } else if (formMode.value === 'login') {
-    return 'Login';
+    return t('loginModal.titles.login');
   } else if (formMode.value === 'forgotPassword') {
-    return 'Esqueci minha senha';
+    return t('loginModal.titles.forgotPassword');
   }
-  return 'Login';
+  return t('loginModal.titles.login');
 });
 
 // ------ Functions  ------
@@ -240,7 +245,7 @@ function forgotPasswordCallback(isSuccess: boolean) {
   if (isSuccess) {
     isVisible.value = false;
     props.handleCloseModal();
-    notificationStore.success('Um email foi enviado para a sua conta.');
+    notificationStore.success(t('loginModal.notifications.forgotPasswordSent'));
   }
 }
 function loginCallback(isSuccess: boolean) {
@@ -303,7 +308,10 @@ function submitCallback(isSuccess: boolean) {
   if (isSuccess) {
     isVisible.value = false;
     props.handleCloseModal();
-    notificationStore.success('Um email foi enviado para a sua conta.', 'Cadastro feito com sucesso!');
+    notificationStore.success(
+      t('loginModal.notifications.signupSuccess'),
+      t('loginModal.notifications.signupSuccessTitle'),
+    );
   }
 }
 
