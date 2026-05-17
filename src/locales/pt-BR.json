@@ -1,5 +1,8 @@
 {
   "title": "Bolão da Copa 2026",
+  "common": {
+    "dismiss": "Fechar"
+  },
   "navigation": {
     "home": "Início",
     "matches": "Partidas",
@@ -40,8 +43,14 @@
   "favoritesModal": {
     "title": "Favoritos",
     "clearButton": "Remover Todos",
-    "successMessage": "Favoritos atualizados com sucesso!",
-    "errorMessage": "Ocorreu um erro ao atualizar seus favoritos. Por favor, tente novamente."
+    "success": {
+      "title": "Favoritos Atualizados",
+      "message": "Favoritos atualizados com sucesso!"
+    },
+    "error": {
+      "title": "Erro",
+      "message": "Ocorreu um erro ao atualizar seus favoritos. Por favor, tente novamente."
+    }
   },
   "userTrackingModal": {
     "addFavoriteNotificationError": {
@@ -247,12 +256,18 @@
     "live": "Placar"
   },
   "extraBets": {
+    "rulesBanner": "Apostas extras são apostas adicionais que você pode fazer além dos palpites normais das partidas. Elas oferecem uma oportunidade de ganhar pontos extras e se destacar no ranking geral do bolão!",
+    "rulesBannerLink": "Saiba mais nas regras",
     "champion": "Campeão",
     "topScorer": "Artilheiro",
     "bestPlayer": "Melhor Jogador",
     "bestDefense": "Melhor Defesa",
     "bestOffense": "Melhor Ataque",
-    "playersWarning": "Essa aposta estará disponível assim que as escalações de todas as seleções forem divulgadas!"
+    "playersWarning": "Essa aposta estará disponível assim que as escalações de todas as seleções forem divulgadas!",
+    "notification": {
+      "success": "Aposta extra salva com sucesso!",
+      "error": "Ocorreu um erro ao salvar sua aposta extra. Por favor, tente novamente."
+    }
   },
   "footer": {
     "about": {
@@ -263,9 +278,18 @@
       "title": "Contato",
       "whatsapp": "Grupo do WhatsApp",
       "telegram": "Grupo do Telegram",
-      "email": "E-mail"
+      "email": "Email"
     },
-    "copyright": "© {year} Bolão da Copa 2026"
+    "copyright": "© {year} Bolão da Copa 2026",
+    "preferences": {
+      "title": "Preferências",
+      "language": "Idioma",
+      "theme": "Tema",
+      "portuguese": "Português",
+      "english": "Inglês",
+      "light": "Claro",
+      "dark": "Escuro"
+    }
   },
   "paginator": {
     "sortByTime": "Por horário",
@@ -306,14 +330,14 @@
     "scores": {
       "title": "Pontuação",
       "howItWorks": "Como funciona",
-      "intro": "Cada jogo tem três possíveis resultados de aposta:",
+      "intro": "Cada jogo tem quatro possíveis resultados de aposta:",
       "exactScore": "Acerto Total",
       "exactScoreDesc": "acertou o placar completo.",
       "partialScore": "Acerto Parcial",
       "partialScoreDesc": "acertou o vencedor do jogo e o número de gols de apenas uma das equipes.",
       "minimumScore": "Acerto Mínimo",
       "minimumScoreDesc": "acertou apenas o vencedor do jogo, mas errou o número de gols das duas equipes.",
-      "miss": "Erro",
+      "miss": "Erros",
       "missDesc": "errou o vencedor da partida.",
       "scoresByPhase": "Pontuação por fase",
       "tableHeaders": {
@@ -335,7 +359,7 @@
       "missNote": "● {miss} valem sempre 0 (zero) pontos.",
       "drawNote": "{draw} pode ser {exact}, {minimum} ou {miss} - mas nunca {partial}.",
       "drawWord": "Empate",
-      "knockoutNote": "● No mata-mata (a partir dos 16 Avos de Final), o resultado que vale para pontuação é aquele ao final do tempo extra (se houver). Resultados de disputa por {highlight} não são considerados.",
+      "knockoutNote": "● No mata-mata (a partir dos 16 Avos de Final), o resultado que vale para pontuação é aquele ao final do tempo extra (se houver). Resultados de disputa por {highlight}.",
       "penaltiesHighlight": "pênaltis não são considerados",
       "examples": "Exemplos",
       "exampleTableHeaders": {
@@ -468,9 +492,11 @@
       "additional2": "● 1º colocado geral ao fim de todos os jogos (sem apostas extras): devolução da inscrição (R$100,00).",
       "tiebreakSubtitle": "Critério de Desempate",
       "tiebreak1": "1. Maior número de pontos conquistados;",
-      "tiebreak2": "2. Maior número de {highlight} acertos totais;",
+      "tiebreak2": "2. Maior número de {highlight};",
+      "tiebreak2Highlight": "acertos totais",
       "tiebreak3": "3. Aposta extra no campeão correta;",
-      "tiebreak4": "4. Maior número de {highlight} acertos parciais;",
+      "tiebreak4": "4. Maior número de {highlight};",
+      "tiebreak4Highlight": "acertos parciais",
       "tiebreak5": "5. Aposta extra no artilheiro correta;",
       "tiebreak6": "6. Aposta extra no melhor jogador correta;",
       "tiebreak7": "7. Sorteio."

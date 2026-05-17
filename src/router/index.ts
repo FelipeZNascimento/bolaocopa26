@@ -70,6 +70,10 @@ const router = createRouter({
       path: '/admin',
     },
   ],
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) return savedPosition; // browser back/forward
+    return { behavior: 'smooth', top: 0 };
+  },
 });
 
 // Navigation guard to warn about unsaved changes

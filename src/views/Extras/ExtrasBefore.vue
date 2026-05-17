@@ -1,5 +1,24 @@
 <template>
   <div class="outer">
+    <div
+      v-if="!isDashboardBannerDismissed"
+      class="rules-banner"
+    >
+      <h3>{{ t('extraBets.rulesBanner') }}</h3>
+      <RouterLink
+        to="/regras?section=extras"
+        class="rules-banner-link"
+      >
+        {{ t('extraBets.rulesBannerLink') }} <i class="pi pi-arrow-up-right" />
+      </RouterLink>
+      <button
+        class="banner-dismiss"
+        :aria-label="$t('common.dismiss')"
+        @click="dismissBanner"
+      >
+        <i class="pi pi-times" />
+      </button>
+    </div>
     <h2 style="text-align: center">Minhas Apostas</h2>
     <div style="position: relative; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center">
       <!-- Overlay spinner when updating -->
@@ -143,8 +162,8 @@ const isUpdatingExtras = computed(() => extraBetStore.isUpdating);
 const activeProfileBets = computed(() => extraBetStore.activeProfileBets);
 const isLoadingTeams = computed(() => teamsStore.isLoading);
 const teams = computed(() => teamsStore.teams.filter((team) => team.id !== 33)); // Filter out placeholder team
-const currentSelectedToggle = computed(() =>
-  buttonOptions.value.find((option) => option.value === selectedToggle.value.value),
+const currentSelectedToggle = computed(
+  () => buttonOptions.value.find((option) => option.value === selectedToggle.value.value) ?? buttonOptions.value[0],
 );
 const buttonOptions = computed<IToggleOption[]>(() => {
   // Create fresh base options every time
@@ -195,6 +214,15 @@ const buttonOptions = computed<IToggleOption[]>(() => {
 // ------ Initialization ------
 teamsService.fetch();
 
+// ------ Rules banner ------
+const BANNER_STORAGE_KEY = 'extra-bets-rules-banner-dismissed';
+const isDashboardBannerDismissed = ref(localStorage.getItem(BANNER_STORAGE_KEY) === 'true');
+
+function dismissBanner() {
+  isDashboardBannerDismissed.value = true;
+  localStorage.setItem(BANNER_STORAGE_KEY, 'true');
+}
+
 // ------ Functions ------
 async function handleClick(team: ITeam) {
   if (!activeProfile.value) {
@@ -223,8 +251,8 @@ async function handleClick(team: ITeam) {
           // Refresh the extra bets from the store to reflect the update
           extraBetService.fetch();
           notificationStore.success(
-            `${currentSelectedToggle.value?.label}: ${currentSelectedToggle.value?.selectedTeam?.name || 'Nenhum'}`,
-            'Aposta feita com sucesso',
+            `${t(currentSelectedToggle.value.label)}: ${currentSelectedToggle.value?.selectedTeam?.name || 'Nenhum'}`,
+            t('extraBets.notification.success'),
           );
         } else {
           console.error('Failed to update extra bet:', error);
@@ -232,7 +260,7 @@ async function handleClick(team: ITeam) {
           if (currentSelectedToggle.value) {
             currentSelectedToggle.value.selectedTeam = previousTeam;
           }
-          notificationStore.error(`Falha ao atualizar a aposta`);
+          notificationStore.error(t('extraBets.notification.error'));
         }
       },
     );
@@ -254,6 +282,70 @@ function handleCloseLoginModal() {
 
   @media (width <= 768px) {
     padding: var(--xxl-spacing) var(--s-spacing);
+  }
+}
+
+.rules-banner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--xs-spacing);
+  align-items: center;
+  justify-content: center;
+  padding: var(--s-spacing) var(--xxl-spacing);
+  margin-bottom: var(--l-spacing);
+  color: var(--bolao-c-grey2);
+  background-color: var(--bolao-c-blue5);
+  border: 1px solid var(--bolao-c-blue3);
+  border-radius: var(--border-radius);
+
+  h3 {
+    font-size: var(--s-font-size);
+    text-align: center;
+  }
+}
+
+.rules-banner-link {
+  font-size: var(--xs-font-size);
+  color: var(--bolao-c-blue1);
+  text-decoration: none;
+  transition: color 0.2s;
+
+  &:hover {
+    color: var(--bolao-c-blue1-l1);
+    text-decoration: underline;
+  }
+
+  .pi {
+    font-size: 0.7em;
+  }
+}
+
+.banner-dismiss {
+  position: absolute;
+  top: 50%;
+  right: var(--s-spacing);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  cursor: pointer;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  opacity: 0.6;
+  transform: translateY(-50%);
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  .pi {
+    font-size: var(--xs-font-size);
+    color: var(--bolao-c-grey2);
   }
 }
 

@@ -23,7 +23,7 @@
               {{ match.referee.name }}
             </p>
             <p class="info-detail">
-              {{ match.referee.country }}
+              {{ locale === 'pt-BR' ? match.referee.country : match.referee.countryEn }}
             </p>
           </div>
 
@@ -71,7 +71,7 @@ const props = defineProps<{
 
 // ------ Initialization ------
 const clockStore = useClockStore();
-const { t } = useI18n();
+const { locale, t } = useI18n();
 
 // ------ Computed Properties ------
 const countdown = computed(() => {
