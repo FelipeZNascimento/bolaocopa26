@@ -5,13 +5,17 @@
       <div class="top-bar">
         <div class="logo-section">
           <div class="logo-container">
-            <img
-              src="/logo-mobile.png"
-              style="width: auto; height: 100%; object-fit: contain"
-              alt="Logo do Bolão Copa 2026"
-            />
+            <RouterLink to="/">
+              <img
+                src="/logo-mobile.png"
+                style="width: auto; height: 100%; object-fit: contain"
+                :alt="t('title')"
+              />
+            </RouterLink>
           </div>
-          <span class="app-title">Bolão Copa 2026</span>
+          <RouterLink to="/">
+            <span class="app-title">{{ t('title') }}</span>
+          </RouterLink>
         </div>
         <div class="right-section">
           <!-- Profile indicator when logged in -->
@@ -131,7 +135,7 @@
                 variant="text"
                 severity="secondary"
                 size="small"
-                label="Perfil"
+                :label="t('profilePopover.profile')"
                 @click="
                   isProfileModalOpen = true;
                   closeMenu();
@@ -141,7 +145,7 @@
                 variant="text"
                 severity="secondary"
                 size="small"
-                label="Senha"
+                :label="t('profilePopover.password')"
                 @click="
                   isPasswordModalOpen = true;
                   closeMenu();
@@ -151,7 +155,7 @@
                 variant="text"
                 severity="secondary"
                 size="small"
-                label="Favoritos"
+                :label="t('profilePopover.favorites')"
                 @click="
                   isFavoritesModalOpen = true;
                   closeMenu();
@@ -175,7 +179,7 @@
               style="margin: var(--s-spacing)"
               severity="danger"
               size="small"
-              label="Sair"
+              :label="t('profilePopover.logout')"
               @click="handleLogout"
             />
           </div>
@@ -187,7 +191,7 @@
             <PrimeButton
               style="margin: var(--s-spacing)"
               severity="info"
-              label="Fazer login"
+              :label="t('profilePopover.login')"
               @click="
                 closeMenu();
                 isLoginModalOpen = true;

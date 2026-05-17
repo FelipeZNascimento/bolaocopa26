@@ -1,6 +1,10 @@
 @use './base';
 @import 'primeicons/primeicons.css';
 
+html {
+  overflow-x: clip;
+}
+
 #app {
   margin: 0 auto;
   font-weight: normal;

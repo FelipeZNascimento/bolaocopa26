@@ -5,7 +5,7 @@
         <h3 class="section-title">{{ t('footer.about.title') }}</h3>
         <p class="about-text">{{ t('footer.about.description') }}</p>
       </div>
-      <div class="footer-section">
+      <div class="footer-section footer-section--contact">
         <h3 class="section-title">{{ t('footer.contact.title') }}</h3>
         <ul class="contact-list">
           <li>
@@ -41,10 +41,51 @@
           </li>
         </ul>
       </div>
-    </div>
-
-    <div class="footer-bottom">
-      <span>{{ t('footer.copyright', { year: currentYear }) }}</span>
+      <div class="footer-section footer-section--prefs">
+        <h3 class="section-title">{{ t('footer.preferences.title') }}</h3>
+        <div class="prefs-row">
+          <span class="prefs-label">{{ t('footer.preferences.language') }}</span>
+          <div class="language-switcher">
+            <button
+              class="flag-btn"
+              :class="{ 'flag-btn--active': locale === 'pt-BR' }"
+              :aria-label="t('footer.preferences.portuguese')"
+              @click="setLocale('pt-BR')"
+            >
+              🇧🇷
+            </button>
+            <button
+              class="flag-btn"
+              :class="{ 'flag-btn--active': locale === 'en' }"
+              :aria-label="t('footer.preferences.english')"
+              @click="setLocale('en')"
+            >
+              🇺🇸
+            </button>
+          </div>
+        </div>
+        <div class="prefs-row">
+          <span class="prefs-label">{{ t('footer.preferences.theme') }}</span>
+          <div class="theme-switcher">
+            <button
+              class="theme-btn"
+              :class="{ 'theme-btn--active': theme === 'light' }"
+              :aria-label="t('footer.preferences.light')"
+              @click="setTheme('light')"
+            >
+              <i class="pi pi-sun" />
+            </button>
+            <button
+              class="theme-btn"
+              :class="{ 'theme-btn--active': theme === 'dark' }"
+              :aria-label="t('footer.preferences.dark')"
+              @click="setTheme('dark')"
+            >
+              <i class="pi pi-moon" />
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </footer>
 </template>
@@ -53,8 +94,24 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
-const currentYear = computed(() => new Date().getFullYear());
+import type { TThemeValue } from '@/stores/configuration.types';
+
+import { LOCALE_STORAGE_KEY } from '@/i18n';
+import { useConfigurationStore } from '@/stores/configuration';
+
+const { locale, t } = useI18n();
+const configurationStore = useConfigurationStore();
+
+const theme = computed(() => configurationStore.theme);
+
+function setLocale(lang: 'en' | 'pt-BR') {
+  locale.value = lang;
+  localStorage.setItem(LOCALE_STORAGE_KEY, lang);
+}
+
+function setTheme(newTheme: TThemeValue) {
+  configurationStore.setTheme(newTheme);
+}
 </script>
 
 <style lang="scss" scoped>
@@ -91,7 +148,7 @@ const currentYear = computed(() => new Date().getFullYear());
   margin-bottom: var(--s-spacing);
   font-size: var(--s-font-size);
   font-weight: 600;
-  color: var(--p-text-color);
+  color: var(--bolao-c-grey1);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -133,5 +190,77 @@ const currentYear = computed(() => new Date().getFullYear());
   font-size: var(--xxs-font-size);
   text-align: center;
   border-top: 1px solid var(--bolao-c-blue3);
+}
+
+.prefs-row {
+  display: flex;
+  gap: var(--s-spacing);
+  align-items: center;
+  margin-bottom: var(--s-spacing);
+}
+
+.prefs-label {
+  font-size: var(--xs-font-size);
+  color: var(--bolao-c-grey3);
+}
+
+.language-switcher,
+.theme-switcher {
+  display: flex;
+  gap: var(--xs-spacing);
+}
+
+.flag-btn {
+  padding: var(--xxs-spacing) var(--xs-spacing);
+  font-size: var(--m-font-size);
+  line-height: 1;
+  cursor: pointer;
+  background: none;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  opacity: 0.45;
+  transition: all 0.2s;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &--active {
+    border-color: var(--bolao-c-blue1);
+    opacity: 1;
+  }
+}
+
+.theme-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  cursor: pointer;
+  background: none;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  opacity: 0.45;
+  transition: all 0.2s;
+
+  .pi {
+    font-size: var(--s-font-size);
+    color: var(--bolao-c-grey2);
+  }
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &--active {
+    border-color: var(--bolao-c-blue1);
+    opacity: 1;
+
+    .pi {
+      color: var(--bolao-c-gold);
+    }
+  }
 }
 </style>

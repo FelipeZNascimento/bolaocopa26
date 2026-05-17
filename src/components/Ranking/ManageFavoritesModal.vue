@@ -120,10 +120,10 @@ function removeFavorite(userId: number) {
 
 function updateCallback(isSuccess: boolean) {
   if (isSuccess) {
-    notificationStore.success(t('favoritesModal.successMessage'), 'success');
+    notificationStore.success(t('favoritesModal.success.message'), t('favoritesModal.success.title'));
     console.log('Favorites updated successfully');
   } else {
-    notificationStore.error(t('favoritesModal.errorMessage'), 'error');
+    notificationStore.error(t('favoritesModal.error.message'), t('favoritesModal.error.title'));
     console.error('Failed to update favorites');
   }
 }

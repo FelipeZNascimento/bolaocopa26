@@ -63,7 +63,9 @@
           keypath="rules.prize.tiebreak2"
           tag="span"
         >
-          <template #highlight><span style="color: var(--bolao-c-gold-l2)"></span></template>
+          <template #highlight
+            ><span style="color: var(--bolao-c-gold-l2)">{{ t('rules.prize.tiebreak2Highlight') }}</span></template
+          >
         </i18n-t>
       </p>
       <p class="padded">{{ t('rules.prize.tiebreak3') }}</p>
@@ -72,7 +74,9 @@
           keypath="rules.prize.tiebreak4"
           tag="span"
         >
-          <template #highlight><span style="color: var(--bolao-c-green-l3)"></span></template>
+          <template #highlight
+            ><span style="color: var(--bolao-c-green-l3)">{{ t('rules.prize.tiebreak4Highlight') }}</span></template
+          >
         </i18n-t>
       </p>
       <p class="padded">{{ t('rules.prize.tiebreak5') }}</p>

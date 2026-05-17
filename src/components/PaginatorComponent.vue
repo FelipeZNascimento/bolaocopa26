@@ -91,7 +91,7 @@
       />
     </div>
     <div
-      v-if="selectedRound === 1 || selectedRound === 2 || selectedRound === 3"
+      v-if="(selectedRound === 1 || selectedRound === 2 || selectedRound === 3) && route.path === '/partidas'"
       class="match-sorting-toggle"
     >
       <button
@@ -103,7 +103,6 @@
       >
         <i :class="matchListSorting === 'group' ? 'pi pi-sort-numeric-down' : 'pi pi-sort-alpha-down'" />
       </button>
-      <!-- <p style="font-size: var(--xs-font-size)">{{ matchListSorting === 'group' ? 'Horário' : 'Grupos' }}</p> -->
     </div>
   </div>
 </template>
@@ -111,6 +110,7 @@
 import { useConfirm } from 'primevue';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 
 import { ROUNDS } from '@/constants/rounds';
 import { useViewport } from '@/services/viewport';
@@ -127,6 +127,7 @@ const configurationStore = useConfigurationStore();
 const { isDesktop, isMobile } = useViewport();
 const confirm = useConfirm();
 const matchesStore = useMatchesStore();
+const route = useRoute();
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
 });

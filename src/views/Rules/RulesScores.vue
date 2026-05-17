@@ -98,7 +98,7 @@
           tag="span"
         >
           <template #miss>
-            <span style="font-weight: bold; color: var(--bolao-c-red-l2)">{{ t('rules.scores.miss') }}s</span>
+            <span style="font-weight: bold; color: var(--bolao-c-red-l2)">{{ t('rules.scores.miss') }}</span>
           </template>
         </i18n-t>
       </p>
@@ -185,7 +185,7 @@ const { t } = useI18n();
 
 const scoresData = computed(() => [
   {
-    acertoMinimo: '4 pt',
+    acertoMinimo: '4 pts',
     acertoParcial: '6 pts',
     acertoTotal: '10 pts',
     fase: t('rules.scores.phases.groups'),
