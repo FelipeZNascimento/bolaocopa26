@@ -70,11 +70,42 @@
     "chartExplanation": "A pontuação no gráfico não inclui pontos extras, apenas os pontos acumulados das apostas normais.",
     "extraBets": "Apostas Extras"
   },
+  "loginModal": {
+    "titles": {
+      "login": "Login",
+      "signup": "Cadastro",
+      "forgotPassword": "Esqueci minha senha"
+    },
+    "fields": {
+      "email": "Email",
+      "password": "Senha",
+      "name": "Nome Completo",
+      "nickname": "Apelido"
+    },
+    "validation": {
+      "emailInvalid": "Email inválido",
+      "passwordEmpty": "Senha está vazia",
+      "nameEmpty": "Nome está vazio",
+      "nicknameLength": "Apelido tem que ter entre 4 e 12 caracteres"
+    },
+    "buttons": {
+      "forgotPassword": "Esqueci a senha",
+      "confirm": "Confirmar",
+      "backToLogin": "Voltar para o login",
+      "signup": "Faça aqui o seu cadastro"
+    },
+    "notifications": {
+      "forgotPasswordSent": "Um email foi enviado para a sua conta.",
+      "signupSuccess": "Um email foi enviado para a sua conta.",
+      "signupSuccessTitle": "Cadastro feito com sucesso!"
+    }
+  },
   "profilePopover": {
     "admin": "Admin",
     "profile": "Perfil",
     "password": "Senha",
     "favorites": "Favoritos",
+    "login": "Entrar",
     "logout": "Sair"
   },
   "floatingButton": {
@@ -190,7 +221,7 @@
     "dashboard": "Esse é o seu dashboard da Copa 2026. Use a função de arrastar e soltar para organizar os widgets como preferir. Todos os seus ajustes serão salvos automaticamente para a próxima vez que você acessar o Bolão!",
     "welcome": {
       "headline": "Seu bolão, sua Copa!",
-      "description": "Chute os placares, acerte os campões e suba no ranking! O Bolão da Copa 2026 traz apostas em todas as partidas, confrontos entre amigos, apostas extras (artilheiro, melhor jogador e muito mais) e um ranking em tempo real para você acompanhar cada virada. Vai perder essa?",
+      "description": "Chute os placares, acerte o campeão e suba no ranking! O Bolão da Copa 2026 traz apostas em todas as partidas, confrontos entre amigos, apostas extras (artilheiro, melhor jogador e muito mais) e um ranking em tempo real para você acompanhar cada virada. Vai perder essa?",
       "features": {
         "champion": "Aposte nos placares de cada partida",
         "extras": "Acerte o campeão, artilheiro e muito mais",

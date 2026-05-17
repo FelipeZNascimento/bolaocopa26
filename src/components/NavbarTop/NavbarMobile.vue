@@ -131,6 +131,18 @@
               <span class="label">{{ profileRoute.label }}</span>
             </div>
             <div class="button-container">
+              <RouterLink
+                v-if="activeProfile && activeProfile.admin"
+                to="/admin"
+              >
+                <PrimeButton
+                  v-if="activeProfile?.admin"
+                  variant="text"
+                  severity="secondary"
+                  size="small"
+                  :label="t('profilePopover.admin')"
+                />
+              </RouterLink>
               <PrimeButton
                 variant="text"
                 severity="secondary"

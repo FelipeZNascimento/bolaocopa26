@@ -40,16 +40,25 @@ export default defineConfig({
         display: 'standalone',
         icons: [
           {
+            purpose: 'any',
             sizes: '192x192',
             src: 'android-chrome-192x192.png',
             type: 'image/png',
           },
           {
+            purpose: 'any',
             sizes: '512x512',
             src: 'android-chrome-512x512.png',
             type: 'image/png',
           },
+          {
+            purpose: 'maskable',
+            sizes: '512x512',
+            src: 'maskable-icon-512x512.png',
+            type: 'image/png',
+          },
         ],
+        id: '/',
         name: 'Bolao Copa 2026',
         short_name: 'BolaoCopa2026',
         start_url: '/',
@@ -88,6 +97,7 @@ export default defineConfig({
   ],
   resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
   server: {
+    host: true,
     // host: '127.0.0.1',
     // host: 'localhost',
     port: 3000,
