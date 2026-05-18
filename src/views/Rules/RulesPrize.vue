@@ -51,6 +51,7 @@
           class="column"
         />
       </PrimeDataTable>
+      <p>{{ t('rules.prize.usersCount', { count: usersNumber }) }}</p>
       <PrimeDivider />
       <p class="subtitle">{{ t('rules.prize.additionalSubtitle') }}</p>
       <p>{{ t('rules.prize.additional1') }}</p>
@@ -82,19 +83,42 @@
       <p class="padded">{{ t('rules.prize.tiebreak5') }}</p>
       <p class="padded">{{ t('rules.prize.tiebreak6') }}</p>
       <p class="padded">{{ t('rules.prize.tiebreak7') }}</p>
+      <PrimeDivider />
+      <p class="subtitle">{{ t('rules.prize.foreignCurrencyTitle') }}</p>
+      <p>
+        {{ t('rules.prize.foreignCurrency1') }}
+      </p>
+      <p>
+        {{ t('rules.prize.foreignCurrency2') }}
+      </p>
+      <p>
+        {{ t('rules.prize.foreignCurrency3') }}
+      </p>
+      <p>
+        {{ t('rules.prize.foreignCurrency4') }}
+      </p>
+      <p style="padding-top: var(--m-spacing); font-weight: bold">{{ t('rules.prize.foreignCurrency5') }}</p>
+      <p>{{ t('rules.prize.foreignCurrency6') }}</p>
+      <p>{{ t('rules.prize.foreignCurrency7') }}</p>
+      <p>{{ t('rules.prize.foreignCurrency8') }}</p>
     </PrimePanel>
   </div>
 </template>
 <script setup lang="ts">
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useRulesPanel } from '@/composables/useRulesPanel';
+import { useRankingStore } from '@/stores/ranking';
 
 const { isOpen, panelPt } = useRulesPanel('premiacao');
 const { t, tm } = useI18n();
+const rankingStore = useRankingStore();
 
 const prizeDistributionShort = tm('rules.prize.shortData') as { percentage: string; position: string }[];
 const prizeDistributionLong = tm('rules.prize.longData') as { percentage: string; position: string }[];
+
+const usersNumber = computed(() => rankingStore.seasonRanking.length);
 </script>
 <style lang="scss" scoped>
 .outer {

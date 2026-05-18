@@ -29,7 +29,7 @@
         <div class="payment-section">
           <h3>🇧🇷 {{ t('rules.subscription.pixCopyPaste') }}</h3>
           <ClipboardText
-            text="00020126580014BR.GOV.BCB.PIX0136395.825.028-945204000053039865802BR5925Nelson Gimenez da Motta6009Sao Paulo62070503***6304"
+            text="00020126550014BR.GOV.BCB.PIX0111395825028940218Bolão da Copa 20265204000053039865406100.005802BR5923NELSON GIMENEZ DA MOTTA6009SAO PAULO62170513BolaoCopa20266304F822"
           />
         </div>
         <div class="payment-section">
@@ -154,7 +154,6 @@ const { t } = useI18n();
   gap: var(--l-spacing);
   width: 100%;
   padding: var(--l-spacing);
-  background-color: var(--bolao-c-black-t1);
 
   @media (width <= 768px) {
     grid-template-columns: 1fr;
