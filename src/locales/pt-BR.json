@@ -576,5 +576,9 @@
         "answer": "Não. Se você não apostar numa partida, ela será considerada como não realizada e, portanto, não afetará sua pontuação."
       }
     }
+  },
+  "emptyFavorites": {
+    "title": "Nenhum favorito adicionado.",
+    "description": "Para adicionar alguém aos seus favoritos, clique em um usuário e ative a estrela no topo das estatísticas."
   }
 }

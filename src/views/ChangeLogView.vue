@@ -33,10 +33,12 @@ import { ref } from 'vue';
 const changelogEntries = ref([
   {
     changes: [
+      '[Rules] Success notification toaster now dont overlap with the header on desktop',
       '[Rules] Fix PIX Copy & Paste text',
       '[Rules] Added more details for foreign currency payments',
       '[Translation] Updates',
       "[Ranking] Fix 'find me' functionality on ranking",
+      '[Ranking] Favorites functionality are easier to find',
       '[Home] Next matches widget now correctly shows upcoming matches with no relation to the selected round',
     ],
     date: '19/05/2026',

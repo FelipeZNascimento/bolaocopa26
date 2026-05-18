@@ -577,5 +577,9 @@
         "answer": "No. If you don't bet on a match, it will be considered as not placed and, therefore, will not affect your score."
       }
     }
+  },
+  "emptyFavorites": {
+    "title": "No favorites added.",
+    "description": "To add someone to your favorites, click on a user and activate the star at the top of the statistics."
   }
 }

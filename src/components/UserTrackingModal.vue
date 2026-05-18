@@ -10,16 +10,20 @@
   >
     <template #header>
       <p class="modal-title">
-        <i
+        {{ selectedUser?.nickname }}
+
+        <PrimeButton
           v-if="!isUserActive"
           v-tooltip.top="
             isFavorite() ? t('userTrackingModal.removeFavoriteTooltip') : t('userTrackingModal.addFavoriteTooltip')
           "
-          :class="isFavorite() ? 'pi pi-star-fill' : 'pi pi-star'"
-          class="favorite-star"
+          :icon="isFavorite() ? 'pi pi-star-fill' : 'pi pi-star'"
+          class="favorite-button"
+          raised
+          severity="secondary"
+          rounded
           @click="toggleFavorite"
         />
-        {{ selectedUser?.nickname }}
       </p>
     </template>
     <PrimeChart
@@ -288,25 +292,23 @@ watch(isVisible, async (newValue) => {
   overflow-x: hidden !important;
 }
 
-.favorite-star {
-  font-size: 1.2rem;
-  color: var(--bolao-c-yellow, #f4b303);
-  cursor: pointer;
+.favorite-button {
+  color: var(--bolao-c-yellow, #f4b303) !important;
   transition:
     transform 0.2s,
     opacity 0.2s;
-}
 
-.favorite-star:hover {
-  opacity: 0.8;
-  transform: scale(1.2);
-}
+  &:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
 
-.pi-star {
-  opacity: 0.5;
-}
+  :deep(.pi-star) {
+    opacity: 0.5;
+  }
 
-.pi-star-fill {
-  opacity: 1;
+  :deep(.pi-star-fill) {
+    opacity: 1;
+  }
 }
 </style>

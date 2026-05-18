@@ -72,7 +72,6 @@
       </PrimeButtonGroup>
     </div>
   </div>
-
   <PrimeDataTable
     class="prime-data-table"
     :value="[...filteredRankingData]"

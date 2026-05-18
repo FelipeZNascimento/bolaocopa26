@@ -120,14 +120,6 @@ const handleSave = async () => {
     );
   }
 
-  if (invalidBetsCount.value === 0 && changes.length === 0) {
-    notificationStore.message(
-      t('floatingButton.notifications.noChanges.message'),
-      t('floatingButton.notifications.noChanges.title'),
-    );
-    return;
-  }
-
   if (changes.length === 0) {
     return;
   }
