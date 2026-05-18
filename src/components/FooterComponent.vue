@@ -88,8 +88,19 @@
       </div>
     </div>
     <div class="footer-bottom">
-      v{{ appVersion }} -
+      <span>v{{ appVersion }}</span>
+      <span>·</span>
       <RouterLink to="/changelog">{{ t('footer.about.changelog') }}</RouterLink>
+      <span>·</span>
+      <a
+        href="https://github.com/FelipeZNascimento/bolaocopa26"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="footer-github"
+      >
+        <i class="pi pi-github" />
+        GitHub
+      </a>
     </div>
   </footer>
 </template>
@@ -192,10 +203,26 @@ function setTheme(newTheme: TThemeValue) {
 }
 
 .footer-bottom {
+  display: flex;
+  gap: var(--xs-spacing);
+  align-items: center;
+  justify-content: center;
   padding: var(--s-spacing) var(--l-spacing);
   font-size: var(--xxs-font-size);
-  text-align: center;
   border-top: 1px solid var(--bolao-c-blue3);
+}
+
+.footer-github {
+  display: inline-flex;
+  gap: var(--xxs-spacing);
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s;
+
+  &:hover {
+    color: var(--bolao-c-white);
+  }
 }
 
 .prefs-row {
