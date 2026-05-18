@@ -33,7 +33,9 @@ import RankingTable from '@/components/Ranking/RankingTable.vue';
 }
 
 .ranking-outer {
+  display: flex;
   flex: 1;
+  flex-direction: column;
   align-items: center;
   min-height: 0;
   padding-bottom: var(--xl-spacing);
