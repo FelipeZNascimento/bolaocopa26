@@ -6,6 +6,7 @@
       label="Refresh Users"
       @click="userService.getAll(getUsersCallback)"
     />
+    <p>Usuários: {{ users.filter((u) => u.isActive).length }}/{{ users.length }}</p>
     <PrimeDataTable
       :value="users"
       :loading="isLoading || isLoadingActiveProfile"

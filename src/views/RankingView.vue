@@ -21,7 +21,7 @@ import RankingTable from '@/components/Ranking/RankingTable.vue';
   gap: var(--xxl-spacing);
   justify-content: center;
   width: 100%;
-  height: calc(100vh - var(--paginator-height) - var(--navbar-height));
+  height: calc(100vh - var(--paginator-height) - var(--navbar-height) - 10px);
   padding: 0;
   margin-top: 20px;
   overflow-y: auto;
@@ -33,7 +33,9 @@ import RankingTable from '@/components/Ranking/RankingTable.vue';
 }
 
 .ranking-outer {
+  display: flex;
   flex: 1;
+  flex-direction: column;
   align-items: center;
   min-height: 0;
   padding-bottom: var(--xl-spacing);

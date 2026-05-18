@@ -303,7 +303,8 @@
   "footer": {
     "about": {
       "title": "About",
-      "description": "Bolão (Pick'em Pool format) World Cup 2026 — Compete with friends and family by betting on World Cup match results."
+      "description": "Bolão (Pick'em Pool format) World Cup 2026 — Compete with friends and family by betting on World Cup match results.",
+      "changelog": "Changelog"
     },
     "contact": {
       "title": "Contact",
@@ -499,6 +500,7 @@
         "position": "Place",
         "percentage": "% of Total Pool"
       },
+      "usersCount": "Current number of participants: {count}",
       "shortData": [
         { "position": "1st Place", "percentage": "45%" },
         { "position": "2nd Place", "percentage": "25%" },
@@ -530,9 +532,24 @@
       "tiebreak4Highlight": "partial scores",
       "tiebreak5": "5. Correct extra bet on the top scorer;",
       "tiebreak6": "6. Correct extra bet on the best player;",
-      "tiebreak7": "7. Prize draw."
+      "tiebreak7": "7. Prize draw.",
+      "foreignCurrencyTitle": "Foreign Currency Payments",
+      "foreignCurrency1": "The official currency of the Bolão is the Brazilian Real. Registration fees in foreign currencies are not exact conversions to accommodate possible fees and variations in currency conversion.",
+      "foreignCurrency2": "For prize calculation purposes, the accumulated amount will always be considered as the number of participants multiplied by the registration fee in Brazilian Real (R$100).",
+      "foreignCurrency3": "The only exception is for cases where the prize is a \"registration refund\" (additional prizes). In this case, the full amount paid will be refunded regardless of the currency.",
+      "foreignCurrency4": "The Bolão organizers commit to making the prize payment within 30 days after the winner is confirmed, using the exchange rate in effect on the payment date. The final amount received by the winner may vary from the originally accumulated amount due to exchange rate fluctuations and conversion fees applied by the winner's financial institution.",
+      "foreignCurrency5": "Example:",
+      "foreignCurrency6": "If there are 200 participants, the accumulated amount for prize purposes will be 200 x R$100 = R$20,000",
+      "foreignCurrency7": "10% of the total amount is allocated to maintenance costs. Two registrations will be returned as additional prizes (as explained above), so the net amount for the prize will be R$17,800.",
+      "foreignCurrency8": "As shown in the table above (115+ participants), the 1st place will receive 35% of the net amount, i.e., R$6,230. If you wish to receive it in foreign currency, this amount will be used for conversion and payment of applicable fees and/or taxes."
     },
     "faqItems": {
+      "pwaInstall": {
+        "question": "Can I install the app as a PWA?",
+        "answer1": "Yes! You can install the app as a Progressive Web App (PWA) on your device. To do this on your computer, open the app in your browser and look for the install option right beside the address bar:",
+        "answer2": "If you are on your mobile device, you can also install the app. Just open the menu in your browser and look for the option to add to home screen:",
+        "answerLinkAlt": "PWA Installation Guide"
+      },
       "changeAfterBet": {
         "question": "Can I change my bets after placing them?",
         "answer1": "Bets can be changed at any time before kick-off. To change a bet, just find the match in the ",
@@ -560,5 +577,9 @@
         "answer": "No. If you don't bet on a match, it will be considered as not placed and, therefore, will not affect your score."
       }
     }
+  },
+  "emptyFavorites": {
+    "title": "No favorites added.",
+    "description": "To add someone to your favorites, click on a user and activate the star at the top of the statistics."
   }
 }

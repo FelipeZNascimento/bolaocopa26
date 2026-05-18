@@ -56,7 +56,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { MATCH_STATUS } from '@/constants/match';
+import MatchService from '@/services/match';
 import { useMatchesStore } from '@/stores/matches';
 
 import ExtrasWidget from './Home/ExtrasWidget.vue';
@@ -111,6 +111,10 @@ const STORAGE_KEY = 'home-widget-order';
 const matchesStore = useMatchesStore();
 const { t } = useI18n();
 
+// ------ Initialization ------
+const matchService = new MatchService();
+matchService.fetchNextMatches();
+
 // ------ Dashboard banner ------
 const isDashboardBannerDismissed = ref(localStorage.getItem(BANNER_STORAGE_KEY) === 'true');
 
@@ -143,14 +147,7 @@ function saveOrder() {
 
 // ------ Computed ------
 const matches = computed(() => matchesStore.matches);
-
-const nextMatches = computed(() =>
-  matches.value
-    .filter((m) => m.status === MATCH_STATUS.NOT_STARTED)
-    .sort((a, b) => parseInt(a.timestamp, 10) - parseInt(b.timestamp, 10))
-    .slice(0, 3),
-);
-
+const nextMatches = computed(() => matchesStore.nextMatches);
 const liveMatches = computed(() => matches.value.filter((m) => m.status >= 20));
 
 const visibleWidgets = computed(() =>

@@ -1,3 +1,7 @@
+import { type Ref } from 'vue';
+
+import i18n from '@/i18n';
+
 class HttpError extends Error {
   constructor(
     message: string,
@@ -11,9 +15,13 @@ class HttpError extends Error {
 export default class ApiService {
   private baseUrl: string;
 
+  private get locale(): string {
+    return (i18n.global.locale as unknown as Ref<string>).value;
+  }
+
   constructor() {
-    this.baseUrl = import.meta.env.PROD ? 'https://apicopa.omegafox.me/' : 'http://localhost:63768/';
-    // this.baseUrl = import.meta.env.VITE_BOLAO_BASE_URL;
+    // this.baseUrl = import.meta.env.PROD ? 'https://apicopa.omegafox.me/' : 'http://localhost:9002/';
+    this.baseUrl = import.meta.env.VITE_BOLAO_BASE_URL;
   }
 
   public async get<T>(
@@ -29,6 +37,7 @@ export default class ApiService {
         const requestOptions: RequestInit = {
           credentials: 'include',
           headers: {
+            'Accept-Language': this.locale,
             'Content-Type': 'application/json',
             ...headers,
           },
@@ -71,6 +80,7 @@ export default class ApiService {
           body: JSON.stringify(data),
           credentials: 'include',
           headers: {
+            'Accept-Language': this.locale,
             'Content-Type': 'application/json',
             ...headers,
           },

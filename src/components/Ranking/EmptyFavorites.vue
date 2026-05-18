@@ -1,14 +1,15 @@
 <template>
   <div class="favorites-empty">
     <i class="pi pi-info-circle" />
-    <p>Nenhum favorito adicionado</p>
-    <p>
-      Para adicionar alguém aos seus favoritos, clique no usuário na tabela do ranking ou nas suas apostas nos jogos e
-      ative a estrela no topo das estatísticas.
-    </p>
+    <p>{{ t('emptyFavorites.title') }}</p>
+    <p>{{ t('emptyFavorites.description') }}</p>
   </div>
 </template>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+</script>
 <style lang="scss" scoped>
 .favorites-empty {
   display: flex;

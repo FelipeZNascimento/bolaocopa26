@@ -1,7 +1,7 @@
 <template>
   <NavbarMobile v-if="isMobile" />
   <NavbarTop v-else />
-  <PrimeToast />
+  <PrimeToast :position="isDesktop ? 'bottom-right' : 'bottom'" />
   <PrimeConfirmDialog />
   <div class="outer-view">
     <RouterView />
@@ -44,7 +44,7 @@ const configurationStore = useConfigurationStore();
 const activeProfileStore = useActiveProfileStore();
 const extraBetStore = useExtraBetStore();
 const matchesStore = useMatchesStore();
-const { isMobile } = useViewport();
+const { isDesktop, isMobile } = useViewport();
 
 function initializationCallback(isSuccess: boolean) {
   if (isSuccess) {
@@ -110,7 +110,7 @@ watch(activeProfile, async (newValue) => {
 <style lang="scss" scoped>
 .outer-view {
   width: 100%;
-  min-height: calc(100vh - var(--navbar-height));
+  min-height: calc(100vh - var(--navbar-height) - 10px);
   padding-bottom: var(--xl-spacing);
   margin-top: var(--navbar-height);
 

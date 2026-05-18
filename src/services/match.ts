@@ -50,6 +50,19 @@ export default class MatchService {
     }
   }
 
+  public async fetchNextMatches() {
+    this.matchesStore.setLoading(true);
+    try {
+      const response = await this.apiRequest.get<IMatch[]>(`match/next-matches`);
+      this.matchesStore.setNextMatches(response);
+      this.matchesStore.setLoading(false);
+      this.matchesStore.setError(null);
+    } catch (error: unknown) {
+      this.matchesStore.setLoading(false);
+      this.matchesStore.setError(new Error(error instanceof Error ? error.message : String(error)));
+    }
+  }
+
   private onWebsocketUpdate(this: WebSocket, ev: MessageEvent<unknown>) {
     // const configurationStore = useConfigurationStore();
     // const selectedRound = configurationStore.selectedRound;

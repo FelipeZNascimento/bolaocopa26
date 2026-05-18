@@ -303,7 +303,8 @@
   "footer": {
     "about": {
       "title": "Sobre",
-      "description": "Bolão da Copa 2026 — Compita com amigos e família apostando nos resultados da Copa do Mundo."
+      "description": "Bolão da Copa 2026 — Compita com amigos e família apostando nos resultados da Copa do Mundo.",
+      "changelog": "Changelog"
     },
     "contact": {
       "title": "Contato",
@@ -499,6 +500,7 @@
         "position": "Colocação",
         "percentage": "% da Arrecadação"
       },
+      "usersCount": "Número atual de participantes: {count}",
       "shortData": [
         { "position": "1º Lugar", "percentage": "45%" },
         { "position": "2º Lugar", "percentage": "25%" },
@@ -519,8 +521,8 @@
         { "position": "10º Lugar", "percentage": "1%" }
       ],
       "additionalSubtitle": "Prêmios Adicionais",
-      "additional1": "● 1º colocado após os 72 jogos da fase de grupos (sem apostas extras): devolução da inscrição (R$100,00).",
-      "additional2": "● 1º colocado geral ao fim de todos os jogos (sem apostas extras): devolução da inscrição (R$100,00).",
+      "additional1": "● 1º colocado após os 72 jogos da fase de grupos (sem apostas extras): devolução do valor da inscrição.",
+      "additional2": "● 1º colocado geral ao fim de todos os jogos (sem apostas extras): devolução do valor da inscrição.",
       "tiebreakSubtitle": "Critério de Desempate",
       "tiebreak1": "1. Maior número de pontos conquistados;",
       "tiebreak2": "2. Maior número de {highlight};",
@@ -530,9 +532,23 @@
       "tiebreak4Highlight": "acertos parciais",
       "tiebreak5": "5. Aposta extra no artilheiro correta;",
       "tiebreak6": "6. Aposta extra no melhor jogador correta;",
-      "tiebreak7": "7. Sorteio."
+      "tiebreak7": "7. Sorteio.",
+      "foreignCurrencyTitle": "Moeda Estrangeira",
+      "foreignCurrency1": "A moeda oficial do Bolão é o Real Brasileiro. Os valores de inscrição em moedas estrangeiras não são conversões exatas para acomodar possíveis taxas e variações na conversão da moeda.",
+      "foreignCurrency2": "Para o cálculo das premiações, o montante acumulado será sempre considerado como o número de participantes multiplicado pela taxa de inscrição em Real Brasileiro (R$100).",
+      "foreignCurrency3": "A única exceção fica para os casos em que o prêmio é \"devolução da inscrição\" (prêmios adicionais). Nesse caso, será devolvido integralmente o valor pago independente da moeda.",
+      "foreignCurrency4": "Os organizadores do Bolão comprometem-se em efetuar o pagamento do prêmio em até 30 dias após a confirmação do vencedor, utilizando a taxa de câmbio vigente na data do pagamento. O valor final recebido pelo vencedor pode variar em relação ao valor originalmente acumulado devido a flutuações cambiais e taxas de conversão aplicadas pela instituição financeira do vencedor.",
+      "foreignCurrency5": "Exemplo:",
+      "foreignCurrency6": "Se houver 200 participantes, o montante acumulado para fins de premiação será 200 x R$100 = R$20.000",
+      "foreignCurrency7": "10% do valor total é revertido em custos de manutenção. Duas inscrições serão devolvidas em prêmios adicionais (como explicado acima), portanto, o valor líquido para premiação será R$17.800.",
+      "foreignCurrency8": "Como mostrado na tabela acima (115+ participantes), o 1º lugar receberá 35% do valor líquido, ou seja, R$6.230. Caso deseje receber em moeda estrangeira, esse valor será usado para fazer a conversão e fazer o pagamento de taxas e/ou impostos aplicáveis na conversão."
     },
     "faqItems": {
+      "pwaInstall": {
+        "question": "Posso instalar o aplicativo como PWA?",
+        "answer1": "Sim! Você pode instalar o aplicativo como um Progressive Web App (PWA) no seu dispositivo. Para fazer isso no seu computador, abra o aplicativo no seu navegador e procure a opção de instalação ao lado da barra de endereços:",
+        "answer2": "Se você estiver no seu dispositivo móvel, também pode instalar o aplicativo. Basta abrir o menu no seu navegador e procurar a opção de adicionar à tela inicial:"
+      },
       "changeAfterBet": {
         "question": "Posso alterar minhas apostas depois de feitas?",
         "answer1": "As apostas podem ser alteradas a qualquer momento antes do início de cada jogo. Para alterar uma aposta, basta encontrar a partida na seção ",
@@ -560,5 +576,9 @@
         "answer": "Não. Se você não apostar numa partida, ela será considerada como não realizada e, portanto, não afetará sua pontuação."
       }
     }
+  },
+  "emptyFavorites": {
+    "title": "Nenhum favorito adicionado.",
+    "description": "Para adicionar alguém aos seus favoritos, clique em um usuário e ative a estrela no topo das estatísticas."
   }
 }

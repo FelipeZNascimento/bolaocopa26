@@ -249,10 +249,15 @@ async function handleClick(team: ITeam) {
       },
       (isSuccess: boolean, error?: Error) => {
         if (isSuccess) {
+          const teamName =
+            locale.value === 'pt-BR'
+              ? currentSelectedToggle.value?.selectedTeam?.name
+              : currentSelectedToggle.value?.selectedTeam?.nameEn;
+
           // Refresh the extra bets from the store to reflect the update
           extraBetService.fetch();
           notificationStore.success(
-            `${t(currentSelectedToggle.value.label)}: ${currentSelectedToggle.value?.selectedTeam?.name || 'Nenhum'}`,
+            `${t(currentSelectedToggle.value.label)}: ${teamName || 'Nenhum'}`,
             t('extraBets.notification.success'),
           );
         } else {

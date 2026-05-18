@@ -288,8 +288,24 @@ $colors: (
   --p-datatable-row-hover-background: var(--bolao-c-blue5-t1) !important;
   --p-datatable-row-hover-color: var(--bolao-c-white) !important;
 
+  // Toast
+  --p-toast-success-background: var(--bolao-c-mint-t1) !important;
+  --p-toast-success-border-color: var(--bolao-c-mint-d1) !important;
+  --p-toast-success-color: var(--text-color) !important;
+  --p-toast-success-detail-color: var(--text-color) !important;
+
   // Chart
   --surface-card: var(--bolao-c-white-t3) !important;
+}
+
+// Toast mobile fix: default width is 25rem which overflows narrow viewports
+// when positioned bottom-right (right: 20px). CSS !important overrides inline styles.
+@media (width <= 480px) {
+  .p-toast {
+    right: 16px !important;
+    left: auto !important;
+    width: calc(100vw - 32px) !important;
+  }
 }
 
 [data-theme='dark'] {

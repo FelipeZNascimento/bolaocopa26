@@ -225,6 +225,7 @@ function setRound(num: null | number) {
   justify-content: center;
   width: 100%;
   height: var(--paginator-height);
+  pointer-events: none;
   border-radius: var(--border-radius);
 
   @media (width <= 1024px) {
@@ -253,6 +254,7 @@ function setRound(num: null | number) {
   gap: var(--xs-spacing);
   align-items: center;
   padding: var(--s-spacing);
+  pointer-events: auto;
   background-color: var(--bolao-c-blue3);
   border-radius: var(--border-radius);
 
@@ -308,6 +310,7 @@ function setRound(num: null | number) {
   justify-content: center;
   height: 100%;
   padding: var(--s-spacing);
+  pointer-events: auto;
   border-radius: var(--border-radius);
 }
 
