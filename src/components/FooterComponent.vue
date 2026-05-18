@@ -87,11 +87,17 @@
         </div>
       </div>
     </div>
+    <div class="footer-bottom">
+      v{{ appVersion }} -
+      <RouterLink to="/changelog">{{ t('footer.about.changelog') }}</RouterLink>
+    </div>
   </footer>
 </template>
 
 <script lang="ts" setup>
 import { computed } from 'vue';
+
+const appVersion = __APP_VERSION__;
 import { useI18n } from 'vue-i18n';
 
 import type { TThemeValue } from '@/stores/configuration.types';

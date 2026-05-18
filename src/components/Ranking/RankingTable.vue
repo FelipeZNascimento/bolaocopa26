@@ -382,9 +382,17 @@ function isActiveProfile(userId: number): boolean {
 
 function scrollToMe() {
   const innerRow = document.querySelector<HTMLElement>('.active-user-row');
-  innerRow?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  const tr = innerRow?.closest('tr');
+  const tr = innerRow?.closest('tr') as HTMLElement | null;
   if (!tr) return;
+
+  const scrollContainer = tr.closest<HTMLElement>('.p-datatable-table-container');
+  if (scrollContainer) {
+    const containerTop = scrollContainer.getBoundingClientRect().top;
+    const rowTop = tr.getBoundingClientRect().top;
+    const offset = rowTop - containerTop - scrollContainer.clientHeight / 2 + tr.clientHeight / 2;
+    scrollContainer.scrollBy({ behavior: 'smooth', top: offset });
+  }
+
   tr.classList.remove('is-pulsing');
   void tr.offsetWidth;
   tr.classList.add('is-pulsing');

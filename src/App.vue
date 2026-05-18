@@ -110,7 +110,7 @@ watch(activeProfile, async (newValue) => {
 <style lang="scss" scoped>
 .outer-view {
   width: 100%;
-  min-height: calc(100vh - var(--navbar-height));
+  min-height: calc(100vh - var(--navbar-height) - 10px);
   padding-bottom: var(--xl-spacing);
   margin-top: var(--navbar-height);
 

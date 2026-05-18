@@ -69,6 +69,14 @@ const router = createRouter({
       name: 'admin',
       path: '/admin',
     },
+    {
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/ChangeLogView.vue'),
+      name: 'changelog',
+      path: '/changelog',
+    },
   ],
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) return savedPosition; // browser back/forward
