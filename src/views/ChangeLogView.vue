@@ -36,7 +36,7 @@ const changelogEntries = ref([
       '[Translation] Updates and missing translations added',
       '[Home] On mobile, drag & drop functionality has been improved for better usability',
       '🐛 [Notifications] On mobile, notifications are showing up again',
-      '🐛 [Games] Blocked and added notifications for inactive users trying to bet',
+      '🐛 [Matches] Blocked and added notifications for inactive users trying to bet',
       '🐛 [Extras] Blocked and added notifications for inactive users trying to bet',
     ],
     date: '19/05/2026',
