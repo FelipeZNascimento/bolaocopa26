@@ -1,6 +1,16 @@
 <template>
   <div class="outer">
     <div
+      v-if="!activeProfile?.isActive"
+      class="active-banner"
+    >
+      <p>
+        {{ t('inactiveBanner.message1') }}
+        <RouterLink to="regras?section=inscricoes">{{ t('inactiveBanner.cta') }}</RouterLink
+        >{{ t('inactiveBanner.message2') }}
+      </p>
+    </div>
+    <div
       v-if="!isDashboardBannerDismissed"
       class="rules-banner"
     >
@@ -32,15 +42,62 @@
         />
       </div>
 
-      <div
+      <div class="bets-list">
+        <div
+          v-for="option in buttonOptions"
+          :key="option.value"
+          class="bet-row"
+          @click="selectedToggle.value = option.value"
+        >
+          <span class="bet-label">
+            {{ t(EXTRA_BETS_LABELS[option.value]) }}
+            <span v-if="option.value === EXTRA_BETS_VALUES.CHAMPION">*</span>
+          </span>
+          <div
+            v-if="option.selectedTeam"
+            class="bet-value"
+          >
+            <img
+              class="bet-flag"
+              :src="`https://assets.omegafox.me/copa/countries_flags/${option.selectedTeam?.isoCode.toLowerCase()}.png`"
+              :alt="`${option.selectedTeam?.name} Flag`"
+            />
+            <span>
+              {{ locale === 'pt-BR' ? option.selectedTeam?.name : option.selectedTeam?.nameEn }}
+            </span>
+          </div>
+          <span
+            v-else
+            class="bet-empty"
+          >
+            —
+          </span>
+        </div>
+      </div>
+    </div>
+    <p style="margin-top: 10px; font-size: var(--xs-font-size); color: var(--color-text); text-align: center">
+      {{ t('extraBets.championDisclaimer.message1') }}
+      {{ t('extraBets.championDisclaimer.message2') }}
+      <RouterLink
+        to="/regras?section=extras"
+        style="font-weight: 600; color: var(--bolao-c-blue1)"
+      >
+        {{ t('extraBets.championDisclaimer.link') }}
+      </RouterLink>
+    </p>
+    <!-- <div
         v-for="option in buttonOptions"
         :key="option.value"
+        :class="{ champion: option.value === EXTRA_BETS_VALUES.CHAMPION }"
         class="team-card"
         @click="selectedToggle.value = option.value"
       >
         <div class="team-name">
           {{ t(option.label) }}
         </div>
+        <p v-if="option.value === EXTRA_BETS_VALUES.CHAMPION">
+          A aposta de campeão poderá ser alterada ao longo da competição, mas valerá menos pontos.
+        </p>
 
         <div
           v-if="option.selectedTeam"
@@ -58,8 +115,7 @@
         >
           {{ locale === 'pt-BR' ? option.selectedTeam?.name : option.selectedTeam?.nameEn }}
         </div>
-      </div>
-    </div>
+      </div> -->
     <PrimeDivider />
     <div class="buttons-outer">
       <PrimeButton
@@ -231,6 +287,14 @@ async function handleClick(team: ITeam) {
     return;
   }
 
+  if (!activeProfile.value.isActive) {
+    notificationStore.message(
+      t('floatingButton.notifications.inactiveProfile.message'),
+      t('floatingButton.notifications.inactiveProfile.title'),
+    );
+    return;
+  }
+
   if (currentSelectedToggle.value) {
     // Save the previous state for potential rollback
     const previousTeam = currentSelectedToggle.value.selectedTeam;
@@ -289,6 +353,19 @@ function handleCloseLoginModal() {
   @media (width <= 768px) {
     padding: var(--xxl-spacing) var(--s-spacing);
   }
+}
+
+.active-banner {
+  position: relative;
+  display: flex;
+  gap: var(--xs-spacing);
+  padding: var(--s-spacing) var(--xxl-spacing);
+  margin-bottom: var(--l-spacing);
+  color: var(--bolao-c-grey2);
+  text-align: center;
+  background-color: var(--bolao-c-blue5);
+  border: 1px solid var(--bolao-c-blue3);
+  border-radius: var(--border-radius);
 }
 
 .rules-banner {
@@ -381,6 +458,7 @@ function handleCloseLoginModal() {
 .team-card {
   position: relative;
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: var(--s-spacing);
   align-items: center;
@@ -450,8 +528,6 @@ function handleCloseLoginModal() {
   color: var(--color-contrast);
   text-align: center;
 
-  // white-space: nowrap;
-
   @media (width <= 768px) {
     font-size: var(--xs-font-size);
   }
@@ -467,5 +543,60 @@ function handleCloseLoginModal() {
   background-color: rgb(0 0 0 / 30%);
   border-radius: var(--border-radius);
   backdrop-filter: blur(2px);
+}
+
+.bets-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--xs-spacing);
+  min-width: 300px;
+  border-radius: var(--border-radius);
+}
+
+.bet-row {
+  display: flex;
+  gap: var(--xl-spacing);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--s-spacing) var(--m-spacing);
+  font-size: var(--m-font-size);
+  cursor: pointer;
+  background-color: var(--bolao-c-blue4);
+  border-radius: var(--border-radius);
+  transition: background-color 0.1s ease;
+
+  &:hover {
+    background-color: var(--bolao-c-blue3-t1);
+  }
+
+  @media (width <= 768px) {
+    gap: var(--s-spacing);
+    font-size: var(--xs-font-size);
+  }
+}
+
+.bet-label {
+  font-weight: 500;
+  color: var(--bolao-c-grey3);
+  white-space: nowrap;
+}
+
+.bet-value {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  font-weight: 600;
+  color: var(--bolao-c-grey1);
+}
+
+.bet-flag {
+  width: 18px;
+  height: auto;
+  border-radius: 2px;
+}
+
+.bet-empty {
+  font-size: var(--s-font-size);
+  color: var(--bolao-c-grey4);
 }
 </style>

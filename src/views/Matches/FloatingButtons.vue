@@ -51,6 +51,7 @@ import { useI18n } from 'vue-i18n';
 
 import BetService from '@/services/bet';
 import { useViewport } from '@/services/viewport';
+import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useMatchesStore } from '@/stores/matches';
 import { useNotificationStore } from '@/stores/notification';
 
@@ -65,6 +66,7 @@ const isSaving = ref(false);
 
 // ------ Initialization ------
 const matchesStore = useMatchesStore();
+const activeProfileStore = useActiveProfileStore();
 const notificationStore = useNotificationStore();
 const betService = new BetService();
 const { isDesktop } = useViewport();
@@ -88,6 +90,7 @@ watch(
 
 // ------ Computed Properties ------
 const hasChanges = computed(() => matchesStore.hasAnyChanges());
+const activeProfile = computed(() => activeProfileStore.activeProfile);
 const allChangesAreValid = computed(() =>
   matchesStore.getChangedBets().every((bet) => bet.scoreAway !== null && bet.scoreHome !== null),
 );
@@ -111,6 +114,15 @@ const handleScroll = () => {
   }
 };
 const handleSave = async () => {
+  if (activeProfile.value && !activeProfile.value.isActive) {
+    notificationStore.message(
+      t('floatingButton.notifications.inactiveProfile.message'),
+      t('floatingButton.notifications.inactiveProfile.title'),
+    );
+    matchesStore.resetWorkingBets();
+    return;
+  }
+
   const changes = matchesStore.getChangedBets().filter((bet) => bet.scoreAway !== null && bet.scoreHome !== null);
 
   if (hasChanges.value && !allChangesAreValid.value) {

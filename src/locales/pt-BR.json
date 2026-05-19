@@ -1,5 +1,10 @@
 {
   "title": "Bolão da Copa 2026",
+  "inactiveBanner": {
+    "message1": "Clique ",
+    "cta": "aqui",
+    "message2": " para saber como ativar seu perfil."
+  },
   "common": {
     "dismiss": "Fechar"
   },
@@ -130,6 +135,10 @@
         "title": "Apostas Incompletas",
         "message": "Apostas incompletas (laranja) não podem ser salvas."
       },
+      "inactiveProfile": {
+        "title": "Perfil Inativo",
+        "message": "Seu perfil ainda não está ativo. Mais informações na seção de Regras -> Inscrições"
+      },
       "error": {
         "title": "Erro",
         "message": "Ocorreu um erro ao salvar suas apostas. Por favor, tente novamente."
@@ -218,7 +227,8 @@
     }
   },
   "home": {
-    "dashboard": "Esse é o seu dashboard da Copa 2026. Use a função de arrastar e soltar para organizar os widgets como preferir. Todos os seus ajustes serão salvos automaticamente para a próxima vez que você acessar o Bolão!",
+    "dashboard1": "Esse é o seu painel da Copa 2026.",
+    "dashboard2": "Use a função de arrastar e soltar para organizar os widgets como preferir. Todos os seus ajustes serão salvos automaticamente para a próxima vez que você acessar o Bolão!",
     "welcome": {
       "headline": "Seu bolão, sua Copa!",
       "description": "Chute os placares, acerte o campeão e suba no ranking! O Bolão da Copa 2026 traz apostas em todas as partidas, confrontos entre amigos, apostas extras (artilheiro, melhor jogador e muito mais) e um ranking em tempo real para você acompanhar cada virada. Vai perder essa?",
@@ -235,7 +245,7 @@
       "ranking": "Ranking",
       "rules": "Participação",
       "extras": "Apostas Extras",
-      "welcome": "Bem-vinde",
+      "welcome": "Boas-vindas",
       "logo": "Bolão da Copa 2026",
       "betStatus": "Próxima Aposta",
       "countdown": "Próxima Partida",
@@ -289,6 +299,11 @@
   "extraBets": {
     "rulesBanner": "Apostas extras são apostas adicionais que você pode fazer além dos palpites normais das partidas. Elas oferecem uma oportunidade de ganhar pontos extras e se destacar no ranking geral do bolão!",
     "rulesBannerLink": "Saiba mais nas regras",
+    "championDisclaimer": {
+      "message1": "* A aposta de Campeão poderá ser trocada ao longo da competição, mas valerá menos pontos no final.",
+      "message2": "Saiba mais em ",
+      "link": "Regras -> Apostas Extras"
+    },
     "champion": "Campeão",
     "topScorer": "Artilheiro",
     "bestPlayer": "Melhor Jogador",

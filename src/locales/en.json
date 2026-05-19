@@ -1,5 +1,10 @@
 {
   "title": "Bolão World Cup 2026",
+  "inactiveBanner": {
+    "message1": "Click ",
+    "cta": "here",
+    "message2": " to learn how to activate your profile."
+  },
   "common": {
     "dismiss": "Dismiss"
   },
@@ -130,6 +135,10 @@
         "title": "Incomplete Bets",
         "message": "Incomplete bets (orange) cannot be saved."
       },
+      "inactiveProfile": {
+        "title": "Inactive Profile",
+        "message": "Your profile is not yet active. More information can be found in the Rules -> Registration section"
+      },
       "error": {
         "title": "Error",
         "message": "An error occurred while saving your bets. Please try again."
@@ -218,7 +227,8 @@
     }
   },
   "home": {
-    "dashboard": "This is your World Cup 2026 dashboard. Use the drag and drop feature to organize the widgets as you like. All your adjustments will be saved automatically for the next time you access the Bolão!",
+    "dashboard1": "This is your World Cup 2026 dashboard.",
+    "dashboard2": "Use the drag and drop feature to organize the widgets as you like. All your adjustments will be saved automatically for the next time you access the Bolão!",
     "welcome": {
       "headline": "Your bracket, your Cup!",
       "description": "Predict scores, crown the champion and climb the leaderboard! Bolão World Cup 2026 lets you bet on every single match, challenge your friends, unlock extra bets (top scorer, best player & more) and watch a live ranking update with every goal. Think you’ve got what it takes?",
@@ -289,6 +299,11 @@
   "extraBets": {
     "rulesBanner": "Extra bets are additional bets you can make beyond the regular match predictions. They offer an opportunity to earn extra points and stand out in the overall pool ranking!",
     "rulesBannerLink": "Learn more in the rules",
+    "championDisclaimer": {
+      "message1": "* The Champion bet can be changed throughout the competition, but will be worth fewer points at the end.",
+      "message2": "Learn more at ",
+      "link": "Rules -> Extra Bets"
+    },
     "champion": "Champion",
     "topScorer": "Top Scorer",
     "bestPlayer": "Best Player",
@@ -456,7 +471,7 @@
       "playerData": [
         { "type": "Top Scorer", "points": "15 points" },
         { "type": "Best Player (Golden Ball)", "points": "15 points" },
-        { "type": "Best Attack (Groups)", "points": "10 points" },
+        { "type": "Best Offense (Groups)", "points": "10 points" },
         { "type": "Best Defense (Groups)", "points": "10 points" }
       ],
       "guideData": [
@@ -486,7 +501,7 @@
         },
         { "type": "Top Scorer", "beforeGroups": "15 points", "beforePlayoffs": "-", "beforeQuarter": "-" },
         { "type": "Best Player", "beforeGroups": "15 points", "beforePlayoffs": "-", "beforeQuarter": "-" },
-        { "type": "Best Attack (Groups)", "beforeGroups": "10 points", "beforePlayoffs": "-", "beforeQuarter": "-" },
+        { "type": "Best Offense (Groups)", "beforeGroups": "10 points", "beforePlayoffs": "-", "beforeQuarter": "-" },
         { "type": "Best Defense (Groups)", "beforeGroups": "10 points", "beforePlayoffs": "-", "beforeQuarter": "-" }
       ]
     },

@@ -102,6 +102,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useRulesPanel } from '@/composables/useRulesPanel';
@@ -109,14 +110,17 @@ import { useRulesPanel } from '@/composables/useRulesPanel';
 const { isOpen, panelPt } = useRulesPanel('extras');
 const { t, tm } = useI18n();
 
-const championData = tm('rules.extras.championData') as { points: string; stage: string }[];
-const playerData = tm('rules.extras.playerData') as { points: string; type: string }[];
-const guideData = tm('rules.extras.guideData') as {
-  beforeGroups: string;
-  beforePlayoffs: string;
-  beforeQuarter: string;
-  type: string;
-}[];
+const championData = computed(() => tm('rules.extras.championData') as { points: string; stage: string }[]);
+const playerData = computed(() => tm('rules.extras.playerData') as { points: string; type: string }[]);
+const guideData = computed(
+  () =>
+    tm('rules.extras.guideData') as {
+      beforeGroups: string;
+      beforePlayoffs: string;
+      beforeQuarter: string;
+      type: string;
+    }[],
+);
 </script>
 <style lang="scss" scoped>
 .outer {

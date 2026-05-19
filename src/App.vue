@@ -1,7 +1,7 @@
 <template>
   <NavbarMobile v-if="isMobile" />
   <NavbarTop v-else />
-  <PrimeToast :position="isDesktop ? 'bottom-right' : 'bottom'" />
+  <PrimeToast position="bottom-right" />
   <PrimeConfirmDialog />
   <div class="outer-view">
     <RouterView />
@@ -10,14 +10,16 @@
     v-if="!isLoading && activeProfile && !activeProfile.isActive && route.path !== '/regras'"
     class="not-active"
   >
-    Clique <RouterLink to="regras?section=inscricoes">aqui</RouterLink> para saber como ativar seu perfil e participar
-    do bolão!
+    {{ t('inactiveBanner.message1') }}
+    <RouterLink to="regras?section=inscricoes">{{ t('inactiveBanner.cta') }}</RouterLink
+    >{{ t('inactiveBanner.message2') }}
   </div>
   <FooterComponent />
 </template>
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
 
 import FooterComponent from './components/FooterComponent.vue';
@@ -44,7 +46,8 @@ const configurationStore = useConfigurationStore();
 const activeProfileStore = useActiveProfileStore();
 const extraBetStore = useExtraBetStore();
 const matchesStore = useMatchesStore();
-const { isDesktop, isMobile } = useViewport();
+const { isMobile } = useViewport();
+const { t } = useI18n();
 
 function initializationCallback(isSuccess: boolean) {
   if (isSuccess) {
@@ -124,12 +127,16 @@ watch(activeProfile, async (newValue) => {
   position: fixed;
   bottom: 0;
   left: 0;
-  z-index: 1000;
+  z-index: 100;
   width: 100vw;
   padding: var(--m-spacing) 0;
   font-size: var(--l-font-size);
   color: black;
   text-align: center;
-  background-color: rgb(255 255 255 / 70%);
+  background-color: var(--bolao-c-grey2-t3);
+
+  @media (width <= 1024px) {
+    font-size: var(--m-font-size);
+  }
 }
 </style>
