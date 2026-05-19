@@ -1,5 +1,10 @@
 {
   "title": "Bolão World Cup 2026",
+  "inactiveBanner": {
+    "message1": "Click ",
+    "cta": "here",
+    "message2": " to learn how to activate your profile."
+  },
   "common": {
     "dismiss": "Dismiss"
   },
@@ -129,6 +134,10 @@
       "incomplete": {
         "title": "Incomplete Bets",
         "message": "Incomplete bets (orange) cannot be saved."
+      },
+      "inactiveProfile": {
+        "title": "Inactive Profile",
+        "message": "Your profile is not yet active. More information can be found in the Rules -> Registration section"
       },
       "error": {
         "title": "Error",
@@ -290,6 +299,11 @@
   "extraBets": {
     "rulesBanner": "Extra bets are additional bets you can make beyond the regular match predictions. They offer an opportunity to earn extra points and stand out in the overall pool ranking!",
     "rulesBannerLink": "Learn more in the rules",
+    "championDisclaimer": {
+      "message1": "* The Champion bet can be changed throughout the competition, but will be worth fewer points at the end.",
+      "message2": "Learn more at ",
+      "link": "Rules -> Extra Bets"
+    },
     "champion": "Champion",
     "topScorer": "Top Scorer",
     "bestPlayer": "Best Player",

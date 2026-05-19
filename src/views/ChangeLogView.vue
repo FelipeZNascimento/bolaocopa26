@@ -33,10 +33,11 @@ import { ref } from 'vue';
 const changelogEntries = ref([
   {
     changes: [
-      '[Translation] Updates',
+      '[Translation] Updates and missing translations added',
       '[Home] On mobile, drag & drop functionality has been improved for better usability',
-      '[Rules] Success notification toaster now dont overlap with the header on desktop',
       '🐛 [Notifications] On mobile, notifications are showing up again',
+      '🐛 [Games] Blocked and added notifications for inactive users trying to bet',
+      '🐛 [Extras] Blocked and added notifications for inactive users trying to bet',
     ],
     date: '19/05/2026',
     version: 'v1.0.2',
@@ -46,7 +47,7 @@ const changelogEntries = ref([
       '[App] Success notification toaster now dont overlap with the header on desktop',
       '[Rules] Fix PIX Copy & Paste text',
       '[Rules] Added more details for foreign currency payments',
-      '[Translation] Updates',
+      '[Translation] Updates and missing translations added',
       "[Ranking] Fix 'find me' functionality on ranking",
       '[Ranking] Favorites functionality are easier to find',
       '[Home] Next matches widget now correctly shows upcoming matches with no relation to the selected round',
