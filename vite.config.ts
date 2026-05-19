@@ -1,11 +1,17 @@
 import vue from '@vitejs/plugin-vue';
-import { readFileSync } from 'node:fs';
+import { execSync } from 'node:child_process';
 import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import vueDevTools from 'vite-plugin-vue-devtools';
 
-const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
+const appVersion = (() => {
+  try {
+    return execSync('git describe --tags --abbrev=0').toString().trim().replace(/^v/, '');
+  } catch {
+    return '0.0.0';
+  }
+})();
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -32,7 +38,7 @@ export default defineConfig({
     },
   },
   define: {
-    __APP_VERSION__: JSON.stringify(pkg.version),
+    __APP_VERSION__: JSON.stringify(appVersion),
   },
   plugins: [
     vue(),
