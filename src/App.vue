@@ -1,7 +1,7 @@
 <template>
   <NavbarMobile v-if="isMobile" />
   <NavbarTop v-else />
-  <PrimeToast :position="isDesktop ? 'bottom-right' : 'bottom'" />
+  <PrimeToast position="bottom-right" />
   <PrimeConfirmDialog />
   <div class="outer-view">
     <RouterView />
