@@ -1,7 +1,10 @@
 name: ❄️ CI and Deploy to PPROD
 
 on:
-  push:
+  pull_request:
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
   quality-checks:
@@ -10,6 +13,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -19,6 +24,11 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: 🔍 Log current version
+        run: |
+          LATEST=$(git tag --sort=-version:refname | head -1)
+          echo "Building PPROD with version: ${LATEST:-untagged}"
 
       # - name: Run tests
       #   run: npm run test:run
