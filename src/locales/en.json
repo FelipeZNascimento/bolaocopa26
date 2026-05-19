@@ -218,7 +218,8 @@
     }
   },
   "home": {
-    "dashboard": "This is your World Cup 2026 dashboard. Use the drag and drop feature to organize the widgets as you like. All your adjustments will be saved automatically for the next time you access the Bolão!",
+    "dashboard1": "This is your World Cup 2026 dashboard.",
+    "dashboard2": "Use the drag and drop feature to organize the widgets as you like. All your adjustments will be saved automatically for the next time you access the Bolão!",
     "welcome": {
       "headline": "Your bracket, your Cup!",
       "description": "Predict scores, crown the champion and climb the leaderboard! Bolão World Cup 2026 lets you bet on every single match, challenge your friends, unlock extra bets (top scorer, best player & more) and watch a live ranking update with every goal. Think you’ve got what it takes?",

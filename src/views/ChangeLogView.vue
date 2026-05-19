@@ -33,7 +33,15 @@ import { ref } from 'vue';
 const changelogEntries = ref([
   {
     changes: [
-      '[Rules] Success notification toaster now dont overlap with the header on desktop',
+      '[Translation] Updates',
+      '[Home] On mobile, drag & drop functionality has been improved for better usability',
+    ],
+    date: '19/05/2026',
+    version: 'v1.0.2',
+  },
+  {
+    changes: [
+      '[App] Success notification toaster now dont overlap with the header on desktop',
       '[Rules] Fix PIX Copy & Paste text',
       '[Rules] Added more details for foreign currency payments',
       '[Translation] Updates',

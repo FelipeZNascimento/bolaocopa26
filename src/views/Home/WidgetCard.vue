@@ -17,9 +17,11 @@
       :aria-label="'Reordenar widget'"
       @dragstart.stop="emit('dragstart')"
       @dragend.stop="emit('dragend')"
-      @touchstart.passive="emit('handleTouchStart', $event)"
     >
-      <i class="pi pi-bars" />
+      <i
+        class="pi pi-bars drag-icon"
+        @touchstart.passive="emit('handleTouchStart', $event)"
+      />
       <span class="widget-title">{{ title }}</span>
     </div>
     <div class="widget-content">
@@ -78,10 +80,9 @@ const emit = defineEmits<{
   display: flex;
   gap: var(--s-spacing);
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: var(--s-spacing) var(--m-spacing);
   color: var(--bolao-c-grey4);
-  touch-action: none;
   cursor: grab;
   user-select: none;
   background-color: var(--bolao-c-blue5);
@@ -98,6 +99,36 @@ const emit = defineEmits<{
 
   &:active {
     cursor: grabbing;
+  }
+}
+
+.drag-icon {
+  touch-action: none;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  @media (width <= 1024px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    font-size: var(--s-font-size);
+    color: var(--bolao-c-grey2);
+    background-color: var(--bolao-c-blue3);
+    border: 1px solid var(--bolao-c-blue1-t2);
+    border-radius: 8px;
+    transition:
+      background-color 0.15s ease,
+      transform 0.15s ease;
+
+    &:active {
+      background-color: var(--bolao-c-blue1-t2);
+      transform: scale(0.93);
+    }
   }
 }
 

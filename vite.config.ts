@@ -1,3 +1,4 @@
+import basicSsl from '@vitejs/plugin-basic-ssl';
 import vue from '@vitejs/plugin-vue';
 import { execSync } from 'node:child_process';
 import { fileURLToPath, URL } from 'node:url';
@@ -42,6 +43,7 @@ export default defineConfig({
   },
   plugins: [
     vue(),
+    basicSsl(),
     vueDevTools(),
     VitePWA({
       devOptions: { enabled: true },
@@ -113,5 +115,18 @@ export default defineConfig({
     // host: '127.0.0.1',
     // host: 'localhost',
     port: 3000,
+    proxy: {
+      '/api': {
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+        target: 'http://localhost:63768',
+      },
+      '/ws': {
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/ws/, ''),
+        target: 'ws://localhost:63768',
+        ws: true,
+      },
+    },
   },
 });

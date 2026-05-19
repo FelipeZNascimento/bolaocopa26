@@ -436,6 +436,10 @@ function updateBallPosition() {
   width: 100%;
   height: var(--navbar-height);
   background-color: var(--bolao-c-navbar);
+
+  @media (width <= 1280px) {
+    height: var(--navbar-height-mobile);
+  }
 }
 
 .nav-container {
@@ -471,8 +475,18 @@ function updateBallPosition() {
   gap: var(--l-spacing);
   align-items: flex-end;
   justify-content: space-around;
+  max-width: var(--page-width);
   height: 100%;
   padding: 0 var(--l-spacing) var(--xs-spacing) var(--l-spacing);
+  margin: 0 auto;
+
+  @media (width <= 480px) {
+    padding: 0 var(--xs-spacing);
+  }
+
+  @media (width <= 1280px) {
+    padding: 0 var(--s-spacing);
+  }
 }
 
 .nav-link {
@@ -507,6 +521,11 @@ function updateBallPosition() {
   box-shadow:
     0 8px 16px rgb(0 0 0 / 30%),
     0 4px 8px rgb(0 0 0 / 15%);
+
+  @media (width <= 1280px) {
+    width: 55px;
+    height: 55px;
+  }
 }
 
 .nav-label {
@@ -519,11 +538,19 @@ function updateBallPosition() {
   opacity: 0.9;
   transition: all 0.3s ease;
 
+  @media (width <= 480px) {
+    display: none;
+  }
+
   &.active-label {
     font-weight: bold;
     color: var(--bolao-c-white);
     opacity: 1;
     transform: scale(1.15);
+
+    @media (width <= 1280px) {
+      transform: scale(1.25);
+    }
   }
 
   &:hover {
@@ -547,38 +574,8 @@ function updateBallPosition() {
   }
 }
 
-/* Responsive */
-@media (width <= 1280px) {
-  .navbar {
-    height: var(--navbar-height-mobile);
-  }
-
-  .nav-links-wrapper {
-    padding: 0 var(--s-spacing);
-  }
-
-  .telstar-ball {
-    width: 55px;
-    height: 55px;
-  }
-
-  .nav-label {
-    &.active-label {
-      transform: scale(1.25);
-    }
-  }
-}
-
-@media (width <= 480px) {
-  .nav-links-wrapper {
-    padding: 0 var(--xs-spacing);
-  }
-
-  .nav-label {
-    display: none;
-  }
-
-  .nav-link.active .nav-label.active-label {
+.nav-link.active .nav-label.active-label {
+  @media (width <= 480px) {
     display: block;
   }
 }

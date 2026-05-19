@@ -4,7 +4,12 @@
       v-if="!isDashboardBannerDismissed"
       class="dashboard-banner"
     >
-      <h3>{{ $t('home.dashboard') }}</h3>
+      <div>
+        <h3>{{ $t('home.dashboard1') }}</h3>
+        <p style="padding-top: var(--s-spacing); text-align: center">
+          <i class="pi pi-bars" /> {{ $t('home.dashboard2') }}
+        </p>
+      </div>
       <button
         class="banner-dismiss"
         :aria-label="$t('common.dismiss')"
