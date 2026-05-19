@@ -457,7 +457,7 @@
       "playerData": [
         { "type": "Top Scorer", "points": "15 points" },
         { "type": "Best Player (Golden Ball)", "points": "15 points" },
-        { "type": "Best Attack (Groups)", "points": "10 points" },
+        { "type": "Best Offense (Groups)", "points": "10 points" },
         { "type": "Best Defense (Groups)", "points": "10 points" }
       ],
       "guideData": [
@@ -487,7 +487,7 @@
         },
         { "type": "Top Scorer", "beforeGroups": "15 points", "beforePlayoffs": "-", "beforeQuarter": "-" },
         { "type": "Best Player", "beforeGroups": "15 points", "beforePlayoffs": "-", "beforeQuarter": "-" },
-        { "type": "Best Attack (Groups)", "beforeGroups": "10 points", "beforePlayoffs": "-", "beforeQuarter": "-" },
+        { "type": "Best Offense (Groups)", "beforeGroups": "10 points", "beforePlayoffs": "-", "beforeQuarter": "-" },
         { "type": "Best Defense (Groups)", "beforeGroups": "10 points", "beforePlayoffs": "-", "beforeQuarter": "-" }
       ]
     },
