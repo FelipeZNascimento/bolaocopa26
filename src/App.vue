@@ -44,7 +44,7 @@ const configurationStore = useConfigurationStore();
 const activeProfileStore = useActiveProfileStore();
 const extraBetStore = useExtraBetStore();
 const matchesStore = useMatchesStore();
-const { isDesktop, isMobile } = useViewport();
+const { isMobile } = useViewport();
 
 function initializationCallback(isSuccess: boolean) {
   if (isSuccess) {

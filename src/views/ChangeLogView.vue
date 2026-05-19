@@ -35,6 +35,7 @@ const changelogEntries = ref([
     changes: [
       '[Translation] Updates',
       '[Home] On mobile, drag & drop functionality has been improved for better usability',
+      '🐛 [Notifications] On mobile, notifications are showing up again',
     ],
     date: '19/05/2026',
     version: 'v1.0.2',
