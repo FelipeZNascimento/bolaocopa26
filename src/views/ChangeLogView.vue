@@ -33,7 +33,25 @@ import { ref } from 'vue';
 const changelogEntries = ref([
   {
     changes: [
-      '[Translation] Updates and missing translations added',
+      '[Telegram] Telegram now has a Bolão bot, to be revelead soon',
+      '[App] Countdown component now being reused across the app for better consistency',
+      '[App] Emails for Signup and Change Password are now in line with the user interface language',
+      '[App] General improvements in logging for better error tracking and debugging',
+      '[Translations] Updates and missing translations added',
+      '[Extras] New team cards with improved design',
+      '[Extras] Under-the-hood improvements for champion change flow',
+      '[Teams] New team cards with improved design',
+      '[Ranking] When theres a tie in all categories, users are now sorted alphabetically by nickname instead of name',
+      '🐛 [App] Logout was not working correctly on some cases',
+      '🐛 [App] Flags were not displayed correctly on some devices',
+      '🐛 [App] Resetting password for non-registered emails was working correctly?',
+    ],
+    date: '21/05/2026',
+    version: 'v1.0.3',
+  },
+  {
+    changes: [
+      '[Translations] Updates and missing translations added',
       '[Home] On mobile, drag & drop functionality has been improved for better usability',
       '🐛 [Notifications] On mobile, notifications are showing up again',
       '🐛 [Matches] Blocked and added notifications for inactive users trying to bet',
@@ -47,7 +65,7 @@ const changelogEntries = ref([
       '[App] Success notification toaster now dont overlap with the header on desktop',
       '[Rules] Fix PIX Copy & Paste text',
       '[Rules] Added more details for foreign currency payments',
-      '[Translation] Updates and missing translations added',
+      '[Translations] Updates and missing translations added',
       "[Ranking] Fix 'find me' functionality on ranking",
       '[Ranking] Favorites functionality are easier to find',
       '[Home] Next matches widget now correctly shows upcoming matches with no relation to the selected round',

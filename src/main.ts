@@ -1,5 +1,20 @@
 import './assets/main.scss';
 
+const gaId = import.meta.env.VITE_GA_ID;
+if (gaId) {
+  const script = document.createElement('script');
+  script.async = true;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+  document.head.appendChild(script);
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag(...args: unknown[]) {
+    window.dataLayer.push(args);
+  }
+  gtag('js', new Date());
+  gtag('config', gaId);
+}
+
 import { definePreset } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura';
 import { createPinia } from 'pinia';
