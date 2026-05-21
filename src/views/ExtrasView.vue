@@ -1,5 +1,4 @@
 <template>
-  {{ configurationStore.editionStart }}
   <div
     v-if="!activeProfile && !isLoading"
     style="padding: var(--l-spacing)"

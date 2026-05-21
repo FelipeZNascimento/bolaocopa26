@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Em Manutenção · Bolão Copa 2026</title>
+    <link
+      rel="icon"
+      href="/favicon.ico"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --c-background: #141c2c;
+        --c-blue4: #152a68;
+        --c-blue3: #13518a;
+        --c-blue1: #1e85e6;
+        --c-mint: #29c84e;
+        --c-gold: #f4b303;
+        --c-grey1: #eceff1;
+        --c-grey2: #cfd8dc;
+        --c-grey4: #757a7c;
+        --c-white: #ffffff;
+        --border-radius: 12px;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 32px 16px;
+        font-family: 'Inter', 'Inter Fallback', Arial, sans-serif;
+        color: var(--c-grey1);
+        background-color: var(--c-background);
+        background-image:
+          radial-gradient(ellipse at 20% 50%, rgba(21, 42, 104, 0.4) 0%, transparent 60%),
+          radial-gradient(ellipse at 80% 20%, rgba(19, 81, 138, 0.3) 0%, transparent 50%);
+      }
+
+      .card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+        width: 100%;
+        max-width: 480px;
+        padding: 48px 40px;
+        text-align: center;
+        background-color: var(--c-blue4);
+        border: 1px solid var(--c-blue3);
+        border-radius: 20px;
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.5),
+          0 2px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Logo */
+      .logo {
+        height: 48px;
+        width: auto;
+        object-fit: contain;
+      }
+
+      .logo--mobile {
+        display: none;
+      }
+
+      @media (max-width: 480px) {
+        .logo--desktop {
+          display: none;
+        }
+        .logo--mobile {
+          display: block;
+        }
+      }
+
+      /* Ball */
+      .ball-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 88px;
+        height: 88px;
+      }
+
+      .ball-wrapper::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        animation: pulse 2.4s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.7;
+        }
+        50% {
+          transform: scale(1.15);
+          opacity: 1;
+        }
+      }
+
+      .ball {
+        font-size: 56px;
+        line-height: 1;
+        animation: spin 6s linear infinite;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Divider */
+      .divider {
+        width: 48px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--c-mint), var(--c-gold));
+        border-radius: 99px;
+      }
+
+      /* Text */
+      .title {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--c-white);
+        line-height: 1.2;
+      }
+
+      .title span {
+        color: var(--c-mint);
+      }
+
+      .subtitle {
+        font-size: 15px;
+        font-weight: 400;
+        color: var(--c-grey2);
+        line-height: 1.6;
+      }
+
+      /* Status badge */
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--c-gold);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        background-color: rgba(244, 179, 3, 0.12);
+        border: 1px solid rgba(244, 179, 3, 0.35);
+        border-radius: 99px;
+      }
+
+      .badge::before {
+        content: '';
+        width: 7px;
+        height: 7px;
+        background-color: var(--c-gold);
+        border-radius: 50%;
+        animation: blink 1.4s ease-in-out infinite;
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.2;
+        }
+      }
+
+      /* Footer */
+      .footer {
+        margin-top: 16px;
+        font-size: 12px;
+        color: var(--c-grey4);
+      }
+
+      .footer strong {
+        color: var(--c-grey2);
+      }
+
+      /* Mobile tweaks */
+      @media (max-width: 480px) {
+        .card {
+          padding: 36px 24px;
+          gap: 20px;
+        }
+
+        .title {
+          font-size: 22px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <img
+        class="logo logo--desktop"
+        src="logo-desktop.png"
+        alt="Bolão Copa 2026"
+      />
+      <img
+        class="logo logo--mobile"
+        src="logo-mobile.png"
+        alt="Bolão Copa 2026"
+      />
+
+      <div class="ball-wrapper">
+        <span
+          class="ball"
+          role="img"
+          aria-label="Bola de futebol"
+          >⚽</span
+        >
+      </div>
+
+      <div class="divider"></div>
+
+      <h1 class="title">Em <span>Manutenção</span></h1>
+
+      <p class="subtitle">
+        Estamos fazendo algumas melhorias para você.<br />
+        Voltamos em breve — o jogo continua!
+      </p>
+
+      <div class="badge">Voltamos em breve</div>
+    </div>
+
+    <p class="footer">&copy; <strong>Bolão Copa 2026</strong> &mdash; bolaocopa.omegafox.me</p>
+  </body>
+</html>
