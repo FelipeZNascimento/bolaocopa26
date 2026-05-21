@@ -39,7 +39,7 @@
     "@prettier/plugin-oxc": "^0.1.4",
     "@stylistic/stylelint-plugin": "^5.1.0",
     "@tsconfig/node22": "^22.0.2",
-    "@types/jsdom": "^28.0.1",
+    "@types/jsdom": "^28.0.3",
     "@types/node": "^25.6.0",
     "@vitejs/plugin-basic-ssl": "^2.3.0",
     "@vitejs/plugin-vue": "^6.0.1",
