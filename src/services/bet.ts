@@ -36,6 +36,7 @@ export default class BetService {
       }
     } catch (error: unknown) {
       this.matchesStore.setUpdatingMatch(false, updateObj.matchId);
+      console.error('[BetService.update]', error);
       if (callback) {
         callback(false, error as Error);
       }

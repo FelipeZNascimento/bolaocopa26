@@ -31,6 +31,7 @@ export default class TeamService {
       this.teamsStore.setError(null);
     } catch (error: unknown) {
       this.teamsStore.setLoading(false);
+      console.error('[TeamService.fetch]', error);
       this.teamsStore.setError(new Error(error instanceof Error ? error.message : String(error)));
     }
   }

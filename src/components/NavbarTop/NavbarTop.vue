@@ -260,6 +260,8 @@ const wavePath = computed(() => {
   return path;
 });
 
+// ------ Watches ------
+
 // Watch for route changes (e.g., when user logs in and new routes are added)
 watch(activeRoute, () => {
   // Recalculate active item index in case route positions changed
@@ -270,6 +272,11 @@ watch(activeRoute, () => {
   }
 
   // Update ball position after DOM has updated with new routes
+  setTimeout(() => updateBallPosition(), 0);
+});
+
+// Watch for profile changes (login/logout may add/remove nav items)
+watch(activeProfile, () => {
   setTimeout(() => updateBallPosition(), 0);
 });
 

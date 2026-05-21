@@ -26,6 +26,7 @@ export default class RankingService {
       this.rankingStore.setErrorSeason(null);
     } catch (error: unknown) {
       this.rankingStore.setLoadingSeason(false);
+      console.error('[RankingService.fetch]', error);
       this.rankingStore.setErrorSeason(new Error(error instanceof Error ? error.message : String(error)));
     }
   }

@@ -195,14 +195,14 @@ const scoresData = computed(() => [
     acertoMinimo: '6 pts',
     acertoParcial: '9 pts',
     acertoTotal: '15 pts',
-    fase: t('rules.scores.phases.r16'),
+    fase: t('rules.scores.phases.r32'),
     numJogos: 16,
   },
   {
     acertoMinimo: '8 pts',
     acertoParcial: '12 pts',
     acertoTotal: '20 pts',
-    fase: t('rules.scores.phases.r8'),
+    fase: t('rules.scores.phases.r16'),
     numJogos: 8,
   },
   {

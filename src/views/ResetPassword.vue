@@ -2,7 +2,7 @@
   <div class="reset-password-container">
     <PrimeCard class="reset-password-card">
       <template #header>
-        <h1 style="text-align: center">Redefinir Senha</h1>
+        <h1 style="text-align: center">{{ t('resetPassword.title') }}</h1>
       </template>
 
       <template #content>
@@ -20,11 +20,11 @@
                 <span class="goal-text">GOL!</span>
               </div>
             </div>
-            <p class="success-message">Senha redefinida com sucesso!</p>
+            <p class="success-message">{{ t('resetPassword.successMessage') }}</p>
             <p class="redirect-message">
-              Redirecionando para os Jogos em
+              {{ t('resetPassword.redirectMessage') }}
               <strong>{{ countdown }}</strong>
-              {{ countdown === 1 ? 'segundo' : 'segundos' }}...
+              {{ countdown === 1 ? t('resetPassword.redirectSecond') : t('resetPassword.redirectSeconds') }}...
             </p>
             <PrimeProgressBar
               :value="progressValue"
@@ -35,7 +35,7 @@
               to="/jogos"
               class="skip-link"
             >
-              Ir agora <i class="pi pi-arrow-right" />
+              {{ t('resetPassword.skipLink') }} <i class="pi pi-arrow-right" />
             </RouterLink>
           </div>
 
@@ -65,7 +65,7 @@
               >
                 {{ $form.email.error?.message }}
               </PrimeMessage>
-              <label for="email">Email</label>
+              <label for="email">{{ t('resetPassword.fields.email') }}</label>
             </PrimeFloatLabel>
 
             <PrimeFloatLabel
@@ -86,7 +86,7 @@
               >
                 {{ $form.token.error?.message }}
               </PrimeMessage>
-              <label for="token">Token</label>
+              <label for="token">{{ t('resetPassword.fields.token') }}</label>
             </PrimeFloatLabel>
 
             <PrimeFloatLabel
@@ -109,7 +109,7 @@
               >
                 {{ $form.password.error?.message }}
               </PrimeMessage>
-              <label for="password">Nova Senha</label>
+              <label for="password">{{ t('resetPassword.fields.password') }}</label>
             </PrimeFloatLabel>
 
             <PrimeFloatLabel
@@ -131,13 +131,12 @@
               >
                 {{ $form.confirmPassword.error?.message }}
               </PrimeMessage>
-              <label for="confirmPassword">Confirme a Senha</label>
+              <label for="confirmPassword">{{ t('resetPassword.fields.confirmPassword') }}</label>
             </PrimeFloatLabel>
 
             <PrimeButton
-              rounded
               type="submit"
-              label="Redefinir Senha"
+              :label="t('resetPassword.submitButton')"
               variant="primary"
               severity="primary"
               icon="pi pi-check"
@@ -155,6 +154,7 @@
 import { Form, type FormSubmitEvent } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { z } from 'zod';
 
@@ -166,6 +166,7 @@ const userService = new UserService();
 const notificationStore = useNotificationStore();
 const route = useRoute();
 const router = useRouter();
+const { t } = useI18n();
 const tokenFromQuery = (route.query.token as string) || '';
 const emailFromQuery = (route.query.email as string) || '';
 
@@ -186,13 +187,13 @@ onMounted(() => {
 const resetPasswordResolver = zodResolver(
   z
     .object({
-      confirmPassword: z.string().min(1, { message: 'Confirme a senha' }),
-      email: z.string().email({ message: 'Email é obrigatório' }),
-      password: z.string().min(6, { message: 'Senha deve ter no mínimo 6 caracteres' }),
-      token: z.string().min(1, { message: 'Token é obrigatório' }),
+      confirmPassword: z.string().min(1, { message: t('resetPassword.validation.confirmPasswordEmpty') }),
+      email: z.string().email({ message: t('resetPassword.validation.emailRequired') }),
+      password: z.string().min(6, { message: t('resetPassword.validation.passwordMinLength') }),
+      token: z.string().min(1, { message: t('resetPassword.validation.tokenRequired') }),
     })
     .refine((data) => data.password === data.confirmPassword, {
-      message: 'As senhas não coincidem',
+      message: t('resetPassword.validation.passwordsMismatch'),
       path: ['confirmPassword'],
     }),
 );
@@ -229,12 +230,15 @@ const handleResetPassword = async (formData: FormSubmitEvent<Record<string, stri
   try {
     const { email, password, token } = formData.values;
     await userService.updatePasswordFromToken(email, password, token);
-    notificationStore.success('Senha redefinida com sucesso!', 'Redefinição de Senha');
+    notificationStore.success(
+      t('resetPassword.notification.successMessage'),
+      t('resetPassword.notification.successTitle'),
+    );
     resetSuccess.value = true;
     startRedirectCountdown();
   } catch (error: unknown) {
-    const errorMessage = (error as Error).message || 'Falha ao redefinir a senha';
-    notificationStore.error(errorMessage, 'Falha na Redefinição da Senha');
+    const errorMessage = (error as Error).message || t('resetPassword.notification.errorFallback');
+    notificationStore.error(errorMessage, t('resetPassword.notification.errorTitle'));
   } finally {
     loading.value = false;
   }

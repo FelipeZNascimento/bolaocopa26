@@ -61,6 +61,7 @@ export default class ExtraBetService {
       this.extraBetStore.setLoading(false);
     } catch (error: unknown) {
       this.extraBetStore.setLoading(false);
+      console.error('[ExtraBetService.fetch]', error);
       this.extraBetStore.setError(new Error(String(error)));
     }
   }
@@ -70,6 +71,8 @@ export default class ExtraBetService {
 
     extraBets.forEach((extraBetType) => {
       extraBetType.bets.forEach((bet) => {
+        if (bet.player === null) return;
+
         const existingPlayer = playersWithExtras.find((p) => p.player.id === bet.player.id);
         if (existingPlayer) {
           existingPlayer.bets.push(bet);
@@ -91,6 +94,8 @@ export default class ExtraBetService {
 
     extraBets.forEach((extraBetType) => {
       extraBetType.bets.forEach((bet) => {
+        if (bet.team === null) return;
+
         const existingTeam = teamsWithExtras.find((t) => t.team.id === bet.team.id);
         if (existingTeam) {
           existingTeam.bets.push(bet);
@@ -141,6 +146,7 @@ export default class ExtraBetService {
       }
     } catch (error: unknown) {
       this.extraBetStore.setUpdating(false);
+      console.error('[ExtraBetService.update]', error);
       if (callback) {
         callback(false, error as Error);
       }

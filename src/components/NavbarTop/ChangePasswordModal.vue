@@ -87,7 +87,6 @@
 
       <div class="buttons-container">
         <PrimeButton
-          rounded
           type="submit"
           :label="t('changePasswordModal.saveButton')"
           variant="primary"

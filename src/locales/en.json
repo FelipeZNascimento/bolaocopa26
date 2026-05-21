@@ -1,12 +1,13 @@
 {
   "title": "Bolão World Cup 2026",
   "inactiveBanner": {
-    "message1": "Click ",
-    "cta": "here",
-    "message2": " to learn how to activate your profile."
+    "message1": "Your profile is not active yet."
   },
   "common": {
-    "dismiss": "Dismiss"
+    "dismiss": "Dismiss",
+    "clickHere": "Click here",
+    "loggedInOnly": "This area is exclusively for logged-in users. Please log in to access this content.",
+    "seeMore": "See more"
   },
   "navigation": {
     "home": "Home",
@@ -100,8 +101,8 @@
       "signup": "Create an account here"
     },
     "notifications": {
-      "forgotPasswordSent": "An email has been sent to your account.",
-      "signupSuccess": "An email has been sent to your account.",
+      "forgotPasswordSent": "If this email is registered, an email will be sent to your account.",
+      "signupSuccess": "An email will be sent to your account.",
       "signupSuccessTitle": "Account created successfully!"
     }
   },
@@ -202,20 +203,20 @@
       "long": "Group Stage - Round 3"
     },
     "4": {
+      "short": "R32",
+      "long": "Round of 32"
+    },
+    "5": {
       "short": "R16",
       "long": "Round of 16"
     },
-    "5": {
-      "short": "R8",
-      "long": "Round of 8"
-    },
     "6": {
       "short": "QF",
-      "long": "Quarter Finals"
+      "long": "Quarterfinals"
     },
     "7": {
       "short": "SF",
-      "long": "Semi Finals"
+      "long": "Semifinals"
     },
     "8": {
       "short": "3rd",
@@ -227,8 +228,8 @@
     }
   },
   "home": {
-    "dashboard1": "This is your World Cup 2026 dashboard.",
-    "dashboard2": "Use the drag and drop feature to organize the widgets as you like. All your adjustments will be saved automatically for the next time you access the Bolão!",
+    "dashboard1": "This is your World Cup 2026 dashboard!",
+    "dashboard2": "Use the drag and drop feature to organize the widgets as you like. All your adjustments will be saved automatically for the next time you access the Bolão.",
     "welcome": {
       "headline": "Your bracket, your Cup!",
       "description": "Predict scores, crown the champion and climb the leaderboard! Bolão World Cup 2026 lets you bet on every single match, challenge your friends, unlock extra bets (top scorer, best player & more) and watch a live ranking update with every goal. Think you’ve got what it takes?",
@@ -297,6 +298,11 @@
     "live": "Score"
   },
   "extraBets": {
+    "generalBets": "General Bets",
+    "myBets": "My Bets",
+    "results": "Results",
+    "correctBet": "Congratulations",
+    "wrongBet": "Better luck next time",
     "rulesBanner": "Extra bets are additional bets you can make beyond the regular match predictions. They offer an opportunity to earn extra points and stand out in the overall pool ranking!",
     "rulesBannerLink": "Learn more in the rules",
     "championDisclaimer": {
@@ -307,13 +313,32 @@
     "champion": "Champion",
     "topScorer": "Top Scorer",
     "bestPlayer": "Best Player",
-    "bestDefense": "Best Defense",
-    "bestOffense": "Best Offense",
+    "bestDefense": "Fewest Goals Conceded",
+    "bestOffense": "Most Goals Scored",
     "playersWarning": "This bet will be available once the lineups of all teams are announced!",
     "notification": {
       "success": "Extra bet saved successfully!",
       "error": "An error occurred while saving your extra bet. Please try again."
+    },
+    "resultPending": "Awaiting result",
+    "championChangeModal": {
+      "title": "New Champion?",
+      "warning": "Warning!",
+      "message1": "By changing your champion bet, the maximum number of points you can earn will be reduced.",
+      "currentRound": "Current Round: {round}",
+      "tableMessage": "Check the table below to better understand how this reduction works:",
+      "irreversibleAction": "This action cannot be undone.",
+      "confirmButton": "I understood, let's do it",
+      "cancelButton": "Better not",
+      "teamSelectionStep": {
+        "backButton": "Back",
+        "confirmButton": "Confirm change"
+      }
     }
+  },
+  "extraBetsDetailsModal": {
+    "bets": "bet | bets",
+    "empty": "No bets placed on this option yet."
   },
   "footer": {
     "about": {
@@ -346,6 +371,34 @@
       "message": "Are you sure you want to continue without saving your bets?",
       "confirm": "Continue",
       "cancel": "Cancel"
+    }
+  },
+  "resetPassword": {
+    "title": "Reset Password",
+    "fields": {
+      "email": "Email",
+      "token": "Token",
+      "password": "New Password",
+      "confirmPassword": "Confirm Password"
+    },
+    "validation": {
+      "confirmPasswordEmpty": "Please confirm your password",
+      "emailRequired": "Email is required",
+      "passwordMinLength": "Password must be at least 6 characters",
+      "tokenRequired": "Token is required",
+      "passwordsMismatch": "Passwords do not match"
+    },
+    "submitButton": "Reset Password",
+    "successMessage": "Password reset successfully!",
+    "redirectMessage": "Redirecting to Matches in",
+    "redirectSecond": "second",
+    "redirectSeconds": "seconds",
+    "skipLink": "Go now",
+    "notification": {
+      "successMessage": "Password reset successfully!",
+      "successTitle": "Password Reset",
+      "errorTitle": "Password Reset Failed",
+      "errorFallback": "Failed to reset password"
     }
   },
   "teams": {
@@ -396,10 +449,10 @@
       },
       "phases": {
         "groups": "Group Stage",
+        "r32": "Round of 32",
         "r16": "Round of 16",
-        "r8": "Round of 8",
-        "qf": "Quarter Finals",
-        "sf": "Semi Finals",
+        "qf": "Quarterfinals",
+        "sf": "Semifinals",
         "third": "Third Place Match",
         "final": "Final"
       },
@@ -446,9 +499,9 @@
       "teamExclusiveWord": "exclusive",
       "teamFactors": "participants will have the opportunity to change their team extra bet. The later the change, the lower the scoring factor, but the more information available. The factors below will be applied to the base score depending on when the team extra bet is made:",
       "teamFactorsNew": "New:",
-      "factor1": "• Before the World Cup starts: 100% → until 11/06/2026 at 4 PM (Brasília time).",
-      "factor2": "• Before the Knockout stage: 60% → until 28/06/2026 at 4 PM (Brasília time)",
-      "factor3": "• Before the Round of 8: 30% → until 04/07/2026 at 2 PM (Brasília time)",
+      "factor1": "Before the World Cup starts: 100% → before the first match.",
+      "factor2": "Before the Knockout stage: 60% → before the first match of the Round of 32",
+      "factor3": "Before the Round of 8: 30% → before the first match of the Quarterfinals",
       "othersSubtitle": "Other Extras",
       "othersNote": "These extra bets cannot be changed during the Cup. In case of a tie in these categories, all tied entries count towards the extra score.",
       "guideSubtitle": "Reference Table",
@@ -459,7 +512,7 @@
         "points": "Points",
         "beforeGroups": "Before Groups",
         "beforePlayoffs": "Before Knockout",
-        "beforeQuarter": "Before Round of 8"
+        "beforeQuarter": "Before Quarterfinals"
       },
       "championData": [
         { "stage": "Champion", "points": "50 points" },
@@ -471,8 +524,8 @@
       "playerData": [
         { "type": "Top Scorer", "points": "15 points" },
         { "type": "Best Player (Golden Ball)", "points": "15 points" },
-        { "type": "Best Offense (Groups)", "points": "10 points" },
-        { "type": "Best Defense (Groups)", "points": "10 points" }
+        { "type": "Most Goals Scored (Groups)", "points": "10 points" },
+        { "type": "Fewest Goals Conceded (Groups)", "points": "10 points" }
       ],
       "guideData": [
         {
@@ -501,8 +554,44 @@
         },
         { "type": "Top Scorer", "beforeGroups": "15 points", "beforePlayoffs": "-", "beforeQuarter": "-" },
         { "type": "Best Player", "beforeGroups": "15 points", "beforePlayoffs": "-", "beforeQuarter": "-" },
-        { "type": "Best Offense (Groups)", "beforeGroups": "10 points", "beforePlayoffs": "-", "beforeQuarter": "-" },
-        { "type": "Best Defense (Groups)", "beforeGroups": "10 points", "beforePlayoffs": "-", "beforeQuarter": "-" }
+        {
+          "type": "Most Goals Scored (Groups)",
+          "beforeGroups": "10 points",
+          "beforePlayoffs": "-",
+          "beforeQuarter": "-"
+        },
+        {
+          "type": "Fewest Goals Conceded (Groups)",
+          "beforeGroups": "10 points",
+          "beforePlayoffs": "-",
+          "beforeQuarter": "-"
+        }
+      ],
+      "guideDataReduced": [
+        {
+          "type": "Champion Team",
+          "beforeGroups": "50 points",
+          "beforePlayoffs": "30 points",
+          "beforeQuarter": "15 points"
+        },
+        {
+          "type": "Runner-up Team",
+          "beforeGroups": "30 points",
+          "beforePlayoffs": "18 points",
+          "beforeQuarter": "9 points"
+        },
+        {
+          "type": "Semi-finalist Team",
+          "beforeGroups": "20 points",
+          "beforePlayoffs": "12 points",
+          "beforeQuarter": "6 points"
+        },
+        {
+          "type": "Quarter-finalist Team",
+          "beforeGroups": "10 points",
+          "beforePlayoffs": "6 points",
+          "beforeQuarter": "3 points"
+        }
       ]
     },
     "prize": {

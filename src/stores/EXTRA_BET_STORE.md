@@ -1,6 +1,6 @@
 # Extra Bet Store
 
-The extra bet store is a global Pinia store that manages special bets (extra bets) such as tournament champion, top scorer, best defense, and best offense predictions.
+The extra bet store is a global Pinia store that manages special bets (extra bets) such as tournament champion, top scorer, Least Goals Conceded, and Most Goals Scored predictions.
 
 ## Features
 

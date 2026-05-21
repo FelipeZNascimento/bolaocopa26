@@ -38,18 +38,40 @@
         sortable
       />
       <PrimeColumn
-        header="Ativo"
-        field="isActive"
+        field="extrasCount"
+        style="text-align: center"
         sortable
       >
+        <template #header><div style="width: 100%; text-align: center">Extras</div></template>
+        <template #body="{ data }">
+          <i
+            v-if="data.extrasCount >= MAX_EXTRAS"
+            class="pi pi-check-circle"
+            style="color: var(--bolao-c-mint)"
+          />
+          <i
+            v-else
+            class="pi pi-times-circle"
+            style="color: var(--bolao-c-red-l1)"
+          />
+          {{ data.extrasCount }} / {{ MAX_EXTRAS }}
+        </template>
+      </PrimeColumn>
+      <PrimeColumn
+        field="isActive"
+        style="text-align: center"
+        sortable
+      >
+        <template #header><div style="width: 100%; text-align: center">Ativo</div></template>
         <template #body="{ data }">
           <PrimeToggleSwitch
             :model-value="!!data.isActive"
-            @update:model-value="handleActiveToggle(data)"
+            @click.prevent="handleActiveToggle(data)"
           />
         </template>
       </PrimeColumn>
-      <PrimeColumn header="Unlink de 2026">
+      <PrimeColumn style="text-align: center">
+        <template #header><div style="width: 100%; text-align: center">Unlink de 2026</div></template>
         <template #body="{ data }">
           <PrimeButton
             icon="pi pi-minus-circle"
@@ -76,6 +98,8 @@ import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useAdminStore } from '@/stores/admin';
 import { useNotificationStore } from '@/stores/notification';
+
+const MAX_EXTRAS = 5;
 
 // ------ Services & Stores ------
 const activeProfileStore = useActiveProfileStore();
@@ -118,8 +142,19 @@ function getUsersCallback(success: boolean) {
 }
 
 function handleActiveToggle(user: IUser) {
-  console.log('Toggle isActive for user:', user.id, !user.isActive);
-  userService.activateUser(user.id, !user.isActive, activateToggleCallback);
+  confirm.require({
+    accept: () => {
+      console.log('Changing active state for user:', user.id);
+      userService.activateUser(user.id, !user.isActive, activateToggleCallback);
+    },
+    acceptProps: { label: 'Confirmar', severity: 'danger' },
+    header: user.isActive ? `Desativar "${user.nickname}"` : `Ativar "${user.nickname}"`,
+    icon: 'pi pi-exclamation-triangle',
+    message: user.isActive
+      ? `Tem certeza que deseja desativar "${user.nickname}"?`
+      : `Tem certeza que deseja ativar "${user.nickname}"?`,
+    rejectProps: { label: 'Cancelar', severity: 'secondary', variant: 'text' },
+  });
 }
 
 function handleDelete(user: IUser) {
@@ -129,7 +164,7 @@ function handleDelete(user: IUser) {
       userService.deleteUser(user.id, deleteCallback);
     },
     acceptProps: { label: 'Remover', severity: 'danger' },
-    header: 'Confirmar unlink de 2026',
+    header: `Confirmar unlink de "${user.nickname}"`,
     icon: 'pi pi-exclamation-triangle',
     message: `Tem certeza que deseja remover "${user.nickname}" do Bolão 2026?`,
     rejectProps: { label: 'Cancelar', severity: 'secondary', variant: 'text' },

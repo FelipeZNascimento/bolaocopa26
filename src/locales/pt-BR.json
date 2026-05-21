@@ -1,12 +1,13 @@
 {
   "title": "Bolão da Copa 2026",
   "inactiveBanner": {
-    "message1": "Clique ",
-    "cta": "aqui",
-    "message2": " para saber como ativar seu perfil."
+    "message1": "Seu perfil ainda não está ativo."
   },
   "common": {
-    "dismiss": "Fechar"
+    "dismiss": "Fechar",
+    "clickHere": "Clique aqui",
+    "loggedInOnly": "Esta área é exclusivamente para usuários logados. Por favor, faça login para acessar este conteúdo.",
+    "seeMore": "Ver mais"
   },
   "navigation": {
     "home": "Início",
@@ -100,7 +101,7 @@
       "signup": "Faça aqui o seu cadastro"
     },
     "notifications": {
-      "forgotPasswordSent": "Um email foi enviado para a sua conta.",
+      "forgotPasswordSent": "Se esse email estiver registrado, um email será enviado para a sua conta.",
       "signupSuccess": "Um email foi enviado para a sua conta.",
       "signupSuccessTitle": "Cadastro feito com sucesso!"
     }
@@ -227,8 +228,8 @@
     }
   },
   "home": {
-    "dashboard1": "Esse é o seu painel da Copa 2026.",
-    "dashboard2": "Use a função de arrastar e soltar para organizar os widgets como preferir. Todos os seus ajustes serão salvos automaticamente para a próxima vez que você acessar o Bolão!",
+    "dashboard1": "Esse é o seu painel da Copa 2026!",
+    "dashboard2": "Use a função de arrastar e soltar para organizar os widgets como preferir. Todos os seus ajustes serão salvos automaticamente para a próxima vez que você acessar o Bolão.",
     "welcome": {
       "headline": "Seu bolão, sua Copa!",
       "description": "Chute os placares, acerte o campeão e suba no ranking! O Bolão da Copa 2026 traz apostas em todas as partidas, confrontos entre amigos, apostas extras (artilheiro, melhor jogador e muito mais) e um ranking em tempo real para você acompanhar cada virada. Vai perder essa?",
@@ -297,6 +298,11 @@
     "live": "Placar"
   },
   "extraBets": {
+    "generalBets": "Apostas Gerais",
+    "myBets": "Minhas Apostas",
+    "results": "Resultados",
+    "correctBet": "Parabéns",
+    "wrongBet": "Mais sorte da próxima vez",
     "rulesBanner": "Apostas extras são apostas adicionais que você pode fazer além dos palpites normais das partidas. Elas oferecem uma oportunidade de ganhar pontos extras e se destacar no ranking geral do bolão!",
     "rulesBannerLink": "Saiba mais nas regras",
     "championDisclaimer": {
@@ -313,7 +319,26 @@
     "notification": {
       "success": "Aposta extra salva com sucesso!",
       "error": "Ocorreu um erro ao salvar sua aposta extra. Por favor, tente novamente."
+    },
+    "resultPending": "Aguardando resultado",
+    "championChangeModal": {
+      "title": "Novo Campeão?",
+      "warning": "Aviso!",
+      "message1": "Ao alterar sua aposta de campeão, o número máximo de pontos que você pode ganhar será reduzido.",
+      "currentRound": "Rodada Atual: {round}",
+      "tableMessage": "Confira a tabela abaixo para entender melhor como essa redução funciona:",
+      "irreversibleAction": "Esta ação não pode ser desfeita.",
+      "confirmButton": "Entendi, bora!",
+      "cancelButton": "Melhor não",
+      "teamSelectionStep": {
+        "backButton": "Voltar",
+        "confirmButton": "Confirmar alteração"
+      }
     }
+  },
+  "extraBetsDetailsModal": {
+    "bets": "aposta | apostas",
+    "empty": "Nenhuma aposta feita nessa opção ainda."
   },
   "footer": {
     "about": {
@@ -346,6 +371,34 @@
       "message": "Tem certeza que deseja prosseguir sem salvar suas apostas?",
       "confirm": "Prosseguir",
       "cancel": "Cancelar"
+    }
+  },
+  "resetPassword": {
+    "title": "Redefinir Senha",
+    "fields": {
+      "email": "Email",
+      "token": "Token",
+      "password": "Nova Senha",
+      "confirmPassword": "Confirme a Senha"
+    },
+    "validation": {
+      "confirmPasswordEmpty": "Confirme a senha",
+      "emailRequired": "Email é obrigatório",
+      "passwordMinLength": "Senha deve ter no mínimo 6 caracteres",
+      "tokenRequired": "Token é obrigatório",
+      "passwordsMismatch": "As senhas não coincidem"
+    },
+    "submitButton": "Redefinir Senha",
+    "successMessage": "Senha redefinida com sucesso!",
+    "redirectMessage": "Redirecionando para os Jogos em",
+    "redirectSecond": "segundo",
+    "redirectSeconds": "segundos",
+    "skipLink": "Ir agora",
+    "notification": {
+      "successMessage": "Senha redefinida com sucesso!",
+      "successTitle": "Redefinição de Senha",
+      "errorTitle": "Falha na Redefinição da Senha",
+      "errorFallback": "Falha ao redefinir a senha"
     }
   },
   "teams": {
@@ -396,8 +449,8 @@
       },
       "phases": {
         "groups": "Fase de Grupos",
-        "r16": "16 Avos de Final",
-        "r8": "Oitavas de Final",
+        "r32": "16 Avos de Final",
+        "r16": "Oitavas de Final",
         "qf": "Quartas de Final",
         "sf": "Semifinais",
         "third": "Disputa de 3º lugar",
@@ -446,9 +499,9 @@
       "teamExclusiveWord": "exclusivas",
       "teamFactors": "os participantes terão a oportunidade de trocar a aposta extra de equipe. Quanto mais tarde a aposta for alterada, menor o fator de pontuação, mas maior a informação disponível. Os fatores abaixo serão aplicados à pontuação base de acordo com o momento em que a aposta extra de equipe for feita:",
       "teamFactorsNew": "Novidade:",
-      "factor1": "• Antes do Início da Copa: 100% → até 11/06/2026, às 16h, horário de Brasília.",
-      "factor2": "• Antes do Mata-Mata: 60% → até 28/06/2026, às 16h, horário de Brasília",
-      "factor3": "• Antes das Oitavas: 30% → até 04/07/2026, às 14h, horário de Brasília",
+      "factor1": "Antes do Início da Copa: 100% → antes do início do primeiro jogo.",
+      "factor2": "Antes do Mata-Mata: 60% → antes do primeiro jogo dos 16 Avos de Final",
+      "factor3": "Antes das Oitavas: 30% → antes do primeiro jogo das Oitavas de Final",
       "othersSubtitle": "Demais Extras",
       "othersNote": "Essas apostas extras não podem ser trocadas ao longo da Copa. Em caso de empate nessas categorias, todos os empatados contam para a pontuação extra.",
       "guideSubtitle": "Tabela-Guia",

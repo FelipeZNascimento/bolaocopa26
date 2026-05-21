@@ -52,7 +52,7 @@
               :aria-label="t('footer.preferences.portuguese')"
               @click="setLocale('pt-BR')"
             >
-              🇧🇷
+              <span class="fi fi-br" />
             </button>
             <button
               class="flag-btn"
@@ -60,7 +60,7 @@
               :aria-label="t('footer.preferences.english')"
               @click="setLocale('en')"
             >
-              🇺🇸
+              <span class="fi fi-gb" />
             </button>
           </div>
         </div>
@@ -245,8 +245,17 @@ function setTheme(newTheme: TThemeValue) {
 
 .flag-btn {
   padding: var(--xxs-spacing) var(--xs-spacing);
-  font-size: var(--m-font-size);
+  font-size: 0;
   line-height: 1;
+
+  .fi {
+    display: block;
+    width: 1.5em;
+    height: 1.125em;
+    font-size: var(--m-font-size);
+    border-radius: 2px;
+  }
+
   cursor: pointer;
   background: none;
   border: 2px solid transparent;

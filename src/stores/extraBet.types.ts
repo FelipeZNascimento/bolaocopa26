@@ -13,8 +13,9 @@ export interface IExtraBet {
   extraType: TEXTRA_BETS_VALUES;
   id: number;
   player: IPlayer;
+  stageId: number;
   team: ITeam;
-  user: Pick<IUser, 'id' | 'isActive' | 'name' | 'nickname'>;
+  user: IUser;
 }
 
 export interface IExtraBetResult {
@@ -40,5 +41,5 @@ export interface ITeamWithExtras {
 
 export type IUserWithExtras = {
   bets: IExtraBet[];
-  user: Pick<IUser, 'id' | 'isActive' | 'name' | 'nickname'>;
+  user: IUser;
 };

@@ -101,7 +101,6 @@
       </PrimeFloatLabel>
       <div class="buttons-container">
         <PrimeButton
-          rounded
           :disabled="isLoading"
           :label="t('loginModal.buttons.forgotPassword')"
           variant="text"
@@ -111,7 +110,6 @@
           {{ t('loginModal.buttons.forgotPassword') }}
         </PrimeButton>
         <PrimeButton
-          rounded
           type="submit"
           :label="t('loginModal.buttons.confirm')"
           variant="primary"
@@ -134,7 +132,6 @@
     <div style="padding-top: var(--l-spacing); text-align: center">
       <PrimeButton
         v-if="formMode !== 'login'"
-        rounded
         class="signup-button"
         type="submit"
         :label="t('loginModal.buttons.backToLogin')"
@@ -145,7 +142,6 @@
       />
       <PrimeButton
         v-else
-        rounded
         type="submit"
         :label="t('loginModal.buttons.signup')"
         variant="link"

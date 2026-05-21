@@ -73,7 +73,6 @@
       </PrimeFloatLabel>
       <div class="buttons-container">
         <PrimeButton
-          rounded
           type="submit"
           :label="t('profileModal.saveButton')"
           variant="primary"
