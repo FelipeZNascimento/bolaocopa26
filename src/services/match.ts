@@ -46,6 +46,7 @@ export default class MatchService {
       this.websocketInstance.connect();
     } catch (error: unknown) {
       this.matchesStore.setLoading(false);
+      console.error('[MatchService.fetch]', error);
       this.matchesStore.setError(new Error(error instanceof Error ? error.message : String(error)));
     }
   }
@@ -59,6 +60,7 @@ export default class MatchService {
       this.matchesStore.setError(null);
     } catch (error: unknown) {
       this.matchesStore.setLoading(false);
+      console.error('[MatchService.fetchNextMatches]', error);
       this.matchesStore.setError(new Error(error instanceof Error ? error.message : String(error)));
     }
   }

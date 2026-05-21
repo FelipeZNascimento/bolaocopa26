@@ -50,6 +50,7 @@ const emit = defineEmits<{
 
 <style lang="scss" scoped>
 .widget-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -62,6 +63,14 @@ const emit = defineEmits<{
     transform 0.2s ease,
     border-color 0.2s ease,
     box-shadow 0.2s ease;
+
+  &::before {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    content: '';
+    background: linear-gradient(135deg, rgb(255 255 255 / 3%) 25%, transparent 25%);
+  }
 
   &.is-dragging {
     opacity: 0.4;

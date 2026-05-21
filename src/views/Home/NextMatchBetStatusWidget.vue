@@ -21,40 +21,11 @@
     </div>
 
     <template v-else>
-      <!-- Label -->
-      <p class="section-label">
-        {{
-          nextMatches.length > 1
-            ? t('home.nextMatchCountdown.simultaneous', { count: nextMatches.length })
-            : t('home.nextMatchCountdown.nextMatch')
-        }}
-      </p>
-
-      <!-- Countdown clock — centrepiece -->
-      <div class="clock-area">
-        <div class="clock">
-          <div class="clock-unit">
-            <span class="clock-value">{{ pad(countdown.days) }}</span>
-            <span class="clock-key">{{ t('home.nextMatchCountdown.days') }}</span>
-          </div>
-          <span class="clock-colon">:</span>
-          <div class="clock-unit">
-            <span class="clock-value">{{ pad(countdown.hours) }}</span>
-            <span class="clock-key">{{ t('home.nextMatchCountdown.hours') }}</span>
-          </div>
-          <span class="clock-colon">:</span>
-          <div class="clock-unit">
-            <span class="clock-value">{{ pad(countdown.minutes) }}</span>
-            <span class="clock-key">{{ t('home.nextMatchCountdown.minutes') }}</span>
-          </div>
-          <span class="clock-colon">:</span>
-          <div class="clock-unit">
-            <span class="clock-value">{{ pad(countdown.seconds) }}</span>
-            <span class="clock-key">{{ t('home.nextMatchCountdown.seconds') }}</span>
-          </div>
-        </div>
-      </div>
-
+      <CountdownComponent
+        :countdown-to="nextTimestamp ?? 0"
+        :title="nextMatches.length > 1 ? 'home.nextMatchCountdown.simultaneous' : 'home.nextMatchCountdown.nextMatch'"
+        :colorful="true"
+      />
       <!-- Match rows -->
       <div class="match-rows">
         <div
@@ -69,9 +40,13 @@
               :src="`https://assets.omegafox.me/copa/countries_flags/${match.homeTeam.isoCode.toLowerCase()}.png`"
               :alt="match.homeTeam.name"
             />
-            <span class="team-name">{{ match.homeTeam.abbreviation }}</span>
+            <span class="team-name">{{
+              locale === 'pt-BR' ? match.homeTeam.abbreviation : match.homeTeam.abbreviationEn
+            }}</span>
             <span class="vs">vs</span>
-            <span class="team-name">{{ match.awayTeam.abbreviation }}</span>
+            <span class="team-name">{{
+              locale === 'pt-BR' ? match.awayTeam.abbreviation : match.awayTeam.abbreviationEn
+            }}</span>
             <img
               class="flag"
               :src="`https://assets.omegafox.me/copa/countries_flags/${match.awayTeam.isoCode.toLowerCase()}.png`"
@@ -109,17 +84,19 @@ import { useI18n } from 'vue-i18n';
 
 import type { IMatch } from '@/stores/matches.types';
 
+import CountdownComponent from '@/components/CountdownComponent.vue';
 import { MATCH_STATUS } from '@/constants/match';
 import { useActiveProfileStore } from '@/stores/activeProfile';
-import { useClockStore } from '@/stores/clock';
 import { useMatchesStore } from '@/stores/matches';
 
-const { t } = useI18n();
+// ------ Initialization ------
+const { locale, t } = useI18n();
 
+// ------ Services & Stores ------
 const matchesStore = useMatchesStore();
-const clockStore = useClockStore();
 const activeProfileStore = useActiveProfileStore();
 
+// ------ Computed Properties ------
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 const isLoading = computed(() => matchesStore.isLoading);
 
@@ -142,16 +119,7 @@ const nextMatches = computed<IMatch[]>(() => {
   return sortedNotStarted.value.filter((m) => parseInt(m.timestamp, 10) === nextTimestamp.value);
 });
 
-// Countdown from now to the next match timestamp
-const countdown = computed(() => {
-  const now = clockStore.currentTimestamp;
-  const diff = Math.max(0, (nextTimestamp.value ?? now) - now);
-  const days = Math.floor(diff / 86400);
-  const hours = Math.floor((diff % 86400) / 3600);
-  const minutes = Math.floor((diff % 3600) / 60);
-  const seconds = diff % 60;
-  return { days, hours, minutes, seconds };
-});
+// ------ Functions ------
 
 function getBetStatusIcon(match: IMatch): string {
   return hasBet(match) ? 'pi pi-check-circle' : 'pi pi-exclamation-circle';
@@ -165,10 +133,6 @@ function hasBet(match: IMatch): boolean {
   if (!match.loggedUserBets) return false;
   const bet = match.loggedUserBets;
   return bet !== null && bet.scoreHome !== null && bet.scoreAway !== null;
-}
-
-function pad(n: number): string {
-  return String(n).padStart(2, '0');
 }
 </script>
 
@@ -222,51 +186,6 @@ function pad(n: number): string {
   color: var(--bolao-c-grey2);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-}
-
-// ---- Clock area — grows to fill remaining space ----
-.clock-area {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-}
-
-.clock {
-  display: flex;
-  gap: var(--s-spacing);
-  align-items: flex-end;
-}
-
-.clock-unit {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 52px;
-}
-
-.clock-value {
-  font-size: var(--xl-font-size);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-  color: var(--bolao-c-grey2);
-}
-
-.clock-key {
-  margin-top: 4px;
-  font-size: var(--xxs-font-size);
-  color: var(--bolao-c-grey2);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.clock-colon {
-  padding-bottom: 18px;
-  font-size: 2rem;
-  font-weight: 300;
-  line-height: 1;
-  color: var(--bolao-c-grey2);
 }
 
 // ---- Match rows — pinned to bottom ----

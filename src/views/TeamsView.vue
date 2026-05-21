@@ -3,10 +3,17 @@
     <h1>{{ t('teams.title') }}</h1>
     <div
       v-if="isLoading"
-      style="display: flex; flex-direction: row; gap: var(--l-spacing); align-items: center; width: 100%"
+      style="
+        display: flex;
+        flex-flow: row wrap;
+        gap: var(--l-spacing);
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+      "
     >
       <PrimeSkeleton
-        v-for="value in 3"
+        v-for="value in 12"
         :key="value"
         class="skeleton-outer"
       />
@@ -24,20 +31,13 @@
           {{ group.groupName }}
         </h2>
         <div class="teams-grid">
-          <div
+          <ClickableTeamCard
             v-for="team in group.teams"
             :key="team.id"
-            class="team-card"
-            @click="openTeamModal(team)"
-          >
-            <img
-              :src="`https://assets.omegafox.me/copa/countries_flags/${team.isoCode.toLowerCase()}.png`"
-              :alt="`${team.name} Flag`"
-            />
-            <div class="team-name">
-              {{ locale === 'pt-BR' ? team.name : team.nameEn }}
-            </div>
-          </div>
+            :team="team"
+            :is-loading="false"
+            :handle-click="openTeamModal"
+          />
         </div>
       </div>
     </div>
@@ -55,12 +55,11 @@ import { useI18n } from 'vue-i18n';
 
 import type { ITeam } from '@/stores/teams.types';
 
+import ClickableTeamCard from '@/components/ClickableTeamCard.vue';
 import TeamDetailsModal from '@/components/TeamDetailsModal.vue';
-import TeamService from '@/services/team';
 import { useTeamsStore } from '@/stores/teams';
 
 // ------ Services & Stores ------
-const teamService = new TeamService();
 const teamsStore = useTeamsStore();
 
 // ------ Refs ------
@@ -107,10 +106,7 @@ function openTeamModal(team: ITeam) {
   selectedTeam.value = team;
   isModalOpen.value = true;
 }
-
-// ------ Initialization ------
-teamService.fetch();
-const { locale, t } = useI18n();
+const { t } = useI18n();
 </script>
 <style lang="scss" scoped>
 .outer-teams {
@@ -131,20 +127,34 @@ const { locale, t } = useI18n();
 }
 
 .skeleton-outer {
-  width: 50%;
-  min-height: 400px;
+  width: 20% !important;
+  min-height: 200px;
+
+  @media (width <= 1024px) {
+    width: 45% !important;
+  }
+
+  @media (width <= 600px) {
+    width: 100% !important;
+  }
 }
 
 .groups-container {
-  display: flex;
-  flex-flow: row wrap;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--xl-spacing);
   width: 100%;
+
+  @media (width <= 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (width <= 600px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .group-section {
-  flex: 1;
-  min-width: 300px;
   overflow: hidden;
   color: var(--color-contrast);
   border-radius: 8px;
@@ -161,74 +171,10 @@ const { locale, t } = useI18n();
 }
 
 .teams-grid {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--m-spacing);
-  justify-content: space-evenly;
   padding: var(--m-spacing);
-}
-
-.team-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 140px;
-  height: 140px;
-  font-size: var(--m-font-size);
-  cursor: pointer;
-  background: color-mix(in srgb, var(--color-contrast) 5%, transparent);
-
-  // padding: var(--m-spacing);
-  border-radius: var(--border-radius);
-  transition: all 0.2s ease;
-
-  @media (width <=768px) {
-    height: 160px;
-    font-size: var(--s-font-size);
-  }
-
-  @media (width <=480px) {
-    width: 140px;
-    height: 140px;
-  }
-
-  &:hover {
-    background: color-mix(in srgb, var(--color-contrast) 10%, transparent);
-    box-shadow: var(--drop-shadow);
-    transform: translateY(-2px);
-  }
-
-  img {
-    flex: 0;
-    width: 100%;
-    height: 80px;
-    min-height: 80px;
-    object-fit: cover;
-
-    @media (width <=768px) {
-      height: 100px;
-      min-height: 100px;
-    }
-
-    @media (width <=480px) {
-      height: 80px;
-      min-height: 80px;
-    }
-  }
-
-  .team-name {
-    display: flex;
-    flex: 1;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    min-height: 50px;
-    padding: var(--s-spacing);
-    font-weight: 600;
-    text-align: center;
-    overflow-wrap: break-word;
-    text-decoration: underline dotted;
-  }
 }
 
 // Group colors

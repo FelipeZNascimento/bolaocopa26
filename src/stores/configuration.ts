@@ -12,8 +12,8 @@ const initialState = {
 export const useConfigurationStore = defineStore('configuration', () => {
   const currentEdition = ref<null | number>(null);
   const editionStart = ref<null | number>(null);
-  const currentRound = ref<null | number>(null);
-  const selectedRound = ref<null | number>(null);
+  const currentRound = ref<number>(1);
+  const selectedRound = ref<number>(1);
   const isLoading = ref<boolean>(true);
   const error = ref<Error | null>(null);
   const theme = ref<TThemeValue>(initialState.theme);
@@ -31,6 +31,7 @@ export const useConfigurationStore = defineStore('configuration', () => {
 
   function setEditionStart(timestamp: number) {
     editionStart.value = timestamp;
+    // editionStart.value = 1081204400; // Temporary hardcoded value for testing purposes
   }
 
   function isDarkMode() {

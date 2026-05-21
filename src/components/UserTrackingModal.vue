@@ -21,7 +21,6 @@
           class="favorite-button"
           raised
           severity="secondary"
-          rounded
           @click="toggleFavorite"
         />
       </p>
@@ -37,14 +36,18 @@
     </p>
     <PrimeDivider />
     <h2 style="text-align: center">{{ t('userTrackingModal.extraBets') }}</h2>
-    <div style="display: flex; justify-content: center; padding: var(--s-spacing)">
+    <div class="teams-grid">
       <PrimeSkeleton
         v-if="isLoadingExtras"
         class="skeleton-outer"
       />
-      <ExtraBetsTeamCard
+      <ClickableTeamCard
+        v-for="extraBet in selectedUserExtraBets"
         v-else
-        :extra-bets="selectedUserExtraBets"
+        :key="extraBet.id"
+        :team="extraBet.team"
+        :is-loading="isLoadingExtras"
+        :title="EXTRA_BETS_LABELS[extraBet.extraType]"
       />
     </div>
   </PrimeDialog>
@@ -61,13 +64,14 @@ import { useI18n } from 'vue-i18n';
 
 import type { IUser } from '@/stores/activeProfile.types';
 
+import ClickableTeamCard from '@/components/ClickableTeamCard.vue';
 import LoginModal from '@/components/LoginModal.vue';
+import { EXTRA_BETS_LABELS } from '@/constants/bets';
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useExtraBetStore } from '@/stores/extraBet';
 import { useNotificationStore } from '@/stores/notification';
 import { useRankingStore } from '@/stores/ranking';
-import ExtraBetsTeamCard from '@/views/Extras/After/ExtraBetsTeamCard.vue';
 
 const props = defineProps<{
   handleCloseModal: () => void;
@@ -309,6 +313,19 @@ watch(isVisible, async (newValue) => {
 
   :deep(.pi-star-fill) {
     opacity: 1;
+  }
+}
+
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 140px));
+  gap: var(--m-spacing);
+  justify-content: center;
+  width: 100%;
+
+  @media (width <= 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 140px));
+    gap: var(--s-spacing);
   }
 }
 </style>

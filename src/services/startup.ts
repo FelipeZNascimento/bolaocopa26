@@ -5,6 +5,7 @@ import type { ITeam } from '@/stores/teams.types';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useExtraBetStore } from '@/stores/extraBet';
+import { useTeamsStore } from '@/stores/teams';
 import { isFulfilled, isRejected } from '@/util/promiseCheck';
 
 import ApiService from './api_request';
@@ -20,12 +21,14 @@ export default class StartupService {
   private apiRequest;
   private configurationStore;
   private extraBetStore;
+  private teamsStore;
 
   constructor() {
     this.apiRequest = new ApiService();
     this.activeProfileStore = useActiveProfileStore();
     this.configurationStore = useConfigurationStore();
     this.extraBetStore = useExtraBetStore();
+    this.teamsStore = useTeamsStore();
   }
 
   public async initialize(callback: (isSuccess: boolean) => void) {
@@ -46,6 +49,10 @@ export default class StartupService {
 
       const loggedUser = isFulfilled(activeProfileResponse) ? activeProfileResponse.value : null;
       const seasonData = isFulfilled(seasonResponse) ? seasonResponse.value : null;
+      const teamsData = isFulfilled(teamResponse) ? teamResponse.value : [];
+
+      // Set Teams store properties
+      this.teamsStore.setTeams(teamsData);
 
       // Set Active Profile store properties
       this.activeProfileStore.setLoading(false);
@@ -55,9 +62,10 @@ export default class StartupService {
       this.configurationStore.setLoading(false);
       if (seasonData) {
         this.configurationStore.setCurrentEdition(seasonData.currentEdition);
-        // this.configurationStore.setCurrentRound(seasonData.currentRound);
-        this.configurationStore.setCurrentRound(1);
-        this.configurationStore.setSelectedRound(1);
+        this.configurationStore.setCurrentRound(seasonData.currentRound);
+        this.configurationStore.setSelectedRound(seasonData.currentRound);
+        // this.configurationStore.setCurrentRound(1);
+        // this.configurationStore.setSelectedRound(1);
         this.configurationStore.setEditionStart(parseInt(seasonData.editionStart));
         this.configurationStore.setError(null);
       }
@@ -70,6 +78,7 @@ export default class StartupService {
       this.activeProfileStore.setLoading(false);
       this.configurationStore.setLoading(false);
       this.extraBetStore.setLoading(false);
+      console.error('[StartupService.initialize]', error);
       this.configurationStore.setError(new Error(error instanceof Error ? error.message : String(error)));
       return callback(false);
     }

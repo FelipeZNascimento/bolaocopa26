@@ -11,7 +11,6 @@
       <PrimeButton
         icon="pi pi-angle-left"
         text
-        rounded
         :disabled="isFirst"
         aria-label="Previous Page"
         @click="prevPage"
@@ -26,7 +25,6 @@
       <PrimeButton
         icon="pi pi-angle-right"
         text
-        rounded
         :disabled="isLast"
         aria-label="Next Page"
         @click="nextPage"
@@ -41,7 +39,6 @@
       <PrimeButton
         icon="pi pi-angle-double-left"
         text
-        rounded
         :disabled="isFirst"
         aria-label="First Page"
         @click="firstPage"
@@ -49,7 +46,6 @@
       <PrimeButton
         icon="pi pi-angle-left"
         text
-        rounded
         :disabled="isFirst"
         aria-label="Previous Page"
         @click="prevPage"
@@ -61,7 +57,6 @@
         :class="{ 'page-btn--active': round.num === selectedRound }"
         :label="t(`rounds.${round.num}.short`)"
         text
-        rounded
         :aria-label="`Page ${round.num}`"
         :aria-current="round.num === selectedRound ? 'page' : undefined"
         @click="setRound(round.num)"
@@ -69,7 +64,6 @@
       <PrimeButton
         icon="pi pi-angle-right"
         text
-        rounded
         :disabled="isLast"
         aria-label="Next Page"
         @click="nextPage"
@@ -77,7 +71,6 @@
       <PrimeButton
         icon="pi pi-angle-double-right"
         text
-        rounded
         :disabled="isLast"
         aria-label="Last Page"
         @click="lastPage"

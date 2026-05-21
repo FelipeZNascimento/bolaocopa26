@@ -216,14 +216,14 @@
               :class="{ 'flag-btn--active': locale === 'pt-BR' }"
               @click="locale = 'pt-BR'"
             >
-              🇧🇷
+              <span class="fi fi-br" />
             </button>
             <button
               class="flag-btn"
               :class="{ 'flag-btn--active': locale === 'en' }"
               @click="locale = 'en'"
             >
-              🇺🇸
+              <span class="fi fi-gb" />
             </button>
           </div>
         </nav>

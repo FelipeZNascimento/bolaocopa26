@@ -1,23 +1,14 @@
 <template>
   <div class="home-view">
-    <div
+    <BannerComponent
       v-if="!isDashboardBannerDismissed"
-      class="dashboard-banner"
-    >
-      <div>
-        <h3>{{ $t('home.dashboard1') }}</h3>
-        <p style="padding-top: var(--s-spacing); text-align: center">
-          <i class="pi pi-bars" /> {{ $t('home.dashboard2') }}
-        </p>
-      </div>
-      <button
-        class="banner-dismiss"
-        :aria-label="$t('common.dismiss')"
-        @click="dismissBanner"
-      >
-        <i class="pi pi-times" />
-      </button>
-    </div>
+      :items="[
+        { key: 'home.dashboard1', type: 'title' },
+        { key: 'home.dashboard2', type: 'description', icon: 'pi pi-bars' },
+      ]"
+      :dismiss-key="BANNER_STORAGE_KEY"
+      @dismissed="isDashboardBannerDismissed = true"
+    />
     <TransitionGroup
       name="widget"
       tag="div"
@@ -61,6 +52,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import BannerComponent from '@/components/BannerComponent.vue';
 import MatchService from '@/services/match';
 import { useMatchesStore } from '@/stores/matches';
 
@@ -123,10 +115,10 @@ matchService.fetchNextMatches();
 // ------ Dashboard banner ------
 const isDashboardBannerDismissed = ref(localStorage.getItem(BANNER_STORAGE_KEY) === 'true');
 
-function dismissBanner() {
-  isDashboardBannerDismissed.value = true;
-  localStorage.setItem(BANNER_STORAGE_KEY, 'true');
-}
+// function dismissBanner() {
+//   isDashboardBannerDismissed.value = true;
+//   localStorage.setItem(BANNER_STORAGE_KEY, 'true');
+// }
 
 // ------ Widget order ------
 function loadOrder(): WidgetId[] {
@@ -284,52 +276,6 @@ onUnmounted(() => {
 
   @media (width <= 768px) {
     padding: var(--s-spacing) var(--s-spacing) var(--s-spacing);
-  }
-}
-
-.dashboard-banner {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--s-spacing) var(--xxl-spacing);
-  margin-bottom: var(--l-spacing);
-  color: var(--bolao-c-grey2);
-  background-color: var(--bolao-c-blue5);
-  border: 1px solid var(--bolao-c-blue3);
-  border-radius: var(--border-radius);
-
-  h3 {
-    font-size: var(--s-font-size);
-    text-align: center;
-  }
-}
-
-.banner-dismiss {
-  position: absolute;
-  top: 50%;
-  right: var(--s-spacing);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  cursor: pointer;
-  background: none;
-  border: none;
-  border-radius: 50%;
-  opacity: 0.6;
-  transform: translateY(-50%);
-  transition: opacity 0.2s;
-
-  &:hover {
-    opacity: 1;
-  }
-
-  .pi {
-    font-size: var(--xs-font-size);
-    color: var(--bolao-c-grey2);
   }
 }
 

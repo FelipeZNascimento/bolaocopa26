@@ -43,7 +43,7 @@ export default class UserService {
     this.adminStore.setLoading(true);
 
     try {
-      const response = await this.apiService.post<IUser[]>('user/activate', { newStatus, userId });
+      const response = await this.apiService.post<IUser[]>('admin/update-active-status', { newStatus, userId });
       this.adminStore.setUsers(response);
       this.adminStore.setLoading(false);
       return callback(true);
@@ -65,7 +65,7 @@ export default class UserService {
     this.adminStore.setLoading(true);
 
     try {
-      const response = await this.apiService.post<IUser[]>('user/delete-from-edition', { userId });
+      const response = await this.apiService.post<IUser[]>('admin/delete-from-edition', { userId });
       this.adminStore.setUsers(response);
       this.adminStore.setLoading(false);
       return callback(true);
@@ -90,6 +90,7 @@ export default class UserService {
     } catch (error: unknown) {
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setError(error as Error);
+      console.error('[UserService.forgotPassword]', error);
       return callback(false);
     }
   }
@@ -103,7 +104,7 @@ export default class UserService {
     this.adminStore.setLoading(true);
 
     try {
-      const response = await this.apiService.get<IUser[]>('user/all');
+      const response = await this.apiService.get<IUser[]>('admin/all-users');
       this.adminStore.setUsers(response);
       this.adminStore.setLoading(false);
       return callback(true);
@@ -139,6 +140,7 @@ export default class UserService {
     } catch (error: unknown) {
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setError(error as Error);
+      console.error('[UserService.login]', error);
       return callback(false);
     }
   }
@@ -156,6 +158,7 @@ export default class UserService {
       await this.apiService.get<IUser>('user/logout');
     } catch (error: unknown) {
       this.activeProfileStore.setLoading(false);
+      console.error('[UserService.logout]', error);
       this.activeProfileStore.setError(new Error(error instanceof Error ? error.message : String(error)));
     }
   }
@@ -188,7 +191,7 @@ export default class UserService {
     } catch (error: unknown) {
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setError(error as Error);
-
+      console.error('[UserService.signup]', error);
       return callback(false);
     }
   }
@@ -226,6 +229,7 @@ export default class UserService {
     } catch (error: unknown) {
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setError(error as Error);
+      console.error('[UserService.updatePassword]', error);
       return callback(false);
     }
   }
@@ -247,6 +251,7 @@ export default class UserService {
     } catch (error: unknown) {
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setError(error as Error);
+      console.error('[UserService.updatePasswordFromToken]', error);
       throw error; // Re-throw the error so it can be caught by the caller
     }
   }
@@ -269,6 +274,7 @@ export default class UserService {
     } catch (error: unknown) {
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setError(error as Error);
+      console.error('[UserService.updateProfile]', error);
       return callback(false);
     }
   }

@@ -12,7 +12,6 @@
     :icon="copied ? 'pi pi-check' : 'pi pi-copy'"
     :severity="copied ? 'success' : 'secondary'"
     variant="text"
-    rounded
     :aria-label="copied ? 'Copiado!' : 'Copiar'"
     @click="copyText"
   />

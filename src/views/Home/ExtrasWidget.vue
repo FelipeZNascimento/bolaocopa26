@@ -1,35 +1,14 @@
 <template>
   <div class="extras-widget">
     <!-- Countdown to edition start -->
-    <div
-      v-if="countdown"
-      class="countdown-section"
-    >
-      <p class="countdown-label">{{ t('home.extras.countdownLabel') }}</p>
-      <div class="countdown-grid">
-        <div class="countdown-unit">
-          <span class="countdown-value">{{ pad(countdown.days) }}</span>
-          <span class="countdown-key">{{ t('home.extras.days') }}</span>
-        </div>
-        <span class="countdown-colon">:</span>
-        <div class="countdown-unit">
-          <span class="countdown-value">{{ pad(countdown.hours) }}</span>
-          <span class="countdown-key">{{ t('home.extras.hours') }}</span>
-        </div>
-        <span class="countdown-colon">:</span>
-        <div class="countdown-unit">
-          <span class="countdown-value">{{ pad(countdown.minutes) }}</span>
-          <span class="countdown-key">{{ t('home.extras.minutes') }}</span>
-        </div>
-        <span class="countdown-colon">:</span>
-        <div class="countdown-unit">
-          <span class="countdown-value">{{ pad(countdown.seconds) }}</span>
-          <span class="countdown-key">{{ t('home.extras.seconds') }}</span>
-        </div>
-      </div>
-    </div>
+    <CountdownComponent
+      v-if="showCountdown"
+      :countdown-to="configurationStore.editionStart ?? 0"
+      title="home.extras.countdownLabel"
+    />
+
     <PrimeDivider
-      v-if="countdown && activeProfile"
+      v-if="showCountdown && activeProfile"
       class="divider"
     />
     <!-- User's extra bets summary -->
@@ -104,6 +83,7 @@ import { RouterLink } from 'vue-router';
 
 import type { ITeam } from '@/stores/teams.types';
 
+import CountdownComponent from '@/components/CountdownComponent.vue';
 import { EXTRA_BETS_LABELS, EXTRA_BETS_VALUES } from '@/constants/bets';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useClockStore } from '@/stores/clock';
@@ -125,15 +105,8 @@ const secondsLeft = computed(() => {
   return diff > 0 ? diff : null;
 });
 
-const countdown = computed(() => {
-  if (!secondsLeft.value) return null;
-  const s = secondsLeft.value;
-  return {
-    days: Math.floor(s / 86400),
-    hours: Math.floor((s % 86400) / 3600),
-    minutes: Math.floor((s % 3600) / 60),
-    seconds: s % 60,
-  };
+const showCountdown = computed(() => {
+  return secondsLeft.value !== null;
 });
 
 // Bets map by type
@@ -144,10 +117,6 @@ const betsByType = computed(() => {
 
 function getTeamName(team: ITeam): string {
   return locale.value === 'pt-BR' ? team.name : team.nameEn;
-}
-
-function pad(n: number): string {
-  return String(n).padStart(2, '0');
 }
 
 // Ordered extra bet entries for display
@@ -161,56 +130,6 @@ const extraBetEntries = Object.entries(EXTRA_BETS_VALUES).map(
   display: flex;
   flex-direction: column;
   gap: var(--m-spacing);
-}
-
-/* Countdown */
-.countdown-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-spacing);
-  align-items: center;
-}
-
-.countdown-label {
-  font-size: var(--xs-font-size);
-  font-weight: 600;
-  color: var(--bolao-c-grey3);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.countdown-grid {
-  display: flex;
-  gap: var(--xs-spacing);
-  align-items: center;
-}
-
-.countdown-unit {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 36px;
-}
-
-.countdown-value {
-  font-size: var(--m2-font-size);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-  color: var(--bolao-c-gold);
-}
-
-.countdown-key {
-  margin-top: 2px;
-  font-size: var(--xs-font-size);
-  color: var(--bolao-c-grey4);
-}
-
-.countdown-colon {
-  margin-bottom: 10px;
-  font-size: var(--m-font-size);
-  font-weight: 700;
-  color: var(--bolao-c-grey3);
 }
 
 /* Bets */
@@ -240,19 +159,27 @@ const extraBetEntries = Object.entries(EXTRA_BETS_VALUES).map(
 }
 
 .bet-label {
-  font-size: var(--xs-font-size);
+  font-size: var(--s-font-size);
   font-weight: 500;
   color: var(--bolao-c-grey3);
   white-space: nowrap;
+
+  @media (width <= 768px) {
+    font-size: var(--xs-font-size);
+  }
 }
 
 .bet-value {
   display: flex;
   gap: 4px;
   align-items: center;
-  font-size: var(--xs-font-size);
+  font-size: var(--s-font-size);
   font-weight: 600;
   color: var(--bolao-c-grey1);
+
+  @media (width <= 768px) {
+    font-size: var(--xs-font-size);
+  }
 }
 
 .bet-flag {

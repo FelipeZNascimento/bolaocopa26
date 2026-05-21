@@ -1,15 +1,9 @@
 <template>
   <div class="outer">
-    <div
+    <BannerComponent
       v-if="!activeProfile?.isActive"
-      class="active-banner"
-    >
-      <p>
-        {{ t('inactiveBanner.message1') }}
-        <RouterLink to="regras?section=inscricoes">{{ t('inactiveBanner.cta') }}</RouterLink
-        >{{ t('inactiveBanner.message2') }}
-      </p>
-    </div>
+      :items="BANNER_ITEMS"
+    />
     <div
       v-if="!isDashboardBannerDismissed"
       class="rules-banner"
@@ -29,106 +23,21 @@
         <i class="pi pi-times" />
       </button>
     </div>
-    <h2 style="text-align: center">Minhas Apostas</h2>
-    <div style="position: relative; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center">
-      <!-- Overlay spinner when updating -->
-      <div
-        v-if="isLoadingExtras || isLoadingTeams || isUpdatingExtras"
-        class="update-overlay"
-      >
-        <PrimeProgressSpinner
-          style="width: 50px; height: 50px"
-          strokeWidth="4"
-        />
-      </div>
-
-      <div class="bets-list">
-        <div
-          v-for="option in buttonOptions"
-          :key="option.value"
-          class="bet-row"
-          @click="selectedToggle.value = option.value"
-        >
-          <span class="bet-label">
-            {{ t(EXTRA_BETS_LABELS[option.value]) }}
-            <span v-if="option.value === EXTRA_BETS_VALUES.CHAMPION">*</span>
-          </span>
-          <div
-            v-if="option.selectedTeam"
-            class="bet-value"
-          >
-            <img
-              class="bet-flag"
-              :src="`https://assets.omegafox.me/copa/countries_flags/${option.selectedTeam?.isoCode.toLowerCase()}.png`"
-              :alt="`${option.selectedTeam?.name} Flag`"
-            />
-            <span>
-              {{ locale === 'pt-BR' ? option.selectedTeam?.name : option.selectedTeam?.nameEn }}
-            </span>
-          </div>
-          <span
-            v-else
-            class="bet-empty"
-          >
-            —
-          </span>
-        </div>
-      </div>
-    </div>
-    <p style="margin-top: 10px; font-size: var(--xs-font-size); color: var(--color-text); text-align: center">
-      {{ t('extraBets.championDisclaimer.message1') }}
-      {{ t('extraBets.championDisclaimer.message2') }}
-      <RouterLink
-        to="/regras?section=extras"
-        style="font-weight: 600; color: var(--bolao-c-blue1)"
-      >
-        {{ t('extraBets.championDisclaimer.link') }}
-      </RouterLink>
-    </p>
-    <!-- <div
-        v-for="option in buttonOptions"
-        :key="option.value"
-        :class="{ champion: option.value === EXTRA_BETS_VALUES.CHAMPION }"
-        class="team-card"
-        @click="selectedToggle.value = option.value"
-      >
-        <div class="team-name">
-          {{ t(option.label) }}
-        </div>
-        <p v-if="option.value === EXTRA_BETS_VALUES.CHAMPION">
-          A aposta de campeão poderá ser alterada ao longo da competição, mas valerá menos pontos.
-        </p>
-
-        <div
-          v-if="option.selectedTeam"
-          class="flag-container"
-        >
-          <img
-            :src="`https://assets.omegafox.me/copa/countries_flags/${option.selectedTeam?.isoCode.toLowerCase()}.png`"
-            :alt="`${option.selectedTeam?.name} Flag`"
-            class="team-flag"
-          />
-        </div>
-        <div
-          v-if="option.selectedTeam"
-          class="team-name"
-        >
-          {{ locale === 'pt-BR' ? option.selectedTeam?.name : option.selectedTeam?.nameEn }}
-        </div>
-      </div> -->
-    <PrimeDivider />
-    <div class="buttons-outer">
-      <PrimeButton
-        v-for="item in buttonOptions"
-        :key="item.value"
-        :label="t(item.label)"
-        variant="outlined"
-        size="small"
-        :severity="selectedToggle.value === item.value ? 'primary' : 'secondary'"
-        rounded
-        @click="selectedToggle.value = item.value"
-      />
-    </div>
+    <CountdownComponent
+      v-if="showCountdown"
+      :countdown-to="configurationStore.editionStart ?? 0"
+      :colorful="true"
+      title="home.extras.countdownLabel"
+    />
+    <h2 style="text-align: center">
+      {{ t('extraBets.myBets') }}
+    </h2>
+    <MyExtrasComponent
+      :selectedToggle="selectedToggle"
+      :extraBetsOptions="extraBetsOptions"
+      :onSelectToggle="onSelectToggle"
+      :isLoading="isLoading"
+    />
     <h2>{{ currentSelectedToggle ? t(currentSelectedToggle.label) : '' }}</h2>
 
     <div
@@ -138,24 +47,14 @@
       "
       class="teams-grid"
     >
-      <div
+      <ClickableTeamCard
         v-for="team in teams"
         :key="team.id"
-        class="team-card"
-        :class="{ selected: currentSelectedToggle?.selectedTeam?.id === team.id }"
-        @click="handleClick(team)"
-      >
-        <div class="flag-container">
-          <img
-            :src="`https://assets.omegafox.me/copa/countries_flags/${team.isoCode.toLowerCase()}.png`"
-            :alt="`${locale === 'pt-BR' ? team.name : team.nameEn} Flag`"
-            class="team-flag"
-          />
-        </div>
-        <div class="team-name">
-          {{ locale === 'pt-BR' ? team.name : team.nameEn }}
-        </div>
-      </div>
+        :team="team"
+        :is-selected="currentSelectedToggle?.selectedTeam?.some((e) => e.team.id === team.id)"
+        :handle-click="handleTeamClick"
+        :is-loading="isLoading"
+      />
     </div>
     <div v-else>
       <p style="color: var(--color-text); text-align: center">{{ t('extraBets.playersWarning') }}</p>
@@ -171,37 +70,41 @@
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import type { IPlayer, ITeam } from '@/stores/teams.types';
+import type { BannerItem } from '@/components/BannerComponent.vue';
+import type { ITeam } from '@/stores/teams.types';
+import type { IToggleOption } from '@/views/Extras/extrasView.types';
 
+import ClickableTeamCard from '@/components/ClickableTeamCard.vue';
+import CountdownComponent from '@/components/CountdownComponent.vue';
 import LoginModal from '@/components/LoginModal.vue';
-import {
-  EXTRA_BETS_LABELS,
-  EXTRA_BETS_VALUES,
-  type TEXTRA_BETS_LABELS,
-  type TEXTRA_BETS_VALUES,
-} from '@/constants/bets';
+import { EXTRA_BETS_LABELS, EXTRA_BETS_VALUES } from '@/constants/bets';
 import ExtraBetService from '@/services/extra_bet';
-import TeamService from '@/services/team';
+// import TeamService from '@/services/team';
 import { useActiveProfileStore } from '@/stores/activeProfile';
+import { useClockStore } from '@/stores/clock';
+import { useConfigurationStore } from '@/stores/configuration';
 import { useExtraBetStore } from '@/stores/extraBet';
 import { useNotificationStore } from '@/stores/notification';
 import { useTeamsStore } from '@/stores/teams';
+import MyExtrasComponent from '@/views/Extras/MyExtrasComponent.vue';
 
-// ------ Types & Interfaces ------
-interface IToggleOption {
-  label: TEXTRA_BETS_LABELS;
-  selectedPlayer?: IPlayer | null;
-  selectedTeam?: ITeam | null;
-  value: TEXTRA_BETS_VALUES;
-}
+import { BUTTON_OPTIONS } from './extrasView.constants';
+
+// ------ Banner ------
+const BANNER_ITEMS: BannerItem[] = [
+  { key: 'inactiveBanner.message1', type: 'description' },
+  { key: 'common.clickHere', route: 'regras?section=inscricoes', type: 'link' },
+];
 
 // ------ Services & Stores ------
 const teamsStore = useTeamsStore();
 const extraBetStore = useExtraBetStore();
-const teamsService = new TeamService();
+// const teamsService = new TeamService();
 const extraBetService = new ExtraBetService();
 const notificationStore = useNotificationStore();
 const activeProfileStore = useActiveProfileStore();
+const configurationStore = useConfigurationStore();
+const clockStore = useClockStore();
 const { locale, t } = useI18n();
 
 // ------ Refs ------
@@ -212,53 +115,29 @@ const selectedToggle = ref<IToggleOption>({
 });
 
 // ------ Computed Properties ------
+const isLoading = computed(() => {
+  return extraBetStore.isLoading || extraBetStore.isUpdating || teamsStore.isLoading;
+});
+const showCountdown = computed(() => {
+  return !clockStore.hasEditionStarted;
+});
+
 const activeProfile = computed(() => activeProfileStore.activeProfile);
-const isLoadingExtras = computed(() => extraBetStore.isLoading);
-const isUpdatingExtras = computed(() => extraBetStore.isUpdating);
 const activeProfileBets = computed(() => extraBetStore.activeProfileBets);
-const isLoadingTeams = computed(() => teamsStore.isLoading);
 const teams = computed(() => teamsStore.teams.filter((team) => team.id !== 33)); // Filter out placeholder team
 const currentSelectedToggle = computed(
-  () => buttonOptions.value.find((option) => option.value === selectedToggle.value.value) ?? buttonOptions.value[0],
+  () =>
+    extraBetsOptions.value.find((option) => option.value === selectedToggle.value.value) ?? extraBetsOptions.value[0],
 );
-const buttonOptions = computed<IToggleOption[]>(() => {
-  // Create fresh base options every time
-  const options: IToggleOption[] = [
-    {
-      label: EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.CHAMPION],
-      selectedTeam: null,
-      value: EXTRA_BETS_VALUES.CHAMPION,
-    },
-
-    {
-      label: EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.OFFENSE],
-      selectedTeam: null,
-      value: EXTRA_BETS_VALUES.OFFENSE,
-    },
-    {
-      label: EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.DEFENSE],
-      selectedTeam: null,
-      value: EXTRA_BETS_VALUES.DEFENSE,
-    },
-    {
-      label: EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.TOP_SCORER],
-      selectedPlayer: null,
-      selectedTeam: null,
-      value: EXTRA_BETS_VALUES.TOP_SCORER,
-    },
-    {
-      label: EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.BEST_PLAYER],
-      selectedPlayer: null,
-      selectedTeam: null,
-      value: EXTRA_BETS_VALUES.BEST_PLAYER,
-    },
-  ];
+const extraBetsOptions = computed<IToggleOption[]>(() => {
+  // Deep-copy each option so mutations never bleed back into the BUTTON_OPTIONS constant
+  const options: IToggleOption[] = BUTTON_OPTIONS.map((opt) => ({ ...opt }));
 
   // Populate from activeProfileBets
   activeProfileBets.value.forEach((bet) => {
     const option = options.find((opt) => opt.value === bet.extraType);
     if (option) {
-      option.selectedTeam = bet.team;
+      option.selectedTeam = [{ stageId: bet.stageId, team: bet.team }];
       if (bet.extraType === EXTRA_BETS_VALUES.TOP_SCORER || bet.extraType === EXTRA_BETS_VALUES.BEST_PLAYER) {
         option.selectedPlayer = bet.player;
       }
@@ -269,7 +148,7 @@ const buttonOptions = computed<IToggleOption[]>(() => {
 });
 
 // ------ Initialization ------
-teamsService.fetch();
+// teamsService.fetch();
 
 // ------ Rules banner ------
 const BANNER_STORAGE_KEY = 'extra-bets-rules-banner-dismissed';
@@ -279,9 +158,13 @@ function dismissBanner() {
   isDashboardBannerDismissed.value = true;
   localStorage.setItem(BANNER_STORAGE_KEY, 'true');
 }
-
 // ------ Functions ------
-async function handleClick(team: ITeam) {
+
+function handleCloseLoginModal() {
+  isLoginModalOpen.value = false;
+}
+
+async function handleTeamClick(team: ITeam) {
   if (!activeProfile.value) {
     isLoginModalOpen.value = true;
     return;
@@ -300,23 +183,18 @@ async function handleClick(team: ITeam) {
     const previousTeam = currentSelectedToggle.value.selectedTeam;
 
     // Optimistically update UI
-    if (currentSelectedToggle.value.selectedTeam?.id === team.id) {
-      currentSelectedToggle.value.selectedTeam = null;
-    } else {
-      currentSelectedToggle.value.selectedTeam = team;
+    if (currentSelectedToggle.value.selectedTeam?.[0]?.team.id === team.id) {
+      return; // No change, do nothing
     }
 
     await extraBetService.update(
       {
         extraType: currentSelectedToggle.value.value,
-        teamId: currentSelectedToggle.value.selectedTeam?.id || null,
+        teamId: team.id,
       },
       (isSuccess: boolean, error?: Error) => {
         if (isSuccess) {
-          const teamName =
-            locale.value === 'pt-BR'
-              ? currentSelectedToggle.value?.selectedTeam?.name
-              : currentSelectedToggle.value?.selectedTeam?.nameEn;
+          const teamName = locale.value === 'pt-BR' ? team.name : team.nameEn;
 
           // Refresh the extra bets from the store to reflect the update
           extraBetService.fetch();
@@ -337,8 +215,8 @@ async function handleClick(team: ITeam) {
   }
 }
 
-function handleCloseLoginModal() {
-  isLoginModalOpen.value = false;
+function onSelectToggle(option: IToggleOption) {
+  selectedToggle.value = option;
 }
 </script>
 <style lang="scss" scoped>
@@ -445,158 +323,13 @@ function handleCloseLoginModal() {
 
 .teams-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: var(--l-spacing);
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: var(--m-spacing);
   width: 100%;
 
   @media (width <= 768px) {
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: var(--m-spacing);
-  }
-}
-
-.team-card {
-  position: relative;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: var(--s-spacing);
-  align-items: center;
-  justify-content: flex-start;
-  min-width: 120px;
-  min-height: 120px;
-  padding: var(--s-spacing);
-  cursor: pointer;
-  background-color: var(--bolao-c-white-t1);
-  border: 2px solid transparent;
-  border-radius: var(--border-radius);
-  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
-  transition: all 0.2s ease;
-
-  &:hover {
-    border-color: var(--bolao-c-white-t1);
-    box-shadow: 0 4px 8px rgb(0 0 0 / 20%);
-    transform: translateY(-2px);
-  }
-
-  &.selected {
-    background-color: var(--bolao-c-blue-t2);
-    border-color: var(--bolao-c-white-t1);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-main) 20%, transparent);
-  }
-
-  @media (width <= 768px) {
-    min-width: 80px;
-    min-height: 80px;
-    padding: var(--xs-spacing);
-  }
-}
-
-.flag-container {
-  display: flex;
-  flex: 1;
-  align-items: flex-start;
-  justify-content: center;
-  width: 80px;
-  height: 50px;
-
-  @media (width <= 768px) {
-    width: 50px;
-    height: 30px;
-  }
-}
-
-.team-flag {
-  width: 80px;
-  height: 50px;
-  object-fit: cover;
-  filter: drop-shadow(0 2px 4px rgb(0 0 0 / 10%));
-
-  @media (width <= 768px) {
-    width: 50px;
-    height: 30px;
-  }
-}
-
-.team-name {
-  width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: var(--s-font-size);
-  font-weight: 600;
-  line-height: 1.2;
-  color: var(--color-contrast);
-  text-align: center;
-
-  @media (width <= 768px) {
-    font-size: var(--xs-font-size);
-  }
-}
-
-.update-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgb(0 0 0 / 30%);
-  border-radius: var(--border-radius);
-  backdrop-filter: blur(2px);
-}
-
-.bets-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--xs-spacing);
-  min-width: 300px;
-  border-radius: var(--border-radius);
-}
-
-.bet-row {
-  display: flex;
-  gap: var(--xl-spacing);
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--s-spacing) var(--m-spacing);
-  font-size: var(--m-font-size);
-  cursor: pointer;
-  background-color: var(--bolao-c-blue4);
-  border-radius: var(--border-radius);
-  transition: background-color 0.1s ease;
-
-  &:hover {
-    background-color: var(--bolao-c-blue3-t1);
-  }
-
-  @media (width <= 768px) {
     gap: var(--s-spacing);
-    font-size: var(--xs-font-size);
   }
-}
-
-.bet-label {
-  font-weight: 500;
-  color: var(--bolao-c-grey3);
-  white-space: nowrap;
-}
-
-.bet-value {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-  font-weight: 600;
-  color: var(--bolao-c-grey1);
-}
-
-.bet-flag {
-  width: 18px;
-  height: auto;
-  border-radius: 2px;
-}
-
-.bet-empty {
-  font-size: var(--s-font-size);
-  color: var(--bolao-c-grey4);
 }
 </style>

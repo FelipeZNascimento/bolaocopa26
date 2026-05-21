@@ -46,9 +46,14 @@
         <span style="font-weight: bold">{{ t('rules.extras.teamFactorsNew') }}</span>
         {{ t('rules.extras.teamFactors') }}
       </p>
-      <p class="padded">{{ t('rules.extras.factor1') }}</p>
+      <ul style="padding-left: 20px; list-style: disc">
+        <li>{{ t('rules.extras.factor1') }}</li>
+        <li>{{ t('rules.extras.factor2') }}</li>
+        <li>{{ t('rules.extras.factor3') }}</li>
+      </ul>
+      <!-- <p class="padded">{{ t('rules.extras.factor1') }}</p>
       <p class="padded">{{ t('rules.extras.factor2') }}</p>
-      <p class="padded">{{ t('rules.extras.factor3') }}</p>
+      <p class="padded">{{ t('rules.extras.factor3') }}</p> -->
       <PrimeDivider />
       <p class="subtitle">{{ t('rules.extras.othersSubtitle') }}</p>
       <PrimeDataTable

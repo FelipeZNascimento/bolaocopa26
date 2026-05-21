@@ -2,11 +2,21 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import { useConfigurationStore } from './configuration';
+
+export type TParsedCountdown = {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+};
+
 export const useClockStore = defineStore('clock', () => {
+  const configStore = useConfigurationStore();
   const currentTime = ref<Date>(new Date());
   const currentTimestamp = ref<number>(Math.floor(currentTime.value.getTime() / 1000));
+  const hasEditionStarted = ref<boolean>(false);
   const { t } = useI18n();
-
   let timer: null | number = null;
 
   function startClock() {
@@ -26,6 +36,9 @@ export const useClockStore = defineStore('clock', () => {
   function updateTime() {
     currentTime.value = new Date();
     currentTimestamp.value = Math.floor(currentTime.value.getTime() / 1000);
+
+    if (hasEditionStarted.value || configStore.editionStart === null) return;
+    hasEditionStarted.value = currentTimestamp.value >= configStore.editionStart;
   }
 
   function getFormattedTime(customTimestamp?: number) {
@@ -60,6 +73,16 @@ export const useClockStore = defineStore('clock', () => {
     return t(`rounds.${round}.long`);
   }
 
+  function getParsedCountdown(targetTimestamp: number): TParsedCountdown {
+    const now = currentTimestamp.value;
+    const diff = Math.max(0, (targetTimestamp ?? now) - now);
+    const days = Math.floor(diff / 86400);
+    const hours = Math.floor((diff % 86400) / 3600);
+    const minutes = Math.floor((diff % 3600) / 60);
+    const seconds = diff % 60;
+    return { days, hours, minutes, seconds };
+  }
+
   function getCountdown(targetTimestamp: number): string {
     const secondsUntil = targetTimestamp - currentTimestamp.value;
 
@@ -92,7 +115,9 @@ export const useClockStore = defineStore('clock', () => {
     getCountdown,
     getFormattedDate,
     getFormattedTime,
+    getParsedCountdown,
     getRoundName,
+    hasEditionStarted,
     startClock,
     stopClock,
   };

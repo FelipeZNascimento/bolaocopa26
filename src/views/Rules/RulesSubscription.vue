@@ -20,20 +20,20 @@
         style=""
       >
         <div class="payment-section">
-          <h3>🇧🇷 {{ t('rules.subscription.pixQrCode') }}</h3>
+          <h3><span class="fi fi-br" /> {{ t('rules.subscription.pixQrCode') }}</h3>
           <img
             src="https://assets.omegafox.me/copa/misc/qr-code.png"
             height="200"
           />
         </div>
         <div class="payment-section">
-          <h3>🇧🇷 {{ t('rules.subscription.pixCopyPaste') }}</h3>
+          <h3><span class="fi fi-br" /> {{ t('rules.subscription.pixCopyPaste') }}</h3>
           <ClipboardText
             text="00020126550014BR.GOV.BCB.PIX0111395825028940218Bolão da Copa 20265204000053039865406100.005802BR5923NELSON GIMENEZ DA MOTTA6009SAO PAULO62170513BolaoCopa20266304F822"
           />
         </div>
         <div class="payment-section">
-          <h3>🇧🇷 {{ t('rules.subscription.pixInfo') }}</h3>
+          <h3><span class="fi fi-br" /> {{ t('rules.subscription.pixInfo') }}</h3>
           <p class="padded">
             <span style="font-weight: bold">{{ t('rules.subscription.pixValue') }}</span
             >: R$100,00
