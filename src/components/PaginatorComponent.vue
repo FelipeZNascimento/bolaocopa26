@@ -251,6 +251,16 @@ function setRound(num: null | number) {
   background-color: var(--bolao-c-blue3);
   border-radius: var(--border-radius);
 
+  @media (width <= 1024px) {
+    height: var(--paginator-height-mobile);
+  }
+
+  :deep(.p-select) {
+    @media (width <= 1024px) {
+      height: var(--paginator-height-mobile);
+    }
+  }
+
   :deep(.p-button) {
     color: white;
 

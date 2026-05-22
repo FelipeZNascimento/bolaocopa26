@@ -17,7 +17,7 @@
       <i
         v-if="!isMini"
         class="pi pi-clock"
-        style="font-size: var(--m2-font-size)"
+        style="font-size: var(--m-font-size)"
       />
       <div class="date">
         <p style="font-weight: bold">
@@ -78,6 +78,10 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
   background-color: var(--bolao-c-white-t1);
   border-radius: var(--border-radius);
 
+  @media (width <=768px) {
+    background-color: transparent;
+  }
+
   &.is-mini {
     height: unset;
 
@@ -89,7 +93,7 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
   }
 
   @media (width <=768px) {
-    height: var(--match-list-height-mobile);
+    height: 30px;
   }
 
   @media (width >=769px) {
@@ -143,11 +147,12 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    font-size: var(--s-font-size);
 
     @media (width <=1024px) {
       flex-direction: row;
       gap: var(--s-spacing);
-      font-size: var(--s-font-size);
+      font-size: var(--xs-font-size);
     }
   }
 }

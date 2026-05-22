@@ -1,5 +1,23 @@
 <template>
   <div
+    v-if="isMobile && !isDemo"
+    style="display: flex; gap: var(--xs-spacing); justify-content: center; justify-content: space-between"
+  >
+    <ClockComponent
+      :hit-level="hitLevel"
+      :timestamp="parseInt(match.timestamp, 10)"
+      :status="match.status"
+      :is-match-started="isMatchStarted"
+      :is-mini="isMini"
+    />
+    <div
+      class="more-info"
+      @click="handleMatchClick"
+    >
+      <i class="pi pi-plus-circle" />
+    </div>
+  </div>
+  <div
     class="outer-match line"
     :class="{ clickable: isMatchStarted, 'is-mini': isMini }"
   >
@@ -65,7 +83,7 @@ const isMoreInfoModalOpen = ref(false);
 
 // ------ Initialization ------
 const clockStore = useClockStore();
-const { isDesktop } = useViewport();
+const { isDesktop, isMobile } = useViewport();
 
 // ------ Computed Properties ------
 // const correctBets = { bullseye: [], half: [] };
@@ -132,6 +150,7 @@ function handleMatchClick() {
 
   @media (width <=768px) {
     gap: var(--xs-spacing);
+    margin-bottom: var(--m-spacing);
   }
 }
 
@@ -153,7 +172,10 @@ function handleMatchClick() {
 
   i {
     font-size: var(--l-font-size);
-    transition: transform 0.2s ease;
+    color: var(--color-contrast);
+    transition:
+      transform 0.2s ease,
+      color 0.2s ease;
   }
 
   span {
@@ -171,14 +193,12 @@ function handleMatchClick() {
 
   @media (width <=768px) {
     min-width: 48px;
-    min-height: 48px;
+    min-height: 30px;
     padding: var(--xs-spacing);
     font-size: var(--xxs-font-size);
-    color: #fff;
 
     i {
-      font-size: var(--l-font-size);
-      color: #fff;
+      font-size: var(--m-font-size);
       filter: drop-shadow(0 1px 2px rgb(0 0 0 / 20%));
     }
   }

@@ -33,6 +33,8 @@ import { ref } from 'vue';
 const changelogEntries = ref([
   {
     changes: [
+      '[Matches] Improvement on match display for both desktop and mobile',
+      '🐛 [Extras] Countdown on extras for light mode was not readable',
       '🐛 [App] Activation email was using a wrong URL for matches page',
       '🐛 [App] Language option is now being persisted on the session after reloading the page',
       '🐛 [App] Matches were not being displayed for logged out users',

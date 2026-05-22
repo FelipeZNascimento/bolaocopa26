@@ -23,12 +23,14 @@
         <i class="pi pi-times" />
       </button>
     </div>
-    <CountdownComponent
-      v-if="showCountdown"
-      :countdown-to="configurationStore.editionStart ?? 0"
-      :colorful="true"
-      title="home.extras.countdownLabel"
-    />
+    <div style="padding: var(--m-spacing); background-color: var(--bolao-c-blue3); border-radius: var(--border-radius)">
+      <CountdownComponent
+        v-if="showCountdown"
+        :countdown-to="configurationStore.editionStart ?? 0"
+        :colorful="true"
+        title="home.extras.countdownLabel"
+      />
+    </div>
     <h2 style="text-align: center">
       {{ t('extraBets.myBets') }}
     </h2>

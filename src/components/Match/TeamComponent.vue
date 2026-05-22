@@ -7,7 +7,6 @@
         flexDirection: isHomeTeam ? 'row' : 'row-reverse',
       }"
     >
-      <div class="overlay">&nbsp;</div>
       <div
         class="team-shield--line"
         :class="{
@@ -28,7 +27,11 @@
         class="team-alias clickable"
         :class="{ 'is-mini': isMini }"
         :style="{ textAlign: isHomeTeam ? 'right' : 'left' }"
+        role="button"
+        tabindex="0"
         @click="openTeamModal(team)"
+        @keydown.enter="openTeamModal(team)"
+        @keydown.space.prevent="openTeamModal(team)"
       >
         {{ locale === 'pt-BR' ? team.name : team.nameEn }}
       </div>
@@ -94,6 +97,7 @@
     <div
       v-if="showEvents && events.length > 0"
       class="events-container"
+      :class="{ 'is-home-events': isHomeTeam }"
       :style="{ alignItems: isHomeTeam ? 'flex-start' : 'flex-end' }"
     >
       <div
@@ -350,8 +354,22 @@ function openTeamModal(team: ITeam) {
   padding: 0 var(--xs-spacing);
   overflow: hidden;
   color: var(--color-contrast);
-  background-color: var(--bolao-c-white-t1);
+  background:
+    linear-gradient(
+      105deg,
+      color-mix(in srgb, var(--color-contrast) 3%, transparent) 0%,
+      color-mix(in srgb, var(--color-main) 20%, transparent) 30%,
+      color-mix(in srgb, var(--color-main) 38%, transparent) 45%,
+      color-mix(in srgb, var(--color-main) 20%, transparent) 60%,
+      color-mix(in srgb, var(--color-contrast) 3%, transparent) 100%
+    ),
+    var(--bolao-c-white-t1);
   border-radius: var(--border-radius);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--color-main) 65%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--color-main) 18%, transparent),
+    inset 0 -2px 0 rgb(0 0 0 / 10%),
+    0 3px 10px rgb(0 0 0 / 12%);
 
   &.is-mini {
     height: 48px;
@@ -366,14 +384,6 @@ function openTeamModal(team: ITeam) {
   }
 }
 
-.overlay {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 22px;
-  background-color: color-mix(in srgb, var(--color-match-overlay) 20%, transparent);
-}
-
 .outer-team-nameless {
   min-width: 60px;
 }
@@ -381,18 +391,26 @@ function openTeamModal(team: ITeam) {
 .team-shield {
   &--line {
     position: absolute;
-    top: 50%;
-    max-width: 90px;
+    top: 0;
+    width: 40%;
+    max-width: 140px;
     height: 100%;
-    transform: translate(0, -50%);
+    overflow: hidden;
+    pointer-events: none;
 
     &.is-mini {
+      width: 44px;
       max-width: 44px;
     }
 
-    @media (width <=1024px) {
-      top: 0%;
-      transform: none;
+    @media (width <= 768px) {
+      width: 35%;
+      max-width: 80px;
+
+      &.is-mini {
+        width: 44px;
+        max-width: 44px;
+      }
     }
   }
 
@@ -400,66 +418,114 @@ function openTeamModal(team: ITeam) {
     left: 0;
     display: flex;
     justify-content: flex-end;
+
+    &:not(.is-mini)::after {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      content: '';
+      background: linear-gradient(to right, transparent 30%, var(--bolao-c-white-t1));
+    }
   }
 
   &--right {
     right: 0;
     display: flex;
     justify-content: flex-start;
+
+    &:not(.is-mini)::after {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      content: '';
+      background: linear-gradient(to left, transparent 30%, var(--bolao-c-white-t1));
+    }
   }
 }
 
 .team-shield-image {
-  width: 100px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  opacity: 0.45;
 
   .is-mini & {
     width: 44px;
+    height: auto;
+    object-fit: contain;
+    opacity: 1;
   }
 
-  @media (width <=768px) {
-    width: 32px;
-    margin: 0 var(--xs-spacing);
-    object-fit: contain;
-
+  @media (width <= 768px) {
     .is-mini & {
       width: 24px;
+      height: auto;
       margin: 0 var(--xxs-spacing);
+      object-fit: contain;
+      opacity: 1;
     }
-  }
-
-  @media (width <=360px) {
-    width: 22px;
-    margin: 0 var(--xs-spacing);
-    object-fit: contain;
   }
 }
 
 .team-alias {
   position: relative;
   z-index: 99;
-  max-width: 50%;
-  padding: var(--l-spacing);
+  display: -webkit-box;
+  max-width: 62%;
+  margin: var(--l-spacing);
   overflow: hidden;
-  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   font-size: var(--m-font-size);
+  font-weight: 600;
   line-height: var(--xl-spacing);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  text-shadow:
+    0 1px 3px rgb(0 0 0 / 45%),
+    0 0 8px rgb(0 0 0 / 20%);
+  transition: color 0.2s ease;
+
+  &.clickable {
+    text-decoration: none;
+
+    &:hover {
+      color: var(--color-anchor);
+      text-decoration: underline;
+      text-decoration-style: solid;
+      text-decoration-color: var(--color-anchor);
+      text-underline-offset: 3px;
+    }
+
+    &:focus-visible {
+      color: var(--color-anchor);
+      text-decoration: underline;
+      text-decoration-style: solid;
+      text-decoration-color: var(--color-anchor);
+      text-underline-offset: 3px;
+      outline: 2px solid var(--color-anchor);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+
+    @media (hover: none) {
+      touch-action: manipulation;
+    }
+  }
 
   &.is-mini {
     padding: var(--xs-spacing);
+    overflow: hidden;
+    -webkit-line-clamp: 1;
     font-size: var(--xs-font-size);
     line-height: var(--l-spacing);
   }
 
   @media (width <768px) {
-    max-width: 50%;
-    padding: var(--xs-spacing);
-    font-size: var(--xs-font-size);
-    line-height: var(--l-spacing);
-  }
-
-  @media (width <=360px) {
-    max-width: 60%;
+    max-width: 70%;
     padding: var(--xs-spacing);
     font-size: var(--xs-font-size);
     line-height: var(--l-spacing);
@@ -639,8 +705,12 @@ function openTeamModal(team: ITeam) {
     align-items: center;
     width: 100%;
     min-height: 40px;
-    padding: var(--xxs-spacing) 0;
-    border-bottom: 1px dotted var(--bolao-c-grey3-t1);
+    padding: var(--xxs-spacing) var(--xs-spacing);
+    border-bottom: 1px solid color-mix(in srgb, var(--bolao-c-grey3), transparent 80%);
+
+    &:last-child {
+      border-bottom: none;
+    }
 
     .line {
       display: flex;
@@ -654,6 +724,14 @@ function openTeamModal(team: ITeam) {
       line-height: 1;
     }
   }
+
+  &.is-home-events .event {
+    border-left: 3px solid color-mix(in srgb, var(--bolao-c-mint), transparent 55%);
+  }
+
+  &:not(.is-home-events) .event {
+    border-right: 3px solid color-mix(in srgb, var(--bolao-c-red), transparent 55%);
+  }
 }
 
 :deep(.player-sticker-popover) {
@@ -663,6 +741,10 @@ function openTeamModal(team: ITeam) {
     border: none;
     box-shadow: 0 10px 40px rgb(0 0 0 / 50%);
   }
+}
+
+:deep(.player-name-hover) {
+  font-weight: 500;
 }
 
 .clickable {
