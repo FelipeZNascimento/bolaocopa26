@@ -12,7 +12,6 @@
         :class="{
           'team-shield--left': isHomeTeam,
           'team-shield--right': !isHomeTeam,
-          'is-mini': isMini,
         }"
       >
         <img
@@ -449,14 +448,7 @@ function openTeamModal(team: ITeam) {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.45;
-
-  .is-mini & {
-    width: 44px;
-    height: auto;
-    object-fit: contain;
-    opacity: 1;
-  }
+  opacity: 1;
 
   @media (width <= 768px) {
     .is-mini & {
@@ -478,7 +470,7 @@ function openTeamModal(team: ITeam) {
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
-  font-size: var(--m-font-size);
+  font-size: var(--s-font-size);
   font-weight: 600;
   line-height: var(--xl-spacing);
   text-transform: uppercase;
@@ -519,7 +511,6 @@ function openTeamModal(team: ITeam) {
   &.is-mini {
     padding: var(--xs-spacing);
     overflow: hidden;
-    -webkit-line-clamp: 1;
     font-size: var(--xs-font-size);
     line-height: var(--l-spacing);
   }
