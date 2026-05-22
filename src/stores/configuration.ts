@@ -17,6 +17,7 @@ export const useConfigurationStore = defineStore('configuration', () => {
   const isLoading = ref<boolean>(true);
   const error = ref<Error | null>(null);
   const theme = ref<TThemeValue>(initialState.theme);
+  const language = ref<'en' | 'pt-BR'>('en');
   const matchListSorting = ref<TMatchListSorting>(initialState.matchListSorting);
   const rankingPosition = ref<TRankingPositionValue>(initialState.rankingPosition);
 
@@ -32,6 +33,10 @@ export const useConfigurationStore = defineStore('configuration', () => {
   function setEditionStart(timestamp: number) {
     editionStart.value = timestamp;
     // editionStart.value = 1081204400; // Temporary hardcoded value for testing purposes
+  }
+
+  function setLanguage(locale: 'en' | 'pt-BR') {
+    language.value = locale;
   }
 
   function isDarkMode() {
@@ -87,6 +92,7 @@ export const useConfigurationStore = defineStore('configuration', () => {
     error,
     isDarkMode,
     isLoading,
+    language,
     matchListSorting,
     rankingPosition,
     selectedRound,
@@ -95,6 +101,7 @@ export const useConfigurationStore = defineStore('configuration', () => {
     setEditionStart,
     setError,
     setInitialState,
+    setLanguage,
     setLoading,
     setMatchListSorting,
     setRankingPosition,

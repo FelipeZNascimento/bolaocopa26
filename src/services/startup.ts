@@ -2,6 +2,7 @@ import type { IUser } from '@/stores/activeProfile.types';
 import type { TMatchListSorting, TRankingPositionValue } from '@/stores/configuration.types';
 import type { ITeam } from '@/stores/teams.types';
 
+import { detectLocale, LOCALE_STORAGE_KEY } from '@/i18n';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useExtraBetStore } from '@/stores/extraBet';
@@ -64,8 +65,6 @@ export default class StartupService {
         this.configurationStore.setCurrentEdition(seasonData.currentEdition);
         this.configurationStore.setCurrentRound(seasonData.currentRound);
         this.configurationStore.setSelectedRound(seasonData.currentRound);
-        // this.configurationStore.setCurrentRound(1);
-        // this.configurationStore.setSelectedRound(1);
         this.configurationStore.setEditionStart(parseInt(seasonData.editionStart));
         this.configurationStore.setError(null);
       }
@@ -88,6 +87,10 @@ export default class StartupService {
     const themePreference = localStorage.getItem('theme-preference');
     const rankingPositionPreference = localStorage.getItem('ranking-position') as TRankingPositionValue;
     const matchListSortingPreference = localStorage.getItem('match-list-sorting') as TMatchListSorting;
+    const localePreference = detectLocale(); // This will also validate the locale against supported ones
+
+    this.configurationStore.setLanguage(localePreference as 'en' | 'pt-BR');
+    localStorage.setItem(LOCALE_STORAGE_KEY, localePreference);
 
     if (matchListSortingPreference) {
       this.configurationStore.setMatchListSorting(matchListSortingPreference);

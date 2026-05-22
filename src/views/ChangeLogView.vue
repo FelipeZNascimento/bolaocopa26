@@ -33,6 +33,21 @@ import { ref } from 'vue';
 const changelogEntries = ref([
   {
     changes: [
+      '🐛 [App] Activation email was using a wrong URL for matches page',
+      '🐛 [App] Language option is now being persisted on the session after reloading the page',
+      '🐛 [App] Matches were not being displayed for logged out users',
+      '🐛 [App] Logout was still not working correctly on some cases',
+    ],
+    date: '21/05/2026',
+    version: 'v1.0.5',
+  },
+  {
+    changes: ['🐛 [Extras] Removed a flying timestamp'],
+    date: '21/05/2026',
+    version: 'v1.0.4',
+  },
+  {
+    changes: [
       '[Telegram] Telegram now has a Bolão bot, to be revelead soon',
       '[App] Countdown component now being reused across the app for better consistency',
       '[App] Emails for Signup and Change Password are now in line with the user interface language',
