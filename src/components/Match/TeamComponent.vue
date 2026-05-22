@@ -477,8 +477,8 @@ function openTeamModal(team: ITeam) {
   letter-spacing: 0.06em;
   text-decoration: none;
   text-shadow:
-    0 1px 3px rgb(0 0 0 / 45%),
-    0 0 8px rgb(0 0 0 / 20%);
+    0 1px 3px rgb(0 0 0 / 100%),
+    0 0 8px rgb(0 0 0 / 100%);
   transition: color 0.2s ease;
 
   &.clickable {
@@ -518,6 +518,7 @@ function openTeamModal(team: ITeam) {
   @media (width <768px) {
     max-width: 70%;
     padding: var(--xs-spacing);
+    margin: var(--l-spacing) 0;
     font-size: var(--xs-font-size);
     line-height: var(--l-spacing);
   }
