@@ -10,7 +10,7 @@ type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
 export const LOCALE_STORAGE_KEY = 'app-locale';
 
-function detectLocale(): SupportedLocale {
+export function detectLocale(): SupportedLocale {
   // 1. Prefer user's explicit choice stored in localStorage
   const stored = localStorage.getItem(LOCALE_STORAGE_KEY);
   if (stored && (SUPPORTED_LOCALES as readonly string[]).includes(stored)) {
