@@ -477,8 +477,8 @@ function openTeamModal(team: ITeam) {
   letter-spacing: 0.06em;
   text-decoration: none;
   text-shadow:
-    0 1px 3px rgb(0 0 0 / 100%),
-    0 0 8px rgb(0 0 0 / 100%);
+    0 1px 3px rgb(from var(--color-main) r g b / 100%),
+    0 0 8px rgb(from var(--color-main) r g b / 100%);
   transition: color 0.2s ease;
 
   &.clickable {

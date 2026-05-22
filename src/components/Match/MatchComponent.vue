@@ -11,6 +11,10 @@
       :is-mini="isMini"
     />
     <div
+      class="match-connector"
+      aria-hidden="true"
+    />
+    <div
       class="more-info"
       @click="handleMatchClick"
     >
@@ -152,6 +156,20 @@ function handleMatchClick() {
     gap: var(--xs-spacing);
     margin-bottom: var(--m-spacing);
   }
+}
+
+.match-connector {
+  flex: 1;
+  align-self: center;
+  height: 1px;
+  margin: 0 var(--xxs-spacing);
+  background-image: repeating-linear-gradient(
+    to right,
+    color-mix(in srgb, var(--color-contrast) 20%, transparent) 0,
+    color-mix(in srgb, var(--color-contrast) 20%, transparent) 3px,
+    transparent 3px,
+    transparent 9px
+  );
 }
 
 .more-info {
