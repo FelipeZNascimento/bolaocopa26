@@ -141,6 +141,7 @@ watch(
 );
 
 watch(isVisible, (newValue) => {
+  document.documentElement.style.overflow = newValue ? 'hidden' : '';
   if (!newValue) {
     props.handleCloseModal();
   }

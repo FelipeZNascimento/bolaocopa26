@@ -182,6 +182,7 @@ watch(
 );
 
 watch(isVisible, async (newValue) => {
+  document.documentElement.style.overflow = newValue ? 'hidden' : '';
   if (!newValue) {
     isUpdateSuccess.value = false;
     activeProfileStore.setError(null);

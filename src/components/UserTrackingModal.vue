@@ -96,7 +96,7 @@ const { t } = useI18n();
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 const favorites = computed(() => activeProfileStore.activeProfile?.favorites || []);
 const roundsRanking = computed(() => rankingStore.roundsRanking);
-const seasonRanking = computed(() => rankingStore.seasonRanking);
+const editionRanking = computed(() => rankingStore.editionRanking);
 const isLoadingExtras = computed(() => extraBetStore.isLoading);
 const selectedUserExtraBets = computed(
   () => extraBetStore.extraBetsByUser.find((u) => u.user.id === props.selectedUser?.id)?.bets || [],
@@ -180,7 +180,7 @@ function updateCallback(isSuccess: boolean, isRemoving: boolean, selectedUser: s
 }
 
 const chartData = computed(() => {
-  const userLine = seasonRanking.value.find((userRanking) => userRanking.user.id === props.selectedUser?.id);
+  const userLine = editionRanking.value.find((userRanking) => userRanking.user.id === props.selectedUser?.id);
   const roundsRankingList = Array.isArray(roundsRanking.value) ? roundsRanking.value : [];
   const userRoundsRanking = roundsRankingList.map((round) => {
     return {
@@ -278,6 +278,7 @@ watch(
 );
 
 watch(isVisible, async (newValue) => {
+  document.documentElement.style.overflow = newValue ? 'hidden' : '';
   if (!newValue) {
     props.handleCloseModal();
   }
