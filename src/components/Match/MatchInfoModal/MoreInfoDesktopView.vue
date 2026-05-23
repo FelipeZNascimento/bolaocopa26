@@ -54,7 +54,6 @@ defineProps<{
 // ------ Initialization ------
 const clockStore = useClockStore();
 const showMatchInfo = ref(false);
-const { t } = useI18n();
 
 function toggleMatchInfo() {
   showMatchInfo.value = !showMatchInfo.value;
