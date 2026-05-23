@@ -45,13 +45,13 @@ import { computed } from 'vue';
 import type { IBet } from '@/stores/matches.types';
 
 import NameTag from '@/components/NameTag.vue';
-import { HIT_LEVELS_LABELS, type HitLevel } from '@/constants/bets';
+import { HIT_LEVELS_LABELS, type THitLevel } from '@/constants/bets';
 import { useViewport } from '@/services/viewport';
 
 const props = defineProps<{
   activeUserBet: IBet[];
   bets: IBet[];
-  hitLevel: HitLevel;
+  hitLevel: THitLevel;
 }>();
 
 // ------ Initialization ------

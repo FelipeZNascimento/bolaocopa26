@@ -12,6 +12,7 @@
       :is-score-modal-open="true"
       :match="match"
       :active-user-bet="match.loggedUserBets"
+      :hit-level="hitLevel"
       :is-match-started="isMatchStarted"
     />
     <button
@@ -33,7 +34,7 @@
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import type { HitLevel } from '@/constants/bets';
+import type { THitLevel } from '@/constants/bets';
 import type { IMatch } from '@/stores/matches.types';
 
 import { useClockStore } from '@/stores/clock';
@@ -43,7 +44,7 @@ import ScoreComponent from '../ScoreComponent.vue';
 import MoreInfoDetails from './MoreInfoDetails.vue';
 
 defineProps<{
-  hitLevel: HitLevel | null;
+  hitLevel: null | THitLevel;
   isMatchStarted: boolean;
   match: IMatch;
 }>();

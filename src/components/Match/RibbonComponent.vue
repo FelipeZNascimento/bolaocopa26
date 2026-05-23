@@ -55,12 +55,12 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { HIT_LEVELS, HIT_LEVELS_LABELS, type HitLevel } from '@/constants/bets';
+import { HIT_LEVELS, HIT_LEVELS_LABELS, type THitLevel } from '@/constants/bets';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 
 withDefaults(
   defineProps<{
-    hitLevel?: HitLevel | null;
+    hitLevel?: null | THitLevel;
   }>(),
   { hitLevel: null },
 );
@@ -84,7 +84,7 @@ const activeProfile = computed(() => {
   position: absolute;
   top: calc(-1 * var(--f));
   right: 4px;
-  z-index: 1;
+  z-index: 999; // Above match box-shadow
   width: 36px;
   height: 44px;
   padding-top: var(--s-spacing);
@@ -114,10 +114,11 @@ const activeProfile = computed(() => {
   }
 
   @media (width <= 1023px) {
-    height: 40px;
+    width: 30px;
+    height: 35px;
 
-    i {
-      font-size: var(--xs-font-size);
+    .pi {
+      font-size: var(--s-font-size);
     }
   }
 }

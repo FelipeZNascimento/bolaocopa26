@@ -44,7 +44,7 @@ export const EXTRA_BETS_LABELS: Record<TEXTRA_BETS_VALUES, string> = {
 };
 
 export type BetsValues = (typeof BETS_VALUES)[keyof typeof BETS_VALUES];
-export type HitLevel = (typeof HIT_LEVELS)[keyof typeof HIT_LEVELS];
 export type Ribbon = 'BULLSEYE' | 'HALF' | 'MISS' | null;
 export type TEXTRA_BETS_LABELS = (typeof EXTRA_BETS_LABELS)[keyof typeof EXTRA_BETS_LABELS];
 export type TEXTRA_BETS_VALUES = (typeof EXTRA_BETS_VALUES)[keyof typeof EXTRA_BETS_VALUES];
+export type THitLevel = (typeof HIT_LEVELS)[keyof typeof HIT_LEVELS];

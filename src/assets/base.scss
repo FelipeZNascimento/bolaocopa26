@@ -263,7 +263,7 @@ $colors: (
   --p-select-option-color: var(--p-select-option-selected-color) !important;
 
   // Dialog - Modal
-  --p-dialog-background: var(--bolao-c-blue4) !important;
+  --p-dialog-background: var(--bolao-c-blue2) !important;
 
   // Popover
   --p-popover-background: var(--bolao-c-blue4) !important;
@@ -296,6 +296,11 @@ $colors: (
 
   // Chart
   --surface-card: var(--bolao-c-white-t3) !important;
+
+  .p-dialog {
+    background: var(--bolao-c-blue3) !important;
+  }
+
 }
 
 // Toast mobile fix: default width is 25rem which overflows narrow viewports
@@ -308,7 +313,7 @@ $colors: (
   }
 }
 
-[data-theme='dark'] {
+html[data-theme='dark'] {
   --color-main: var(--bolao-c-black);
   --color-contrast: var(--bolao-c-white);
   --color-match-overlay: var(--bolao-c-black);
@@ -362,7 +367,7 @@ body {
     'Helvetica Neue',
     sans-serif;
   font-size: 15px;
-  line-height: 1.6;
+  line-height: 1.5;
   color: var(--color-text);
   background: var(--color-background);
   text-rendering: optimizelegibility;

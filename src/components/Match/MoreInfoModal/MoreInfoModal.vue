@@ -121,7 +121,7 @@ import { useI18n } from 'vue-i18n';
 
 import type { IBet, IMatch } from '@/stores/matches.types';
 
-import { BETS_VALUES, HIT_LEVELS, type HitLevel } from '@/constants/bets';
+import { BETS_VALUES, HIT_LEVELS, type THitLevel } from '@/constants/bets';
 import UserService from '@/services/user';
 import { useViewport } from '@/services/viewport';
 import { useActiveProfileStore } from '@/stores/activeProfile';
@@ -133,7 +133,7 @@ import MoreInfoMobileView from './MoreInfoMobileView.vue';
 
 const props = defineProps<{
   handleCloseModal: () => void;
-  hitLevel: HitLevel | null;
+  hitLevel: null | THitLevel;
   isOpen: boolean;
   match: IMatch;
 }>();
@@ -157,7 +157,7 @@ const countdown = computed(() => {
   return clockStore.getCountdown(parseInt(props.match.timestamp, 10));
 });
 
-function filterBets(bets: IBet[] | null, hitLevel: HitLevel) {
+function filterBets(bets: IBet[] | null, hitLevel: THitLevel) {
   if (!bets) return [];
 
   const filteredBets = bets.filter((bet) => {

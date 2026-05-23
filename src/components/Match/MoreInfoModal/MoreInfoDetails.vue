@@ -93,7 +93,7 @@ const countdown = computed(() => {
 
 .info-section {
   padding: var(--m-spacing);
-  background-color: var(--bolao-c-blue3-t2);
+  background-color: var(--bolao-c-blue3-d1);
   border-radius: var(--border-radius);
 }
 

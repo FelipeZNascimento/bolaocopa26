@@ -1,14 +1,20 @@
 <template>
   <div
     class="left-aligned outer-clock"
-    :class="{ 'is-mini': isMini }"
+    :class="{ 'is-mini': isMini, 'is-live': isMatchStarted && !isClockStopped }"
   >
     <RibbonComponent
       v-if="activeProfile && hitLevel"
       :hit-level="hitLevel"
     />
     <span v-if="isClockStopped">{{ MATCH_STATUS_LABELS[status] }}</span>
-    <span v-if="isMatchStarted && !isClockStopped">0' {{ MATCH_STATUS_LABELS[status] }}</span>
+    <span
+      v-if="isMatchStarted && !isClockStopped"
+      class="live-text"
+    >
+      <span class="live-dot" />
+      0' {{ MATCH_STATUS_LABELS[status] }}
+    </span>
     <span
       v-if="!isMatchStarted"
       class="clock-future"
@@ -33,7 +39,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import type { HitLevel } from '@/constants/bets';
+import type { THitLevel } from '@/constants/bets';
 
 import { MATCH_STATUS_LABELS, STOPPED_GAME, type TMatchStatus } from '@/constants/match';
 import { useActiveProfileStore } from '@/stores/activeProfile';
@@ -42,7 +48,7 @@ import { useClockStore } from '@/stores/clock';
 import RibbonComponent from './RibbonComponent.vue';
 
 const props = defineProps<{
-  hitLevel?: HitLevel | null;
+  hitLevel?: null | THitLevel;
   isMatchStarted: boolean;
   isMini?: boolean;
   status: TMatchStatus;
@@ -73,6 +79,7 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
   position: relative;
   display: flex;
   align-items: center;
+  min-width: 120px;
   font-size: var(--m-font-size);
   color: var(--color-contrast);
   background:
@@ -132,6 +139,52 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
     padding: 0 var(--xxl-spacing);
     font-size: var(--m-font-size);
   }
+}
+
+@keyframes dot-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.3;
+    transform: scale(1.6);
+  }
+}
+
+@keyframes bg-breathe {
+  0%,
+  100% {
+    box-shadow: 0 2px 8px rgb(0 0 0 / 12%);
+  }
+
+  50% {
+    box-shadow:
+      0 1px 2px rgb(0 0 0 / 12%),
+      0 0 3px 1px color-mix(in srgb, var(--bolao-c-red), transparent 45%);
+  }
+}
+
+.outer-clock.is-live {
+  animation: bg-breathe 2.5s ease-in-out infinite;
+}
+
+.live-text {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.live-dot {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
+  background: var(--bolao-c-red);
+  border-radius: 50%;
+  animation: dot-pulse 1.4s ease-in-out infinite;
 }
 
 .clock-future {

@@ -7,6 +7,7 @@
       :events="sortedEvents"
       :match="match"
       :is-mini="isMini"
+      :hit-level="hitLevel"
     />
     <TeamComponent
       :is-home-team="false"
@@ -15,12 +16,14 @@
       :match="match"
       :events="sortedEvents"
       :is-mini="isMini"
+      :hit-level="hitLevel"
     />
   </div>
 </template>
 <script lang="ts" setup>
 import { computed } from 'vue';
 
+import type { THitLevel } from '@/constants/bets';
 import type { IBet, IMatch } from '@/stores/matches.types';
 
 import { PENALTIES } from '@/constants/match';
@@ -29,6 +32,7 @@ import TeamComponent from './TeamComponent.vue';
 const props = withDefaults(
   defineProps<{
     activeUserBet: IBet | null;
+    hitLevel?: null | THitLevel;
     isMatchStarted: boolean;
     isMini?: boolean;
     isScoreModalOpen?: boolean;

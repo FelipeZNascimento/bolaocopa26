@@ -1,5 +1,5 @@
 import type { IUser } from '@/stores/activeProfile.types';
-import type { TMatchListSorting, TRankingPositionValue } from '@/stores/configuration.types';
+import type { TMatchListSorting, TRankingPositionValue, TThemeValue } from '@/stores/configuration.types';
 import type { ITeam } from '@/stores/teams.types';
 
 import { detectLocale, LOCALE_STORAGE_KEY } from '@/i18n';
@@ -105,20 +105,11 @@ export default class StartupService {
     }
 
     if (themePreference) {
-      document.documentElement.setAttribute('data-theme', themePreference);
-      if (themePreference === 'light') {
-        this.configurationStore.setTheme('light');
-        document.documentElement.classList.remove('dark-mode');
-      } else {
-        this.configurationStore.setTheme('dark');
-        document.documentElement.classList.add('dark-mode');
-      }
+      this.configurationStore.setTheme(themePreference as TThemeValue);
     } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       this.configurationStore.setTheme('dark');
-      document.documentElement.classList.add('dark-mode');
     } else {
       this.configurationStore.setTheme('light');
-      document.documentElement.classList.remove('dark-mode');
     }
   }
 }
