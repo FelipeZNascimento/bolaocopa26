@@ -24,7 +24,7 @@
       </div>
     </div>
     <div
-      v-else
+      v-else-if="!isMini"
       class="team-score"
       :style="{
         cursor: activeProfile ? 'default' : 'pointer',
@@ -99,6 +99,7 @@ const props = withDefaults(
   defineProps<{
     hitLevel?: null | THitLevel;
     isHomeTeam?: boolean;
+    isMini?: boolean;
     isWinning?: boolean;
     match: IMatch;
   }>(),

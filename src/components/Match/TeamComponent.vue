@@ -35,7 +35,7 @@
         {{ locale === 'pt-BR' ? team.name : team.nameEn }}
       </div>
       <BettingInput
-        v-if="!isMini"
+        :is-mini="isMini"
         :match="match"
         :is-home-team="isHomeTeam"
         :is-winning="isWinning"

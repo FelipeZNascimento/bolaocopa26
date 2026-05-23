@@ -34,6 +34,7 @@ const changelogEntries = ref([
   {
     changes: [
       '[App] Modals now block background scrolling when open for better user experience',
+      '[App] Teams are now sorted alphabetically by name based on the selected locale',
       '[Matches] Improvement on match display for both desktop and mobile',
       '[Matches] Improvement on match display when a match is live',
       '🐛 [Extras] Countdown on extras for light mode was not readable',
