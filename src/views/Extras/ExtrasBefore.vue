@@ -126,7 +126,12 @@ const showCountdown = computed(() => {
 
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 const activeProfileBets = computed(() => extraBetStore.activeProfileBets);
-const teams = computed(() => teamsStore.teams.filter((team) => team.id !== 33)); // Filter out placeholder team
+const teams = computed(() => {
+  const filteredTeams = teamsStore.teams.filter((team) => team.id !== 33);
+  return locale.value === 'pt-BR'
+    ? filteredTeams.toSorted((a, b) => a.name.localeCompare(b.name))
+    : filteredTeams.toSorted((a, b) => a.nameEn.localeCompare(b.nameEn));
+}); // Filter out placeholder team and sort by name based on locale
 const currentSelectedToggle = computed(
   () =>
     extraBetsOptions.value.find((option) => option.value === selectedToggle.value.value) ?? extraBetsOptions.value[0],

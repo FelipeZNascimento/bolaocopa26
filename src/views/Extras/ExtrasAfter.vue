@@ -63,8 +63,8 @@
         :is-loading="isLoading"
       />
     </div>
-    <PrimeDivider />
     <template v-if="extraBetsResults.length > 0">
+      <PrimeDivider />
       <h2 ref="resultsRef">
         <i
           class="pi pi-trophy"
@@ -279,9 +279,13 @@ const selectedExtras = computed<IPlayerWithExtras[] | ITeamWithExtras[]>(() => {
     return [...topScorersByPlayer.value].sort((a, b) => a.player.name.localeCompare(b.player.name));
   }
 
-  return validBetsByTeam.value
-    .filter((team) => team.bets.some((bet) => bet.extraType === selectedToggle.value.value))
-    .sort((a, b) => a.team.name.localeCompare(b.team.name));
+  const filteredTeams = validBetsByTeam.value.filter((team) =>
+    team.bets.some((bet) => bet.extraType === selectedToggle.value.value),
+  );
+
+  return locale.value === 'pt-BR'
+    ? filteredTeams.toSorted((a, b) => a.team.name.localeCompare(b.team.name))
+    : filteredTeams.toSorted((a, b) => a.team.nameEn.localeCompare(b.team.nameEn));
 });
 
 // ------ Functions ------
