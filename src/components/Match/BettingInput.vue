@@ -4,7 +4,7 @@
     mode="out-in"
   >
     <div
-      v-if="isMatchStarted && viewBetOption === 'viewBets'"
+      v-if="activeProfile && isMatchStarted && viewBetOption === 'viewBets'"
       class="score-and-bet"
     >
       <div class="score">
