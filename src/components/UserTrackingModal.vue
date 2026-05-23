@@ -10,8 +10,6 @@
   >
     <template #header>
       <p class="modal-title">
-        {{ selectedUser?.nickname }}
-
         <PrimeButton
           v-if="!isUserActive"
           v-tooltip.top="
@@ -23,6 +21,7 @@
           severity="secondary"
           @click="toggleFavorite"
         />
+        {{ selectedUser?.nickname }}
       </p>
     </template>
     <PrimeChart

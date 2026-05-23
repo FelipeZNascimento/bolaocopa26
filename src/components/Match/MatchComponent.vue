@@ -75,7 +75,7 @@ import { useViewport } from '@/services/viewport';
 import { useClockStore } from '@/stores/clock';
 
 import ClockComponent from './ClockComponent.vue';
-import MoreInfoModal from './MoreInfoModal/MoreInfoModal.vue';
+import MoreInfoModal from './MatchInfoModal/MatchInfoModal.vue';
 import ScoreComponent from './ScoreComponent.vue';
 
 const props = withDefaults(

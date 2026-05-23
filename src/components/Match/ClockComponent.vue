@@ -92,6 +92,34 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
   border-radius: var(--border-radius);
   box-shadow: 0 2px 8px rgb(0 0 0 / 12%);
 
+  @media (width >=1440px) {
+    width: 140px;
+    padding: 0 var(--xxl-spacing);
+    font-size: var(--m-font-size);
+  }
+
+  @media (width >=1024px) {
+    width: 120px;
+    padding: 0 var(--m-spacing);
+    font-size: var(--s-font-size);
+  }
+
+  @media (width <=1023px) {
+    padding: 0 var(--m-spacing);
+    font-size: var(--s-font-size);
+  }
+
+  @media (width >=769px) {
+    height: var(--match-list-height);
+  }
+
+  @media (width <=768px) {
+    height: 30px;
+    font-size: var(--xs-font-size);
+    background: none;
+    box-shadow: none;
+  }
+
   &::after {
     position: absolute;
     inset: 0;
@@ -113,31 +141,6 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
       padding: 0 var(--s-spacing);
       font-size: var(--xs-font-size);
     }
-  }
-
-  @media (width <=768px) {
-    height: 30px;
-  }
-
-  @media (width >=769px) {
-    height: var(--match-list-height);
-  }
-
-  @media (width <=1023px) {
-    padding: 0 var(--m-spacing);
-    font-size: var(--s-font-size);
-  }
-
-  @media (width >=1024px) {
-    width: 120px;
-    padding: 0 var(--m-spacing);
-    font-size: var(--s-font-size);
-  }
-
-  @media (width >=1440px) {
-    width: 140px;
-    padding: 0 var(--xxl-spacing);
-    font-size: var(--m-font-size);
   }
 }
 
@@ -205,10 +208,6 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
       gap: 0;
       font-size: var(--xs-font-size);
     }
-  }
-
-  @media (width <=1024px) {
-    font-size: var(--s-font-size);
   }
 
   .date {

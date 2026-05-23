@@ -12,7 +12,7 @@
   >
     <div
       v-if="hitLevel === null"
-      v-tooltip.top="'Sem aposta'"
+      v-tooltip.top="t('hitLevels.noBet')"
       style="width: 100%; text-align: center"
     >
       <i
@@ -26,27 +26,27 @@
     <div v-else>
       <i
         v-show="hitLevel === HIT_LEVELS.exactScore"
-        v-tooltip.top="HIT_LEVELS_LABELS[hitLevel]"
+        v-tooltip.top="t(HIT_LEVELS_LABELS[HIT_LEVELS.exactScore])"
         class="pi pi-trophy"
       />
       <i
         v-show="hitLevel === HIT_LEVELS.oneScore"
-        v-tooltip.top="HIT_LEVELS_LABELS[hitLevel]"
+        v-tooltip.top="t(HIT_LEVELS_LABELS[HIT_LEVELS.oneScore])"
         class="pi pi-verified"
       />
       <i
         v-show="hitLevel === HIT_LEVELS.winnerOnly"
-        v-tooltip.top="HIT_LEVELS_LABELS[hitLevel]"
+        v-tooltip.top="t(HIT_LEVELS_LABELS[HIT_LEVELS.winnerOnly])"
         class="pi pi-check-circle"
       />
       <i
         v-show="hitLevel === HIT_LEVELS.miss"
-        v-tooltip.top="HIT_LEVELS_LABELS[hitLevel]"
+        v-tooltip.top="t(HIT_LEVELS_LABELS[HIT_LEVELS.miss])"
         class="pi pi-times-circle"
       />
       <i
         v-show="hitLevel === null"
-        v-tooltip.top="HIT_LEVELS_LABELS[hitLevel]"
+        v-tooltip.top="t('hitLevels.noBet')"
         class="pi pi-circle"
       />
     </div>
@@ -54,6 +54,7 @@
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import { HIT_LEVELS, HIT_LEVELS_LABELS, type THitLevel } from '@/constants/bets';
 import { useActiveProfileStore } from '@/stores/activeProfile';
@@ -64,6 +65,8 @@ withDefaults(
   }>(),
   { hitLevel: null },
 );
+
+const { t } = useI18n();
 
 // ------ Initialization ------
 const activeProfileStore = useActiveProfileStore();

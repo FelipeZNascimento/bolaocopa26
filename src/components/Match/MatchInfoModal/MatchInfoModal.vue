@@ -13,7 +13,7 @@
     content-class="content-class"
   >
     <template #header>
-      <div style="display: flex; gap: var(--s-spacing); align-items: center; justify-content: center; width: 100%">
+      <div class="header-outer">
         <span v-if="!isMobile && match"> {{ clockStore.getRoundName(match.round) }} - </span>
         <img
           class="team-shield-image"
@@ -77,30 +77,7 @@
             v-if="isMatchStarted"
             class="bets-outer"
           >
-            <BetsColumn
-              :bets="filterBets(match.bets, 'exact')"
-              :column-value="BETS_VALUES.AWAY_EASY"
-              :active-user-bet="filterBets(match.loggedUserBets ? [match.loggedUserBets] : null, 'exact')"
-              :hit-level="HIT_LEVELS.exactScore"
-            />
-            <BetsColumn
-              :bets="filterBets(match.bets, 'oneScore')"
-              :column-value="BETS_VALUES.AWAY_EASY"
-              :active-user-bet="filterBets(match.loggedUserBets ? [match.loggedUserBets] : null, 'oneScore')"
-              :hit-level="HIT_LEVELS.oneScore"
-            />
-            <BetsColumn
-              :bets="filterBets(match.bets, 'winnerOnly')"
-              :column-value="BETS_VALUES.AWAY_EASY"
-              :active-user-bet="filterBets(match.loggedUserBets ? [match.loggedUserBets] : null, 'winnerOnly')"
-              :hit-level="HIT_LEVELS.winnerOnly"
-            />
-            <BetsColumn
-              :bets="filterBets(match.bets, 'miss')"
-              :column-value="BETS_VALUES.AWAY_EASY"
-              :active-user-bet="filterBets(match.loggedUserBets ? [match.loggedUserBets] : null, 'miss')"
-              :hit-level="HIT_LEVELS.miss"
-            />
+            <BetsFeed :bets="betsWithOutcome" />
           </div>
           <div
             v-else
@@ -121,13 +98,13 @@ import { useI18n } from 'vue-i18n';
 
 import type { IBet, IMatch } from '@/stores/matches.types';
 
-import { BETS_VALUES, HIT_LEVELS, type THitLevel } from '@/constants/bets';
+import { HIT_LEVELS, type THitLevel } from '@/constants/bets';
 import UserService from '@/services/user';
 import { useViewport } from '@/services/viewport';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useClockStore } from '@/stores/clock';
 
-import BetsColumn from './BetsColumn.vue';
+import BetsFeed, { type BetWithOutcome } from './BetsFeed.vue';
 import MoreInfoDesktopView from './MoreInfoDesktopView.vue';
 import MoreInfoMobileView from './MoreInfoMobileView.vue';
 
@@ -155,6 +132,28 @@ const isMatchStarted = computed(() => {
 
 const countdown = computed(() => {
   return clockStore.getCountdown(parseInt(props.match.timestamp, 10));
+});
+
+const betsWithOutcome = computed(() => {
+  const levels: THitLevel[] = [HIT_LEVELS.exactScore, HIT_LEVELS.oneScore, HIT_LEVELS.winnerOnly, HIT_LEVELS.miss];
+  const result: BetWithOutcome[] = [];
+
+  for (const level of levels) {
+    const levelBets = filterBets(props.match.bets, level);
+    const activeUserBets = filterBets(props.match.loggedUserBets ? [props.match.loggedUserBets] : null, level);
+    const activeIds = new Set(activeUserBets.map((b) => b.id));
+
+    for (const bet of activeUserBets) {
+      result.push({ ...bet, hitLevel: level, isActiveUser: true });
+    }
+    for (const bet of levelBets) {
+      if (!activeIds.has(bet.id)) {
+        result.push({ ...bet, hitLevel: level, isActiveUser: false });
+      }
+    }
+  }
+
+  return result;
 });
 
 function filterBets(bets: IBet[] | null, hitLevel: THitLevel) {
@@ -248,6 +247,14 @@ watch(isVisible, async (newValue) => {
 });
 </script>
 <style lang="scss" scoped>
+.header-outer {
+  display: flex;
+  gap: var(--s-spacing);
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
 .toggle {
   color: var(--bolao-c-grey1-t2);
   cursor: pointer;
@@ -267,6 +274,7 @@ watch(isVisible, async (newValue) => {
 
 .bets-outer {
   display: flex;
+  width: 100%;
   overflow-x: hidden !important;
 }
 
@@ -304,5 +312,22 @@ watch(isVisible, async (newValue) => {
 /* Unscoped styles for PrimeDialog content customization */
 .content-class {
   padding: 0 !important;
+}
+
+.p-dialog-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: var(--s-spacing) var(--m-spacing) !important;
+  margin-bottom: var(--s-spacing);
+  background:
+    linear-gradient(
+      150deg,
+      color-mix(in srgb, var(--bolao-c-blue2-d1) 55%, transparent) 0%,
+      color-mix(in srgb, var(--bolao-c-blue2-d1) 8%, transparent) 100%
+    ),
+    var(--bolao-c-blue4) !important;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 30%);
 }
 </style>

@@ -35,6 +35,7 @@ const changelogEntries = ref([
     changes: [
       '[App] Modals now block background scrolling when open for better user experience',
       '[Matches] Improvement on match display for both desktop and mobile',
+      '[Matches] Improvement on match display when a match is live',
       '🐛 [Extras] Countdown on extras for light mode was not readable',
     ],
     date: '23/05/2026',

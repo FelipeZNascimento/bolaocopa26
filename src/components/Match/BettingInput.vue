@@ -1,79 +1,84 @@
 <template>
-  <div
-    v-if="isMatchStarted"
-    class="score-and-bet"
+  <Transition
+    name="score-switch"
+    mode="out-in"
   >
-    <div class="score">
-      {{ isHomeTeam ? props.match.score.home : props.match.score.away }}
+    <div
+      v-if="isMatchStarted && viewBetOption === 'viewBets'"
+      class="score-and-bet"
+    >
+      <div class="score">
+        {{ isHomeTeam ? props.match.score.home : props.match.score.away }}
+      </div>
+      <div
+        class="bet"
+        :class="{
+          gold: hitLevel === HIT_LEVELS.exactScore,
+          green: hitLevel === HIT_LEVELS.oneScore,
+          blue: hitLevel === HIT_LEVELS.winnerOnly,
+          red: hitLevel === HIT_LEVELS.miss,
+          grey: hitLevel === null,
+        }"
+      >
+        {{ isHomeTeam ? props.match.loggedUserBets?.scoreHome : props.match.loggedUserBets?.scoreAway }}
+      </div>
     </div>
     <div
-      class="bet"
-      :class="{
-        gold: hitLevel === HIT_LEVELS.exactScore,
-        green: hitLevel === HIT_LEVELS.oneScore,
-        blue: hitLevel === HIT_LEVELS.winnerOnly,
-        red: hitLevel === HIT_LEVELS.miss,
-        grey: hitLevel === null,
-      }"
-    >
-      {{ isHomeTeam ? props.match.loggedUserBets?.scoreHome : props.match.loggedUserBets?.scoreAway }}
-    </div>
-  </div>
-  <div
-    v-else
-    class="team-score"
-    :style="{
-      cursor: activeProfile ? 'default' : 'pointer',
-    }"
-    @click="handleScoreClick($event)"
-  >
-    <span
-      v-if="!isMatchStarted"
-      class="score-type-label"
-    >
-      {{ t('score.bet') }}
-    </span>
-    <input
-      v-model="inputValue"
-      name="score"
-      type="number"
-      min="0"
-      max="99"
-      class="score-input"
-      :class="{
-        'is-empty': isEmpty,
-        'is-loading': isLoadingMatch,
-        'has-invalid-changes': hasUnsavedChanges && !isBetValid,
-        'has-valid-changes': hasUnsavedChanges && isBetValid,
-      }"
-      placeholder="_"
-      :readonly="isMatchStarted || !activeProfile || isLoadingMatch"
+      v-else
+      class="team-score"
       :style="{
-        fontWeight: isWinning ? 'bold' : 'normal',
-        textAlign: isOnPenalties && !isMobile ? 'left' : 'center',
-        pointerEvents: activeProfile && !isMatchStarted ? 'auto' : 'none',
+        cursor: activeProfile ? 'default' : 'pointer',
       }"
-      @input="handleInput($event)"
-      @keydown="handleKeydown($event)"
-    />
-    <div
-      v-if="isLoadingMatch && !isOnPenalties"
-      class="loading-spinner-wrapper"
+      @click="handleScoreClick($event)"
     >
-      <i class="pi pi-spin pi-spinner" />
+      <span
+        v-if="!isMatchStarted"
+        class="score-type-label"
+      >
+        {{ t('score.bet') }}
+      </span>
+      <input
+        v-model="inputValue"
+        name="score"
+        type="number"
+        min="0"
+        max="99"
+        class="score-input"
+        :class="{
+          'is-empty': isEmpty,
+          'is-loading': isLoadingMatch,
+          'has-invalid-changes': hasUnsavedChanges && !isBetValid,
+          'has-valid-changes': hasUnsavedChanges && isBetValid,
+        }"
+        placeholder="_"
+        :readonly="isMatchStarted || !activeProfile || isLoadingMatch"
+        :style="{
+          fontWeight: isWinning ? 'bold' : 'normal',
+          textAlign: isOnPenalties && !isMobile ? 'left' : 'center',
+          pointerEvents: activeProfile && !isMatchStarted ? 'auto' : 'none',
+        }"
+        @input="handleInput($event)"
+        @keydown="handleKeydown($event)"
+      />
+      <div
+        v-if="isLoadingMatch && !isOnPenalties"
+        class="loading-spinner-wrapper"
+      >
+        <i class="pi pi-spin pi-spinner" />
+      </div>
+      <div
+        v-if="isOnPenalties && !isMobile"
+        class="penalties-outer"
+        :style="{
+          fontWeight: isWinning ? 'bold' : 'normal',
+        }"
+      >
+        <p class="score">
+          {{ isHomeTeam ? props.match.score?.homePenalties : props.match.score?.awayPenalties }}
+        </p>
+      </div>
     </div>
-    <div
-      v-if="isOnPenalties && !isMobile"
-      class="penalties-outer"
-      :style="{
-        fontWeight: isWinning ? 'bold' : 'normal',
-      }"
-    >
-      <p class="score">
-        {{ isHomeTeam ? props.match.score?.homePenalties : props.match.score?.awayPenalties }}
-      </p>
-    </div>
-  </div>
+  </Transition>
 </template>
 
 <script lang="ts" setup>
@@ -87,6 +92,7 @@ import { PENALTIES } from '@/constants/match';
 import { useViewport } from '@/services/viewport';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useClockStore } from '@/stores/clock';
+import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
 
 const props = withDefaults(
@@ -111,12 +117,14 @@ const clockStore = useClockStore();
 const { isMobile } = useViewport();
 const activeProfileStore = useActiveProfileStore();
 const matchesStore = useMatchesStore();
+const configurationStore = useConfigurationStore();
 const { t } = useI18n();
 
 // ------ Computed Properties ------
 const isMatchStarted = computed(() => clockStore.currentTimestamp >= parseInt(props.match.timestamp, 10));
 const isOnPenalties = computed(() => PENALTIES.includes(props.match.status));
 const isLoadingMatch = computed(() => matchesStore.updatingMatches.includes(props.match.id));
+const viewBetOption = computed(() => configurationStore.viewBetOption);
 
 const isEmpty = computed(
   () =>
@@ -444,5 +452,18 @@ function handleScoreClick(event: Event) {
   background-color: var(--bolao-c-gold-t1);
   border: 1px solid var(--bolao-c-gold);
   border-color: var(--bolao-c-gold);
+}
+
+.score-switch-enter-active,
+.score-switch-leave-active {
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+.score-switch-enter-from,
+.score-switch-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
-  <div class="outer">
+  <div class="more-info-desktop-view-outer">
     <ClockComponent
-      style="width: 100%"
+      style="margin-right: var(--l-spacing)"
       :timestamp="parseInt(match.timestamp, 10)"
       :status="match.status"
       :clock="match.timestamp ? clockStore.getFormattedTime(parseInt(match.timestamp, 10)) : null"
@@ -15,15 +15,17 @@
       :hit-level="hitLevel"
       :is-match-started="isMatchStarted"
     />
-    <button
+    <div
       class="match-info-toggle"
-      :aria-expanded="showMatchInfo"
-      :aria-label="t('matches.moreDetails')"
+      role="button"
+      tabindex="0"
+      :aria-label="$t('match.moreInfo')"
       @click="toggleMatchInfo"
+      @keydown.enter="toggleMatchInfo"
+      @keydown.space.prevent="toggleMatchInfo"
     >
-      <i :class="showMatchInfo ? 'pi pi-minus' : 'pi pi-plus'" />
-      <span>{{ t('matches.moreDetails') }}</span>
-    </button>
+      <i class="pi pi-info-circle" />
+    </div>
   </div>
   <MoreInfoDetails
     :match="match"
@@ -50,36 +52,36 @@ defineProps<{
 }>();
 
 // ------ Initialization ------
-const showMatchInfo = ref(false);
 const clockStore = useClockStore();
+const showMatchInfo = ref(false);
 const { t } = useI18n();
 
-// ------ Functions ------
 function toggleMatchInfo() {
   showMatchInfo.value = !showMatchInfo.value;
 }
 </script>
 <style lang="scss" scoped>
-.outer {
+.more-info-desktop-view-outer {
   display: flex;
-  flex-direction: column;
-  gap: var(--s-spacing);
-  margin: 0 var(--xs-spacing) !important;
+  padding: var(--m-spacing);
+  margin: 0 var(--l-spacing) !important;
+  background: color-mix(in srgb, var(--color-main) 60%, transparent);
+  border-radius: var(--border-radius);
 }
 
 .match-info-toggle {
   position: relative;
   display: flex;
-  flex-direction: row;
-  gap: var(--s-spacing);
+  flex-direction: column;
+  gap: var(--xxs-spacing);
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: var(--match-list-height-mobile);
+  width: 60px;
+  height: var(--match-list-height);
+  padding: var(--s-spacing);
+  margin-left: var(--l-spacing);
   overflow: hidden;
-  font-size: var(--s-font-size);
   font-weight: 600;
-  color: var(--color-contrast);
   cursor: pointer;
   background:
     linear-gradient(
@@ -88,7 +90,6 @@ function toggleMatchInfo() {
       color-mix(in srgb, var(--color-main) 5%, transparent) 100%
     ),
     var(--bolao-c-white-t1);
-  border: none;
   border-radius: var(--border-radius);
   box-shadow:
     inset 0 1px 0 color-mix(in srgb, var(--color-main) 55%, transparent),
@@ -118,7 +119,7 @@ function toggleMatchInfo() {
   i {
     position: relative;
     z-index: 1;
-    font-size: var(--m-font-size);
+    font-size: var(--l-font-size);
     color: var(--color-contrast);
     transition:
       color 0.2s ease,
@@ -128,6 +129,7 @@ function toggleMatchInfo() {
   span {
     position: relative;
     z-index: 1;
+    white-space: nowrap;
   }
 
   &:hover {

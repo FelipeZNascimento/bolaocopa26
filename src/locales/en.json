@@ -192,6 +192,10 @@
     "countdownMessage": "You have {countdown} to place your bet on this match.",
     "betsAvailable": "All participants' bets will be available once the match starts."
   },
+  "bets": {
+    "filterLabel": "Filter by outcome",
+    "noResults": "No bets for this outcome."
+  },
   "rounds": {
     "1": {
       "short": "G1",
@@ -300,6 +304,13 @@
     "bet": "Bet",
     "live": "Score"
   },
+  "hitLevels": {
+    "exactScore": "Exact Score",
+    "miss": "Missss!",
+    "noBet": "No Bet",
+    "oneScore": "Partial Score",
+    "winnerOnly": "Minimum Score"
+  },
   "extraBets": {
     "generalBets": "General Bets",
     "myBets": "My Bets",
@@ -369,6 +380,8 @@
   "paginator": {
     "sortByTime": "Sort by time",
     "sortByGroup": "Sort by group",
+    "viewBets": "View bets for started matches",
+    "hideBets": "Hide bets for started matches",
     "unsavedBets": {
       "header": "Unsaved bets",
       "message": "Are you sure you want to continue without saving your bets?",

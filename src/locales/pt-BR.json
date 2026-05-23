@@ -192,6 +192,10 @@
     "countdownMessage": "Você tem {countdown} para fazer sua aposta nesse jogo.",
     "betsAvailable": "As apostas de todos os participantes estarão disponíveis quando a partida começar."
   },
+  "bets": {
+    "filterLabel": "Filtrar por resultado",
+    "noResults": "Nenhuma aposta para este resultado."
+  },
   "rounds": {
     "1": {
       "short": "G1",
@@ -300,6 +304,13 @@
     "bet": "Aposta",
     "live": "Placar"
   },
+  "hitLevels": {
+    "exactScore": "Acerto Total",
+    "miss": "Errrrou",
+    "noBet": "Sem aposta",
+    "oneScore": "Acerto Parcial",
+    "winnerOnly": "Acerto Mínimo"
+  },
   "extraBets": {
     "generalBets": "Apostas Gerais",
     "myBets": "Minhas Apostas",
@@ -369,6 +380,8 @@
   "paginator": {
     "sortByTime": "Por horário",
     "sortByGroup": "Por grupos",
+    "viewBets": "Ver apostas para partidas iniciadas",
+    "hideBets": "Ocultar apostas para partidas iniciadas",
     "unsavedBets": {
       "header": "Apostas não salvas",
       "message": "Tem certeza que deseja prosseguir sem salvar suas apostas?",
