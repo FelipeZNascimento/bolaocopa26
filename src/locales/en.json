@@ -1,5 +1,8 @@
 {
   "title": "Bolão World Cup 2026",
+  "match": {
+    "moreInfo": "Match details"
+  },
   "inactiveBanner": {
     "message1": "Your profile is not active yet."
   },

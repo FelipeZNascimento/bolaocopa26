@@ -14,8 +14,8 @@ export const useRankingStore = defineStore('ranking', () => {
   const isLoadingSeason = ref(false);
   const errorRounds = ref<Error | null>(null);
   const errorSeason = ref<Error | null>(null);
-  const seasonRanking = ref<IRankingLine[]>([]);
-  const seasonRankingWithoutExtras = ref<IRankingLine[]>([]);
+  const editionRanking = ref<IRankingLine[]>([]);
+  const editionRankingWithoutExtras = ref<IRankingLine[]>([]);
   const roundsRanking = ref<IRoundRanking[]>([]);
   const columnsOption = ref<TColumnsValue>(initialState.columnsOption);
   const rowSpacing = ref<TRowSpacingValue>(initialState.rowSpacing);
@@ -28,12 +28,12 @@ export const useRankingStore = defineStore('ranking', () => {
     localStorage.removeItem('ranking-position');
   }
 
-  function setSeasonWithoutExtras(newSeasonRanking: IRankingLine[]) {
-    seasonRankingWithoutExtras.value = Array.isArray(newSeasonRanking) ? newSeasonRanking : [];
+  function setEditionRankingWithoutExtras(newEditionRanking: IRankingLine[]) {
+    editionRankingWithoutExtras.value = Array.isArray(newEditionRanking) ? newEditionRanking : [];
   }
 
-  function setSeason(newSeasonRanking: IRankingLine[]) {
-    seasonRanking.value = Array.isArray(newSeasonRanking) ? newSeasonRanking : [];
+  function setEditionRanking(newEditionRanking: IRankingLine[]) {
+    editionRanking.value = Array.isArray(newEditionRanking) ? newEditionRanking : [];
   }
 
   function setRounds(newRoundsRanking: IRoundRanking[]) {
@@ -68,15 +68,17 @@ export const useRankingStore = defineStore('ranking', () => {
 
   return {
     columnsOption,
+    editionRanking,
+    editionRankingWithoutExtras,
     errorRounds,
     errorSeason,
     isLoadingRounds,
     isLoadingSeason,
     roundsRanking,
     rowSpacing,
-    seasonRanking,
-    seasonRankingWithoutExtras,
     setColumnsOption,
+    setEditionRanking,
+    setEditionRankingWithoutExtras,
     setErrorRounds,
     setErrorSeason,
     setInitialState,
@@ -84,7 +86,5 @@ export const useRankingStore = defineStore('ranking', () => {
     setLoadingSeason,
     setRounds,
     setRowSpacing,
-    setSeason,
-    setSeasonWithoutExtras,
   };
 });

@@ -60,8 +60,8 @@ export const useConfigurationStore = defineStore('configuration', () => {
     localStorage.setItem('ranking-position', newValue);
   }
 
-  function setCurrentEdition(season: number) {
-    currentEdition.value = season;
+  function setCurrentEdition(edition: number) {
+    currentEdition.value = edition;
   }
 
   function setCurrentRound(week: number) {

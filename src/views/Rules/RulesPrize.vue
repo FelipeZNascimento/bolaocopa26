@@ -118,7 +118,7 @@ const rankingStore = useRankingStore();
 const prizeDistributionShort = tm('rules.prize.shortData') as { percentage: string; position: string }[];
 const prizeDistributionLong = tm('rules.prize.longData') as { percentage: string; position: string }[];
 
-const usersNumber = computed(() => rankingStore.seasonRanking.length);
+const usersNumber = computed(() => rankingStore.editionRanking.length);
 </script>
 <style lang="scss" scoped>
 .outer {

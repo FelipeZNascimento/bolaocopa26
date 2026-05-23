@@ -16,7 +16,12 @@
     />
     <div
       class="more-info"
+      role="button"
+      tabindex="0"
+      :aria-label="$t('match.moreInfo')"
       @click="handleMatchClick"
+      @keydown.enter="handleMatchClick"
+      @keydown.space.prevent="handleMatchClick"
     >
       <i class="pi pi-plus-circle" />
     </div>
@@ -26,7 +31,7 @@
     :class="{ clickable: isMatchStarted, 'is-mini': isMini }"
   >
     <ClockComponent
-      v-if="isDesktop && !isDemo"
+      v-if="!isMobile && !isDemo"
       :hit-level="hitLevel"
       :timestamp="parseInt(match.timestamp, 10)"
       :status="match.status"
@@ -41,9 +46,14 @@
       :is-mini="isMini"
     />
     <div
-      v-if="!isDemo && isDesktop"
+      v-if="!isDemo && !isMobile"
       class="more-info"
+      role="button"
+      tabindex="0"
+      :aria-label="$t('match.moreInfo')"
       @click="handleMatchClick"
+      @keydown.enter="handleMatchClick"
+      @keydown.space.prevent="handleMatchClick"
     >
       <i class="pi pi-plus-circle" />
     </div>
@@ -87,7 +97,7 @@ const isMoreInfoModalOpen = ref(false);
 
 // ------ Initialization ------
 const clockStore = useClockStore();
-const { isDesktop, isMobile } = useViewport();
+const { isMobile } = useViewport();
 
 // ------ Computed Properties ------
 // const correctBets = { bullseye: [], half: [] };
@@ -181,31 +191,88 @@ function handleMatchClick() {
   justify-content: center;
   width: 60px;
   padding: var(--s-spacing);
+  overflow: hidden;
   font-weight: 600;
   cursor: pointer;
-  background-color: var(--bolao-c-white-t1);
+  background:
+    linear-gradient(
+      150deg,
+      color-mix(in srgb, var(--color-main) 28%, transparent) 0%,
+      color-mix(in srgb, var(--color-main) 5%, transparent) 100%
+    ),
+    var(--bolao-c-white-t1);
   border-radius: var(--border-radius);
-  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
-  transition: all 0.2s ease;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--color-main) 55%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--color-main) 18%, transparent),
+    inset 0 -2px 0 rgb(0 0 0 / 8%),
+    0 2px 8px rgb(0 0 0 / 12%);
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+
+  &::before {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    content: '';
+    background: radial-gradient(
+      ellipse at 50% 140%,
+      color-mix(in srgb, var(--color-anchor) 35%, transparent) 0%,
+      transparent 65%
+    );
+    border-radius: var(--border-radius);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
 
   i {
+    position: relative;
+    z-index: 1;
     font-size: var(--l-font-size);
     color: var(--color-contrast);
     transition:
-      transform 0.2s ease,
-      color 0.2s ease;
+      color 0.2s ease,
+      transform 0.2s ease;
   }
 
   span {
+    position: relative;
+    z-index: 1;
     white-space: nowrap;
   }
 
   &:hover {
-    box-shadow: 0 4px 8px rgb(0 0 0 / 20%);
-    transform: translateY(-1px);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--color-main) 65%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, var(--color-anchor) 45%, transparent),
+      inset 0 -2px 0 rgb(0 0 0 / 8%),
+      0 6px 18px rgb(0 0 0 / 22%);
+    transform: translateY(-2px);
+
+    &::before {
+      opacity: 1;
+    }
 
     i {
-      transform: scale(1.1);
+      color: var(--color-anchor);
+      transform: scale(1.2);
+    }
+  }
+
+  &:active {
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--color-main) 40%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, var(--color-main) 12%, transparent),
+      inset 0 -1px 0 rgb(0 0 0 / 5%),
+      0 1px 3px rgb(0 0 0 / 10%);
+    transform: scale(0.96);
+  }
+
+  @media (hover: none) {
+    &:active {
+      transform: scale(0.93);
     }
   }
 
@@ -217,7 +284,6 @@ function handleMatchClick() {
 
     i {
       font-size: var(--m-font-size);
-      filter: drop-shadow(0 1px 2px rgb(0 0 0 / 20%));
     }
   }
 }

@@ -38,18 +38,18 @@ export default class StartupService {
     this.configurationStore.setLoading(true);
     this.extraBetStore.setLoading(true);
     try {
-      const [activeProfileResponse, seasonResponse, teamResponse] = await Promise.allSettled([
+      const [activeProfileResponse, editionResponse, teamResponse] = await Promise.allSettled([
         this.apiRequest.get<IUser>('user/activeProfile', undefined, { retries: 3 }),
-        this.apiRequest.get<InitializeObj>('season/current', undefined, { retries: 3 }),
+        this.apiRequest.get<InitializeObj>('edition/current', undefined, { retries: 3 }),
         this.apiRequest.get<ITeam[]>('team/all/', undefined, { retries: 3 }),
       ]);
 
-      if (isRejected(activeProfileResponse) || isRejected(seasonResponse) || isRejected(teamResponse)) {
+      if (isRejected(activeProfileResponse) || isRejected(editionResponse) || isRejected(teamResponse)) {
         throw new Error('Falha ao inicializar a aplicação');
       }
 
       const loggedUser = isFulfilled(activeProfileResponse) ? activeProfileResponse.value : null;
-      const seasonData = isFulfilled(seasonResponse) ? seasonResponse.value : null;
+      const seasonData = isFulfilled(editionResponse) ? editionResponse.value : null;
       const teamsData = isFulfilled(teamResponse) ? teamResponse.value : [];
 
       // Set Teams store properties

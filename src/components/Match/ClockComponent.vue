@@ -75,11 +75,27 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
   align-items: center;
   font-size: var(--m-font-size);
   color: var(--color-contrast);
-  background-color: var(--bolao-c-white-t1);
+  background:
+    linear-gradient(
+      150deg,
+      color-mix(in srgb, var(--color-main) 28%, transparent) 0%,
+      color-mix(in srgb, var(--color-main) 5%, transparent) 100%
+    ),
+    var(--bolao-c-white-t1);
   border-radius: var(--border-radius);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 12%);
 
-  @media (width <=768px) {
-    background-color: transparent;
+  &::after {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    content: '';
+    border-radius: var(--border-radius);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--color-main) 55%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, var(--color-main) 18%, transparent),
+      inset 0 -2px 0 rgb(0 0 0 / 8%);
   }
 
   &.is-mini {

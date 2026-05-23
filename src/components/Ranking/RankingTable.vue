@@ -333,17 +333,17 @@ const isLoading = computed(() => (isRound.value ? isLoadingRounds.value : isLoad
 const errorRounds = computed(() => rankingStore.errorRounds);
 const errorSeason = computed(() => rankingStore.errorSeason);
 const error = computed(() => (isRound.value ? errorRounds.value : errorSeason.value));
-const seasonRanking = computed(() => rankingStore.seasonRanking);
+const editionRanking = computed(() => rankingStore.editionRanking);
 const selectedRoundRanking = computed(
   () => rankingStore.roundsRanking?.find((roundRanking) => roundRanking.round === selectedRound.value)?.ranking || [],
 );
-const selectedRanking = computed(() => (isRound.value ? selectedRoundRanking.value : seasonRanking.value));
-const seasonRankingWithoutExtras = computed(() => rankingStore.seasonRankingWithoutExtras);
+const selectedRanking = computed(() => (isRound.value ? selectedRoundRanking.value : editionRanking.value));
+const editionRankingWithoutExtras = computed(() => rankingStore.editionRankingWithoutExtras);
 const selectedRound = computed(() => configurationStore.selectedRound);
 
 const filteredRankingData = computed(() => {
   if (!showFavoritesOnly.value) {
-    return isExtrasActive.value ? seasonRankingWithoutExtras.value : selectedRanking.value;
+    return isExtrasActive.value ? editionRankingWithoutExtras.value : selectedRanking.value;
   }
 
   if (showFavoritesOnly.value && favorites.value.length === 0) {

@@ -364,11 +364,20 @@ function openTeamModal(team: ITeam) {
     ),
     var(--bolao-c-white-t1);
   border-radius: var(--border-radius);
-  box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--color-main) 65%, transparent),
-    inset 0 0 0 1px color-mix(in srgb, var(--color-main) 18%, transparent),
-    inset 0 -2px 0 rgb(0 0 0 / 10%),
-    0 3px 10px rgb(0 0 0 / 12%);
+  box-shadow: 0 3px 10px rgb(0 0 0 / 12%);
+
+  &::after {
+    position: absolute;
+    inset: 0;
+    z-index: 200;
+    pointer-events: none;
+    content: '';
+    border-radius: var(--border-radius);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--color-main) 65%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, var(--color-main) 18%, transparent),
+      inset 0 -2px 0 rgb(0 0 0 / 10%);
+  }
 
   &.is-mini {
     height: 48px;
@@ -410,6 +419,10 @@ function openTeamModal(team: ITeam) {
         width: 44px;
         max-width: 44px;
       }
+    }
+
+    @media (width <= 320px) {
+      width: 30%;
     }
   }
 
@@ -465,7 +478,7 @@ function openTeamModal(team: ITeam) {
   position: relative;
   z-index: 99;
   display: -webkit-box;
-  max-width: 62%;
+  max-width: 40%;
   margin: var(--l-spacing);
   overflow: hidden;
   -webkit-box-orient: vertical;
@@ -515,12 +528,16 @@ function openTeamModal(team: ITeam) {
     line-height: var(--l-spacing);
   }
 
-  @media (width <768px) {
-    max-width: 70%;
+  @media (width <=768px) {
+    max-width: 60%;
     padding: var(--xs-spacing);
     margin: var(--l-spacing) 0;
     font-size: var(--xs-font-size);
     line-height: var(--l-spacing);
+  }
+
+  @media (width <=320px) {
+    max-width: 70%;
   }
 }
 
@@ -559,14 +576,14 @@ function openTeamModal(team: ITeam) {
   max-width: 48px;
   height: 100%;
   padding: var(--xs-spacing);
-  font-size: var(--xl-font-size);
+  font-size: var(--l-font-size);
   color: var(--color-contrast);
   text-align: left;
   appearance: textfield;
   outline: none;
   background: transparent;
   border: 1px solid color-mix(in srgb, var(--color-contrast), transparent 70%);
-  border-radius: calc(var(--border-radius) / 2);
+  border-radius: var(--border-radius);
   transition: all 0.2s ease;
 
   &.is-mini {

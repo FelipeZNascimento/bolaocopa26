@@ -56,10 +56,6 @@ const selectedRound = computed(() => configurationStore.selectedRound);
   gap: var(--m-spacing);
   align-items: flex-start;
   margin-top: 10px;
-
-  @media (width <= 1024px) {
-    margin-bottom: 80px;
-  }
 }
 
 .outer-line {

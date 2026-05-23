@@ -1,5 +1,8 @@
 {
   "title": "Bolão da Copa 2026",
+  "match": {
+    "moreInfo": "Detalhes da partida"
+  },
   "inactiveBanner": {
     "message1": "Seu perfil ainda não está ativo."
   },

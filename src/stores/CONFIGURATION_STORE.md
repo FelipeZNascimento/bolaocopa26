@@ -75,7 +75,7 @@ Ranking position filter: `'active'` (only active users) or `'all'`. Default: `'a
 
 #### `currentEdition: Ref<number | null>`
 
-Current tournament edition/season number.
+Current tournament edition/edition number.
 
 #### `editionStart: Ref<number | null>`
 
@@ -118,9 +118,9 @@ Sets the ranking position filter and persists to localStorage.
 
 - `newValue`: `'active'` or `'all'`
 
-#### `setCurrentEdition(season: number)`
+#### `setCurrentEdition(edition: number)`
 
-Sets the current tournament edition/season.
+Sets the current tournament edition/edition.
 
 #### `setCurrentRound(week: number)`
 

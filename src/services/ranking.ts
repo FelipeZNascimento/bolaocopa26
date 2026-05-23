@@ -20,8 +20,8 @@ export default class RankingService {
     try {
       const rankingResponse = await this.apiRequest.get<IRankingResponse>(`ranking/edition/`);
       this.rankingStore.setLoadingSeason(false);
-      this.rankingStore.setSeasonWithoutExtras(rankingResponse.seasonWithoutExtras);
-      this.rankingStore.setSeason(rankingResponse.season);
+      this.rankingStore.setEditionRankingWithoutExtras(rankingResponse.editionWithoutExtras);
+      this.rankingStore.setEditionRanking(rankingResponse.edition);
       this.rankingStore.setRounds(rankingResponse.round);
       this.rankingStore.setErrorSeason(null);
     } catch (error: unknown) {
