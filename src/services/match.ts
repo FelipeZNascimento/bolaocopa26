@@ -89,8 +89,8 @@ export default class MatchService {
     // }
 
     const rankingStore = useRankingStore();
-    rankingStore.setSeasonWithoutExtras(ranking.editionRankingWithoutExtras);
-    rankingStore.setSeason(ranking.editionRanking);
+    rankingStore.setEditionRankingWithoutExtras(ranking.editionRankingWithoutExtras);
+    rankingStore.setEditionRanking(ranking.editionRanking);
     rankingStore.setRounds(ranking.weeklyRanking);
   }
 }
