@@ -261,6 +261,7 @@
       "logo": "Bolão da Copa 2026",
       "betStatus": "Próxima Aposta",
       "countdown": "Próxima Partida",
+      "news": "Notícias",
       "socialGroups": "Grupos de Redes Sociais"
     },
     "nextMatches": {
@@ -286,6 +287,11 @@
     },
     "ranking": {
       "seeAll": "Ver ranking completo"
+    },
+    "news": {
+      "loadingError": "Erro ao carregar notícias",
+      "noNews": "Nenhuma notícia disponível",
+      "readMore": "Ler mais"
     },
     "socialGroups": {
       "tagline": "Entre nos nossos grupos para acompanhar os resultados, torcer junto e não perder nenhuma novidade do bolão!",

@@ -23,6 +23,7 @@ export interface IMatch {
   awayTeam: ITeam;
   bets: IBet[];
   events: IMatchEvent[];
+  gametime?: null | string;
   group: null | string;
   homeTeam: ITeam;
   id: number;

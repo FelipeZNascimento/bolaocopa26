@@ -9,6 +9,8 @@
       :status="match.status"
       :is-match-started="isMatchStarted"
       :is-mini="isMini"
+      :points-awarded="match.pointsAwarded"
+      :gametime="match.gametime"
     />
     <div
       class="match-connector"
@@ -37,6 +39,8 @@
       :status="match.status"
       :is-match-started="isMatchStarted"
       :is-mini="isMini"
+      :points-awarded="match.pointsAwarded"
+      :gametime="match.gametime"
     />
     <ScoreComponent
       :match="match"
@@ -57,6 +61,12 @@
     >
       <i class="pi pi-plus-circle" />
     </div>
+    <div
+      v-if="isStatusSweeping"
+      aria-hidden="true"
+      class="status-sweep"
+      :style="{ '--sweep-color': sweepColor }"
+    />
   </div>
   <MoreInfoModal
     :match="match"
@@ -66,11 +76,12 @@
   />
 </template>
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 import type { IMatch } from '@/stores/matches.types';
 
 import { HIT_LEVELS } from '@/constants/bets';
+import { MATCH_STATUS, type TMatchStatus } from '@/constants/match';
 import { useViewport } from '@/services/viewport';
 import { useClockStore } from '@/stores/clock';
 
@@ -94,6 +105,8 @@ const props = withDefaults(
 
 // ------ Refs ------
 const isMoreInfoModalOpen = ref(false);
+const isStatusSweeping = ref(false);
+const sweepColor = ref('');
 
 // ------ Initialization ------
 const clockStore = useClockStore();
@@ -142,6 +155,29 @@ const hitLevel = computed(() => {
   return HIT_LEVELS.miss;
 });
 
+function getStatusSweepColor(status: TMatchStatus): string {
+  if ([MATCH_STATUS.FIRST_HALF, MATCH_STATUS.PENALTIES, MATCH_STATUS.SECOND_HALF].includes(status)) {
+    return 'var(--bolao-c-mint)';
+  }
+
+  if (
+    [
+      MATCH_STATUS.AWAITING_EXTRA_TIME,
+      MATCH_STATUS.AWAITING_PENALTIES,
+      MATCH_STATUS.HALFTIME,
+      MATCH_STATUS.HALFTIME_EXTRA_TIME,
+    ].includes(status)
+  ) {
+    return 'var(--bolao-c-gold)';
+  }
+
+  if ([MATCH_STATUS.FINAL, MATCH_STATUS.FINAL_EXTRA_TIME, MATCH_STATUS.FINAL_PENALTIES].includes(status)) {
+    return 'var(--color-contrast)';
+  }
+
+  return 'var(--bolao-c-red)';
+}
+
 function handleCloseModal() {
   isMoreInfoModalOpen.value = false;
 }
@@ -150,9 +186,22 @@ function handleCloseModal() {
 function handleMatchClick() {
   isMoreInfoModalOpen.value = true;
 }
+
+// ------ Watches ------
+watch(
+  () => props.match.status,
+  (newStatus) => {
+    sweepColor.value = getStatusSweepColor(newStatus);
+    isStatusSweeping.value = true;
+    setTimeout(() => {
+      isStatusSweeping.value = false;
+    }, 800);
+  },
+);
 </script>
 <style lang="scss" scoped>
 .outer-match {
+  position: relative;
   display: flex;
   gap: var(--m-spacing);
   opacity: 1;
@@ -294,6 +343,39 @@ function handleMatchClick() {
 
   @media (width <=768px) {
     height: var(--match-list-height-mobile);
+  }
+}
+
+.status-sweep {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--sweep-color, transparent);
+  transform-origin: left;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes status-sweep {
+    0% {
+      opacity: 1;
+      transform: scaleX(0);
+    }
+
+    70% {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+
+    100% {
+      opacity: 0;
+      transform: scaleX(1);
+    }
+  }
+
+  .status-sweep {
+    animation: status-sweep 800ms ease-out forwards;
   }
 }
 </style>

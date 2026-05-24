@@ -14,18 +14,18 @@ export default class RankingService {
     this.rankingStore = useRankingStore();
   }
 
-  public async fetch() {
-    this.rankingStore.setLoadingSeason(true);
+  public async fetch(silent = false) {
+    if (!silent) this.rankingStore.setLoadingSeason(true);
 
     try {
       const rankingResponse = await this.apiRequest.get<IRankingResponse>(`ranking/edition/`);
-      this.rankingStore.setLoadingSeason(false);
+      if (!silent) this.rankingStore.setLoadingSeason(false);
       this.rankingStore.setEditionRankingWithoutExtras(rankingResponse.editionWithoutExtras);
       this.rankingStore.setEditionRanking(rankingResponse.edition);
       this.rankingStore.setRounds(rankingResponse.round);
       this.rankingStore.setErrorSeason(null);
     } catch (error: unknown) {
-      this.rankingStore.setLoadingSeason(false);
+      if (!silent) this.rankingStore.setLoadingSeason(false);
       console.error('[RankingService.fetch]', error);
       this.rankingStore.setErrorSeason(new Error(error instanceof Error ? error.message : String(error)));
     }

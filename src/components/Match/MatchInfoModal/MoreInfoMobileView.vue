@@ -7,6 +7,8 @@
       :clock="match.timestamp ? clockStore.getFormattedTime(parseInt(match.timestamp, 10)) : null"
       :hit-level="hitLevel"
       :is-match-started="isMatchStarted"
+      :points-awarded="match.pointsAwarded"
+      :gametime="match.gametime"
     />
     <ScoreComponent
       :is-score-modal-open="true"

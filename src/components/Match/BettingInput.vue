@@ -1,4 +1,10 @@
 <template>
+  <span
+    aria-atomic="true"
+    aria-live="polite"
+    class="sr-only"
+    >{{ srScoreAnnouncement }}</span
+  >
   <Transition
     name="score-switch"
     mode="out-in"
@@ -7,7 +13,10 @@
       v-if="activeProfile && isMatchStarted && viewBetOption === 'viewBets'"
       class="score-and-bet"
     >
-      <div class="score">
+      <div
+        class="score"
+        :class="{ 'is-flipping': isScoreFlipping }"
+      >
         {{ isHomeTeam ? props.match.score.home : props.match.score.away }}
       </div>
       <div
@@ -46,6 +55,7 @@
         class="score-input"
         :class="{
           'is-empty': isEmpty,
+          'is-flipping': isScoreFlipping,
           'is-loading': isLoadingMatch,
           'has-invalid-changes': hasUnsavedChanges && !isBetValid,
           'has-valid-changes': hasUnsavedChanges && isBetValid,
@@ -82,7 +92,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import type { IMatch } from '@/stores/matches.types';
@@ -163,6 +173,19 @@ const isBetValid = computed(
 );
 
 const activeProfile = computed(() => activeProfileStore.activeProfile);
+
+const displayScore = computed(() => (props.isHomeTeam ? props.match.score.home : props.match.score.away));
+const isScoreFlipping = ref(false);
+const srScoreAnnouncement = ref('');
+
+watch(displayScore, (newVal) => {
+  const teamName = props.isHomeTeam ? props.match.homeTeam.name : props.match.awayTeam.name;
+  srScoreAnnouncement.value = teamName + ': ' + String(newVal);
+  isScoreFlipping.value = true;
+  setTimeout(() => {
+    isScoreFlipping.value = false;
+  }, 900);
+});
 
 // ------ Functions ------
 function handleInput(event: Event) {
@@ -466,5 +489,45 @@ function handleScoreClick(event: Event) {
 .score-switch-leave-to {
   opacity: 0;
   transform: scale(0.9);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes score-pop {
+    0% {
+      transform: scale(1);
+    }
+
+    35% {
+      transform: scale(1.4);
+    }
+
+    65% {
+      transform: scale(0.88);
+    }
+
+    82% {
+      transform: scale(1.08);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .score.is-flipping,
+  .score-input.is-flipping {
+    animation: score-pop 0.85s ease-out;
+  }
 }
 </style>

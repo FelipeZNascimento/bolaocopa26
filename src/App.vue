@@ -49,6 +49,8 @@ const matchesStore = useMatchesStore();
 const { isMobile } = useViewport();
 const { t } = useI18n();
 
+let appInitialized = false;
+
 function initializationCallback(isSuccess: boolean) {
   if (isSuccess) {
     matchService.fetch();
@@ -59,6 +61,10 @@ function initializationCallback(isSuccess: boolean) {
 startupService.initialize(initializationCallback).then(() => {
   clockStore.startClock();
   rankingService.fetch();
+  if (activeProfile.value) {
+    extraBetService.fetch();
+  }
+  appInitialized = true;
 });
 
 // Warn user before closing tab with unsaved changes
@@ -93,6 +99,8 @@ watch(selectedRound, async (newValue, oldValue) => {
 // Fetches rankings and week's matches when user logs in or out
 // Fetches rankings and week's matches when user updates profile
 watch(activeProfile, async (newValue) => {
+  if (!appInitialized) return;
+
   rankingService.fetch();
   matchService.fetch();
 

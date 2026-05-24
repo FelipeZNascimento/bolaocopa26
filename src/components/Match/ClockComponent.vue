@@ -6,14 +6,24 @@
     <RibbonComponent
       v-if="activeProfile && hitLevel"
       :hit-level="hitLevel"
+      :points="getPointsAwarded(props.pointsAwarded, props.hitLevel)"
     />
     <span v-if="isClockStopped">{{ MATCH_STATUS_LABELS[status] }}</span>
     <span
       v-if="isMatchStarted && !isClockStopped"
       class="live-text"
     >
-      <span class="live-dot" />
-      0' {{ MATCH_STATUS_LABELS[status] }}
+      <span class="live-dot-wrapper">
+        <Transition name="heartbeat">
+          <span
+            v-if="isHeartbeating"
+            aria-hidden="true"
+            class="live-dot-ring"
+          />
+        </Transition>
+        <span class="live-dot" />
+      </span>
+      {{ gametimeDisplay }}{{ MATCH_STATUS_LABELS[status] }}
     </span>
     <span
       v-if="!isMatchStarted"
@@ -37,20 +47,24 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 
-import type { THitLevel } from '@/constants/bets';
+import type { IPointsAwarded } from '@/stores/matches.types';
 
+import { type THitLevel } from '@/constants/bets';
 import { MATCH_STATUS_LABELS, STOPPED_GAME, type TMatchStatus } from '@/constants/match';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useClockStore } from '@/stores/clock';
+import { getPointsAwarded } from '@/util/betsCalculator';
 
 import RibbonComponent from './RibbonComponent.vue';
 
 const props = defineProps<{
+  gametime?: null | string;
   hitLevel?: null | THitLevel;
   isMatchStarted: boolean;
   isMini?: boolean;
+  pointsAwarded?: IPointsAwarded;
   status: TMatchStatus;
   timestamp: number;
 }>();
@@ -64,7 +78,23 @@ const activeProfile = computed(() => {
   return activeProfileStore.activeProfile;
 });
 
+const gametimeDisplay = computed(() => (props.gametime != null ? props.gametime + "' " : ''));
+
 const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
+
+// ------ Refs ------
+const isHeartbeating = ref(false);
+
+// ------ Watches ------
+watch(
+  () => props.gametime,
+  () => {
+    isHeartbeating.value = true;
+    setTimeout(() => {
+      isHeartbeating.value = false;
+    }, 400);
+  },
+);
 </script>
 <style lang="scss" scoped>
 .left-aligned {
@@ -180,6 +210,25 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
   align-items: center;
 }
 
+.live-dot-wrapper {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 7px;
+  height: 7px;
+}
+
+.live-dot-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: var(--bolao-c-red);
+  border-radius: 50%;
+}
+
 .live-dot {
   display: inline-block;
   flex-shrink: 0;
@@ -188,6 +237,28 @@ const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
   background: var(--bolao-c-red);
   border-radius: 50%;
   animation: dot-pulse 1.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes dot-ring {
+    from {
+      opacity: 0.7;
+      transform: scale(1);
+    }
+
+    to {
+      opacity: 0;
+      transform: scale(4);
+    }
+  }
+
+  .heartbeat-enter-active {
+    animation: dot-ring 400ms ease-out forwards;
+  }
+
+  .heartbeat-leave-active {
+    display: none;
+  }
 }
 
 .clock-future {

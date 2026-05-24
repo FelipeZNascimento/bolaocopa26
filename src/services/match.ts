@@ -1,23 +1,24 @@
 import type { IMatch } from '@/stores/matches.types';
-import type { IRankingLine, IRoundRanking } from '@/stores/ranking.types';
 
 import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
-import { useRankingStore } from '@/stores/ranking';
 
 import ApiService from './api_request';
-import WebsocketService from './websocket';
+import RankingService from './ranking';
+import WebsocketService, { WEBSOCKET_EVENTS } from './websocket';
 
 export default class MatchService {
   public websocketInstance;
   private apiRequest;
   private configurationStore;
   private matchesStore;
+  private rankingService;
 
   constructor() {
     this.apiRequest = new ApiService();
     this.configurationStore = useConfigurationStore();
     this.matchesStore = useMatchesStore();
+    this.rankingService = new RankingService();
     this.websocketInstance = new WebsocketService(this.onWebsocketUpdate);
   }
 
@@ -39,11 +40,7 @@ export default class MatchService {
       this.matchesStore.setLoading(false);
       this.matchesStore.setError(null);
 
-      if (this.websocketInstance) {
-        this.websocketInstance.close();
-      }
-
-      this.websocketInstance.connect();
+      this.websocketInstance.connectIfNeeded();
     } catch (error: unknown) {
       this.matchesStore.setLoading(false);
       console.error('[MatchService.fetch]', error);
@@ -65,32 +62,23 @@ export default class MatchService {
     }
   }
 
-  private onWebsocketUpdate(this: WebSocket, ev: MessageEvent<unknown>) {
-    // const configurationStore = useConfigurationStore();
-    // const selectedRound = configurationStore.selectedRound;
-
-    // const { _matches, ranking, week } = JSON.parse(ev.data) as {
-    //   _matches: IMatch[];
-    //   ranking: { editionRanking: IRankingLine[]; weeklyRanking: IRoundRanking[] };
-    //   week: number;
-    // };
-    const { ranking } = JSON.parse(ev.data as string) as {
-      ranking: {
-        editionRanking: IRankingLine[];
-        editionRankingWithoutExtras: IRankingLine[];
-        weeklyRanking: IRoundRanking[];
-      };
-    };
-
-    // Update matches if the update is for the current week being viewed
-    // if (selectedRound === week) {
-    //   const _matchesStore = useMatchesStore();
-    //   _matchesStore.updateMatches(_matches);
-    // }
-
-    const rankingStore = useRankingStore();
-    rankingStore.setEditionRankingWithoutExtras(ranking.editionRankingWithoutExtras);
-    rankingStore.setEditionRanking(ranking.editionRanking);
-    rankingStore.setRounds(ranking.weeklyRanking);
+  private async fetchSilent() {
+    try {
+      const round = this.configurationStore.selectedRound;
+      const edition = this.configurationStore.currentEdition;
+      const response = await this.apiRequest.get<IMatch[]>(`match/${edition}/${round}`);
+      this.matchesStore.setMatches(response);
+      this.matchesStore.setError(null);
+    } catch (error: unknown) {
+      console.error('[MatchService.fetchSilent]', error);
+      this.matchesStore.setError(new Error(error instanceof Error ? error.message : String(error)));
+    }
   }
+
+  private onWebsocketUpdate = (ev: MessageEvent<unknown>) => {
+    if (ev.data === WEBSOCKET_EVENTS.MATCHES_UPDATED) {
+      this.fetchSilent();
+      this.rankingService.fetch(true);
+    }
+  };
 }

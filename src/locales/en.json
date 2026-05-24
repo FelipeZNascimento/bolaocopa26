@@ -261,6 +261,7 @@
       "logo": "Bolão World Cup 2026",
       "betStatus": "Next Bet",
       "countdown": "Next Match",
+      "news": "News",
       "socialGroups": "Social Groups"
     },
     "nextMatches": {
@@ -287,6 +288,11 @@
     "ranking": {
       "seeAll": "See full ranking"
     },
+    "news": {
+      "loadingError": "Failed to load news",
+      "noNews": "No news available",
+      "readMore": "Read more"
+    },
     "socialGroups": {
       "tagline": "Join our groups to follow results, cheer together and never miss a pool update!",
       "joinGroup": "Join the group"
@@ -309,11 +315,11 @@
     "live": "Score"
   },
   "hitLevels": {
-    "exactScore": "Exact Score",
+    "exactScore": "Exact Score (+{points})",
     "miss": "Missss!",
     "noBet": "No Bet",
-    "oneScore": "Partial Score",
-    "winnerOnly": "Minimum Score"
+    "oneScore": "Partial Score (+{points})",
+    "winnerOnly": "Minimum Score (+{points})"
   },
   "extraBets": {
     "generalBets": "General Bets",
