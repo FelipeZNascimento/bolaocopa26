@@ -77,8 +77,11 @@
     },
     "addFavoriteTooltip": "Adicionar aos Favoritos",
     "removeFavoriteTooltip": "Remover dos Favoritos",
-    "chartExplanation": "A pontuação no gráfico não inclui pontos extras, apenas os pontos acumulados das apostas normais.",
-    "extraBets": "Apostas Extras"
+    "chartExplanation": "A pontuação no gráfico não inclui pontos extras, apenas os pontos recebidos em apostas normais.",
+    "extraBets": "Apostas Extras",
+    "position": "Posição",
+    "globalPosition": "Posição Global",
+    "pointsPercentage": "% de Pontos"
   },
   "loginModal": {
     "titles": {

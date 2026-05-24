@@ -27,7 +27,6 @@
     <PrimeChart
       type="bar"
       :data="chartData"
-      :style="{ height: '300px', backgroundColor: 'var(--surface-card)', borderRadius: 'var(--border-radius)' }"
       :options="chartOptions"
     />
     <p style="text-align: center">
@@ -65,6 +64,7 @@ import type { IUser } from '@/stores/activeProfile.types';
 
 import ClickableTeamCard from '@/components/ClickableTeamCard.vue';
 import LoginModal from '@/components/LoginModal.vue';
+import { useScrollLock } from '@/composables/useScrollLock';
 import { EXTRA_BETS_LABELS } from '@/constants/bets';
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
@@ -102,6 +102,10 @@ const selectedUserExtraBets = computed(
 );
 
 // ------ Functions  ------
+function getCssVar(name: string, fallback: string): string {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+}
+
 function handleCloseLoginModal() {
   isLoginModalOpen.value = false;
 }
@@ -120,15 +124,15 @@ function returnLabelForRound(round: null | number): string {
   }
 
   const labels: Record<number, string> = {
-    1: 'Grupos 1',
-    2: 'Grupos 2',
-    3: 'Grupos 3',
-    4: '16 Avos',
-    5: 'Oitavas',
-    6: 'Quartas',
-    7: 'Semi Finais',
-    8: 'Disputa 3º Lugar',
-    9: 'Final',
+    1: t('rounds.1.short'),
+    2: t('rounds.2.short'),
+    3: t('rounds.3.short'),
+    4: t('rounds.4.short'),
+    5: t('rounds.5.short'),
+    6: t('rounds.6.short'),
+    7: t('rounds.7.short'),
+    8: t('rounds.8.short'),
+    9: t('rounds.9.short'),
   };
   return labels[round] || `Rodada ${round}`;
 }
@@ -181,12 +185,14 @@ function updateCallback(isSuccess: boolean, isRemoving: boolean, selectedUser: s
 const chartData = computed(() => {
   const userLine = editionRanking.value.find((userRanking) => userRanking.user.id === props.selectedUser?.id);
   const roundsRankingList = Array.isArray(roundsRanking.value) ? roundsRanking.value : [];
-  const userRoundsRanking = roundsRankingList.map((round) => {
-    return {
-      ranking: round.ranking.find((userRanking) => userRanking.user.id === props.selectedUser?.id),
-      round: round.round,
-    };
-  });
+  const userRoundsRanking = roundsRankingList
+    .map((round) => {
+      return {
+        ranking: round.ranking.find((userRanking) => userRanking.user.id === props.selectedUser?.id),
+        round: round.round,
+      };
+    })
+    .filter((entry) => entry.ranking?.isFinished || (entry.ranking?.score.points && entry.ranking?.score.points > 0));
 
   if (!userLine) {
     return {
@@ -202,7 +208,7 @@ const chartData = computed(() => {
         borderColor: '#f4b303',
         borderWidth: 2,
         data: userRoundsRanking.map((round) => round.ranking?.score.position),
-        label: 'Posição',
+        label: t('userTrackingModal.position'),
         tension: 0.4,
         type: 'line',
         yAxisID: 'y1',
@@ -212,7 +218,7 @@ const chartData = computed(() => {
         borderColor: '#de6135',
         borderWidth: 2,
         data: userRoundsRanking.map((round) => round.ranking?.accumulatedScore.position),
-        label: 'Posição Geral',
+        label: t('userTrackingModal.globalPosition'),
         tension: 0.4,
         type: 'line',
         yAxisID: 'y1',
@@ -220,7 +226,7 @@ const chartData = computed(() => {
       {
         backgroundColor: '#29c84e50',
         data: userRoundsRanking.map((round) => round.ranking?.score.percentage),
-        label: '% de Pontos na Rodada',
+        label: t('userTrackingModal.pointsPercentage'),
         type: 'bar',
         yAxisID: 'y',
       },
@@ -229,17 +235,31 @@ const chartData = computed(() => {
   };
 });
 
-const chartOptions = {
+const chartOptions = computed(() => ({
   maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      labels: {
+        color: getCssVar('--bolao-c-white', '#495057'),
+      },
+    },
+  },
   responsive: true,
   scales: {
-    x: { stacked: true },
-    y: {
-      position: 'left',
+    x: {
+      grid: { color: getCssVar('--bolao-c-grey1-t1', 'rgb(128 128 128 / 20%)') },
       stacked: true,
+      ticks: { color: getCssVar('--bolao-c-white', '#495057') },
+    },
+    y: {
+      grid: { color: getCssVar('--bolao-c-grey1-t1', 'rgb(128 128 128 / 20%)') },
+      position: 'left' as const,
+      stacked: true,
+      ticks: { color: getCssVar('--bolao-c-white', '#495057') },
       title: {
+        color: getCssVar('--bolao-c-white', '#495057'),
         display: true,
-        text: 'Pontos Acumulados',
+        text: t('userTrackingModal.pointsPercentage'),
       },
     },
     y1: {
@@ -250,21 +270,23 @@ const chartOptions = {
       },
       max: 140,
       min: 1,
-      position: 'right',
+      position: 'right' as const,
       reverse: true,
       stacked: false,
       ticks: {
+        color: getCssVar('--bolao-c-white', '#495057'),
         min: 1,
         stepSize: 1,
       },
       title: {
+        color: getCssVar('--bolao-c-white', '#495057'),
         display: true,
-        text: 'Posição',
+        text: t('userTrackingModal.position'),
       },
       type: 'linear',
     },
   },
-};
+}));
 
 // ------ Watches ------
 watch(
@@ -276,8 +298,11 @@ watch(
   },
 );
 
+const { lock, unlock } = useScrollLock();
+
 watch(isVisible, async (newValue) => {
-  document.documentElement.style.overflow = newValue ? 'hidden' : '';
+  if (newValue) lock();
+  else unlock();
   if (!newValue) {
     props.handleCloseModal();
   }
@@ -327,5 +352,12 @@ watch(isVisible, async (newValue) => {
     grid-template-columns: repeat(auto-fill, minmax(80px, 140px));
     gap: var(--s-spacing);
   }
+}
+</style>
+<style lang="scss">
+.p-chart {
+  height: 300px;
+  background-color: var(--bolao-c-grey1-t1);
+  border-radius: var(--border-radius);
 }
 </style>

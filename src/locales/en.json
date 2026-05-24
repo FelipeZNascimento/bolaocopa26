@@ -77,8 +77,11 @@
     },
     "addFavoriteTooltip": "Add to Favorites",
     "removeFavoriteTooltip": "Remove from Favorites",
-    "chartExplanation": "The score in the chart does not include extra points, only the accumulated points from regular bets.",
-    "extraBets": "Extra Bets"
+    "chartExplanation": "The score in the chart does not include extra points, only the points received from regular bets.",
+    "extraBets": "Extra Bets",
+    "position": "Position",
+    "globalPosition": "Global Position",
+    "pointsPercentage": "% of Points"
   },
   "loginModal": {
     "titles": {

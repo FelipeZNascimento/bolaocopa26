@@ -185,6 +185,7 @@ import { useI18n } from 'vue-i18n';
 import type { ITeam } from '@/stores/teams.types';
 
 import ClickableTeamCard from '@/components/ClickableTeamCard.vue';
+import { useScrollLock } from '@/composables/useScrollLock';
 import { useClockStore } from '@/stores/clock';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useTeamsStore } from '@/stores/teams';
@@ -243,8 +244,11 @@ watch(
   },
 );
 
+const { lock, unlock } = useScrollLock();
+
 watch(isVisible, (newValue) => {
-  document.documentElement.style.overflow = newValue ? 'hidden' : '';
+  if (newValue) lock();
+  else unlock();
   if (!newValue) {
     props.handleCloseModal();
   }

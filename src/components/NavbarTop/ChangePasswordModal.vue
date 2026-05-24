@@ -120,6 +120,7 @@ import { Form, type FormSubmitEvent } from '@primevue/forms';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import { useScrollLock } from '@/composables/useScrollLock';
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { updatePasswordResolver } from '@/util/zodResolvers';
@@ -181,8 +182,11 @@ watch(
   },
 );
 
+const { lock, unlock } = useScrollLock();
+
 watch(isVisible, async (newValue) => {
-  document.documentElement.style.overflow = newValue ? 'hidden' : '';
+  if (newValue) lock();
+  else unlock();
   if (!newValue) {
     isUpdateSuccess.value = false;
     activeProfileStore.setError(null);

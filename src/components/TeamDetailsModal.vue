@@ -106,6 +106,7 @@ import { useI18n } from 'vue-i18n';
 import type { ITeam } from '@/stores/teams.types';
 
 import HoverablePlayerName from '@/components/HoverablePlayerName.vue';
+import { useScrollLock } from '@/composables/useScrollLock';
 import { useViewport } from '@/services/viewport';
 
 const props = defineProps<{
@@ -143,8 +144,11 @@ watch(
   },
 );
 
+const { lock, unlock } = useScrollLock();
+
 watch(isVisible, (newValue) => {
-  document.documentElement.style.overflow = newValue ? 'hidden' : '';
+  if (newValue) lock();
+  else unlock();
   if (!newValue) {
     props.handleCloseModal();
   }

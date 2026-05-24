@@ -101,6 +101,7 @@ import { useI18n } from 'vue-i18n';
 
 import type { IBet, IMatch } from '@/stores/matches.types';
 
+import { useScrollLock } from '@/composables/useScrollLock';
 import { HIT_LEVELS, type THitLevel } from '@/constants/bets';
 import UserService from '@/services/user';
 import { useViewport } from '@/services/viewport';
@@ -250,8 +251,11 @@ watch(
   },
 );
 
+const { lock, unlock } = useScrollLock();
+
 watch(isVisible, async (newValue) => {
-  document.documentElement.style.overflow = newValue ? 'hidden' : '';
+  if (newValue) lock();
+  else unlock();
   if (!newValue) {
     props.handleCloseModal();
   }

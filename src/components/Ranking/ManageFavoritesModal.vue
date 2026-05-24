@@ -57,6 +57,7 @@ import { useI18n } from 'vue-i18n';
 
 import type { IUser } from '@/stores/activeProfile.types';
 
+import { useScrollLock } from '@/composables/useScrollLock';
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
@@ -138,8 +139,11 @@ watch(
   },
 );
 
+const { lock, unlock } = useScrollLock();
+
 watch(isVisible, (newValue) => {
-  document.documentElement.style.overflow = newValue ? 'hidden' : '';
+  if (newValue) lock();
+  else unlock();
   if (!newValue) {
     props.handleCloseModal();
   }

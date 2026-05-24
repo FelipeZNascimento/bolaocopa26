@@ -77,11 +77,13 @@ const { t } = useI18n();
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
   window.visualViewport?.addEventListener('resize', handleVisualViewport);
+  window.visualViewport?.addEventListener('scroll', handleVisualViewport);
 });
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
   window.visualViewport?.removeEventListener('resize', handleVisualViewport);
+  window.visualViewport?.removeEventListener('scroll', handleVisualViewport);
 });
 
 // Watch for save trigger from keyboard shortcuts
@@ -111,7 +113,10 @@ const saveButtonTooltip = computed(() => {
 // ------ Functions ------
 const handleVisualViewport = () => {
   if (!window.visualViewport) return;
-  keyboardOffset.value = Math.max(0, window.innerHeight - window.visualViewport.height);
+  keyboardOffset.value = Math.max(
+    0,
+    window.innerHeight - window.visualViewport.offsetTop - window.visualViewport.height,
+  );
 };
 
 const handleScroll = () => {
