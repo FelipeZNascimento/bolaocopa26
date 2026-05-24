@@ -291,7 +291,8 @@
     "news": {
       "loadingError": "Failed to load news",
       "noNews": "No news available",
-      "readMore": "Read more"
+      "readMore": "Read more",
+      "seeMore": "See more"
     },
     "socialGroups": {
       "tagline": "Join our groups to follow results, cheer together and never miss a pool update!",

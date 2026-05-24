@@ -30,61 +30,81 @@
       <span>{{ t('home.news.noNews') }}</span>
     </div>
 
-    <div
-      v-else
-      class="news-list"
-    >
-      <a
-        v-for="item in newsStore.news"
-        :key="item.id"
-        :href="item.link"
-        class="news-item"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <div
-          v-if="item.image"
-          class="news-image-wrapper"
+    <template v-else>
+      <div class="news-list">
+        <a
+          v-for="item in visibleNews"
+          :key="item.id"
+          :href="item.link"
+          class="news-item"
+          target="_blank"
+          rel="noopener noreferrer"
         >
-          <PrimeSkeleton
-            v-if="imageLoading[item.id]"
-            class="image-skeleton"
-          />
-          <img
-            :src="item.image"
-            :alt="item.title"
-            class="news-image"
-            :class="{ 'is-loading': imageLoading[item.id] }"
-            loading="lazy"
-            @load="onImageLoad(item.id)"
-            @error="onImageLoad(item.id)"
-          />
-        </div>
-        <div class="news-body">
-          <span class="news-title">{{ item.title }}</span>
-          <p class="news-summary">{{ item.summary }}</p>
-          <span class="news-read-more">
-            {{ t('home.news.readMore') }}
-            <i class="pi pi-external-link" />
-          </span>
-        </div>
-      </a>
-    </div>
+          <div
+            v-if="item.image"
+            class="news-image-wrapper"
+          >
+            <PrimeSkeleton
+              v-if="imageLoading[item.id]"
+              class="image-skeleton"
+            />
+            <img
+              :src="item.image"
+              :alt="item.title"
+              class="news-image"
+              :class="{ 'is-loading': imageLoading[item.id] }"
+              loading="lazy"
+              @load="onImageLoad(item.id)"
+              @error="onImageLoad(item.id)"
+            />
+          </div>
+          <div class="news-body">
+            <span class="news-title">{{ item.title }}</span>
+            <p class="news-summary">{{ item.summary }}</p>
+            <span class="news-read-more">
+              {{ t('home.news.readMore') }}
+              <i class="pi pi-external-link" />
+            </span>
+          </div>
+        </a>
+      </div>
+      <button
+        v-if="showToggle"
+        class="news-toggle"
+        @click="loadMore"
+      >
+        {{ t('home.news.seeMore') }}
+        <i class="pi pi-chevron-down" />
+      </button>
+    </template>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive, watch } from 'vue';
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import NewsService from '@/services/news';
 import { useNewsStore } from '@/stores/news';
+
+const MOBILE_BREAKPOINT = '(max-width: 768px)';
+const MOBILE_PAGE_SIZE = 3;
+const DESKTOP_PAGE_SIZE = 5;
 
 const { t } = useI18n();
 
 const newsStore = useNewsStore();
 const newsService = new NewsService();
 const imageLoading = reactive<Record<number, boolean>>({});
+const isMobile = ref(window.matchMedia(MOBILE_BREAKPOINT).matches);
+const pageSize = computed(() => (isMobile.value ? MOBILE_PAGE_SIZE : DESKTOP_PAGE_SIZE));
+const visibleCount = ref(pageSize.value);
+const visibleNews = computed(() => newsStore.news.slice(0, visibleCount.value));
+const showToggle = computed(() => visibleCount.value < newsStore.news.length);
+
+watch(pageSize, (size) => {
+  visibleCount.value = size;
+});
 
 watch(
   () => newsStore.news,
@@ -98,12 +118,28 @@ watch(
   { immediate: true },
 );
 
+function loadMore() {
+  visibleCount.value += pageSize.value;
+}
+
 function onImageLoad(id: number) {
   imageLoading[id] = false;
 }
 
+let mq: MediaQueryList | null = null;
+
+function onMqChange(e: MediaQueryListEvent) {
+  isMobile.value = e.matches;
+}
+
 onMounted(() => {
+  mq = window.matchMedia(MOBILE_BREAKPOINT);
+  mq.addEventListener('change', onMqChange);
   newsService.fetch();
+});
+
+onUnmounted(() => {
+  mq?.removeEventListener('change', onMqChange);
 });
 </script>
 
@@ -254,6 +290,26 @@ onMounted(() => {
   transition: color 0.15s ease;
 
   .news-item:hover & {
+    color: var(--bolao-c-sky);
+  }
+}
+
+.news-toggle {
+  display: flex;
+  gap: var(--xs-spacing);
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--xs-spacing);
+  font-size: var(--s-font-size);
+  color: var(--bolao-c-blue1);
+  cursor: pointer;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  transition: color 0.15s ease;
+
+  &:hover {
     color: var(--bolao-c-sky);
   }
 }

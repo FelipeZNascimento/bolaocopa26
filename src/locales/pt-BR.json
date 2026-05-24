@@ -291,7 +291,8 @@
     "news": {
       "loadingError": "Erro ao carregar notícias",
       "noNews": "Nenhuma notícia disponível",
-      "readMore": "Ler mais"
+      "readMore": "Ler mais",
+      "seeMore": "Ver mais"
     },
     "socialGroups": {
       "tagline": "Entre nos nossos grupos para acompanhar os resultados, torcer junto e não perder nenhuma novidade do bolão!",

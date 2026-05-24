@@ -33,10 +33,12 @@ import { ref } from 'vue';
 const changelogEntries = ref([
   {
     changes: [
+      '[App] News widget added to the homepage with latest news about the tournament',
       '[App] Modals now block background scrolling when open for better user experience',
       '[App] Teams are now sorted alphabetically by name based on the selected locale',
-      '[Matches] Improvement on match display for both desktop and mobile',
-      '[Matches] Improvement on match display when a match is live',
+      '[Matches] Now able to showcase live score changes and events in real time with improved animations',
+      '[Matches] Improvements on match display for both desktop and mobile',
+      '[Matches] Improvements on match display when a match is live',
       '🐛 [Extras] Countdown on extras for light mode was not readable',
     ],
     date: '23/05/2026',
