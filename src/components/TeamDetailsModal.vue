@@ -39,8 +39,11 @@
               <h2 class="team-name">
                 {{ locale === 'pt-BR' ? team.name : team.nameEn }}
               </h2>
-              <p class="team-name-en">
-                {{ locale === 'pt-BR' ? team.name : team.nameEn }}
+              <p
+                v-if="locale !== 'en'"
+                class="team-name-en"
+              >
+                {{ team.nameEn }}
               </p>
               <p class="team-name-en">
                 {{ team.confederation.abbreviation }}

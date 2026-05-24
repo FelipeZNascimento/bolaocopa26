@@ -98,7 +98,7 @@
       </button>
     </div>
     <div
-      v-if="(selectedRound === 1 || selectedRound === 2 || selectedRound === 3) && route.path === '/partidas'"
+      v-if="hasEditionStarted && route.path === '/partidas'"
       class="toggle-button"
     >
       <button
@@ -121,6 +121,7 @@ import { useRoute } from 'vue-router';
 
 import { ROUNDS } from '@/constants/rounds';
 import { useViewport } from '@/services/viewport';
+import { useClockStore } from '@/stores/clock';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
 
@@ -130,10 +131,8 @@ const isScrolled = ref(false);
 
 // ------ Initialization ------
 const { t } = useI18n();
-const configurationStore = useConfigurationStore();
 const { isDesktop, isMobile } = useViewport();
 const confirm = useConfirm();
-const matchesStore = useMatchesStore();
 const route = useRoute();
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
@@ -143,7 +142,13 @@ onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
 });
 
+// ------ Stores and Services ------
+const configurationStore = useConfigurationStore();
+const matchesStore = useMatchesStore();
+const clockStore = useClockStore();
+
 // ------ Computed Properties ------
+const hasEditionStarted = computed(() => clockStore.hasEditionStarted);
 const selectedRound = computed(() => configurationStore.selectedRound);
 const viewBetOption = computed(() => configurationStore.viewBetOption);
 const visibleRounds = computed(() => rounds.value.filter((r) => !r.hidden));

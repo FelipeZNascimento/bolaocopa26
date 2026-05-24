@@ -50,7 +50,7 @@
           @click="showFavoritesOnly = true"
         />
       </PrimeButtonGroup>
-      <PrimeButtonGroup v-if="isDesktop && isFullPage">
+      <PrimeButtonGroup v-if="isDesktop">
         <PrimeButton
           :label="t('ranking.toggle.withExtras')"
           :disabled="isRound"
@@ -300,14 +300,10 @@ import UserTrackingModal from '../UserTrackingModal.vue';
 import EmptyFavorites from './EmptyFavorites.vue';
 const { t } = useI18n();
 
-withDefaults(
-  defineProps<{
-    columnConfig: TColumnsValue;
-    isFullPage?: boolean;
-    rowSpacingConfig: TRowSpacingValue;
-  }>(),
-  { isFullPage: true },
-);
+defineProps<{
+  columnConfig: TColumnsValue;
+  rowSpacingConfig: TRowSpacingValue;
+}>();
 
 // ------ Refs ------
 const isUserTrackingModalOpen = ref<boolean>(false);
@@ -492,7 +488,7 @@ function scrollToMe() {
   min-height: 0;
 
   @media (width <= 1024px) {
-    width: 100vw;
+    width: 100%;
     max-height: 100vh;
     overflow-x: auto;
     font-size: 12px;

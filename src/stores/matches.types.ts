@@ -28,6 +28,7 @@ export interface IMatch {
   id: number;
   idFifa: number;
   loggedUserBets: IBet | null;
+  pointsAwarded?: IPointsAwarded;
   referee: IReferee;
   round: number;
   score: IScore;
@@ -35,12 +36,20 @@ export interface IMatch {
   status: TMatchStatus;
   timestamp: string;
 }
+
 export interface IMatchEvent {
   event: IEvent;
   id: number;
   matchId: number;
   player: IPlayer;
   playerAssist: IPlayer | null;
+}
+
+export interface IPointsAwarded {
+  exact: number;
+  minimal: number;
+  miss: number;
+  partial: number;
 }
 
 export interface IReferee {

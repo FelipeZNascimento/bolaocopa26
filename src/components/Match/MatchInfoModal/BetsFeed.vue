@@ -73,7 +73,7 @@
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import type { IBet } from '@/stores/matches.types';
+import type { IBet, IPointsAwarded } from '@/stores/matches.types';
 
 import NameTag from '@/components/NameTag.vue';
 import { HIT_LEVELS, HIT_LEVELS_LABELS, HIT_LEVELS_POINTS, type THitLevel } from '@/constants/bets';
@@ -85,6 +85,7 @@ export interface BetWithOutcome extends IBet {
 
 const props = defineProps<{
   bets: BetWithOutcome[];
+  pointsAwarded?: IPointsAwarded;
 }>();
 
 const { t } = useI18n();
@@ -104,28 +105,28 @@ const outcomeCards = computed(() => [
     hitLevel: HIT_LEVELS.exactScore,
     icon: 'pi-trophy',
     label: HIT_LEVELS_LABELS[HIT_LEVELS.exactScore],
-    points: HIT_LEVELS_POINTS[HIT_LEVELS.exactScore],
+    points: props.pointsAwarded?.exact ?? HIT_LEVELS_POINTS[HIT_LEVELS.exactScore],
   },
   {
     count: props.bets.filter((b) => b.hitLevel === HIT_LEVELS.oneScore).length,
     hitLevel: HIT_LEVELS.oneScore,
     icon: 'pi-verified',
     label: HIT_LEVELS_LABELS[HIT_LEVELS.oneScore],
-    points: HIT_LEVELS_POINTS[HIT_LEVELS.oneScore],
+    points: props.pointsAwarded?.partial ?? HIT_LEVELS_POINTS[HIT_LEVELS.oneScore],
   },
   {
     count: props.bets.filter((b) => b.hitLevel === HIT_LEVELS.winnerOnly).length,
     hitLevel: HIT_LEVELS.winnerOnly,
     icon: 'pi-check-circle',
     label: HIT_LEVELS_LABELS[HIT_LEVELS.winnerOnly],
-    points: HIT_LEVELS_POINTS[HIT_LEVELS.winnerOnly],
+    points: props.pointsAwarded?.minimal ?? HIT_LEVELS_POINTS[HIT_LEVELS.winnerOnly],
   },
   {
     count: props.bets.filter((b) => b.hitLevel === HIT_LEVELS.miss).length,
     hitLevel: HIT_LEVELS.miss,
     icon: 'pi-times-circle',
     label: HIT_LEVELS_LABELS[HIT_LEVELS.miss],
-    points: HIT_LEVELS_POINTS[HIT_LEVELS.miss],
+    points: props.pointsAwarded?.miss ?? HIT_LEVELS_POINTS[HIT_LEVELS.miss],
   },
 ]);
 

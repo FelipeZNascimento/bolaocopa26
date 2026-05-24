@@ -82,7 +82,7 @@ const sortedEvents = computed(() => {
 .outer-score-line {
   display: flex;
   flex: 1;
-  gap: var(--m-spacing);
+  gap: var(--xs-spacing);
   align-items: flex-start;
   justify-content: center;
 

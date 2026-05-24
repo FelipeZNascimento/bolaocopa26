@@ -10,7 +10,8 @@
     "dismiss": "Dismiss",
     "clickHere": "Click here",
     "loggedInOnly": "This area is exclusively for logged-in users. Please log in to access this content.",
-    "seeMore": "See more"
+    "seeMore": "See more",
+    "groupStage": "Group stage"
   },
   "navigation": {
     "home": "Home",
@@ -238,7 +239,7 @@
     "dashboard1": "This is your World Cup 2026 dashboard!",
     "dashboard2": "Use the drag and drop feature to organize the widgets as you like. All your adjustments will be saved automatically for the next time you access the Bolão.",
     "welcome": {
-      "headline": "Your bracket, your Cup!",
+      "headline": "Your Bolão, your Cup!",
       "description": "Predict scores, crown the champion and climb the leaderboard! Bolão World Cup 2026 lets you bet on every single match, challenge your friends, unlock extra bets (top scorer, best player & more) and watch a live ranking update with every goal. Think you’ve got what it takes?",
       "features": {
         "champion": "Predict the score of every match",
@@ -672,13 +673,12 @@
       },
       "changeAfterBet": {
         "question": "Can I change my bets after placing them?",
-        "answer1": "Bets can be changed at any time before kick-off. To change a bet, just find the match in the ",
-        "answerLink": "Matches",
-        "answer2": " section and make the desired changes. Remember to save your changes for them to be recorded. Once the match starts, bets are locked and can no longer be modified."
+        "answer1": "Bets can be changed at any time before kick-off. To change a bet, just find the match in the Matches section and make the desired changes. Remember to save your changes for them to be recorded. Once the match starts, bets are locked and can no longer be modified.",
+        "answerLink": "Click here to see all Matches"
       },
       "missedBet": {
         "question": "If I miss a match, can I still bet on the next ones?",
-        "answer": "Yes! Only matches that have already finished can no longer receive bets. For future matches, you can place your bets normally, even if you missed the chance to bet on a previous one."
+        "answer": "Yes! Only matches that have already started cannot receive bets. For future matches, you can place your bets normally, even if you missed the chance to bet on a previous one."
       },
       "cantBet": {
         "question": "I can't place my bets — what now?",

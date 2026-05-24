@@ -54,7 +54,7 @@
               :class="{ activeToggle: !showFavoritesOnly }"
               @click="showFavoritesOnly = false"
             >
-              <i class="pi pi-list" /> Todos
+              <i class="pi pi-list" /> {{ t('ranking.toggle.all') }}
             </span>
             <span
               class="toggle"
@@ -70,14 +70,17 @@
                   'pi pi-star': !showFavoritesOnly,
                 }"
               />
-              Favoritos
+              {{ t('ranking.toggle.favorites') }}
             </span>
           </div>
           <div
             v-if="isMatchStarted"
             class="bets-outer"
           >
-            <BetsFeed :bets="betsWithOutcome" />
+            <BetsFeed
+              :bets="betsWithOutcome"
+              :points-awarded="props.match.pointsAwarded"
+            />
           </div>
           <div
             v-else
@@ -144,11 +147,19 @@ const betsWithOutcome = computed(() => {
     const activeIds = new Set(activeUserBets.map((b) => b.id));
 
     for (const bet of activeUserBets) {
-      result.push({ ...bet, hitLevel: level, isActiveUser: true });
+      result.push({
+        ...bet,
+        hitLevel: level,
+        isActiveUser: true,
+      });
     }
     for (const bet of levelBets) {
       if (!activeIds.has(bet.id)) {
-        result.push({ ...bet, hitLevel: level, isActiveUser: false });
+        result.push({
+          ...bet,
+          hitLevel: level,
+          isActiveUser: false,
+        });
       }
     }
   }

@@ -287,16 +287,6 @@ function openTeamModal(team: ITeam) {
   height: 100%;
   object-fit: cover;
   opacity: 1;
-
-  @media (width <= 768px) {
-    .is-mini & {
-      width: 24px;
-      height: auto;
-      margin: 0 var(--xxs-spacing);
-      object-fit: contain;
-      opacity: 1;
-    }
-  }
 }
 
 .team-alias {
@@ -318,6 +308,18 @@ function openTeamModal(team: ITeam) {
     0 1px 3px rgb(from var(--color-main) r g b / 100%),
     0 0 8px rgb(from var(--color-main) r g b / 100%);
   transition: color 0.2s ease;
+
+  @media (width <=768px) {
+    max-width: 60%;
+    padding: var(--xs-spacing);
+    margin: var(--l-spacing) 0;
+    font-size: var(--xs-font-size);
+    line-height: var(--l-spacing);
+  }
+
+  @media (width <=320px) {
+    max-width: 70%;
+  }
 
   &.clickable {
     text-decoration: none;
@@ -347,22 +349,12 @@ function openTeamModal(team: ITeam) {
   }
 
   &.is-mini {
-    padding: var(--xs-spacing);
-    overflow: hidden;
-    font-size: var(--xs-font-size);
-    line-height: var(--l-spacing);
-  }
-
-  @media (width <=768px) {
-    max-width: 60%;
-    padding: var(--xs-spacing);
-    margin: var(--l-spacing) 0;
-    font-size: var(--xs-font-size);
-    line-height: var(--l-spacing);
-  }
-
-  @media (width <=320px) {
     max-width: 70%;
+    padding: var(--xs-spacing);
+    margin: 0;
+    overflow: hidden;
+    font-size: var(--xxs-font-size);
+    line-height: var(--l-spacing);
   }
 }
 
