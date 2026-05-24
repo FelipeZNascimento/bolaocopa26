@@ -95,7 +95,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { handle } from '@primeuix/themes/aura/imagecompare';
 import { useConfirm } from 'primevue/useconfirm';
 import { computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
