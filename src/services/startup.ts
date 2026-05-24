@@ -32,6 +32,10 @@ export default class StartupService {
     this.teamsStore = useTeamsStore();
   }
 
+  cacheFlush() {
+    this.apiRequest.get('admin/flush', undefined, { retries: 3 });
+  }
+
   public async initialize(callback: (isSuccess: boolean) => void) {
     this.initializeLocalStoragePreferences();
     this.activeProfileStore.setLoading(true);

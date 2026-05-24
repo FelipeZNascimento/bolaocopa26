@@ -1,11 +1,20 @@
 <template>
   <div class="admin-view">
     <h2>Admin</h2>
-    <PrimeButton
-      style="margin-bottom: var(--s-spacing)"
-      label="Refresh Users"
-      @click="userService.getAll(getUsersCallback)"
-    />
+    <div style="display: flex">
+      <PrimeButton
+        style="margin-bottom: var(--s-spacing)"
+        label="Refresh Users"
+        @click="userService.getAll(getUsersCallback)"
+      />
+      <PrimeDivider layout="vertical" />
+      <PrimeButton
+        style="margin-bottom: var(--s-spacing)"
+        label="Flush Cache"
+        severity="danger"
+        @click="handleFlushCache"
+      />
+    </div>
     <p>Usuários: {{ users.filter((u) => u.isActive).length }}/{{ users.length }}</p>
     <PrimeDataTable
       :value="users"
@@ -86,6 +95,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import { handle } from '@primeuix/themes/aura/imagecompare';
 import { useConfirm } from 'primevue/useconfirm';
 import { computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
@@ -94,6 +104,7 @@ import type { IUser } from '@/stores/activeProfile.types';
 
 import OnlineBadge from '@/components/OnlineBadge.vue';
 import RankingService from '@/services/ranking';
+import StartupService from '@/services/startup';
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useAdminStore } from '@/stores/admin';
@@ -109,6 +120,7 @@ const router = useRouter();
 const confirm = useConfirm();
 const userService = new UserService();
 const rankingService = new RankingService();
+const startupService = new StartupService();
 
 // ------ Computed Properties ------
 const activeProfile = computed(() => activeProfileStore.activeProfile);
@@ -167,6 +179,19 @@ function handleDelete(user: IUser) {
     header: `Confirmar unlink de "${user.nickname}"`,
     icon: 'pi pi-exclamation-triangle',
     message: `Tem certeza que deseja remover "${user.nickname}" do Bolão 2026?`,
+    rejectProps: { label: 'Cancelar', severity: 'secondary', variant: 'text' },
+  });
+}
+
+function handleFlushCache() {
+  confirm.require({
+    accept: () => {
+      startupService.cacheFlush();
+    },
+    acceptProps: { label: 'Confirmar', severity: 'danger' },
+    header: 'Confirmar Flush Cache',
+    icon: 'pi pi-exclamation-triangle',
+    message: 'Tem certeza que deseja limpar o cache?',
     rejectProps: { label: 'Cancelar', severity: 'secondary', variant: 'text' },
   });
 }
