@@ -88,7 +88,7 @@
       class="toggle-button"
     >
       <button
-        v-tooltip.right="matchListSorting === 'group' ? t('paginator.sortByTime') : t('paginator.sortByGroup')"
+        v-tooltip.bottom="matchListSorting === 'group' ? t('paginator.sortByTime') : t('paginator.sortByGroup')"
         class="action-btn"
         :aria-label="matchListSorting === 'group' ? t('paginator.sortByTime') : t('paginator.sortByGroup')"
         :title="matchListSorting === 'group' ? t('paginator.sortByTime') : t('paginator.sortByGroup')"
@@ -102,7 +102,7 @@
       class="toggle-button"
     >
       <button
-        v-tooltip.right="viewBetOption === 'viewBets' ? t('paginator.viewBets') : t('paginator.hideBets')"
+        v-tooltip.bottom="viewBetOption === 'viewBets' ? t('paginator.viewBets') : t('paginator.hideBets')"
         class="action-btn"
         :aria-label="viewBetOption === 'viewBets' ? t('paginator.viewBets') : t('paginator.hideBets')"
         :title="viewBetOption === 'viewBets' ? t('paginator.viewBets') : t('paginator.hideBets')"
