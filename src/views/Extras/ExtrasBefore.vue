@@ -335,7 +335,7 @@ function onSelectToggle(option: IToggleOption) {
   width: 100%;
 
   @media (width <= 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
     gap: var(--s-spacing);
   }
 }
