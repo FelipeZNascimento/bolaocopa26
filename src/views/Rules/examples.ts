@@ -91,6 +91,7 @@ const referee: IReferee = {
   dateOfBirth: '0000-00-00',
   id: 37,
   idFifa: 0,
+  isoCode: 'UND',
   name: 'Não definido',
 };
 
@@ -103,7 +104,9 @@ const stadium: IStadium = {
   geoLongitude: '-74.0742',
   id: 23,
   idCountry: 70,
+  isoCode: 'US',
   name: 'MetLife Stadium',
+  url: '',
 };
 
 export const firstExample: IMatch = {
