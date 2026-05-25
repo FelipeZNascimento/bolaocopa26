@@ -41,7 +41,7 @@ const changelogEntries = ref([
       '[Matches] Improvements on match display when a match is live',
       '🐛 [Extras] Countdown on extras for light mode was not readable',
     ],
-    date: '23/05/2026',
+    date: '25/05/2026',
     version: 'v1.0.6',
   },
   {
