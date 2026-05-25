@@ -10,6 +10,105 @@
     />
   </div>
 
+  <section
+    v-if="isBracketLoading || bracketData.length > 0"
+    class="bracket-section"
+  >
+    <div class="stage-tabs">
+      <template v-if="isBracketLoading">
+        <PrimeSkeleton
+          v-for="i in 6"
+          :key="i"
+          class="skel-tab"
+        />
+      </template>
+      <template v-else>
+        <button
+          v-for="stage in sortedStages"
+          :key="stage.IdStage"
+          class="stage-tab"
+          :class="{ 'stage-tab--active': selectedStageId === stage.IdStage }"
+          @click="selectedStageId = stage.IdStage"
+        >
+          {{ getStageName(stage) }}
+        </button>
+      </template>
+    </div>
+
+    <div class="bracket-matches">
+      <template v-if="isBracketLoading">
+        <div
+          v-for="i in 8"
+          :key="i"
+          class="match-card"
+        >
+          <PrimeSkeleton class="skel-match" />
+        </div>
+      </template>
+      <div
+        v-for="match in selectedStageMatches"
+        v-else
+        :key="match.IdMatch"
+        class="match-card"
+      >
+        <div class="match-number">{{ match.MatchNumber }}</div>
+        <div
+          class="match-team"
+          :class="{
+            'match-team--winner': isMatchWinner(match, match.HomeTeam),
+            'match-team--loser': isMatchLoser(match, match.HomeTeam),
+          }"
+        >
+          <img
+            v-if="getBracketTeamFlag(match.HomeTeam)"
+            class="match-flag"
+            :src="`https://assets.omegafox.me/copa/countries_flags/${getBracketTeamFlag(match.HomeTeam)}.png`"
+            :alt="match.HomeTeam?.Abbreviation"
+          />
+          <span class="match-team__name">{{
+            match.HomeTeam ? getBracketTeamName(match.HomeTeam) : match.PlaceHolderA
+          }}</span>
+          <span
+            v-if="match.HomeTeamScore !== null"
+            class="match-team__score"
+            >{{ match.HomeTeamScore }}</span
+          >
+        </div>
+        <div class="match-divider" />
+        <div
+          class="match-team"
+          :class="{
+            'match-team--winner': isMatchWinner(match, match.AwayTeam),
+            'match-team--loser': isMatchLoser(match, match.AwayTeam),
+          }"
+        >
+          <img
+            v-if="getBracketTeamFlag(match.AwayTeam)"
+            class="match-flag"
+            :src="`https://assets.omegafox.me/copa/countries_flags/${getBracketTeamFlag(match.AwayTeam)}.png`"
+            :alt="match.AwayTeam?.Abbreviation"
+          />
+          <span class="match-team__name">{{
+            match.AwayTeam ? getBracketTeamName(match.AwayTeam) : match.PlaceHolderB
+          }}</span>
+          <span
+            v-if="match.AwayTeamScore !== null"
+            class="match-team__score"
+            >{{ match.AwayTeamScore }}</span
+          >
+        </div>
+        <div
+          v-if="match.HomeTeamPenaltyScore !== null"
+          class="match-penalties"
+        >
+          ({{ match.HomeTeamPenaltyScore }}–{{ match.AwayTeamPenaltyScore }} pen)
+        </div>
+      </div>
+    </div>
+
+    <div class="bracket-divider" />
+  </section>
+
   <div class="standings-grid">
     <template v-if="isLoading">
       <div
@@ -119,6 +218,36 @@ import TeamService from '@/services/team';
 import { useViewport } from '@/services/viewport';
 import { useTeamsStore } from '@/stores/teams';
 
+interface IBracketMatch {
+  AwayTeam: IBracketTeam | null;
+  AwayTeamPenaltyScore: null | number;
+  AwayTeamScore: null | number;
+  HomeTeam: IBracketTeam | null;
+  HomeTeamPenaltyScore: null | number;
+  HomeTeamScore: null | number;
+  IdMatch: string;
+  MatchNumber: number;
+  MatchStatus: number;
+  PlaceHolderA: string;
+  PlaceHolderB: string;
+  Winner: null | string;
+}
+
+interface IBracketStage {
+  IdStage: string;
+  Matches: IBracketMatch[];
+  Name: Array<{ Description: string; Locale: string }>;
+  SequenceOrder: number;
+}
+
+interface IBracketTeam {
+  Abbreviation: string;
+  IdCountry: string;
+  IdTeam: string;
+  Score: null | number;
+  TeamName: Array<{ Description: string; Locale: string }>;
+}
+
 interface IStandingEntry {
   Against: number;
   Drawn: number;
@@ -151,6 +280,9 @@ const STANDINGS_URL = `https://api.fifa.com/api/v3/calendar/17/285023/289273/sta
 const standings = ref<IStandingEntry[]>([]);
 const isLoading = ref(true);
 const selectedTeam = ref<ITeam | null>(null);
+const bracketData = ref<IBracketStage[]>([]);
+const isBracketLoading = ref(false);
+const selectedStageId = ref('');
 
 const teamByFifaId = computed(() => {
   const map = new Map<number, ITeam>();
@@ -159,6 +291,23 @@ const teamByFifaId = computed(() => {
   }
   return map;
 });
+
+function getBracketTeamFlag(team: IBracketTeam | null): string {
+  if (!team) return '';
+  const storeTeam = getTeam(team.IdTeam);
+  if (storeTeam?.isoCode) return storeTeam.isoCode.toLowerCase();
+  return team.IdCountry.toLowerCase();
+}
+
+function getBracketTeamName(team: IBracketTeam): string {
+  const storeTeam = getTeam(team.IdTeam);
+  if (storeTeam) return locale.value === 'pt-BR' ? storeTeam.name : storeTeam.nameEn;
+  return team.TeamName[0]?.Description ?? team.Abbreviation;
+}
+
+function getStageName(stage: IBracketStage): string {
+  return stage.Name[0]?.Description ?? '';
+}
 
 function getTeam(fifaId: string): ITeam | undefined {
   return teamByFifaId.value.get(Number(fifaId));
@@ -169,6 +318,23 @@ function getTeamName(fifaId: string): string {
   if (!team) return '';
   return locale.value === 'pt-BR' ? team.name : team.nameEn;
 }
+
+function isMatchLoser(match: IBracketMatch, team: IBracketTeam | null): boolean {
+  if (!match.Winner || !team) return false;
+  return match.Winner !== team.IdTeam;
+}
+
+function isMatchWinner(match: IBracketMatch, team: IBracketTeam | null): boolean {
+  if (!match.Winner || !team) return false;
+  return match.Winner === team.IdTeam;
+}
+
+const sortedStages = computed(() => [...bracketData.value].sort((a, b) => a.SequenceOrder - b.SequenceOrder));
+
+const selectedStageMatches = computed(() => {
+  const stage = bracketData.value.find((s) => s.IdStage === selectedStageId.value);
+  return stage?.Matches ?? [];
+});
 
 const groupedStandings = computed(() => {
   const groupMap = new Map<string, { entries: IStandingEntry[]; name: string }>();
@@ -190,8 +356,29 @@ const groupedStandings = computed(() => {
 
 onMounted(async () => {
   teamService.fetch();
-  await fetchStandings();
+  await Promise.all([fetchStandings(), fetchBracket()]);
 });
+
+async function fetchBracket() {
+  // Uncomment to restrict to knockout phase only:
+  // const { currentRound } = useConfigurationStore();
+  // if (currentRound < 4) return;
+  isBracketLoading.value = true;
+  const lang = locale.value === 'pt-BR' ? 'pt' : 'en';
+  try {
+    const response = await fetch(`https://api.fifa.com/api/v3/seasonbracket/season/285023?language=${lang}`);
+    const data = await response.json();
+    const stages = (data.KnockoutStages as IBracketStage[]) ?? [];
+    bracketData.value = [...stages].sort((a, b) => a.SequenceOrder - b.SequenceOrder);
+    if (bracketData.value.length > 0 && !selectedStageId.value) {
+      selectedStageId.value = bracketData.value[0].IdStage;
+    }
+  } catch {
+    bracketData.value = [];
+  } finally {
+    isBracketLoading.value = false;
+  }
+}
 
 async function fetchStandings() {
   isLoading.value = true;
@@ -387,5 +574,136 @@ async function fetchStandings() {
 
 .gd--negative {
   color: #f87171;
+}
+
+.bracket-section {
+  width: 100%;
+  margin-bottom: var(--l-spacing);
+}
+
+.stage-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--xs-spacing);
+  align-items: center;
+  margin-bottom: var(--m-spacing);
+  overflow-x: auto;
+}
+
+.skel-tab {
+  width: 80px;
+  height: 32px;
+  border-radius: var(--border-radius);
+}
+
+.stage-tab {
+  padding: var(--xs-spacing) var(--s-spacing);
+  font-size: var(--xs-font-size);
+  font-weight: 600;
+  color: var(--bolao-c-grey3);
+  white-space: nowrap;
+  cursor: pointer;
+  background-color: var(--bolao-c-blue4);
+  border: 1px solid var(--bolao-c-blue3);
+  border-radius: var(--border-radius);
+  transition: all 0.2s ease;
+
+  @media (hover: hover) {
+    &:hover {
+      color: var(--bolao-c-white);
+      border-color: var(--bolao-c-blue-l2);
+    }
+  }
+
+  &.stage-tab--active {
+    color: var(--bolao-c-gold);
+    background-color: rgb(from var(--bolao-c-gold) r g b / 10%);
+    border-color: var(--bolao-c-gold);
+  }
+}
+
+.bracket-matches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--m-spacing);
+  margin-bottom: var(--l-spacing);
+}
+
+.skel-match {
+  height: 88px;
+}
+
+.match-card {
+  overflow: hidden;
+  background-color: var(--bolao-c-blue4);
+  border: 1px solid var(--bolao-c-blue3);
+  border-radius: var(--border-radius);
+}
+
+.match-number {
+  padding: 4px var(--s-spacing);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--bolao-c-grey5);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background-color: var(--bolao-c-blue3);
+}
+
+.match-team {
+  display: flex;
+  gap: var(--xs-spacing);
+  align-items: center;
+  padding: var(--xs-spacing) var(--s-spacing);
+  transition: opacity 0.2s ease;
+
+  &--winner {
+    background-color: rgb(from var(--bolao-c-gold) r g b / 8%);
+  }
+
+  &--loser {
+    opacity: 0.5;
+  }
+}
+
+.match-flag {
+  width: 18px;
+  height: 12px;
+  object-fit: contain;
+}
+
+.match-team__name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: var(--xs-font-size);
+  color: var(--bolao-c-grey1);
+  white-space: nowrap;
+}
+
+.match-team__score {
+  font-size: var(--s-font-size);
+  font-weight: 800;
+  color: var(--bolao-c-white);
+}
+
+.match-divider {
+  height: 1px;
+  background-color: var(--bolao-c-blue3);
+}
+
+.match-penalties {
+  padding: 2px var(--s-spacing);
+  font-size: 10px;
+  color: var(--bolao-c-grey5);
+  text-align: center;
+  background-color: var(--bolao-c-blue3);
+}
+
+.bracket-divider {
+  width: 100%;
+  height: 1px;
+  margin-bottom: var(--xl-spacing);
+  background-color: var(--bolao-c-blue3);
 }
 </style>

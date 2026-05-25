@@ -36,6 +36,7 @@
       </div>
       <BettingInput
         :is-mini="isMini"
+        :is-demo="isDemo"
         :match="match"
         :is-home-team="isHomeTeam"
         :is-winning="isWinning"
@@ -106,6 +107,7 @@ const props = withDefaults(
     events: IMatchEvent[];
     hitLevel?: null | THitLevel;
     isAlias?: boolean;
+    isDemo?: boolean;
     isHomeTeam?: boolean;
     isMini?: boolean;
     isNameless?: boolean;
@@ -115,6 +117,7 @@ const props = withDefaults(
   }>(),
   {
     isAlias: false,
+    isDemo: false,
     isHomeTeam: false,
     isMini: false,
     isNameless: false,

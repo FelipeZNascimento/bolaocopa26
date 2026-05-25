@@ -48,6 +48,7 @@
       :is-match-started="isMatchStarted"
       :hit-level="hitLevel"
       :is-mini="isMini"
+      :is-demo="isDemo"
     />
     <div
       v-if="!isDemo && !isMobile"
