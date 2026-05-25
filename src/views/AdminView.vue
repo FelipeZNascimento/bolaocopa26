@@ -201,7 +201,7 @@ watch(
   ([profile, loading]) => {
     if (loading) return;
     if (!profile || !profile.admin) {
-      router.replace('/jogos');
+      router.replace('/partidas');
       return;
     }
     userService.getAll(getUsersCallback);

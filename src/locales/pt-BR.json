@@ -483,7 +483,7 @@
         "third": "Disputa de 3º lugar",
         "final": "Final"
       },
-      "missNote": "● {miss} valem sempre 0 (zero) pontos.",
+      "missNote": "● {miss} vale sempre 0 (zero) pontos.",
       "drawNote": "{draw} pode ser {exact}, {minimum} ou {miss} - mas nunca {partial}.",
       "drawWord": "Empate",
       "knockoutNote": "● No mata-mata (a partir dos 16 Avos de Final), o resultado que vale para pontuação é aquele ao final do tempo extra (se houver). Resultados de disputa por {highlight}.",
@@ -539,7 +539,7 @@
         "points": "Pontos",
         "beforeGroups": "Antes dos Grupos",
         "beforePlayoffs": "Antes do Mata-Mata",
-        "beforeQuarter": "Antes das Oitavas"
+        "beforeR16": "Antes das Oitavas"
       },
       "championData": [
         { "stage": "Campeão", "points": "50 pontos" },

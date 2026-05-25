@@ -14,7 +14,7 @@
 
   <!-- Matches (alias) -->
   <url>
-    <loc>https://bolaocopa.omegafox.me/jogos</loc>
+    <loc>https://bolaocopa.omegafox.me/partidas</loc>
     <lastmod>2026-05-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>

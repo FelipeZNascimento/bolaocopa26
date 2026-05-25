@@ -8,12 +8,15 @@
       :hit-level="hitLevel"
       :points="getPointsAwarded(props.pointsAwarded, props.hitLevel)"
     />
-    <span v-if="isClockStopped">{{ MATCH_STATUS_LABELS[status] }}</span>
     <span
-      v-if="isMatchStarted && !isClockStopped"
+      v-if="isMatchStarted"
       class="live-text"
     >
-      <span class="live-dot-wrapper">
+      <span
+        v-if="status !== MATCH_STATUS.FINAL"
+        class="live-dot-wrapper"
+      >
+        {{ status }}
         <Transition name="heartbeat">
           <span
             v-if="isHeartbeating"
@@ -23,7 +26,8 @@
         </Transition>
         <span class="live-dot" />
       </span>
-      {{ gametimeDisplay }}{{ MATCH_STATUS_LABELS[status] }}
+      <span v-if="!isClockStopped">{{ gametimeDisplay }}</span>
+      {{ MATCH_STATUS_LABELS[status] }}
     </span>
     <span
       v-if="!isMatchStarted"
@@ -31,7 +35,6 @@
       :class="{ 'is-mini': isMini }"
     >
       <i
-        v-if="!isMini"
         class="pi pi-clock"
         style="font-size: var(--m-font-size)"
       />
@@ -52,7 +55,7 @@ import { computed, ref, watch } from 'vue';
 import type { IPointsAwarded } from '@/stores/matches.types';
 
 import { type THitLevel } from '@/constants/bets';
-import { MATCH_STATUS_LABELS, STOPPED_GAME, type TMatchStatus } from '@/constants/match';
+import { MATCH_STATUS, MATCH_STATUS_LABELS, STOPPED_GAME, type TMatchStatus } from '@/constants/match';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useClockStore } from '@/stores/clock';
 import { getPointsAwarded } from '@/util/betsCalculator';
@@ -78,7 +81,7 @@ const activeProfile = computed(() => {
   return activeProfileStore.activeProfile;
 });
 
-const gametimeDisplay = computed(() => (props.gametime != null ? props.gametime + "' " : ''));
+const gametimeDisplay = computed(() => (props.gametime != null ? props.gametime : ''));
 
 const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
 
@@ -267,7 +270,7 @@ watch(
   flex-direction: row;
   gap: var(--s-spacing);
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   font-size: var(--m-font-size);
 
   &.is-mini {

@@ -539,7 +539,7 @@
         "points": "Points",
         "beforeGroups": "Before Groups",
         "beforePlayoffs": "Before Knockout",
-        "beforeQuarter": "Before Quarterfinals"
+        "beforeR16": "Before Round of 16"
       },
       "championData": [
         { "stage": "Champion", "points": "50 points" },

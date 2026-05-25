@@ -6,7 +6,7 @@ User-agent: *
 
 # Allow crawling of public pages
 Allow: /
-Allow: /jogos
+Allow: /partidas
 Allow: /extras
 Allow: /regras
 Allow: /ranking

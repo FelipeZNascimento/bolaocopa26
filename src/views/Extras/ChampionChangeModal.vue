@@ -92,7 +92,7 @@
             field="beforePlayoffs"
           />
           <PrimeColumn
-            :header="t('rules.extras.tableHeaders.beforeQuarter')"
+            :header="t('rules.extras.tableHeaders.beforeR16')"
             class="column"
             field="beforeQuarter"
           />
