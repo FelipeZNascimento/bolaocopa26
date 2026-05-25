@@ -49,9 +49,9 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('../views/TeamsView.vue'),
-      name: ROUTES.find((r) => r.id === ROUTE_ID.TEAMS)?.name,
-      path: ROUTES.find((r) => r.id === ROUTE_ID.TEAMS)?.url || '/equipes',
+      component: () => import('../views/WorldCupPlusView.vue'),
+      name: ROUTES.find((r) => r.id === ROUTE_ID.WORLDCUP)?.name,
+      path: ROUTES.find((r) => r.id === ROUTE_ID.WORLDCUP)?.url || '/copa',
     },
     {
       // route level code-splitting

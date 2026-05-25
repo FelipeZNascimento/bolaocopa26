@@ -19,7 +19,7 @@
     "extras": "Extras",
     "ranking": "Ranking",
     "rules": "Regras",
-    "teams": "Equipes",
+    "worldcup": "Copa+",
     "profile": "Perfil"
   },
   "matches": {
@@ -430,7 +430,15 @@
   },
   "teams": {
     "title": "Equipes",
-    "group": "Grupo {group}"
+    "group": "Grupo {group}",
+    "search": "Buscar equipe...",
+    "noResults": "Nenhuma equipe encontrada"
+  },
+  "players": {
+    "noPhoto": "Sem foto",
+    "noResults": "Nenhum jogador encontrado",
+    "search": "Buscar jogador, seleção ou clube...",
+    "years": "anos"
   },
   "teamDetailsModal": {
     "coach": "Técnico",
@@ -696,6 +704,28 @@
         "answer": "Não. Se você não apostar numa partida, ela será considerada como não realizada e, portanto, não afetará sua pontuação."
       }
     }
+  },
+  "referees": {
+    "age": "Idade",
+    "country": "País",
+    "name": "Árbitro",
+    "noResults": "Nenhum árbitro encontrado",
+    "search": "Buscar árbitro ou país...",
+    "yo": "anos"
+  },
+  "standings": {
+    "refresh": "Atualizar",
+    "team": "Equipe"
+  },
+  "worldCupPlus": {
+    "title": "Copa+",
+    "description": "Conheça um pouco mais sobre as equipes, estádios, jogadores e treinadores que participam da Copa do Mundo!",
+    "groups": "Grupos",
+    "players": "Jogadores",
+    "referees": "Árbitros",
+    "stadiums": "Estádios",
+    "standings": "Classificação",
+    "teams": "Equipes"
   },
   "emptyFavorites": {
     "title": "Nenhum favorito adicionado.",

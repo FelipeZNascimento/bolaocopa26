@@ -1,44 +1,41 @@
 <template>
-  <div class="outer-teams">
-    <h1>{{ t('teams.title') }}</h1>
+  <div
+    v-if="isLoading"
+    style="
+      display: flex;
+      flex-flow: row wrap;
+      gap: var(--l-spacing);
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    "
+  >
+    <PrimeSkeleton
+      v-for="value in 12"
+      :key="value"
+      class="skeleton-outer"
+    />
+  </div>
+  <div
+    v-else
+    class="groups-container"
+  >
     <div
-      v-if="isLoading"
-      style="
-        display: flex;
-        flex-flow: row wrap;
-        gap: var(--l-spacing);
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-      "
+      v-for="group in groupedTeams"
+      :key="group.groupName"
+      :class="`group-section group-${group.groupName.toLowerCase().split(' ')[1]}`"
     >
-      <PrimeSkeleton
-        v-for="value in 12"
-        :key="value"
-        class="skeleton-outer"
-      />
-    </div>
-    <div
-      v-else
-      class="groups-container"
-    >
-      <div
-        v-for="group in groupedTeams"
-        :key="group.groupName"
-        :class="`group-section group-${group.groupName.toLowerCase().split(' ')[1]}`"
-      >
-        <h2 class="group-header">
-          {{ group.groupName }}
-        </h2>
-        <div class="teams-grid">
-          <ClickableTeamCard
-            v-for="team in group.teams"
-            :key="team.id"
-            :team="team"
-            :is-loading="false"
-            :handle-click="openTeamModal"
-          />
-        </div>
+      <h2 class="group-header">
+        {{ group.groupName }}
+      </h2>
+      <div class="teams-grid">
+        <ClickableTeamCard
+          v-for="team in group.teams"
+          :key="team.id"
+          :team="team"
+          :is-loading="false"
+          :handle-click="openTeamModal"
+        />
       </div>
     </div>
   </div>
@@ -59,17 +56,16 @@ import ClickableTeamCard from '@/components/ClickableTeamCard.vue';
 import TeamDetailsModal from '@/components/TeamDetailsModal.vue';
 import { useTeamsStore } from '@/stores/teams';
 
-// ------ Services & Stores ------
-const teamsStore = useTeamsStore();
-const { locale, t } = useI18n();
-
 // ------ Refs ------
 const selectedTeam = ref<ITeam | null>(null);
 const isModalOpen = ref(false);
 
+// ------ Services & Stores ------
+const teamsStore = useTeamsStore();
+const { locale, t } = useI18n();
+
 // ------ Computed Properties ------
 const isLoading = computed(() => teamsStore.isLoading);
-// const error = computed(() => teamsStore.error);
 const teams = computed(() => teamsStore.teams);
 
 const groupedTeams = computed(() => {
@@ -100,48 +96,19 @@ const groupedTeams = computed(() => {
     }));
 });
 
+// ------ Functions ------
+
 function closeTeamModal() {
   selectedTeam.value = null;
   isModalOpen.value = false;
 }
 
-// ------ Functions ------
 function openTeamModal(team: ITeam) {
   selectedTeam.value = team;
   isModalOpen.value = true;
 }
 </script>
 <style lang="scss" scoped>
-.outer-teams {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: var(--l-spacing);
-  align-items: center;
-  padding: var(--l-spacing) 160px;
-
-  @media (width <=768px) {
-    padding: var(--xxl-spacing) var(--s-spacing);
-  }
-
-  h1 {
-    margin: 0;
-  }
-}
-
-.skeleton-outer {
-  width: 20% !important;
-  min-height: 200px;
-
-  @media (width <= 1024px) {
-    width: 45% !important;
-  }
-
-  @media (width <= 600px) {
-    width: 100% !important;
-  }
-}
-
 .groups-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

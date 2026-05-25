@@ -17,6 +17,8 @@ export default class TeamService {
   }
 
   public async fetch(edition?: null | number) {
+    if (this.teamsStore.teams.length > 0) return; // Avoid refetching if we already have teams loaded
+
     this.teamsStore.setLoading(true);
 
     // Season may be "0" so needs to be checked against null and undefined

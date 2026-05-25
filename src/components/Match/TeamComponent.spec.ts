@@ -149,6 +149,7 @@ const createMatch = (overrides = {}): IMatch => ({
     dateOfBirth: '1980-01-01',
     id: 1,
     idFifa: 1,
+    isoCode: 'CR',
     name: 'Referee Name',
   },
   round: 1,
@@ -167,7 +168,9 @@ const createMatch = (overrides = {}): IMatch => ({
     geoLongitude: '0',
     id: 1,
     idCountry: 1,
+    isoCode: 'ST',
     name: 'Stadium Name',
+    url: '',
   },
   status: 1,
   timestamp: '2000000', // Future match

@@ -32,6 +32,16 @@ import { ref } from 'vue';
 
 const changelogEntries = ref([
   {
+    changes: ['[WorldCup+] New section added to the app with standings, teams, stadiums, players, referees'],
+    date: '25/05/2026',
+    version: 'v1.0.8',
+  },
+  {
+    changes: ['[App] Metatags were updated to improve SEO and sharing previews on social media platforms'],
+    date: '25/05/2026',
+    version: 'v1.0.7',
+  },
+  {
     changes: [
       '[App] News widget added to the homepage with latest news about the tournament',
       '[App] Modals now block background scrolling when open for better user experience',

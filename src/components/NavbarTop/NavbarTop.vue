@@ -536,7 +536,7 @@ function updateBallPosition() {
 }
 
 .nav-label {
-  max-width: 100px;
+  max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: var(--m-font-size);

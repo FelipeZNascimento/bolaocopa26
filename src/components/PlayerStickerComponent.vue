@@ -1,114 +1,142 @@
 <template>
   <div
-    v-if="player"
-    class="panini-sticker"
-    :style="{ '--team-gradient': `linear-gradient(90deg, ${player.team.colors || '#FFD700'})` }"
+    class="ps-sticker"
+    :class="{ 'ps-sticker--loading': loading }"
+    :style="{
+      '--ps-c1': player?.team.colors?.[0] ?? '#FFD700',
+      '--ps-c2': player?.team.colors?.[1] ?? player?.team.colors?.[0] ?? '#FFD700',
+    }"
   >
-    <div
-      class="sticker-header"
-      :style="{ background: `linear-gradient(90deg, ${player.team.colors || '#FFD700'})` }"
-    >
-      <div class="sticker-country">
+    <template v-if="loading">
+      <PrimeSkeleton class="ps-sticker__skel-header" />
+      <PrimeSkeleton class="ps-sticker__skel-photo" />
+      <div class="ps-sticker__info">
+        <PrimeSkeleton class="ps-sticker__skel-name" />
+        <PrimeSkeleton class="ps-sticker__skel-sub" />
+        <PrimeSkeleton class="ps-sticker__skel-detail" />
+      </div>
+    </template>
+
+    <template v-else-if="player">
+      <div
+        class="ps-sticker__header"
+        :style="{
+          background: `linear-gradient(90deg, ${player.team.colors?.[0] ?? '#FFD700'}, ${player.team.colors?.[1] ?? player.team.colors?.[0] ?? '#FFD700'})`,
+        }"
+      >
         <img
-          class="sticker-flag"
+          class="ps-sticker__flag"
           :src="`https://assets.omegafox.me/copa/countries_flags/${player.team.isoCode.toLowerCase()}.png`"
           :alt="player.team.name"
         />
-        {{ player.team.name }}
+        <span class="ps-sticker__team-name">{{ locale === 'pt-BR' ? player.team.name : player.team.nameEn }}</span>
+        <span class="ps-sticker__number">{{ player.number }}</span>
       </div>
-    </div>
-    <div class="sticker-photo">
-      <div
-        v-if="isLoadingImage && player.fifa.pictureId"
-        class="loading-spinner"
-      >
-        <i
-          class="pi pi-spin pi-spinner"
-          style="font-size: var(--xl-font-size)"
+
+      <div class="ps-sticker__photo">
+        <div
+          v-if="isLoadingImage && player.fifa.pictureId"
+          class="ps-sticker__spinner"
+        >
+          <i class="pi pi-spin pi-spinner" />
+        </div>
+        <img
+          v-if="player.fifa.pictureId && !imageError"
+          class="ps-sticker__img"
+          :src="`https://digitalhub.fifa.com/transform/${player.fifa.pictureId.toLowerCase()}/`"
+          :alt="player.name"
+          @load="isLoadingImage = false"
+          @error="handleImageError"
         />
-      </div>
-      <img
-        v-if="player.fifa.pictureId"
-        :src="`https://digitalhub.fifa.com/transform/${player.fifa.pictureId.toLowerCase()}/`"
-        :alt="player.name"
-        @load="isLoadingImage = false"
-        @error="handleImageError"
-      />
-      <div
-        v-else
-        class="placeholder-photo"
-      >
-        <i class="pi pi-user" />
-        <span>Sem Foto</span>
-      </div>
-    </div>
-    <div class="sticker-info">
-      <div
-        class="sticker-number"
-        :style="{ color: player.team.colors[0], backgroundColor: player.team.colors[1] }"
-      >
-        {{ player.number }}
-      </div>
-      <div class="sticker-name">
-        {{ player.name }}
-      </div>
-      <div class="sticker-position">
-        {{ player.position.description }}
-      </div>
-      <div class="sticker-details">
-        <div class="detail-item">
-          <i class="pi pi-calendar" />
-          <span>{{ formatBirthDate(player.dateOfBirth) }}</span>
-        </div>
-        <div class="detail-item">
-          <i class="pi pi-arrows-v" />
-          <span>{{ player.height }} cm</span>
-        </div>
-        <div class="detail-item">
-          <i class="pi pi-shield" />
-          <span>{{ player.club.name }}</span>
+        <div
+          v-if="!player.fifa.pictureId || imageError"
+          class="ps-sticker__fallback"
+        >
+          <i class="pi pi-user" />
+          <span>{{ t('players.noPhoto') }}</span>
         </div>
       </div>
-    </div>
+
+      <div class="ps-sticker__info">
+        <span class="ps-sticker__name">{{ player.name }}</span>
+        <span class="ps-sticker__position">{{
+          locale === 'pt-BR' ? player.position.description : player.position.descriptionEn
+        }}</span>
+        <div class="ps-sticker__details">
+          <div class="ps-sticker__detail-row">
+            <i class="pi pi-shield" />
+            <span>{{ player.club.name }}</span>
+          </div>
+          <div class="ps-sticker__detail-row">
+            <i class="pi pi-calendar" />
+            <span>{{ playerAge }} {{ t('players.years') }}</span>
+          </div>
+          <div class="ps-sticker__detail-row">
+            <i class="pi pi-arrows-v" />
+            <span>{{ player.height }} cm</span>
+          </div>
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import type { IPlayer } from '@/stores/teams.types';
 
-defineProps<{
+const props = defineProps<{
+  loading?: boolean;
   player: IPlayer | null;
 }>();
 
-// ------ Refs ------
+const { locale, t } = useI18n();
+
 const isLoadingImage = ref(true);
+const imageError = ref(false);
 
-// ------ Functions ------
-function formatBirthDate(dateString: string): string {
-  const date = new Date(dateString);
-  const age = new Date().getFullYear() - date.getFullYear();
-  return `${age} anos`;
-}
+watch(
+  () => props.player?.id,
+  () => {
+    isLoadingImage.value = true;
+    imageError.value = false;
+  },
+);
 
-function handleImageError(e: Event) {
+const playerAge = computed(() => {
+  if (!props.player) return '';
+  const birth = new Date(props.player.dateOfBirth);
+  return new Date().getFullYear() - birth.getFullYear();
+});
+
+function handleImageError() {
   isLoadingImage.value = false;
-  const target = e.target as HTMLImageElement;
-  target.style.display = 'none';
+  imageError.value = true;
 }
 </script>
 
 <style lang="scss" scoped>
-.panini-sticker {
+.ps-sticker {
   position: relative;
-  width: 220px;
-  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
   overflow: hidden;
-  border-radius: var(--border-radius);
   box-shadow:
-    0 4px 8px rgb(0 0 0 / 20%),
-    0 0 20px rgb(255 215 0 / 30%);
+    0 6px 16px rgb(0 0 0 / 35%),
+    0 0 24px rgb(from var(--ps-c1) r g b / 25%);
+
+  &--loading {
+    pointer-events: none;
+    box-shadow: none;
+
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
 
   &::before {
     position: absolute;
@@ -116,209 +144,23 @@ function handleImageError(e: Event) {
     z-index: -1;
     pointer-events: none;
     content: '';
-    background: var(--team-gradient, linear-gradient(90deg, #ffd700 0%, #ffed4e 100%));
-    border-radius: var(--border-radius);
-  }
-
-  &::after {
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    z-index: -1;
-    width: 200%;
-    height: 200%;
-    pointer-events: none;
-    content: '';
-    background: linear-gradient(90deg, transparent 30%, rgb(255 255 255 / 40%) 50%, transparent 70%);
-    border-radius: var(--border-radius);
-    animation: shimmer 3s infinite;
+    background: linear-gradient(160deg, var(--ps-c1), var(--ps-c2) 50%, var(--ps-c1));
   }
 }
 
-.sticker-header {
-  position: relative;
-  padding: var(--s-spacing);
-  overflow: hidden;
-  font-weight: bold;
-  color: white;
-  text-align: center;
-  text-shadow: 0 2px 8px rgb(0 0 0 / 50%);
-  border-top-left-radius: var(--border-radius);
-  border-top-right-radius: var(--border-radius);
-
-  &::after {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    content: '';
-    background: linear-gradient(to bottom, rgb(0 0 0 / 30%) 0%, transparent 100%);
-  }
-
-  &::before {
+@media (prefers-reduced-motion: no-preference) {
+  .ps-sticker::after {
     position: absolute;
     top: -50%;
     left: -50%;
-    z-index: 1;
+    z-index: 3;
     width: 200%;
     height: 200%;
+    pointer-events: none;
     content: '';
     background: linear-gradient(90deg, transparent 30%, rgb(255 255 255 / 15%) 50%, transparent 70%);
     animation: shimmer 3s infinite;
   }
-}
-
-.sticker-country {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  gap: var(--l-spacing);
-  align-items: center;
-  justify-content: center;
-  padding: var(--xs-spacing) var(--s-spacing);
-  font-size: var(--s-font-size);
-  line-height: var(--m-font-size);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  background: rgb(0 0 0 / 15%);
-  border-radius: var(--border-radius);
-  backdrop-filter: blur(4px);
-}
-
-.sticker-photo {
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  width: 100%;
-  height: 150px;
-  overflow: hidden;
-  background: linear-gradient(to bottom, transparent 0%, #f5f5f5 100%);
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top;
-    filter: contrast(1.05) saturate(1.1);
-  }
-}
-
-.loading-spinner {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 10;
-  color: var(--bolao-c-grey4);
-  transform: translate(-50%, -50%);
-}
-
-.placeholder-photo {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-spacing);
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  color: var(--bolao-c-grey4);
-
-  i {
-    font-size: 48px;
-  }
-
-  span {
-    font-size: var(--s-font-size);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-}
-
-.sticker-info {
-  position: relative;
-  padding: var(--m-spacing);
-  background: white;
-  border-bottom-right-radius: var(--border-radius);
-  border-bottom-left-radius: var(--border-radius);
-}
-
-.sticker-number {
-  position: absolute;
-  top: -20px;
-  right: var(--m-spacing);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  font-size: var(--l-font-size);
-  font-weight: bold;
-
-  // background: linear-gradient(90deg, #ffd700 0%, #ffed4e 100%);
-  color: #333;
-  border: 2px solid white;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
-}
-
-.sticker-name {
-  padding-right: 50px;
-  margin-bottom: var(--xs-spacing);
-  font-size: var(--m-font-size);
-  font-weight: bold;
-  line-height: var(--m-font-size);
-  color: var(--bolao-c-black);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.sticker-position {
-  margin-bottom: var(--s-spacing);
-  font-size: var(--s-font-size);
-  font-weight: 600;
-  color: var(--bolao-c-grey5);
-}
-
-.sticker-details {
-  display: flex;
-  flex-direction: column;
-  gap: var(--xs-spacing);
-  font-size: var(--s-font-size);
-  color: #555;
-}
-
-.detail-item {
-  display: flex;
-  gap: var(--s-spacing);
-  align-items: center;
-
-  i {
-    font-size: 0.8rem;
-    color: var(--bolao-c-gold);
-  }
-
-  span {
-    font-size: 0.85rem;
-  }
-}
-
-.sticker-footer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--xxs-spacing);
-  color: var(--bolao-c-black);
-  background: linear-gradient(to bottom, #f5f5f5 0%, #e0e0e0 100%);
-  border-top: 1px solid #ddd;
-  border-bottom-right-radius: var(--border-radius);
-  border-bottom-left-radius: var(--border-radius);
-}
-
-.sticker-flag {
-  width: auto;
-  height: 24px;
-  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 20%));
 }
 
 @keyframes shimmer {
@@ -328,6 +170,172 @@ function handleImageError(e: Event) {
 
   100% {
     transform: translateX(100%) translateY(100%);
+  }
+}
+
+.ps-sticker__skel-header {
+  height: 40px;
+}
+
+.ps-sticker__skel-photo {
+  height: 150px;
+}
+
+.ps-sticker__skel-name {
+  height: 14px;
+  margin-bottom: var(--xxs-spacing);
+}
+
+.ps-sticker__skel-sub {
+  width: 70%;
+  height: 11px;
+  margin-bottom: var(--xxs-spacing);
+}
+
+.ps-sticker__skel-detail {
+  height: 11px;
+}
+
+.ps-sticker__header {
+  position: relative;
+  display: flex;
+  gap: var(--xs-spacing);
+  align-items: center;
+  padding: var(--xs-spacing) var(--s-spacing);
+  overflow: hidden;
+  font-size: var(--xs-font-size);
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-shadow: 0 1px 4px rgb(0 0 0 / 60%);
+}
+
+.ps-sticker__flag {
+  width: auto;
+  height: 16px;
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 30%));
+}
+
+.ps-sticker__team-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ps-sticker__number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  font-size: var(--xs-font-size);
+  font-weight: 800;
+  color: rgb(0 0 0 / 70%);
+  background: rgb(255 255 255 / 85%);
+  border-radius: 50%;
+}
+
+.ps-sticker__photo {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 150px;
+  overflow: hidden;
+  background-color: #d4d0c8;
+}
+
+.ps-sticker__spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  color: var(--bolao-c-grey5);
+  transform: translate(-50%, -50%);
+}
+
+.ps-sticker__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  filter: contrast(1.05) saturate(1.1);
+}
+
+.ps-sticker__fallback {
+  display: flex;
+  flex-direction: column;
+  gap: var(--xs-spacing);
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: var(--bolao-c-grey5);
+
+  i {
+    font-size: 40px;
+  }
+
+  span {
+    font-size: var(--xs-font-size);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+
+.ps-sticker__info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--xxs-spacing);
+  padding: var(--s-spacing);
+  background-color: var(--bolao-c-white-d1);
+}
+
+.ps-sticker__name {
+  font-size: var(--xs-font-size);
+  font-weight: 800;
+  line-height: 1.2;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.ps-sticker__position {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--bolao-c-grey5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ps-sticker__details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: var(--xxs-spacing);
+}
+
+.ps-sticker__detail-row {
+  display: flex;
+  gap: var(--xxs-spacing);
+  align-items: center;
+  overflow: hidden;
+  font-size: 10px;
+  color: var(--bolao-c-grey5);
+
+  i {
+    font-size: 9px;
+    color: var(--bolao-c-gold);
+  }
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 </style>

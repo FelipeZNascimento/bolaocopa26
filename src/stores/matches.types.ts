@@ -59,6 +59,7 @@ export interface IReferee {
   dateOfBirth: string;
   id: number;
   idFifa: number;
+  isoCode: string;
   name: string;
 }
 
@@ -78,7 +79,9 @@ export interface IStadium {
   geoLongitude: string;
   id: number;
   idCountry: number;
+  isoCode: string;
   name: string;
+  url: string;
 }
 
 export type TConference = 'AFC' | 'NFC';
