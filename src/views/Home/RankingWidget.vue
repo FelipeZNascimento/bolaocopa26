@@ -3,8 +3,7 @@
     <div class="table-wrapper">
       <RankingTable
         column-config="compact"
-        row-spacing-config="small"
-        :is-full-page="false"
+        row-spacing-config="normal"
       />
     </div>
     <RouterLink
@@ -37,8 +36,8 @@ const { t } = useI18n();
   display: flex;
   flex: 1;
   flex-direction: column;
+  align-items: center;
   min-height: 0;
-  overflow: hidden;
 }
 
 .see-all-link {

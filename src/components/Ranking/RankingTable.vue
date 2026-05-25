@@ -50,7 +50,7 @@
           @click="showFavoritesOnly = true"
         />
       </PrimeButtonGroup>
-      <PrimeButtonGroup v-if="isDesktop && isFullPage">
+      <PrimeButtonGroup v-if="isDesktop">
         <PrimeButton
           :label="t('ranking.toggle.withExtras')"
           :disabled="isRound"
@@ -300,14 +300,10 @@ import UserTrackingModal from '../UserTrackingModal.vue';
 import EmptyFavorites from './EmptyFavorites.vue';
 const { t } = useI18n();
 
-withDefaults(
-  defineProps<{
-    columnConfig: TColumnsValue;
-    isFullPage?: boolean;
-    rowSpacingConfig: TRowSpacingValue;
-  }>(),
-  { isFullPage: true },
-);
+defineProps<{
+  columnConfig: TColumnsValue;
+  rowSpacingConfig: TRowSpacingValue;
+}>();
 
 // ------ Refs ------
 const isUserTrackingModalOpen = ref<boolean>(false);
@@ -333,17 +329,17 @@ const isLoading = computed(() => (isRound.value ? isLoadingRounds.value : isLoad
 const errorRounds = computed(() => rankingStore.errorRounds);
 const errorSeason = computed(() => rankingStore.errorSeason);
 const error = computed(() => (isRound.value ? errorRounds.value : errorSeason.value));
-const seasonRanking = computed(() => rankingStore.seasonRanking);
+const editionRanking = computed(() => rankingStore.editionRanking);
 const selectedRoundRanking = computed(
   () => rankingStore.roundsRanking?.find((roundRanking) => roundRanking.round === selectedRound.value)?.ranking || [],
 );
-const selectedRanking = computed(() => (isRound.value ? selectedRoundRanking.value : seasonRanking.value));
-const seasonRankingWithoutExtras = computed(() => rankingStore.seasonRankingWithoutExtras);
+const selectedRanking = computed(() => (isRound.value ? selectedRoundRanking.value : editionRanking.value));
+const editionRankingWithoutExtras = computed(() => rankingStore.editionRankingWithoutExtras);
 const selectedRound = computed(() => configurationStore.selectedRound);
 
 const filteredRankingData = computed(() => {
   if (!showFavoritesOnly.value) {
-    return isExtrasActive.value ? seasonRankingWithoutExtras.value : selectedRanking.value;
+    return isExtrasActive.value ? editionRankingWithoutExtras.value : selectedRanking.value;
   }
 
   if (showFavoritesOnly.value && favorites.value.length === 0) {
@@ -492,7 +488,7 @@ function scrollToMe() {
   min-height: 0;
 
   @media (width <= 1024px) {
-    width: 100vw;
+    width: 100%;
     max-height: 100vh;
     overflow-x: auto;
     font-size: 12px;

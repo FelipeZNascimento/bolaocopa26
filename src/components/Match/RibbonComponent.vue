@@ -1,69 +1,73 @@
 <template>
-  <div
-    v-if="activeProfile"
-    class="ribbon"
-    :class="{
-      'gold-bg': hitLevel === HIT_LEVELS.exactScore,
-      'green-bg': hitLevel === HIT_LEVELS.oneScore,
-      'blue-bg': hitLevel === HIT_LEVELS.winnerOnly,
-      'red-bg': hitLevel === HIT_LEVELS.miss,
-      'grey-bg': hitLevel === null,
-    }"
-  >
+  <Transition name="ribbon">
     <div
-      v-if="hitLevel === null"
-      v-tooltip.top="'Sem aposta'"
-      style="width: 100%; text-align: center"
+      v-if="activeProfile"
+      :key="hitLevel ?? 'none'"
+      class="ribbon"
+      :class="{
+        'gold-bg': hitLevel === HIT_LEVELS.exactScore,
+        'green-bg': hitLevel === HIT_LEVELS.oneScore,
+        'blue-bg': hitLevel === HIT_LEVELS.winnerOnly,
+        'red-bg': hitLevel === HIT_LEVELS.miss,
+        'grey-bg': hitLevel === null,
+      }"
     >
-      <i
-        v-show="hitLevel === null"
-        class="pi pi-circle"
-      />
+      <div
+        v-if="hitLevel === null"
+        v-tooltip.top="t('hitLevels.noBet')"
+        style="width: 100%; text-align: center"
+      >
+        <i
+          v-show="hitLevel === null"
+          class="pi pi-circle"
+        />
+      </div>
+      <div v-else>
+        <i
+          v-show="hitLevel === HIT_LEVELS.exactScore"
+          v-tooltip.top="t(HIT_LEVELS_LABELS[HIT_LEVELS.exactScore], { points: props.points })"
+          class="pi pi-trophy"
+        />
+        <i
+          v-show="hitLevel === HIT_LEVELS.oneScore"
+          v-tooltip.top="t(HIT_LEVELS_LABELS[HIT_LEVELS.oneScore], { points: props.points })"
+          class="pi pi-verified"
+        />
+        <i
+          v-show="hitLevel === HIT_LEVELS.winnerOnly"
+          v-tooltip.top="t(HIT_LEVELS_LABELS[HIT_LEVELS.winnerOnly], { points: props.points })"
+          class="pi pi-check-circle"
+        />
+        <i
+          v-show="hitLevel === HIT_LEVELS.miss"
+          v-tooltip.top="t(HIT_LEVELS_LABELS[HIT_LEVELS.miss], { points: props.points })"
+          class="pi pi-times-circle"
+        />
+        <i
+          v-show="hitLevel === null"
+          v-tooltip.top="t('hitLevels.noBet')"
+          class="pi pi-circle"
+        />
+      </div>
     </div>
-    <!-- <div v-else v-tooltip.top="HIT_LEVELS_LABELS[hitLevel]" style="width: 100%; text-align: center">
-      {{ HIT_LEVELS_POINTS[hitLevel] }}
-    </div> -->
-    <div v-else>
-      <i
-        v-show="hitLevel === HIT_LEVELS.exactScore"
-        v-tooltip.top="HIT_LEVELS_LABELS[hitLevel]"
-        class="pi pi-trophy"
-      />
-      <i
-        v-show="hitLevel === HIT_LEVELS.oneScore"
-        v-tooltip.top="HIT_LEVELS_LABELS[hitLevel]"
-        class="pi pi-verified"
-      />
-      <i
-        v-show="hitLevel === HIT_LEVELS.winnerOnly"
-        v-tooltip.top="HIT_LEVELS_LABELS[hitLevel]"
-        class="pi pi-check-circle"
-      />
-      <i
-        v-show="hitLevel === HIT_LEVELS.miss"
-        v-tooltip.top="HIT_LEVELS_LABELS[hitLevel]"
-        class="pi pi-times-circle"
-      />
-      <i
-        v-show="hitLevel === null"
-        v-tooltip.top="HIT_LEVELS_LABELS[hitLevel]"
-        class="pi pi-circle"
-      />
-    </div>
-  </div>
+  </Transition>
 </template>
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
-import { HIT_LEVELS, HIT_LEVELS_LABELS, type HitLevel } from '@/constants/bets';
+import { HIT_LEVELS, HIT_LEVELS_LABELS, type THitLevel } from '@/constants/bets';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
-    hitLevel?: HitLevel | null;
+    hitLevel?: null | THitLevel;
+    points: null | number;
   }>(),
   { hitLevel: null },
 );
+
+const { t } = useI18n();
 
 // ------ Initialization ------
 const activeProfileStore = useActiveProfileStore();
@@ -84,7 +88,7 @@ const activeProfile = computed(() => {
   position: absolute;
   top: calc(-1 * var(--f));
   right: 4px;
-  z-index: 1;
+  z-index: 999; // Above match box-shadow
   width: 36px;
   height: 44px;
   padding-top: var(--s-spacing);
@@ -114,10 +118,11 @@ const activeProfile = computed(() => {
   }
 
   @media (width <= 1023px) {
-    height: 40px;
+    width: 30px;
+    height: 35px;
 
-    i {
-      font-size: var(--xs-font-size);
+    .pi {
+      font-size: var(--s-font-size);
     }
   }
 }
@@ -201,5 +206,69 @@ const activeProfile = computed(() => {
   background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0 / calc(2 * var(--f)) var(--f) no-repeat
     border-box;
   background-color: var(--c);
+}
+
+.ribbon-enter-active,
+.ribbon-leave-active {
+  transform-origin: top center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes ribbon-roll-up {
+    0% {
+      opacity: 1;
+      transform: perspective(200px) rotateX(0deg);
+    }
+
+    10% {
+      transform: perspective(200px) rotateX(10deg);
+    }
+
+    100% {
+      opacity: 0;
+      transform: perspective(200px) rotateX(-95deg);
+    }
+  }
+
+  @keyframes ribbon-roll-down {
+    0% {
+      opacity: 0;
+      transform: perspective(200px) rotateX(-95deg);
+    }
+
+    26% {
+      opacity: 1;
+      transform: perspective(200px) rotateX(32deg);
+    }
+
+    44% {
+      transform: perspective(200px) rotateX(-18deg);
+    }
+
+    60% {
+      transform: perspective(200px) rotateX(9deg);
+    }
+
+    74% {
+      transform: perspective(200px) rotateX(-4deg);
+    }
+
+    86% {
+      transform: perspective(200px) rotateX(1.5deg);
+    }
+
+    100% {
+      opacity: 1;
+      transform: perspective(200px) rotateX(0deg);
+    }
+  }
+
+  .ribbon-enter-active {
+    animation: ribbon-roll-down 1.8s linear;
+  }
+
+  .ribbon-leave-active {
+    animation: ribbon-roll-up 1.2s cubic-bezier(0.4, 0, 0.95, 0.6);
+  }
 }
 </style>

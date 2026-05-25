@@ -61,6 +61,7 @@ import { useTeamsStore } from '@/stores/teams';
 
 // ------ Services & Stores ------
 const teamsStore = useTeamsStore();
+const { locale, t } = useI18n();
 
 // ------ Refs ------
 const selectedTeam = ref<ITeam | null>(null);
@@ -92,7 +93,10 @@ const groupedTeams = computed(() => {
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([groupName, teams]) => ({
       groupName: t(`teams.group`, { group: groupName }),
-      teams: teams.sort((a, b) => a.name.localeCompare(b.name)),
+      teams:
+        locale.value === 'pt-BR'
+          ? teams.sort((a, b) => a.name.localeCompare(b.name))
+          : teams.sort((a, b) => a.nameEn.localeCompare(b.nameEn)),
     }));
 });
 
@@ -106,7 +110,6 @@ function openTeamModal(team: ITeam) {
   selectedTeam.value = team;
   isModalOpen.value = true;
 }
-const { t } = useI18n();
 </script>
 <style lang="scss" scoped>
 .outer-teams {

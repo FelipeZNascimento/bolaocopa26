@@ -97,6 +97,12 @@ vi.mock('@/stores/notification', () => ({
   }),
 }));
 
+vi.mock('@/stores/configuration', () => ({
+  useConfigurationStore: () => ({
+    viewBetOption: 'input',
+  }),
+}));
+
 let mockIsMobile = false;
 vi.mock('@/services/viewport', () => ({ useViewport: () => ({ isMobile: mockIsMobile }) }));
 

@@ -24,10 +24,16 @@
         @click="onSelectToggle(option)"
       >
         <span class="bet-radio" />
-        <span class="bet-label">
+        <div class="bet-label">
           {{ t(EXTRA_BETS_LABELS[option.value]) }}
           <span v-if="option.value === EXTRA_BETS_VALUES.CHAMPION">*</span>
-        </span>
+          <p
+            v-if="option.value === EXTRA_BETS_VALUES.DEFENSE || option.value === EXTRA_BETS_VALUES.OFFENSE"
+            style="font-size: var(--xs-font-size)"
+          >
+            ({{ t('common.groupStage') }})
+          </p>
+        </div>
         <div
           v-if="option.selectedTeam?.length"
           class="bet-value"

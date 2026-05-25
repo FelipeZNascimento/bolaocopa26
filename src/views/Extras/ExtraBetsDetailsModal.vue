@@ -76,6 +76,7 @@ import type { IExtraBet } from '@/stores/extraBet.types';
 import type { IPlayer, ITeam } from '@/stores/teams.types';
 
 import NameTag from '@/components/NameTag.vue';
+import { useScrollLock } from '@/composables/useScrollLock';
 import { EXTRA_BETS_VALUES } from '@/constants/bets';
 
 const props = defineProps<{
@@ -118,7 +119,11 @@ watch(
   { immediate: true },
 );
 
+const { lock, unlock } = useScrollLock();
+
 watch(isVisible, (newValue) => {
+  if (newValue) lock();
+  else unlock();
   if (!newValue) {
     props.handleCloseModal();
   }

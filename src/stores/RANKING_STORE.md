@@ -1,14 +1,14 @@
 # Ranking Store
 
-The ranking store is a global Pinia store that manages ranking data for both season-wide and round-by-round rankings, along with UI preferences for displaying the ranking table.
+The ranking store is a global Pinia store that manages ranking data for both edition-wide and round-by-round rankings, along with UI preferences for displaying the ranking table.
 
 ## Features
 
-- **Dual ranking views**: Separate data for season ranking and round-by-round rankings
-- **Independent loading states**: Separate loading states for season and rounds data
+- **Dual ranking views**: Separate data for edition ranking and round-by-round rankings
+- **Independent loading states**: Separate loading states for edition and rounds data
 - **UI preferences**: Customizable column display and row spacing
 - **LocalStorage integration**: Persists display preferences across sessions
-- **Error handling**: Separate error states for season and rounds
+- **Error handling**: Separate error states for edition and rounds
 - **Global access**: Available throughout the entire app via Pinia store
 
 ## Usage
@@ -24,7 +24,7 @@ const rankingStore = useRankingStore();
 ### Set ranking data
 
 ```typescript
-// Set season-wide ranking
+// Set edition-wide ranking
 const seasonData: IRankingLine[] = [
   /* ... */
 ];
@@ -82,7 +82,7 @@ rankingStore.setErrorRounds(error as Error);
 
 ### State
 
-#### `seasonRanking: Ref<IRankingLine[]>`
+#### `editionRanking: Ref<IRankingLine[]>`
 
 Season-wide ranking data. Empty array if not loaded.
 
@@ -100,7 +100,7 @@ Row spacing preference: `'small'`, `'medium'`, or `'large'`. Default: `'small'`.
 
 #### `isLoadingSeason: Ref<boolean>`
 
-Loading state for season ranking data.
+Loading state for edition ranking data.
 
 #### `isLoadingRounds: Ref<boolean>`
 
@@ -108,7 +108,7 @@ Loading state for rounds ranking data.
 
 #### `errorSeason: Ref<Error | null>`
 
-Error state for season ranking operations.
+Error state for edition ranking operations.
 
 #### `errorRounds: Ref<Error | null>`
 
@@ -118,7 +118,7 @@ Error state for rounds ranking operations.
 
 #### `setSeason(newSeasonRanking: IRankingLine[])`
 
-Sets the season-wide ranking data. Ensures data is an array.
+Sets the edition-wide ranking data. Ensures data is an array.
 
 #### `setRounds(newRoundsRanking: IRoundRanking[])`
 
@@ -138,7 +138,7 @@ Sets the row spacing preference and persists to localStorage as `'ranking-spacin
 
 #### `setLoadingSeason(loadingState: boolean)`
 
-Sets the loading state for season ranking.
+Sets the loading state for edition ranking.
 
 #### `setLoadingRounds(loadingState: boolean)`
 
@@ -146,7 +146,7 @@ Sets the loading state for rounds ranking.
 
 #### `setErrorSeason(newError: Error | null)`
 
-Sets the error state for season ranking.
+Sets the error state for edition ranking.
 
 #### `setErrorRounds(newError: Error | null)`
 
@@ -170,7 +170,7 @@ import RankingService from '@/services/ranking';
 const rankingStore = useRankingStore();
 const rankingService = new RankingService();
 
-const seasonRanking = computed(() => rankingStore.seasonRanking);
+const editionRanking = computed(() => rankingStore.editionRanking);
 const isLoading = computed(() => rankingStore.isLoadingSeason);
 const error = computed(() => rankingStore.errorSeason);
 
@@ -259,7 +259,7 @@ onMounted(() => {
 
 - Uses Vue 3 Composition API with `ref`
 - Type definitions in `ranking.types.ts` and `configuration.types.ts`
-- Separate loading and error states for season and rounds data
+- Separate loading and error states for edition and rounds data
 - UI preferences automatically persist to localStorage
 - Data arrays are validated on set (ensures array type)
 - Initial state can be restored with `setInitialState()`

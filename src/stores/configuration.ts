@@ -1,12 +1,13 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-import type { TMatchListSorting, TRankingPositionValue, TThemeValue } from './configuration.types';
+import type { TMatchListSorting, TRankingPositionValue, TThemeValue, TViewBetOptionValue } from './configuration.types';
 
 const initialState = {
   matchListSorting: 'group' as TMatchListSorting,
   rankingPosition: 'active' as TRankingPositionValue,
   theme: 'dark' as TThemeValue,
+  viewBetOption: 'viewBets' as TViewBetOptionValue,
 };
 
 export const useConfigurationStore = defineStore('configuration', () => {
@@ -20,14 +21,17 @@ export const useConfigurationStore = defineStore('configuration', () => {
   const language = ref<'en' | 'pt-BR'>('en');
   const matchListSorting = ref<TMatchListSorting>(initialState.matchListSorting);
   const rankingPosition = ref<TRankingPositionValue>(initialState.rankingPosition);
+  const viewBetOption = ref<TViewBetOptionValue>(initialState.viewBetOption);
 
   function setInitialState() {
     theme.value = initialState.theme;
     rankingPosition.value = initialState.rankingPosition;
     matchListSorting.value = initialState.matchListSorting;
+    viewBetOption.value = initialState.viewBetOption;
     localStorage.removeItem('ranking-columns');
     localStorage.removeItem('theme-preference');
     localStorage.removeItem('ranking-position');
+    localStorage.removeItem('view-bet-option');
   }
 
   function setEditionStart(timestamp: number) {
@@ -60,8 +64,8 @@ export const useConfigurationStore = defineStore('configuration', () => {
     localStorage.setItem('ranking-position', newValue);
   }
 
-  function setCurrentEdition(season: number) {
-    currentEdition.value = season;
+  function setCurrentEdition(edition: number) {
+    currentEdition.value = edition;
   }
 
   function setCurrentRound(week: number) {
@@ -83,6 +87,12 @@ export const useConfigurationStore = defineStore('configuration', () => {
   function setMatchListSorting(newSorting: TMatchListSorting) {
     matchListSorting.value = newSorting;
     localStorage.setItem('match-list-sorting', newSorting);
+  }
+
+  function setViewBetOption(newOption: TViewBetOptionValue) {
+    console.log('Setting view bet option to:', newOption);
+    viewBetOption.value = newOption;
+    localStorage.setItem('view-bet-option', newOption);
   }
 
   return {
@@ -107,6 +117,8 @@ export const useConfigurationStore = defineStore('configuration', () => {
     setRankingPosition,
     setSelectedRound,
     setTheme,
+    setViewBetOption,
     theme,
+    viewBetOption,
   };
 });

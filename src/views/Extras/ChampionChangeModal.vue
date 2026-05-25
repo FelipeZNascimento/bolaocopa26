@@ -92,7 +92,7 @@
             field="beforePlayoffs"
           />
           <PrimeColumn
-            :header="t('rules.extras.tableHeaders.beforeQuarter')"
+            :header="t('rules.extras.tableHeaders.beforeR16')"
             class="column"
             field="beforeQuarter"
           />
@@ -185,6 +185,7 @@ import { useI18n } from 'vue-i18n';
 import type { ITeam } from '@/stores/teams.types';
 
 import ClickableTeamCard from '@/components/ClickableTeamCard.vue';
+import { useScrollLock } from '@/composables/useScrollLock';
 import { useClockStore } from '@/stores/clock';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useTeamsStore } from '@/stores/teams';
@@ -206,7 +207,12 @@ const teamsStore = useTeamsStore();
 const { locale, t, tm } = useI18n();
 
 const currentRound = computed(() => configurationStore.currentRound);
-const teams = computed(() => teamsStore.teams);
+const teams = computed(() => {
+  const filteredTeams = teamsStore.teams.filter((team) => team.id !== 33);
+  return locale.value === 'pt-BR'
+    ? filteredTeams.toSorted((a, b) => a.name.localeCompare(b.name))
+    : filteredTeams.toSorted((a, b) => a.nameEn.localeCompare(b.nameEn));
+});
 const guideData = computed(
   () =>
     tm('rules.extras.guideDataReduced') as {
@@ -238,7 +244,11 @@ watch(
   },
 );
 
+const { lock, unlock } = useScrollLock();
+
 watch(isVisible, (newValue) => {
+  if (newValue) lock();
+  else unlock();
   if (!newValue) {
     props.handleCloseModal();
   }

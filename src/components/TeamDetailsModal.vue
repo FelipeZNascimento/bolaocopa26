@@ -39,8 +39,11 @@
               <h2 class="team-name">
                 {{ locale === 'pt-BR' ? team.name : team.nameEn }}
               </h2>
-              <p class="team-name-en">
-                {{ locale === 'pt-BR' ? team.name : team.nameEn }}
+              <p
+                v-if="locale !== 'en'"
+                class="team-name-en"
+              >
+                {{ team.nameEn }}
               </p>
               <p class="team-name-en">
                 {{ team.confederation.abbreviation }}
@@ -103,6 +106,7 @@ import { useI18n } from 'vue-i18n';
 import type { ITeam } from '@/stores/teams.types';
 
 import HoverablePlayerName from '@/components/HoverablePlayerName.vue';
+import { useScrollLock } from '@/composables/useScrollLock';
 import { useViewport } from '@/services/viewport';
 
 const props = defineProps<{
@@ -140,7 +144,11 @@ watch(
   },
 );
 
+const { lock, unlock } = useScrollLock();
+
 watch(isVisible, (newValue) => {
+  if (newValue) lock();
+  else unlock();
   if (!newValue) {
     props.handleCloseModal();
   }

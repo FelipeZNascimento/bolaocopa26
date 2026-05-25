@@ -1,5 +1,5 @@
 import type { IUser } from '@/stores/activeProfile.types';
-import type { TMatchListSorting, TRankingPositionValue } from '@/stores/configuration.types';
+import type { TMatchListSorting, TRankingPositionValue, TThemeValue } from '@/stores/configuration.types';
 import type { ITeam } from '@/stores/teams.types';
 
 import { detectLocale, LOCALE_STORAGE_KEY } from '@/i18n';
@@ -32,24 +32,28 @@ export default class StartupService {
     this.teamsStore = useTeamsStore();
   }
 
+  cacheFlush() {
+    this.apiRequest.get('admin/flush', undefined, { retries: 3 });
+  }
+
   public async initialize(callback: (isSuccess: boolean) => void) {
     this.initializeLocalStoragePreferences();
     this.activeProfileStore.setLoading(true);
     this.configurationStore.setLoading(true);
     this.extraBetStore.setLoading(true);
     try {
-      const [activeProfileResponse, seasonResponse, teamResponse] = await Promise.allSettled([
+      const [activeProfileResponse, editionResponse, teamResponse] = await Promise.allSettled([
         this.apiRequest.get<IUser>('user/activeProfile', undefined, { retries: 3 }),
-        this.apiRequest.get<InitializeObj>('season/current', undefined, { retries: 3 }),
+        this.apiRequest.get<InitializeObj>('edition/current', undefined, { retries: 3 }),
         this.apiRequest.get<ITeam[]>('team/all/', undefined, { retries: 3 }),
       ]);
 
-      if (isRejected(activeProfileResponse) || isRejected(seasonResponse) || isRejected(teamResponse)) {
+      if (isRejected(activeProfileResponse) || isRejected(editionResponse) || isRejected(teamResponse)) {
         throw new Error('Falha ao inicializar a aplicação');
       }
 
       const loggedUser = isFulfilled(activeProfileResponse) ? activeProfileResponse.value : null;
-      const seasonData = isFulfilled(seasonResponse) ? seasonResponse.value : null;
+      const seasonData = isFulfilled(editionResponse) ? editionResponse.value : null;
       const teamsData = isFulfilled(teamResponse) ? teamResponse.value : [];
 
       // Set Teams store properties
@@ -105,20 +109,11 @@ export default class StartupService {
     }
 
     if (themePreference) {
-      document.documentElement.setAttribute('data-theme', themePreference);
-      if (themePreference === 'light') {
-        this.configurationStore.setTheme('light');
-        document.documentElement.classList.remove('dark-mode');
-      } else {
-        this.configurationStore.setTheme('dark');
-        document.documentElement.classList.add('dark-mode');
-      }
+      this.configurationStore.setTheme(themePreference as TThemeValue);
     } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       this.configurationStore.setTheme('dark');
-      document.documentElement.classList.add('dark-mode');
     } else {
       this.configurationStore.setTheme('light');
-      document.documentElement.classList.remove('dark-mode');
     }
   }
 }

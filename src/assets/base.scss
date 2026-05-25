@@ -78,7 +78,8 @@ $spacings: (
   'xxxl': 64px,
 );
 $font-sizes: (
-  'xxs': 8px,
+  'xxxs': 8px,
+  'xxs': 10px,
   'xs': 12px,
   's': 16px,
   'm': 18px,
@@ -225,7 +226,7 @@ $colors: (
   --color-text: var(--vt-c-text-light-1);
   --section-gap: 160px;
   --paginator-height: 80px;
-  --paginator-height-mobile: 60px;
+  --paginator-height-mobile: 40px;
   --navbar-height: 70px;
   --navbar-height-mobile: 50px;
   --match-list-height: 60px;
@@ -256,14 +257,14 @@ $colors: (
 
   // Select
   --p-select-background: var(--bolao-c-green-t3) !important;
-  --p-select-overlay-background: var(--bolao-c-green-t3) !important;
+  --p-select-overlay-background: var(--bolao-c-green-d1) !important;
   --p-select-option-selected-background: var(--bolao-c-green) !important;
   --p-select-option-focus-background: var(--bolao-c-blue3) !important;
   --p-select-option-selected-color: var(--bolao-c-white) !important;
   --p-select-option-color: var(--p-select-option-selected-color) !important;
 
   // Dialog - Modal
-  --p-dialog-background: var(--bolao-c-blue4) !important;
+  --p-dialog-background: var(--bolao-c-blue2) !important;
 
   // Popover
   --p-popover-background: var(--bolao-c-blue4) !important;
@@ -296,6 +297,11 @@ $colors: (
 
   // Chart
   --surface-card: var(--bolao-c-white-t3) !important;
+
+  .p-dialog {
+    background: var(--bolao-c-blue3) !important;
+  }
+
 }
 
 // Toast mobile fix: default width is 25rem which overflows narrow viewports
@@ -308,7 +314,7 @@ $colors: (
   }
 }
 
-[data-theme='dark'] {
+html[data-theme='dark'] {
   --color-main: var(--bolao-c-black);
   --color-contrast: var(--bolao-c-white);
   --color-match-overlay: var(--bolao-c-black);
@@ -362,7 +368,7 @@ body {
     'Helvetica Neue',
     sans-serif;
   font-size: 15px;
-  line-height: 1.6;
+  line-height: 1.5;
   color: var(--color-text);
   background: var(--color-background);
   text-rendering: optimizelegibility;

@@ -43,6 +43,7 @@
         <SocialGroupsWidget v-else-if="widgetId === 'social-groups'" />
         <ExtrasWidget v-else-if="widgetId === 'extras'" />
         <RankingWidget v-else-if="widgetId === 'ranking'" />
+        <NewsWidget v-else-if="widgetId === 'news'" />
       </WidgetCard>
     </TransitionGroup>
   </div>
@@ -53,12 +54,14 @@ import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import BannerComponent from '@/components/BannerComponent.vue';
+import { LIVE_GAME } from '@/constants/match';
 import MatchService from '@/services/match';
 import { useMatchesStore } from '@/stores/matches';
 
 import ExtrasWidget from './Home/ExtrasWidget.vue';
 import LiveMatchesWidget from './Home/LiveMatchesWidget.vue';
 import LogoWidget from './Home/LogoWidget.vue';
+import NewsWidget from './Home/NewsWidget.vue';
 import NextMatchBetStatusWidget from './Home/NextMatchBetStatusWidget.vue';
 import NextMatchesWidget from './Home/NextMatchesWidget.vue';
 import RankingWidget from './Home/RankingWidget.vue';
@@ -72,6 +75,7 @@ type WidgetId =
   | 'extras'
   | 'live-matches'
   | 'logo'
+  | 'news'
   | 'next-matches'
   | 'ranking'
   | 'rules'
@@ -83,6 +87,7 @@ const WIDGET_TITLES = computed<Record<WidgetId, string>>(() => ({
   extras: t('home.widgets.extras'),
   'live-matches': t('home.widgets.liveMatches'),
   logo: t('home.widgets.logo'),
+  news: t('home.widgets.news'),
   'next-matches': t('home.widgets.nextMatches'),
   ranking: t('home.widgets.ranking'),
   rules: t('home.widgets.rules'),
@@ -93,6 +98,7 @@ const WIDGET_TITLES = computed<Record<WidgetId, string>>(() => ({
 const ALL_WIDGET_IDS: WidgetId[] = [
   'logo',
   'welcome',
+  'news',
   'rules',
   'social-groups',
   'next-matches',
@@ -101,6 +107,19 @@ const ALL_WIDGET_IDS: WidgetId[] = [
   'extras',
   'ranking',
 ];
+
+function checkFirstVisitForNewWidget(): boolean {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved) as string[];
+      return !parsed.includes('news');
+    }
+  } catch {
+    // ignore parse errors
+  }
+  return true;
+}
 const BANNER_STORAGE_KEY = 'home-dashboard-banner-dismissed';
 const STORAGE_KEY = 'home-widget-order';
 
@@ -122,18 +141,29 @@ const isDashboardBannerDismissed = ref(localStorage.getItem(BANNER_STORAGE_KEY) 
 
 // ------ Widget order ------
 function loadOrder(): WidgetId[] {
+  const firstVisit = checkFirstVisitForNewWidget();
+
+  let base: WidgetId[];
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       const parsed = JSON.parse(saved) as WidgetId[];
       const valid = parsed.filter((id) => (ALL_WIDGET_IDS as string[]).includes(id));
       const missing = ALL_WIDGET_IDS.filter((id) => !valid.includes(id));
-      return [...valid, ...missing];
+      base = [...valid, ...missing];
+    } else {
+      base = [...ALL_WIDGET_IDS];
     }
   } catch {
-    // ignore parse errors
+    base = [...ALL_WIDGET_IDS];
   }
-  return [...ALL_WIDGET_IDS];
+
+  if (firstVisit) {
+    const order: WidgetId[] = ['news', ...base.filter((id) => id !== 'news')];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(order));
+    return order;
+  }
+  return base;
 }
 
 const widgetOrder = ref<WidgetId[]>(loadOrder());
@@ -145,7 +175,7 @@ function saveOrder() {
 // ------ Computed ------
 const matches = computed(() => matchesStore.matches);
 const nextMatches = computed(() => matchesStore.nextMatches);
-const liveMatches = computed(() => matches.value.filter((m) => m.status >= 20));
+const liveMatches = computed(() => matches.value.filter((m) => LIVE_GAME.includes(m.status)));
 
 const visibleWidgets = computed(() =>
   widgetOrder.value.filter((id) => {

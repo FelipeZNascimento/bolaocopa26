@@ -33,6 +33,19 @@ import { ref } from 'vue';
 const changelogEntries = ref([
   {
     changes: [
+      '[App] News widget added to the homepage with latest news about the tournament',
+      '[App] Modals now block background scrolling when open for better user experience',
+      '[App] Teams are now sorted alphabetically by name based on the selected locale',
+      '[Matches] Now able to showcase live score changes and events in real time with improved animations',
+      '[Matches] Improvements on match display for both desktop and mobile',
+      '[Matches] Improvements on match display when a match is live',
+      '🐛 [Extras] Countdown on extras for light mode was not readable',
+    ],
+    date: '25/05/2026',
+    version: 'v1.0.6',
+  },
+  {
+    changes: [
       '🐛 [App] Activation email was using a wrong URL for matches page',
       '🐛 [App] Language option is now being persisted on the session after reloading the page',
       '🐛 [App] Matches were not being displayed for logged out users',

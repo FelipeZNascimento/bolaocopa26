@@ -32,7 +32,7 @@
               class="redirect-bar"
             />
             <RouterLink
-              to="/jogos"
+              to="/partidas"
               class="skip-link"
             >
               {{ t('resetPassword.skipLink') }} <i class="pi pi-arrow-right" />
@@ -215,7 +215,7 @@ function startRedirectCountdown() {
 
     if (elapsed >= totalMs) {
       clearInterval(timer);
-      router.push('/jogos');
+      router.push('/partidas');
     }
   }, intervalMs);
 }

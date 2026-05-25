@@ -1,7 +1,8 @@
 <template>
   <div
     class="floating-actions"
-    :class="{ scrolled: isScrolled, 'near-bottom': isNearBottom }"
+    :class="{ scrolled: isScrolled, 'near-bottom': isNearBottom && keyboardOffset === 0 }"
+    :style="keyboardOffset > 0 ? { bottom: `${keyboardOffset}px` } : undefined"
   >
     <div class="button-outer">
       <button
@@ -63,6 +64,7 @@ defineProps<{
 const isNearBottom = ref(false);
 const isScrolled = ref(false);
 const isSaving = ref(false);
+const keyboardOffset = ref(0);
 
 // ------ Initialization ------
 const matchesStore = useMatchesStore();
@@ -74,10 +76,14 @@ const { t } = useI18n();
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
+  window.visualViewport?.addEventListener('resize', handleVisualViewport);
+  window.visualViewport?.addEventListener('scroll', handleVisualViewport);
 });
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
+  window.visualViewport?.removeEventListener('resize', handleVisualViewport);
+  window.visualViewport?.removeEventListener('scroll', handleVisualViewport);
 });
 
 // Watch for save trigger from keyboard shortcuts
@@ -105,6 +111,14 @@ const saveButtonTooltip = computed(() => {
 });
 
 // ------ Functions ------
+const handleVisualViewport = () => {
+  if (!window.visualViewport) return;
+  keyboardOffset.value = Math.max(
+    0,
+    window.innerHeight - window.visualViewport.offsetTop - window.visualViewport.height,
+  );
+};
+
 const handleScroll = () => {
   if (isDesktop.value) {
     isScrolled.value = window.scrollY > 100;
@@ -231,7 +245,9 @@ const handleReset = () => {
     padding: var(--s-spacing) 0 0 0;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
-    transition: transform 0.3s ease;
+    transition:
+      transform 0.3s ease,
+      bottom 0.3s ease;
 
     // background-color: var(--bolao-c-blue5-t3);
 
@@ -248,7 +264,7 @@ const handleReset = () => {
 .button-outer {
   display: flex;
   flex-direction: column;
-  gap: var(--s-spacing);
+  gap: var(--xxxs-spacing);
   align-items: center;
   color: var(--bolao-c-grey1);
 }

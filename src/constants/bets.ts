@@ -21,10 +21,10 @@ export const HIT_LEVELS_POINTS = {
 };
 
 export const HIT_LEVELS_LABELS = {
-  [HIT_LEVELS.exactScore]: `Acerto Total (${HIT_LEVELS_POINTS[HIT_LEVELS.exactScore]} pontos)`,
-  [HIT_LEVELS.oneScore]: `Acerto Parcial (${HIT_LEVELS_POINTS[HIT_LEVELS.oneScore]} pontos)`,
-  [HIT_LEVELS.winnerOnly]: `Acerto Mínimo (${HIT_LEVELS_POINTS[HIT_LEVELS.winnerOnly]} pontos)`,
-  [HIT_LEVELS.miss]: `Errrrou (${HIT_LEVELS_POINTS[HIT_LEVELS.miss]} pontos)`,
+  [HIT_LEVELS.exactScore]: 'hitLevels.exactScore',
+  [HIT_LEVELS.oneScore]: 'hitLevels.oneScore',
+  [HIT_LEVELS.winnerOnly]: 'hitLevels.winnerOnly',
+  [HIT_LEVELS.miss]: 'hitLevels.miss',
 };
 
 export const EXTRA_BETS_VALUES = {
@@ -44,7 +44,7 @@ export const EXTRA_BETS_LABELS: Record<TEXTRA_BETS_VALUES, string> = {
 };
 
 export type BetsValues = (typeof BETS_VALUES)[keyof typeof BETS_VALUES];
-export type HitLevel = (typeof HIT_LEVELS)[keyof typeof HIT_LEVELS];
 export type Ribbon = 'BULLSEYE' | 'HALF' | 'MISS' | null;
 export type TEXTRA_BETS_LABELS = (typeof EXTRA_BETS_LABELS)[keyof typeof EXTRA_BETS_LABELS];
 export type TEXTRA_BETS_VALUES = (typeof EXTRA_BETS_VALUES)[keyof typeof EXTRA_BETS_VALUES];
+export type THitLevel = (typeof HIT_LEVELS)[keyof typeof HIT_LEVELS];

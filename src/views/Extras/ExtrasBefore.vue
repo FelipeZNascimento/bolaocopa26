@@ -23,12 +23,14 @@
         <i class="pi pi-times" />
       </button>
     </div>
-    <CountdownComponent
-      v-if="showCountdown"
-      :countdown-to="configurationStore.editionStart ?? 0"
-      :colorful="true"
-      title="home.extras.countdownLabel"
-    />
+    <div style="padding: var(--m-spacing); background-color: var(--bolao-c-blue3); border-radius: var(--border-radius)">
+      <CountdownComponent
+        v-if="showCountdown"
+        :countdown-to="configurationStore.editionStart ?? 0"
+        :colorful="true"
+        title="home.extras.countdownLabel"
+      />
+    </div>
     <h2 style="text-align: center">
       {{ t('extraBets.myBets') }}
     </h2>
@@ -124,7 +126,12 @@ const showCountdown = computed(() => {
 
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 const activeProfileBets = computed(() => extraBetStore.activeProfileBets);
-const teams = computed(() => teamsStore.teams.filter((team) => team.id !== 33)); // Filter out placeholder team
+const teams = computed(() => {
+  const filteredTeams = teamsStore.teams.filter((team) => team.id !== 33);
+  return locale.value === 'pt-BR'
+    ? filteredTeams.toSorted((a, b) => a.name.localeCompare(b.name))
+    : filteredTeams.toSorted((a, b) => a.nameEn.localeCompare(b.nameEn));
+}); // Filter out placeholder team and sort by name based on locale
 const currentSelectedToggle = computed(
   () =>
     extraBetsOptions.value.find((option) => option.value === selectedToggle.value.value) ?? extraBetsOptions.value[0],
@@ -328,7 +335,7 @@ function onSelectToggle(option: IToggleOption) {
   width: 100%;
 
   @media (width <= 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
     gap: var(--s-spacing);
   }
 }

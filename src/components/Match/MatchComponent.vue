@@ -1,15 +1,46 @@
 <template>
   <div
-    class="outer-match line"
-    :class="{ clickable: isMatchStarted, 'is-mini': isMini }"
+    v-if="isMobile && !isDemo"
+    style="display: flex; gap: var(--xs-spacing); justify-content: center; justify-content: space-between"
   >
     <ClockComponent
-      v-if="isDesktop && !isDemo"
       :hit-level="hitLevel"
       :timestamp="parseInt(match.timestamp, 10)"
       :status="match.status"
       :is-match-started="isMatchStarted"
       :is-mini="isMini"
+      :points-awarded="match.pointsAwarded"
+      :gametime="match.gametime"
+    />
+    <div
+      class="match-connector"
+      aria-hidden="true"
+    />
+    <div
+      class="more-info"
+      role="button"
+      tabindex="0"
+      :aria-label="$t('match.moreInfo')"
+      @click="handleMatchClick"
+      @keydown.enter="handleMatchClick"
+      @keydown.space.prevent="handleMatchClick"
+    >
+      <i class="pi pi-plus-circle" />
+    </div>
+  </div>
+  <div
+    class="outer-match line"
+    :class="{ clickable: isMatchStarted, 'is-mini': isMini }"
+  >
+    <ClockComponent
+      v-if="!isMobile && !isDemo"
+      :hit-level="hitLevel"
+      :timestamp="parseInt(match.timestamp, 10)"
+      :status="match.status"
+      :is-match-started="isMatchStarted"
+      :is-mini="isMini"
+      :points-awarded="match.pointsAwarded"
+      :gametime="match.gametime"
     />
     <ScoreComponent
       :match="match"
@@ -19,12 +50,23 @@
       :is-mini="isMini"
     />
     <div
-      v-if="!isDemo && isDesktop"
+      v-if="!isDemo && !isMobile"
       class="more-info"
+      role="button"
+      tabindex="0"
+      :aria-label="$t('match.moreInfo')"
       @click="handleMatchClick"
+      @keydown.enter="handleMatchClick"
+      @keydown.space.prevent="handleMatchClick"
     >
       <i class="pi pi-plus-circle" />
     </div>
+    <div
+      v-if="isStatusSweeping"
+      aria-hidden="true"
+      class="status-sweep"
+      :style="{ '--sweep-color': sweepColor }"
+    />
   </div>
   <MoreInfoModal
     :match="match"
@@ -34,16 +76,17 @@
   />
 </template>
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 import type { IMatch } from '@/stores/matches.types';
 
 import { HIT_LEVELS } from '@/constants/bets';
+import { MATCH_STATUS, type TMatchStatus } from '@/constants/match';
 import { useViewport } from '@/services/viewport';
 import { useClockStore } from '@/stores/clock';
 
 import ClockComponent from './ClockComponent.vue';
-import MoreInfoModal from './MoreInfoModal/MoreInfoModal.vue';
+import MoreInfoModal from './MatchInfoModal/MatchInfoModal.vue';
 import ScoreComponent from './ScoreComponent.vue';
 
 const props = withDefaults(
@@ -62,10 +105,12 @@ const props = withDefaults(
 
 // ------ Refs ------
 const isMoreInfoModalOpen = ref(false);
+const isStatusSweeping = ref(false);
+const sweepColor = ref('');
 
 // ------ Initialization ------
 const clockStore = useClockStore();
-const { isDesktop } = useViewport();
+const { isMobile } = useViewport();
 
 // ------ Computed Properties ------
 // const correctBets = { bullseye: [], half: [] };
@@ -110,6 +155,29 @@ const hitLevel = computed(() => {
   return HIT_LEVELS.miss;
 });
 
+function getStatusSweepColor(status: TMatchStatus): string {
+  if ([MATCH_STATUS.FIRST_HALF, MATCH_STATUS.PENALTIES, MATCH_STATUS.SECOND_HALF].includes(status)) {
+    return 'var(--bolao-c-mint)';
+  }
+
+  if (
+    [
+      MATCH_STATUS.AWAITING_EXTRA_TIME,
+      MATCH_STATUS.AWAITING_PENALTIES,
+      MATCH_STATUS.HALFTIME,
+      MATCH_STATUS.HALFTIME_EXTRA_TIME,
+    ].includes(status)
+  ) {
+    return 'var(--bolao-c-gold)';
+  }
+
+  if ([MATCH_STATUS.FINAL, MATCH_STATUS.FINAL_EXTRA_TIME, MATCH_STATUS.FINAL_PENALTIES].includes(status)) {
+    return 'var(--color-contrast)';
+  }
+
+  return 'var(--bolao-c-red)';
+}
+
 function handleCloseModal() {
   isMoreInfoModalOpen.value = false;
 }
@@ -118,9 +186,22 @@ function handleCloseModal() {
 function handleMatchClick() {
   isMoreInfoModalOpen.value = true;
 }
+
+// ------ Watches ------
+watch(
+  () => props.match.status,
+  (newStatus) => {
+    sweepColor.value = getStatusSweepColor(newStatus);
+    isStatusSweeping.value = true;
+    setTimeout(() => {
+      isStatusSweeping.value = false;
+    }, 800);
+  },
+);
 </script>
 <style lang="scss" scoped>
 .outer-match {
+  position: relative;
   display: flex;
   gap: var(--m-spacing);
   opacity: 1;
@@ -132,7 +213,22 @@ function handleMatchClick() {
 
   @media (width <=768px) {
     gap: var(--xs-spacing);
+    margin-bottom: var(--m-spacing);
   }
+}
+
+.match-connector {
+  flex: 1;
+  align-self: center;
+  height: 1px;
+  margin: 0 var(--xxs-spacing);
+  background-image: repeating-linear-gradient(
+    to right,
+    color-mix(in srgb, var(--color-contrast) 20%, transparent) 0,
+    color-mix(in srgb, var(--color-contrast) 20%, transparent) 3px,
+    transparent 3px,
+    transparent 9px
+  );
 }
 
 .more-info {
@@ -144,42 +240,99 @@ function handleMatchClick() {
   justify-content: center;
   width: 60px;
   padding: var(--s-spacing);
+  overflow: hidden;
   font-weight: 600;
   cursor: pointer;
-  background-color: var(--bolao-c-white-t1);
+  background:
+    linear-gradient(
+      150deg,
+      color-mix(in srgb, var(--color-main) 28%, transparent) 0%,
+      color-mix(in srgb, var(--color-main) 5%, transparent) 100%
+    ),
+    var(--bolao-c-white-t1);
   border-radius: var(--border-radius);
-  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
-  transition: all 0.2s ease;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--color-main) 55%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--color-main) 18%, transparent),
+    inset 0 -2px 0 rgb(0 0 0 / 8%),
+    0 2px 8px rgb(0 0 0 / 12%);
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+
+  &::before {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    content: '';
+    background: radial-gradient(
+      ellipse at 50% 140%,
+      color-mix(in srgb, var(--color-anchor) 35%, transparent) 0%,
+      transparent 65%
+    );
+    border-radius: var(--border-radius);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
 
   i {
+    position: relative;
+    z-index: 1;
     font-size: var(--l-font-size);
-    transition: transform 0.2s ease;
+    color: var(--color-contrast);
+    transition:
+      color 0.2s ease,
+      transform 0.2s ease;
   }
 
   span {
+    position: relative;
+    z-index: 1;
     white-space: nowrap;
   }
 
   &:hover {
-    box-shadow: 0 4px 8px rgb(0 0 0 / 20%);
-    transform: translateY(-1px);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--color-main) 65%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, var(--color-anchor) 45%, transparent),
+      inset 0 -2px 0 rgb(0 0 0 / 8%),
+      0 6px 18px rgb(0 0 0 / 22%);
+    transform: translateY(-2px);
+
+    &::before {
+      opacity: 1;
+    }
 
     i {
-      transform: scale(1.1);
+      color: var(--color-anchor);
+      transform: scale(1.2);
+    }
+  }
+
+  &:active {
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--color-main) 40%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, var(--color-main) 12%, transparent),
+      inset 0 -1px 0 rgb(0 0 0 / 5%),
+      0 1px 3px rgb(0 0 0 / 10%);
+    transform: scale(0.96);
+  }
+
+  @media (hover: none) {
+    &:active {
+      transform: scale(0.93);
     }
   }
 
   @media (width <=768px) {
     min-width: 48px;
-    min-height: 48px;
+    min-height: 30px;
     padding: var(--xs-spacing);
     font-size: var(--xxs-font-size);
-    color: #fff;
 
     i {
-      font-size: var(--l-font-size);
-      color: #fff;
-      filter: drop-shadow(0 1px 2px rgb(0 0 0 / 20%));
+      font-size: var(--m-font-size);
     }
   }
 }
@@ -190,6 +343,39 @@ function handleMatchClick() {
 
   @media (width <=768px) {
     height: var(--match-list-height-mobile);
+  }
+}
+
+.status-sweep {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--sweep-color, transparent);
+  transform-origin: left;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes status-sweep {
+    0% {
+      opacity: 1;
+      transform: scaleX(0);
+    }
+
+    70% {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+
+    100% {
+      opacity: 0;
+      transform: scaleX(1);
+    }
+  }
+
+  .status-sweep {
+    animation: status-sweep 800ms ease-out forwards;
   }
 }
 </style>

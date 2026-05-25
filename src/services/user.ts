@@ -148,14 +148,20 @@ export default class UserService {
   public async logout() {
     this.activeProfileStore.setLoading(true);
     try {
+      console.log('Resetting active profile and related stores');
       this.activeProfileStore.setLoading(false);
-      this.activeProfileStore.setActiveProfile(null);
       this.activeProfileStore.setError(null);
-      this.rankingStore.setInitialState();
-      this.configurationStore.setInitialState();
       this.matchesStore.resetLoggedUserBets();
       this.extraBetStore.resetActiveProfileBets();
+      this.rankingStore.setInitialState();
+      this.configurationStore.setInitialState();
+
       await this.apiService.get<IUser>('user/logout');
+      // This needs to always go after the API call to ensure the user is only logged out on the frontend
+      // if the backend logout was successful. Emptying the activeProfile before the API leads to matches
+      // being fetched before the user is deleted from the backend, and therefore it's still seen as a logged
+      // user call.
+      this.activeProfileStore.setActiveProfile(null);
     } catch (error: unknown) {
       this.activeProfileStore.setLoading(false);
       console.error('[UserService.logout]', error);

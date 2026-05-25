@@ -57,6 +57,7 @@ import { useI18n } from 'vue-i18n';
 
 import type { IUser } from '@/stores/activeProfile.types';
 
+import { useScrollLock } from '@/composables/useScrollLock';
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
@@ -85,20 +86,20 @@ const { t } = useI18n();
 // ------ Computed ------
 const favorites = computed(() => activeProfileStore.activeProfile?.favorites || []);
 const activeProfile = computed(() => activeProfileStore.activeProfile);
-const seasonRanking = computed(() => rankingStore.seasonRanking);
+const editionRanking = computed(() => rankingStore.editionRanking);
 const isLoadingRounds = computed(() => configurationStore.isLoading || rankingStore.isLoadingRounds);
 const isLoadingSeason = computed(() => configurationStore.isLoading || rankingStore.isLoadingSeason);
 const isLoadingActiveProfile = computed(() => activeProfileStore.isLoading);
 
 const favoriteUsers = computed(() => {
-  if (favorites.value.length === 0 || seasonRanking.value.length === 0) {
+  if (favorites.value.length === 0 || editionRanking.value.length === 0) {
     return [];
   }
 
   // Map favorite IDs to user objects from ranking data
   return favorites.value
     .map((userId) => {
-      const rankingLine = seasonRanking.value.find((line) => line.user.id === userId);
+      const rankingLine = editionRanking.value.find((line) => line.user.id === userId);
       return rankingLine ? rankingLine.user : null;
     })
     .filter((user): user is IUser => user !== null);
@@ -138,7 +139,11 @@ watch(
   },
 );
 
+const { lock, unlock } = useScrollLock();
+
 watch(isVisible, (newValue) => {
+  if (newValue) lock();
+  else unlock();
   if (!newValue) {
     props.handleCloseModal();
   }

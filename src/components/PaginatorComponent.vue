@@ -85,16 +85,30 @@
     </div>
     <div
       v-if="(selectedRound === 1 || selectedRound === 2 || selectedRound === 3) && route.path === '/partidas'"
-      class="match-sorting-toggle"
+      class="toggle-button"
     >
       <button
-        v-tooltip.right="matchListSorting === 'group' ? t('paginator.sortByTime') : t('paginator.sortByGroup')"
+        v-tooltip.bottom="matchListSorting === 'group' ? t('paginator.sortByTime') : t('paginator.sortByGroup')"
         class="action-btn"
         :aria-label="matchListSorting === 'group' ? t('paginator.sortByTime') : t('paginator.sortByGroup')"
         :title="matchListSorting === 'group' ? t('paginator.sortByTime') : t('paginator.sortByGroup')"
         @click="handleListToggle"
       >
         <i :class="matchListSorting === 'group' ? 'pi pi-sort-numeric-down' : 'pi pi-sort-alpha-down'" />
+      </button>
+    </div>
+    <div
+      v-if="hasEditionStarted && route.path === '/partidas'"
+      class="toggle-button"
+    >
+      <button
+        v-tooltip.bottom="viewBetOption === 'viewBets' ? t('paginator.viewBets') : t('paginator.hideBets')"
+        class="action-btn"
+        :aria-label="viewBetOption === 'viewBets' ? t('paginator.viewBets') : t('paginator.hideBets')"
+        :title="viewBetOption === 'viewBets' ? t('paginator.viewBets') : t('paginator.hideBets')"
+        @click="handleViewBetToggle"
+      >
+        <i :class="viewBetOption === 'viewBets' ? 'pi pi-eye' : 'pi pi-eye-slash'" />
       </button>
     </div>
   </div>
@@ -107,6 +121,7 @@ import { useRoute } from 'vue-router';
 
 import { ROUNDS } from '@/constants/rounds';
 import { useViewport } from '@/services/viewport';
+import { useClockStore } from '@/stores/clock';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
 
@@ -116,10 +131,8 @@ const isScrolled = ref(false);
 
 // ------ Initialization ------
 const { t } = useI18n();
-const configurationStore = useConfigurationStore();
 const { isDesktop, isMobile } = useViewport();
 const confirm = useConfirm();
-const matchesStore = useMatchesStore();
 const route = useRoute();
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
@@ -129,8 +142,15 @@ onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
 });
 
+// ------ Stores and Services ------
+const configurationStore = useConfigurationStore();
+const matchesStore = useMatchesStore();
+const clockStore = useClockStore();
+
 // ------ Computed Properties ------
+const hasEditionStarted = computed(() => clockStore.hasEditionStarted);
 const selectedRound = computed(() => configurationStore.selectedRound);
+const viewBetOption = computed(() => configurationStore.viewBetOption);
 const visibleRounds = computed(() => rounds.value.filter((r) => !r.hidden));
 const matchListSorting = computed(() => configurationStore.matchListSorting);
 
@@ -179,6 +199,11 @@ function prevPage() {
   if (idx > 0) setRound(visibleRounds.value[idx - 1].num);
 }
 
+const handleViewBetToggle = () => {
+  const newOption = viewBetOption.value === 'viewBets' ? 'hideBets' : 'viewBets';
+  configurationStore.setViewBetOption(newOption);
+};
+
 const handleListToggle = () => {
   const newOption = matchListSorting.value === 'group' ? 'time' : 'group';
   configurationStore.setMatchListSorting(newOption);
@@ -213,7 +238,7 @@ function setRound(num: null | number) {
   z-index: 10;
   display: flex;
   flex-direction: row;
-  gap: var(--s-spacing);
+  gap: var(--xs-spacing);
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -250,6 +275,16 @@ function setRound(num: null | number) {
   pointer-events: auto;
   background-color: var(--bolao-c-blue3);
   border-radius: var(--border-radius);
+
+  @media (width <= 1024px) {
+    height: var(--paginator-height-mobile);
+  }
+
+  :deep(.p-select) {
+    @media (width <= 1024px) {
+      height: var(--paginator-height-mobile);
+    }
+  }
 
   :deep(.p-button) {
     color: white;
@@ -297,12 +332,11 @@ function setRound(num: null | number) {
   }
 }
 
-.match-sorting-toggle {
+.toggle-button {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
-  padding: var(--s-spacing);
   pointer-events: auto;
   border-radius: var(--border-radius);
 }
@@ -321,10 +355,19 @@ function setRound(num: null | number) {
   box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
   transition: all 0.3s ease;
 
+  @media (width <= 1024px) {
+    width: 36px;
+    height: 36px;
+  }
+
   .pi {
     font-size: var(--m-font-size);
     color: white;
     transition: color 0.3s ease;
+
+    @media (width <= 1024px) {
+      font-size: var(--s-font-size);
+    }
   }
 
   // Interaction states

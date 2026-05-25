@@ -111,8 +111,7 @@ const FAQs = computed<FAQItem[]>(() => [
   {
     answer: [
       { text: t('rules.faqItems.changeAfterBet.answer1'), type: 'text' },
-      { text: t('rules.faqItems.changeAfterBet.answerLink'), to: '/jogos', type: 'link' },
-      { text: t('rules.faqItems.changeAfterBet.answer2'), type: 'text' },
+      { text: t('rules.faqItems.changeAfterBet.answerLink'), to: '/partidas', type: 'link' },
     ],
     question: t('rules.faqItems.changeAfterBet.question'),
     slug: 'alterar-apostas',
