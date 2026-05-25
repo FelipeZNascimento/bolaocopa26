@@ -16,7 +16,6 @@
         v-if="status !== MATCH_STATUS.FINAL"
         class="live-dot-wrapper"
       >
-        {{ status }}
         <Transition name="heartbeat">
           <span
             v-if="isHeartbeating"
