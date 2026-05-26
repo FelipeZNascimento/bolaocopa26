@@ -20,9 +20,9 @@
     </template>
 
     <PlayerStickerComponent
-      v-for="(player, i) in [...Array(100).fill(filteredPlayers[0]), ...Array(100).fill(filteredPlayers[1])]"
+      v-for="player in filteredPlayers"
       v-else
-      :key="i"
+      :key="player.id"
       :player="player"
     />
   </div>

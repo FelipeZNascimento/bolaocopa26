@@ -154,15 +154,14 @@
 </template>
 <script setup lang="ts">
 import { Form, type FormSubmitEvent } from '@primevue/forms';
-import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { computed, ref, type Ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { z } from 'zod';
 
 import { useScrollLock } from '@/composables/useScrollLock';
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useNotificationStore } from '@/stores/notification';
+import { forgotPasswordResolver, loginResolver, signupResolver } from '@/util/zodResolvers';
 
 const props = defineProps<{
   handleCloseModal: () => void;
@@ -182,41 +181,14 @@ const initialValues = ref({
 });
 const resolverDecider = () => {
   if (formMode.value === 'signup') {
-    return signupResolver.value;
+    return signupResolver;
   } else if (formMode.value === 'login') {
-    return loginResolver.value;
+    return loginResolver;
   } else if (formMode.value === 'forgotPassword') {
-    return forgotPasswordResolver.value;
+    return forgotPasswordResolver;
   }
-  return loginResolver.value;
+  return loginResolver;
 };
-
-const forgotPasswordResolver = ref(
-  zodResolver(z.object({ email: z.email({ error: t('loginModal.validation.emailInvalid') }) })),
-);
-
-const loginResolver = ref(
-  zodResolver(
-    z.object({
-      email: z.email({ error: t('loginModal.validation.emailInvalid') }),
-      password: z.string().min(1, { message: t('loginModal.validation.passwordEmpty') }),
-    }),
-  ),
-);
-
-const signupResolver = ref(
-  zodResolver(
-    z.object({
-      email: z.email({ error: t('loginModal.validation.emailInvalid') }),
-      name: z.string().min(1, { message: t('loginModal.validation.nameEmpty') }),
-      nickname: z
-        .string()
-        .min(4, { message: t('loginModal.validation.nicknameLength') })
-        .max(12, { message: t('loginModal.validation.nicknameLength') }),
-      password: z.string().min(1, { message: t('loginModal.validation.passwordEmpty') }),
-    }),
-  ),
-);
 
 // ------ Initializations ------
 const userService = new UserService();

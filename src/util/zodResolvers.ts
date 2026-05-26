@@ -1,53 +1,66 @@
 import { zodResolver } from '@primevue/forms/resolvers/zod';
-import { ref } from 'vue';
 import z from 'zod';
 
-export const loginResolver = ref(
-  zodResolver(
-    z.object({
-      email: z.email({ error: 'Email inválido' }),
-      password: z.string().min(6, { message: 'Senha tem que ter pelo menos 6 caracteres' }),
-    }),
-  ),
+import i18n from '@/i18n';
+
+const t = i18n.global.t;
+
+export const loginResolver = zodResolver(
+  z.object({
+    email: z.email({ error: t('loginModal.validation.emailInvalid') }),
+    password: z.string().min(6, { message: t('loginModal.validation.passwordMinLength') }),
+  }),
 );
 
-export const signupResolver = ref(
-  zodResolver(
-    z.object({
-      email: z.email({ error: 'Email inválido' }),
-      name: z.string().min(1, { message: 'Nome está vazio' }),
-      password: z.string().min(6, { message: 'Senha tem que ter pelo menos 6 caracteres' }),
-      username: z
-        .string()
-        .min(4, { message: 'Apelido tem que ter entre 4 e 12 caracteres' })
-        .max(12, { message: 'Apelido tem que ter entre 4 e 12 caracteres' }),
-    }),
-  ),
+export const signupResolver = zodResolver(
+  z.object({
+    email: z.email({ error: t('loginModal.validation.emailInvalid') }),
+    name: z.string().min(1, { message: t('loginModal.validation.nameEmpty') }),
+    password: z.string().min(6, { message: t('loginModal.validation.passwordMinLength') }),
+    username: z
+      .string()
+      .min(4, { message: t('loginModal.validation.nicknameLength') })
+      .max(12, { message: t('loginModal.validation.nicknameLength') }),
+  }),
 );
 
-export const updateProfileResolver = ref(
-  zodResolver(
-    z.object({
-      name: z.string().min(1, { message: 'Nome está vazio' }),
-      nickname: z
-        .string()
-        .min(4, { message: 'Apelido tem que ter entre 4 e 12 caracteres' })
-        .max(12, { message: 'Apelido tem que ter entre 4 e 12 caracteres' }),
-    }),
-  ),
+export const updateProfileResolver = zodResolver(
+  z.object({
+    name: z.string().min(1, { message: t('loginModal.validation.nameEmpty') }),
+    nickname: z
+      .string()
+      .min(4, { message: t('loginModal.validation.nicknameLength') })
+      .max(12, { message: t('loginModal.validation.nicknameLength') }),
+  }),
 );
 
-export const updatePasswordResolver = ref(
-  zodResolver(
-    z
-      .object({
-        currentPassword: z.string().min(6, { message: 'A sua senha tem pelo menos 6 caracteres' }),
-        newPassword: z.string().min(6, { message: 'Nova senha tem que ter pelo menos 6 caracteres' }),
-        newPasswordConfirmation: z.string().min(6, { message: 'Nova senha tem que ter pelo menos 6 caracteres' }),
-      })
-      .refine((data) => data.newPassword === data.newPasswordConfirmation, {
-        message: 'A senha digitada no campo de confirmação deve ser idêntica à nova senha',
-        path: ['newPasswordConfirmation'], // path of error
-      }),
-  ),
+export const updatePasswordResolver = zodResolver(
+  z
+    .object({
+      currentPassword: z.string().min(6, { message: t('loginModal.validation.passwordMinLength') }),
+      newPassword: z.string().min(6, { message: t('loginModal.validation.passwordMinLength') }),
+      newPasswordConfirmation: z.string().min(6, { message: t('loginModal.validation.passwordMinLength') }),
+    })
+    .refine((data) => data.newPassword === data.newPasswordConfirmation, {
+      message: t('loginModal.validation.passwordConfirmationMismatch'),
+      path: ['newPasswordConfirmation'],
+    }),
+);
+
+export const forgotPasswordResolver = zodResolver(
+  z.object({ email: z.email({ error: t('loginModal.validation.emailInvalid') }) }),
+);
+
+export const resetPasswordResolver = zodResolver(
+  z
+    .object({
+      confirmPassword: z.string().min(1, { message: t('resetPassword.validation.confirmPasswordEmpty') }),
+      email: z.string().email({ message: t('resetPassword.validation.emailRequired') }),
+      password: z.string().min(6, { message: t('resetPassword.validation.passwordMinLength') }),
+      token: z.string().min(1, { message: t('resetPassword.validation.tokenRequired') }),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t('resetPassword.validation.passwordsMismatch'),
+      path: ['confirmPassword'],
+    }),
 );

@@ -32,8 +32,17 @@ import { ref } from 'vue';
 
 const changelogEntries = ref([
   {
+    changes: [
+      '[App] Increased security measures for user data protection',
+      '🐛 [WorldCup+] Player view was sketchy, now fixed',
+      '🐛 [App] Now enforcing passwords with at least 6 characters',
+    ],
+    date: '26/05/2026',
+    version: 'v1.0.9',
+  },
+  {
     changes: ['[WorldCup+] New section added to the app with standings, teams, stadiums, players, referees'],
-    date: '25/05/2026',
+    date: '26/05/2026',
     version: 'v1.0.8',
   },
   {

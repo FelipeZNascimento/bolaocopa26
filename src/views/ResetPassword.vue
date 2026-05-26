@@ -152,14 +152,13 @@
 
 <script setup lang="ts">
 import { Form, type FormSubmitEvent } from '@primevue/forms';
-import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
-import { z } from 'zod';
 
 import UserService from '@/services/user';
 import { useNotificationStore } from '@/stores/notification';
+import { resetPasswordResolver } from '@/util/zodResolvers';
 
 // ------ Initializations ------
 const userService = new UserService();
@@ -183,20 +182,6 @@ onMounted(() => {
     router.replace({ query: {} });
   }
 });
-
-const resetPasswordResolver = zodResolver(
-  z
-    .object({
-      confirmPassword: z.string().min(1, { message: t('resetPassword.validation.confirmPasswordEmpty') }),
-      email: z.string().email({ message: t('resetPassword.validation.emailRequired') }),
-      password: z.string().min(6, { message: t('resetPassword.validation.passwordMinLength') }),
-      token: z.string().min(1, { message: t('resetPassword.validation.tokenRequired') }),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-      message: t('resetPassword.validation.passwordsMismatch'),
-      path: ['confirmPassword'],
-    }),
-);
 
 const loading = ref(false);
 const resetSuccess = ref(false);

@@ -99,7 +99,9 @@
       "emailInvalid": "Invalid email",
       "passwordEmpty": "Password is empty",
       "nameEmpty": "Name is empty",
-      "nicknameLength": "Nickname must be between 4 and 12 characters"
+      "passwordMinLength": "Password must be at least 6 characters",
+      "nicknameLength": "Nickname must be between 4 and 12 characters",
+      "passwordConfirmationMismatch": "The password entered in the confirmation field must match the new password"
     },
     "buttons": {
       "forgotPassword": "Forgot password",
