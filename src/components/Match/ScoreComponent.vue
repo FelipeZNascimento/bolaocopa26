@@ -6,6 +6,7 @@
       :is-winning="isHomeTeamWinning"
       :events="sortedEvents"
       :match="match"
+      :is-demo="isDemo"
       :is-mini="isMini"
       :hit-level="hitLevel"
     />
@@ -15,6 +16,7 @@
       :is-winning="isAwayTeamWinning"
       :match="match"
       :events="sortedEvents"
+      :is-demo="isDemo"
       :is-mini="isMini"
       :hit-level="hitLevel"
     />
@@ -33,12 +35,13 @@ const props = withDefaults(
   defineProps<{
     activeUserBet: IBet | null;
     hitLevel?: null | THitLevel;
+    isDemo?: boolean;
     isMatchStarted: boolean;
     isMini?: boolean;
     isScoreModalOpen?: boolean;
     match: IMatch;
   }>(),
-  { isMini: false, isScoreModalOpen: false },
+  { isDemo: false, isMini: false, isScoreModalOpen: false },
 );
 
 const isHomeTeamWinning = computed(() => {

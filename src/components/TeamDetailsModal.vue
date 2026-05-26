@@ -39,12 +39,19 @@
               <h2 class="team-name">
                 {{ locale === 'pt-BR' ? team.name : team.nameEn }}
               </h2>
-              <p
+              <p class="team-coach">
+                {{ t('teamDetailsModal.coach') }}:
+                <HoverablePlayerName
+                  v-if="coach"
+                  :player="coach"
+                />
+              </p>
+              <!-- <p
                 v-if="locale !== 'en'"
                 class="team-name-en"
               >
                 {{ team.nameEn }}
-              </p>
+              </p> -->
               <p class="team-name-en">
                 {{ team.confederation.abbreviation }}
               </p>
@@ -62,13 +69,7 @@
           </div>
         </div>
       </div>
-      <p>
-        {{ t('teamDetailsModal.coach') }}:
-        <HoverablePlayerName
-          v-if="coach"
-          :player="coach"
-        />
-      </p>
+
       <h3 class="players-title">{{ t('teamDetailsModal.players') }} ({{ sortedPlayers.length }})</h3>
       <div class="players-grid">
         <div
@@ -265,7 +266,7 @@ watch(isVisible, (newValue) => {
       font-size: var(--xxl-font-size);
       font-weight: 700;
       line-height: 1.2;
-      color: var(--color-contrast);
+      color: var(--bolao-c-white);
       text-shadow: 0 2px 4px rgb(0 0 0 / 10%);
 
       @media (width <= 768px) {
@@ -274,11 +275,11 @@ watch(isVisible, (newValue) => {
       }
     }
 
-    .team-name-en {
+    .team-coach {
       margin: 0;
-      font-size: var(--l-font-size);
+      font-size: var(--m-font-size);
       font-weight: 500;
-      color: var(--color-contrast);
+      color: var(--bolao-c-white);
       opacity: 0.85;
 
       @media (width <= 768px) {
@@ -387,7 +388,7 @@ watch(isVisible, (newValue) => {
     min-width: 40px;
     font-size: var(--l-font-size);
     font-weight: bold;
-    color: var(--bolao-c-blue);
+    color: var(--bolao-c-blue1-l2);
     text-align: center;
 
     @media (width <= 768px) {

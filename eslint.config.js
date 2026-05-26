@@ -9,7 +9,7 @@ export default [
     name: 'app/files-to-lint',
   },
   {
-    ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**', '**/dev-dist/**'],
+    ignores: ['**/dist/**', '**/dist-pprod/**', '**/dist-ssr/**', '**/coverage/**', '**/dev-dist/**'],
     name: 'app/files-to-ignore',
   },
   ...pluginVue.configs['flat/essential'],

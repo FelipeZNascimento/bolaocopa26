@@ -1,12 +1,14 @@
 import { onMounted, onUnmounted, ref } from 'vue';
 
 // Breakpoints
+const SMALL_MOBILE_MAX = 480;
 const MOBILE_MAX = 768;
 const TABLET_MAX = 1280;
 
 class ViewportService {
   public isDesktop = ref(false);
   public isMobile = ref(false);
+  public isSmallMobile = ref(false);
   public isTablet = ref(false);
 
   private resizeHandler: () => void;
@@ -27,6 +29,7 @@ class ViewportService {
   private updateViewport() {
     const width = window.innerWidth;
 
+    this.isSmallMobile.value = width <= SMALL_MOBILE_MAX;
     this.isMobile.value = width <= MOBILE_MAX;
     this.isTablet.value = width > MOBILE_MAX && width < TABLET_MAX;
     this.isDesktop.value = width >= TABLET_MAX;
@@ -55,6 +58,7 @@ export function useViewport() {
   return {
     isDesktop: viewportService.isDesktop,
     isMobile: viewportService.isMobile,
+    isSmallMobile: viewportService.isSmallMobile,
     isTablet: viewportService.isTablet,
   };
 }

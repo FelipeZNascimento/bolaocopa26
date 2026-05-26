@@ -20,6 +20,7 @@
         {{ isHomeTeam ? props.match.score.home : props.match.score.away }}
       </div>
       <div
+        v-if="!isDemo"
         class="bet"
         :class="{
           gold: hitLevel === HIT_LEVELS.exactScore,
@@ -108,6 +109,7 @@ import { useMatchesStore } from '@/stores/matches';
 const props = withDefaults(
   defineProps<{
     hitLevel?: null | THitLevel;
+    isDemo?: boolean;
     isHomeTeam?: boolean;
     isMini?: boolean;
     isWinning?: boolean;
@@ -115,7 +117,9 @@ const props = withDefaults(
   }>(),
   {
     hitLevel: null,
+    isDemo: false,
     isHomeTeam: false,
+    isMini: false,
     isWinning: false,
   },
 );

@@ -19,7 +19,7 @@
     "extras": "Extras",
     "ranking": "Ranking",
     "rules": "Rules",
-    "teams": "Teams",
+    "worldcup": "World Cup+",
     "profile": "Profile"
   },
   "matches": {
@@ -430,7 +430,15 @@
   },
   "teams": {
     "title": "Teams",
-    "group": "Group {group}"
+    "group": "Group {group}",
+    "search": "Search team...",
+    "noResults": "No teams found"
+  },
+  "players": {
+    "noPhoto": "No photo",
+    "noResults": "No players found",
+    "search": "Search player, team or club...",
+    "years": "yo"
   },
   "teamDetailsModal": {
     "coach": "Coach",
@@ -707,6 +715,28 @@
         "answer": "No. If you don't bet on a match, it will be considered as not placed and, therefore, will not affect your score."
       }
     }
+  },
+  "referees": {
+    "age": "Age",
+    "country": "Country",
+    "name": "Referee",
+    "noResults": "No referees found",
+    "search": "Search referee or country...",
+    "yo": "yo"
+  },
+  "standings": {
+    "refresh": "Refresh",
+    "team": "Team"
+  },
+  "worldCupPlus": {
+    "title": "World Cup+",
+    "description": "Get to know a little bit more about the teams, stadiums, players and coaches participating in the World Cup!",
+    "groups": "Groups",
+    "players": "Players",
+    "referees": "Referees",
+    "stadiums": "Stadiums",
+    "standings": "Standings",
+    "teams": "Teams"
   },
   "emptyFavorites": {
     "title": "No favorites added.",

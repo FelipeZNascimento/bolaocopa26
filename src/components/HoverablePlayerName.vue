@@ -14,7 +14,9 @@
     @mouseenter="onPopoverMouseEnter"
     @mouseleave="onPopoverMouseLeave"
   >
-    <PlayerStickerComponent :player="selectedPlayer" />
+    <div class="player-sticker-wrapper">
+      <PlayerStickerComponent :player="selectedPlayer" />
+    </div>
   </PrimePopover>
 </template>
 <script setup lang="ts">
@@ -90,5 +92,9 @@ function showPlayerSticker(event: MouseEvent, player: IPlayer) {
     color: var(--bolao-c-gold);
     text-decoration-style: solid;
   }
+}
+
+.player-sticker-wrapper {
+  width: 200px;
 }
 </style>

@@ -10,6 +10,7 @@ export enum ROUTE_ID {
   PROFILE,
   LOGIN,
   TEAMS,
+  WORLDCUP,
 }
 
 export interface TROUTE {
@@ -59,9 +60,9 @@ export const ROUTES = [
     url: '/regras',
   },
   {
-    id: ROUTE_ID.TEAMS,
-    name: 'teams',
+    id: ROUTE_ID.WORLDCUP,
+    name: 'worldcup',
     needCredentials: false,
-    url: '/equipes',
+    url: '/copa',
   },
 ];
