@@ -4,7 +4,9 @@
     "moreInfo": "Detalhes da partida"
   },
   "inactiveBanner": {
-    "message1": "Seu perfil ainda não está ativo."
+    "message1": "Seu perfil ainda não está ativo.",
+    "cta": "Clique aqui ",
+    "message2": "para ativá-lo."
   },
   "common": {
     "dismiss": "Fechar",
@@ -318,11 +320,11 @@
     "live": "Placar"
   },
   "hitLevels": {
-    "exactScore": "Acerto Total",
+    "exactScore": "Acerto Total (+{points})",
     "miss": "Errrrou",
     "noBet": "Sem aposta",
-    "oneScore": "Acerto Parcial",
-    "winnerOnly": "Acerto Mínimo"
+    "oneScore": "Acerto Parcial (+{points})",
+    "winnerOnly": "Acerto Mínimo (+{points})"
   },
   "extraBets": {
     "generalBets": "Apostas Gerais",

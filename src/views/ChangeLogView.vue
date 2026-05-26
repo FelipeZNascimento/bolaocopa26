@@ -33,6 +33,15 @@ import { ref } from 'vue';
 const changelogEntries = ref([
   {
     changes: [
+      '[App] Mobile: showing nickname instead of name on the menu slider',
+      '🐛 [App] Missing translations for inactive users banner',
+      '🐛 [App] Returning users were being set as active instead of inactive',
+    ],
+    date: '26/05/2026',
+    version: 'v1.0.10',
+  },
+  {
+    changes: [
       '[App] Increased security measures for user data protection',
       '🐛 [WorldCup+] Player view was sketchy, now fixed',
       '🐛 [App] Now enforcing passwords with at least 6 characters',

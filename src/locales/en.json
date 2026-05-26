@@ -4,7 +4,9 @@
     "moreInfo": "Match details"
   },
   "inactiveBanner": {
-    "message1": "Your profile is not active yet."
+    "message1": "Your profile is not active yet.",
+    "cta": "Click here ",
+    "message2": "to activate it."
   },
   "common": {
     "dismiss": "Dismiss",
