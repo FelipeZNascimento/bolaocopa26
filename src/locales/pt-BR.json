@@ -319,6 +319,15 @@
     "bet": "Aposta",
     "live": "Placar"
   },
+  "pushNotifications": {
+    "blocked": "Notificações bloqueadas. Ative-as nas configurações do navegador.",
+    "prompt": {
+      "body": "Seja notificado quando partidas começarem, gols forem marcados e resultados saírem.",
+      "dismiss": "Agora não",
+      "enable": "Ativar",
+      "title": "Ativar notificações"
+    }
+  },
   "hitLevels": {
     "exactScore": "Acerto Total (+{points})",
     "miss": "Errrrou",

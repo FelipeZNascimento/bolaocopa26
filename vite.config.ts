@@ -15,7 +15,7 @@ const appVersion = (() => {
 })();
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   build: {
     rollupOptions: {
       output: {
@@ -43,11 +43,13 @@ export default defineConfig({
   },
   plugins: [
     vue(),
-    basicSsl(),
+    ...(command === 'build' ? [basicSsl()] : []),
     vueDevTools(),
     VitePWA({
-      devOptions: { enabled: true },
+      devOptions: { enabled: true, type: 'module' },
+      filename: 'sw.js',
       includeAssets: ['favicon.svg', 'robots.txt', 'sitemap.xml'],
+      injectManifest: { injectionPoint: undefined },
       manifest: {
         background_color: '#1b2f42',
         description: 'Um bolão para acompanhar a Copa do Mundo 2026 em tempo real!',
@@ -78,35 +80,8 @@ export default defineConfig({
         start_url: '/',
         theme_color: '#1b2f42',
       },
-      registerType: 'autoUpdate',
-      workbox: {
-        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5MB
-        runtimeCaching: [
-          {
-            handler: 'StaleWhileRevalidate',
-            options: {
-              cacheName: 'static-resources',
-              expiration: {
-                maxAgeSeconds: 10 * 24 * 60 * 60, // 10 days
-                maxEntries: 50,
-              },
-            },
-            urlPattern: ({ request }) =>
-              request.destination === 'style' || request.destination === 'script' || request.destination === 'worker',
-          },
-          {
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'images',
-              expiration: {
-                maxAgeSeconds: 60 * 24 * 60 * 60, // 60 days
-                maxEntries: 100,
-              },
-            },
-            urlPattern: ({ request }) => request.destination === 'image',
-          },
-        ],
-      },
+      srcDir: 'src',
+      strategies: 'injectManifest',
     }),
   ],
   resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
@@ -123,4 +98,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));
