@@ -76,7 +76,7 @@ export default defineConfig(({ command }) => ({
         ],
         id: '/',
         name: 'Bolao Copa 2026',
-        short_name: 'BolaoCopa2026',
+        short_name: 'Bolao 2026',
         start_url: '/',
         theme_color: '#1b2f42',
       },

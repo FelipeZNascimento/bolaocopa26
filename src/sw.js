@@ -15,10 +15,10 @@ self.addEventListener('push', (event) => {
 
   event.waitUntil(
     self.registration.showNotification(data.title, {
-      badge: '/android-chrome-192x192.png',
+      badge: '/notification-badge.png',
       body: data.body,
       data: { url: data.url ?? '/' },
-      icon: '/android-chrome-192x192.png',
+      icon: '/android-chrome-512x512.png',
     }),
   );
 });
