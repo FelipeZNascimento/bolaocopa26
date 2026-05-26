@@ -234,6 +234,9 @@ $colors: (
   --drop-shadow: 0 4px 12px rgb(0 0 0 / 15%), 0 8px 24px rgb(0 0 0 / 10%);
 
   // PrimeVue component overrides
+  // Input
+  --p-inputtext-border-color: var(--bolao-c-grey3) !important;
+
   // Button
   --p-button-primary-hover-background: var(--bolao-c-blue) !important;
   --p-button-primary-hover-color: var(--bolao-c-white) !important;

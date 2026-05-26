@@ -1,6 +1,13 @@
 export default {
   extends: ['stylelint-config-standard-scss', 'stylelint-config-recommended-vue/scss', 'stylelint-config-recess-order'],
-  ignoreFiles: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**', '**/dev-dist/**', '**/node_modules/**'],
+  ignoreFiles: [
+    '**/dist/**',
+    '**/dist-pprod/**',
+    '**/dist-ssr/**',
+    '**/coverage/**',
+    '**/dev-dist/**',
+    '**/node_modules/**',
+  ],
   plugins: ['@stylistic/stylelint-plugin'],
   rules: {
     // Enforce consistent indentation

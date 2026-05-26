@@ -98,8 +98,10 @@
     "validation": {
       "emailInvalid": "Email inválido",
       "passwordEmpty": "Senha está vazia",
+      "passwordMinLength": "Senha deve ter pelo menos 6 caracteres",
       "nameEmpty": "Nome está vazio",
-      "nicknameLength": "Apelido tem que ter entre 4 e 12 caracteres"
+      "nicknameLength": "Apelido tem que ter entre 4 e 12 caracteres",
+      "passwordConfirmationMismatch": "A senha digitada no campo de confirmação deve ser idêntica à nova senha"
     },
     "buttons": {
       "forgotPassword": "Esqueci a senha",

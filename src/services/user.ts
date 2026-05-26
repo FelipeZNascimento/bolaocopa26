@@ -250,7 +250,7 @@ export default class UserService {
     };
 
     try {
-      const response = await this.apiService.post<IUser>('user/update-password', resetPasswordObject);
+      const response = await this.apiService.post<IUser>('user/update-password-from-token', resetPasswordObject);
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setError(null);
       return response;
