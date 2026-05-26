@@ -42,7 +42,7 @@
           <p class="padded">Nelson Gimenez da Motta</p>
         </div>
         <div class="payment-section">
-          <h3>🇵🇹 {{ t('rules.subscription.mbWayInfo') }}</h3>
+          <h3><span class="fi fi-pt" /> {{ t('rules.subscription.mbWayInfo') }}</h3>
           <p class="padded">
             <span style="font-weight: bold">{{ t('rules.subscription.pixValue') }}</span
             >: €20.00
@@ -51,7 +51,7 @@
           <p class="padded">Felipe Zanon do Nascimento</p>
         </div>
         <div class="payment-section">
-          <h3>🌏 {{ t('rules.subscription.payPalInfo') }}</h3>
+          <h3><span class="fi fi-un" /> {{ t('rules.subscription.payPalInfo') }}</h3>
           <p class="padded">
             <span style="font-weight: bold">{{ t('rules.subscription.pixValue') }}</span
             >: €20.00

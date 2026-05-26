@@ -279,7 +279,7 @@ const activeRoute = ref<number>(ROUTES[0].id);
 
 const profileRoute = computed(() => ({
   id: ROUTE_ID.PROFILE,
-  label: activeProfile.value ? activeProfile.value.name : 'Perfil',
+  label: activeProfile.value ? activeProfile.value.nickname : 'Perfil',
   needCredentials: true,
   url: '',
 }));
