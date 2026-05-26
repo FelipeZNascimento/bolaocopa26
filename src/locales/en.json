@@ -319,6 +319,15 @@
     "bet": "Bet",
     "live": "Score"
   },
+  "pushNotifications": {
+    "blocked": "Notifications are blocked. Enable them in your browser settings.",
+    "prompt": {
+      "body": "Get notified when matches start, goals are scored, and results are in.",
+      "dismiss": "Not now",
+      "enable": "Enable",
+      "title": "Enable push notifications"
+    }
+  },
   "hitLevels": {
     "exactScore": "Exact Score (+{points})",
     "miss": "Missss!",
