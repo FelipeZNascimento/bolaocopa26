@@ -36,32 +36,3 @@ self.addEventListener('notificationclick', (event) => {
     }),
   );
 });
-
-self.addEventListener('push', (event) => {
-  if (!event.data) return;
-
-  const data = event.data.json();
-
-  event.waitUntil(
-    self.registration.showNotification(data.title, {
-      badge: '/android-chrome-192x192.png',
-      body: data.body,
-      data: { url: data.url ?? '/' },
-      icon: '/android-chrome-192x192.png',
-    }),
-  );
-});
-
-self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
-
-  const url = event.notification.data?.url ?? '/';
-
-  event.waitUntil(
-    self.clients.matchAll({ includeUncontrolled: true, type: 'window' }).then((clientList) => {
-      const existing = clientList.find((c) => c.url === url);
-      if (existing) return existing.focus();
-      return self.clients.openWindow(url);
-    }),
-  );
-});
