@@ -79,7 +79,7 @@ async function onEnable() {
 
     const subscription = await subscribeToPush();
     if (subscription) {
-      await apiService.post('user/push/subscribe', subscription.toJSON());
+      await apiService.post('user/push/subscribe', { ...subscription.toJSON() });
     }
     isDismissed.value = true;
   } catch (err) {

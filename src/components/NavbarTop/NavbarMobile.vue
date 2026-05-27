@@ -214,14 +214,14 @@
             <button
               class="flag-btn"
               :class="{ 'flag-btn--active': locale === 'pt-BR' }"
-              @click="locale = 'pt-BR'"
+              @click="setLocale('pt-BR')"
             >
               <span class="fi fi-br" />
             </button>
             <button
               class="flag-btn"
               :class="{ 'flag-btn--active': locale === 'en' }"
-              @click="locale = 'en'"
+              @click="setLocale('en')"
             >
               <span class="fi fi-gb" />
             </button>
@@ -290,6 +290,11 @@ const configurationStore = useConfigurationStore();
 const userService = new UserService();
 const route = useRoute();
 const { locale, t } = useI18n();
+
+function setLocale(newLocale: 'en' | 'pt-BR') {
+  locale.value = newLocale;
+  userService.updateLocale(newLocale);
+}
 
 // Set initial active route
 const currentPath = window.location.pathname;

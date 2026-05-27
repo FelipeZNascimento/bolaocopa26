@@ -33,13 +33,16 @@
 </template>
 
 <script lang="ts" setup>
-defineProps<{
-  draggable?: boolean;
-  isDragging: boolean;
-  isDragOver: boolean;
-  title: string;
-  widgetId: string;
-}>();
+withDefaults(
+  defineProps<{
+    draggable?: boolean;
+    isDragging: boolean;
+    isDragOver: boolean;
+    title: string;
+    widgetId: string;
+  }>(),
+  { draggable: true },
+);
 
 const emit = defineEmits<{
   dragend: [];

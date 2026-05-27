@@ -113,17 +113,18 @@ import { useI18n } from 'vue-i18n';
 
 import type { TThemeValue } from '@/stores/configuration.types';
 
-import { LOCALE_STORAGE_KEY } from '@/i18n';
+import UserService from '@/services/user';
 import { useConfigurationStore } from '@/stores/configuration';
 
 const { locale, t } = useI18n();
 const configurationStore = useConfigurationStore();
+const userService = new UserService();
 
 const theme = computed(() => configurationStore.theme);
 
-function setLocale(lang: 'en' | 'pt-BR') {
-  locale.value = lang;
-  localStorage.setItem(LOCALE_STORAGE_KEY, lang);
+function setLocale(newLocale: 'en' | 'pt-BR') {
+  locale.value = newLocale;
+  userService.updateLocale(newLocale);
 }
 
 function setTheme(newTheme: TThemeValue) {

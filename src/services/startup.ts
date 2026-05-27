@@ -63,6 +63,12 @@ export default class StartupService {
       this.activeProfileStore.setLoading(false);
       this.activeProfileStore.setActiveProfile(loggedUser);
 
+      // Sync localStorage locale to DB for logged-in users
+      if (loggedUser) {
+        const locale = localStorage.getItem(LOCALE_STORAGE_KEY) ?? 'pt-BR';
+        this.apiRequest.post('user/locale', { locale }).catch(console.error);
+      }
+
       // Set Configuration store properties
       this.configurationStore.setLoading(false);
       if (seasonData) {

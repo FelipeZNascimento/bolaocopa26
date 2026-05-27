@@ -2,6 +2,7 @@ import { sha1 } from 'js-sha1';
 
 import type { IUser } from '@/stores/activeProfile.types';
 
+import { LOCALE_STORAGE_KEY } from '@/i18n';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useAdminStore } from '@/stores/admin';
 import { useConfigurationStore } from '@/stores/configuration';
@@ -215,6 +216,13 @@ export default class UserService {
     } catch (error: unknown) {
       console.error('Failed to update favorites:', error);
       return callback(false);
+    }
+  }
+
+  public updateLocale(locale: string) {
+    localStorage.setItem(LOCALE_STORAGE_KEY, locale);
+    if (this.activeProfileStore.activeProfile) {
+      this.apiService.post('user/locale', { locale }).catch(console.error);
     }
   }
 
