@@ -322,7 +322,7 @@
   "pushNotifications": {
     "blocked": "Notificações bloqueadas. Ative-as nas configurações do navegador.",
     "prompt": {
-      "body": "Seja notificado quando partidas começarem, gols forem marcados e resultados saírem.",
+      "body": "Seja notificado quando as partidas estiverem começando sem suas apostas. Não vamos incomodá-lo com notificações desnecessárias, prometemos!",
       "dismiss": "Agora não",
       "enable": "Ativar",
       "title": "Ativar notificações"

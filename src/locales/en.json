@@ -322,7 +322,7 @@
   "pushNotifications": {
     "blocked": "Notifications are blocked. Enable them in your browser settings.",
     "prompt": {
-      "body": "Get notified when matches start, goals are scored, and results are in.",
+      "body": "Get notified when matches are starting without your bets. We'll not annoy you with unnecessary notifications, we promise!",
       "dismiss": "Not now",
       "enable": "Enable",
       "title": "Enable push notifications"

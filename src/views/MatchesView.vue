@@ -1,5 +1,5 @@
 <template>
-  <PushNotificationPrompt v-if="activeProfile" />
+  <PushNotificationPrompt v-if="activeProfile && isDesktop" />
   <FloatingButtons :selectedRound="selectedRound" />
   <div style="display: flex">
     <div class="outer-matches">
