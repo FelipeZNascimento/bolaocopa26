@@ -16,11 +16,11 @@ export const signupResolver = zodResolver(
   z.object({
     email: z.email({ error: t('loginModal.validation.emailInvalid') }),
     name: z.string().min(1, { message: t('loginModal.validation.nameEmpty') }),
-    password: z.string().min(6, { message: t('loginModal.validation.passwordMinLength') }),
-    username: z
+    nickname: z
       .string()
       .min(4, { message: t('loginModal.validation.nicknameLength') })
       .max(12, { message: t('loginModal.validation.nicknameLength') }),
+    password: z.string().min(6, { message: t('loginModal.validation.passwordMinLength') }),
   }),
 );
 
