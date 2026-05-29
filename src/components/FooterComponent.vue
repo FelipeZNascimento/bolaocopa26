@@ -89,6 +89,7 @@
     </div>
     <div class="footer-bottom">
       <span>v{{ appVersion }}</span>
+      <span v-if="envMode !== 'prod'">({{ envMode }})</span>
       <span>·</span>
       <RouterLink to="/changelog">{{ t('footer.about.changelog') }}</RouterLink>
       <span>·</span>
@@ -109,6 +110,7 @@
 import { computed } from 'vue';
 
 const appVersion = __APP_VERSION__;
+const envMode = import.meta.env.MODE;
 import { useI18n } from 'vue-i18n';
 
 import type { TThemeValue } from '@/stores/configuration.types';

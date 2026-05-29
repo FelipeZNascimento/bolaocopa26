@@ -32,7 +32,17 @@ import { ref } from 'vue';
 
 const changelogEntries = ref([
   {
+    changes: ['[App] Notification system implemented for important updates', `[WorldCup+] Stadiums' images added`],
+    date: '29/05/2026',
+    version: 'v1.0.13',
+  },
+  {
     changes: ['🐛 [App] Sign up was not working correctly'],
+    date: '29/05/2026',
+    version: 'v1.0.12',
+  },
+  {
+    changes: ['🐛 [App] Password reset was not working correctly'],
     date: '26/05/2026',
     version: 'v1.0.11',
   },

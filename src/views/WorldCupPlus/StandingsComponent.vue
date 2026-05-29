@@ -10,8 +10,10 @@
     />
   </div>
 
+  <!-- v-if="isBracketLoading || bracketData.length > 0" -->
+  <!-- Temporarily hiding bracket section until we decide how to handle group stage matches in the bracket API -->
   <section
-    v-if="isBracketLoading || bracketData.length > 0"
+    v-if="false || isBracketLoading || bracketData.length > 0"
     class="bracket-section"
   >
     <div class="stage-tabs">
