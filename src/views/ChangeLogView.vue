@@ -32,6 +32,11 @@ import { ref } from 'vue';
 
 const changelogEntries = ref([
   {
+    changes: ['🐛 [App] Sign up was not working correctly'],
+    date: '26/05/2026',
+    version: 'v1.0.11',
+  },
+  {
     changes: [
       '[App] Mobile: showing nickname instead of name on the menu slider',
       '🐛 [App] Missing translations for inactive users banner',
