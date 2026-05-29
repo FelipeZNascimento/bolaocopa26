@@ -8,7 +8,7 @@
       :placeholder="t('teams.search')"
     />
   </div>
-
+  <p>{{ locale }}</p>
   <div class="items-grid">
     <template v-if="isLoading">
       <WorldCupLandscapeStickerComponent
@@ -85,9 +85,12 @@ const searchQuery = ref('');
 
 const filteredTeams = computed(() => {
   const q = searchQuery.value.toLowerCase().trim();
-  if (!q) return teams.value;
+  if (!q)
+    return locale.value === 'pt-BR'
+      ? teams.value.toSorted((a, b) => a.name.localeCompare(b.name))
+      : teams.value.toSorted((a, b) => a.nameEn.localeCompare(b.nameEn));
 
-  return teams.value.filter(
+  const filtered = teams.value.filter(
     (team) =>
       team.name.toLowerCase().includes(q) ||
       team.nameEn.toLowerCase().includes(q) ||
@@ -97,6 +100,10 @@ const filteredTeams = computed(() => {
       team.confederation.nameEn.toLowerCase().includes(q) ||
       team.confederation.abbreviation.toLowerCase().includes(q),
   );
+
+  return locale.value === 'pt-BR'
+    ? filtered.toSorted((a, b) => a.name.localeCompare(b.name))
+    : filtered.toSorted((a, b) => a.nameEn.localeCompare(b.nameEn));
 });
 
 const selectedTeam = ref<ITeam | null>(null);

@@ -73,8 +73,8 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   clickable: false,
-  color: 'var(--bolao-c-gold)',
-  colorDark: 'var(--bolao-c-gold-d2)',
+  color: 'var(--bolao-c-white)',
+  colorDark: 'var(--bolao-c-gold)',
   flippable: false,
   loading: false,
 });
@@ -201,7 +201,6 @@ function handleClick() {
   width: 100%;
   aspect-ratio: 3/2;
   overflow: hidden;
-
   // border-radius: 9px;
 }
 

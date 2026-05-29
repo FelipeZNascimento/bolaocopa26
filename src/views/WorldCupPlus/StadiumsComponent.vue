@@ -16,8 +16,8 @@
     >
       <template #photo>
         <img
-          v-if="stadium.url && !imageErrors[stadium.id]"
-          :src="stadium.url"
+          v-if="!imageErrors[stadium.id]"
+          :src="`https://assets.omegafox.me/copa/2026/stadiums/${stadium.id}.png`"
           :alt="stadium.name"
           class="sticker-image"
           loading="lazy"
@@ -117,7 +117,7 @@ stadiumService.fetch();
 .sticker-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   filter: contrast(1.05) saturate(1.1);
 }
