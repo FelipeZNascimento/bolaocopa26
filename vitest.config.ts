@@ -5,11 +5,11 @@ import viteConfigFn from './vite.config';
 
 const viteConfig = viteConfigFn({ command: 'serve', isPreview: false, isSsrBuild: false, mode: 'test' });
 
-const resolvedViteConfig =
-  typeof viteConfig === 'function' ? viteConfig({ command: 'serve', mode: 'test' }) : viteConfig;
+// const resolvedViteConfig =
+//   typeof viteConfig === 'function' ? viteConfig({ command: 'serve', mode: 'test' }) : viteConfig;
 
 export default mergeConfig(
-  resolvedViteConfig,
+  viteConfig,
   defineConfig({
     test: {
       environment: 'jsdom',
