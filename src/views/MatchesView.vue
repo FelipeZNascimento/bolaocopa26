@@ -1,5 +1,5 @@
 <template>
-  <PushNotificationPrompt v-if="activeProfile" />
+  <!-- <PushNotificationPrompt v-if="activeProfile && isDesktop" /> -->
   <FloatingButtons :selectedRound="selectedRound" />
   <div style="display: flex">
     <div class="outer-matches">
@@ -29,10 +29,10 @@ import { computed } from 'vue';
 import ErrorChecker from '@/components/ErrorChecker.vue';
 import MatchesSkeleton from '@/components/MatchesSkeleton.vue';
 import PaginatorComponent from '@/components/PaginatorComponent.vue';
-import PushNotificationPrompt from '@/components/PushNotificationPrompt.vue';
+// import PushNotificationPrompt from '@/components/PushNotificationPrompt.vue';
 import RankingComponent from '@/components/Ranking/RankingComponent.vue';
 import { useViewport } from '@/services/viewport';
-import { useActiveProfileStore } from '@/stores/activeProfile';
+// import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
 import FloatingButtons from '@/views/Matches/FloatingButtons.vue';
@@ -41,7 +41,7 @@ import MatchesList from '@/views/Matches/MatchesList.vue';
 // ------ Initialization ------
 const configurationStore = useConfigurationStore();
 const matchesStore = useMatchesStore();
-const activeProfileStore = useActiveProfileStore();
+// const activeProfileStore = useActiveProfileStore();
 const { isDesktop } = useViewport();
 
 // ------ Computed Properties ------
@@ -51,7 +51,7 @@ const matches = computed(() => matchesStore.matches);
 const isLoading = computed(() => isConfigurationLoading.value || isMatchesLoading.value);
 const rankingPosition = computed(() => configurationStore.rankingPosition);
 const selectedRound = computed(() => configurationStore.selectedRound);
-const activeProfile = computed(() => activeProfileStore.activeProfile);
+// const activeProfile = computed(() => activeProfileStore.activeProfile);
 </script>
 <style scoped lang="scss">
 .outer-matches {

@@ -1,14 +1,29 @@
 <template>
   <div
-    v-if="isVisible"
-    class="push-prompt"
+    v-if="isBlocked"
+    class="push-widget push-widget--blocked"
   >
-    <i class="pi pi-bell push-prompt__icon" />
-    <div class="push-prompt__content">
-      <span class="push-prompt__title">{{ t('pushNotifications.prompt.title') }}</span>
-      <span class="push-prompt__body">{{ t('pushNotifications.prompt.body') }}</span>
+    <i class="pi pi-bell-slash push-widget__icon" />
+    <span class="push-widget__body">{{ t('pushNotifications.blocked') }}</span>
+  </div>
+
+  <div
+    v-else
+    class="push-widget"
+  >
+    <div class="push-widget__header">
+      <i class="pi pi-bell push-widget__icon" />
+      <div class="push-widget__text">
+        <span class="push-widget__title">{{ t('pushNotifications.prompt.title') }}</span>
+        <span class="push-widget__body">{{ t('pushNotifications.prompt.body') }}</span>
+      </div>
     </div>
-    <div class="push-prompt__actions">
+    <small
+      v-if="subscribeError"
+      class="push-widget__error"
+      >{{ subscribeError }}</small
+    >
+    <div class="push-widget__actions">
       <PrimeButton
         :label="t('pushNotifications.prompt.enable')"
         :loading="isLoading"
@@ -24,45 +39,34 @@
         @click="onDismiss"
       />
     </div>
-    <small
-      v-if="subscribeError"
-      class="push-prompt__error"
-      >{{ subscribeError }}</small
-    >
-  </div>
-
-  <div
-    v-else-if="isBlocked"
-    class="push-prompt push-prompt--blocked"
-  >
-    <i class="pi pi-bell-slash push-prompt__icon" />
-    <span class="push-prompt__body">{{ t('pushNotifications.blocked') }}</span>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import ApiService from '@/services/api_request';
 import { subscribeToPush } from '@/services/pushNotification';
 
+const emit = defineEmits<{ done: [] }>();
+
 const { t } = useI18n();
 
 const isLoading = ref(false);
-const isDismissed = ref(false);
-
 const permission = ref<NotificationPermission>('Notification' in window ? Notification.permission : 'denied');
+const subscribeError = ref<null | string>(null);
 
-const isBlocked = computed(() => permission.value === 'denied');
-const isVisible = computed(() => !isDismissed.value && permission.value === 'default' && 'PushManager' in window);
+const isBlocked = ref(permission.value === 'denied');
+
+onMounted(() => {
+  if (permission.value === 'granted') emit('done');
+});
 
 const apiService = new ApiService();
 
-const subscribeError = ref<null | string>(null);
-
 function onDismiss() {
-  isDismissed.value = true;
+  emit('done');
 }
 
 async function onEnable() {
@@ -71,17 +75,18 @@ async function onEnable() {
   try {
     const result = await Notification.requestPermission();
     permission.value = result;
+    isBlocked.value = result === 'denied';
 
     if (result !== 'granted') {
-      isDismissed.value = true;
+      emit('done');
       return;
     }
 
     const subscription = await subscribeToPush();
     if (subscription) {
-      await apiService.post('user/push/subscribe', { ...subscription.toJSON() });
+      await apiService.post('user/push/subscribe', subscription.toJSON());
     }
-    isDismissed.value = true;
+    emit('done');
   } catch (err) {
     console.error('[PushNotifications] subscribe failed:', err);
     subscribeError.value = err instanceof Error ? err.message : String(err);
@@ -92,49 +97,58 @@ async function onEnable() {
 </script>
 
 <style lang="scss" scoped>
-.push-prompt {
+.push-widget {
   display: flex;
+  flex-direction: column;
   gap: var(--m-spacing);
-  align-items: center;
+  height: 100%;
   padding: var(--m-spacing);
-  background-color: var(--p-surface-100);
-  border: 1px solid var(--p-surface-300);
-  border-radius: var(--p-border-radius-md);
 
   &--blocked {
+    flex-direction: row;
+    align-items: center;
     opacity: 0.6;
+  }
+
+  &__header {
+    display: flex;
+    gap: var(--m-spacing);
+    align-items: flex-start;
   }
 
   &__icon {
     flex-shrink: 0;
     font-size: var(--xl-font-size);
+    color: var(--bolao-c-gold);
   }
 
-  &__content {
+  &__text {
     display: flex;
-    flex: 1;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
   }
 
   &__title {
-    font-weight: bold;
+    font-size: var(--s-font-size);
+    font-weight: 700;
+    color: var(--bolao-c-white);
   }
 
   &__body {
-    font-size: var(--s-font-size);
-    color: var(--p-text-muted-color);
+    font-size: var(--xs-font-size);
+    color: var(--bolao-c-grey2);
   }
 
   &__actions {
     display: flex;
     flex-shrink: 0;
     gap: var(--s-spacing);
+    align-items: center;
   }
 
   &__error {
-    font-size: var(--s-font-size);
-    color: var(--p-red-500);
+    font-size: var(--xs-font-size);
+    color: var(--p-red-400);
   }
 }
 </style>

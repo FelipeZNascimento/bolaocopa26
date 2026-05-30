@@ -73,8 +73,8 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   clickable: false,
-  color: 'var(--bolao-c-gold)',
-  colorDark: 'var(--bolao-c-gold-d2)',
+  color: 'var(--bolao-c-white)',
+  colorDark: 'var(--bolao-c-gold)',
   flippable: false,
   loading: false,
 });
@@ -98,8 +98,6 @@ function handleClick() {
 .ls-sticker {
   position: relative;
   padding: 4px;
-
-  // border-radius: 12px;
   box-shadow:
     0 6px 16px rgb(0 0 0 / 35%),
     0 0 24px rgb(from var(--sticker-color) r g b / 20%);
@@ -112,8 +110,6 @@ function handleClick() {
     pointer-events: none;
     content: '';
     background: linear-gradient(160deg, var(--sticker-color), var(--sticker-color-dark) 50%, var(--sticker-color));
-
-    // border-radius: 12px;
   }
 
   &--flippable,
@@ -190,8 +186,6 @@ function handleClick() {
   overflow: hidden;
   cursor: pointer;
   background-color: #f7f5f0;
-
-  // border-radius: 9px;
   transform: rotateY(180deg);
   backface-visibility: hidden;
 }
@@ -201,8 +195,6 @@ function handleClick() {
   width: 100%;
   aspect-ratio: 3/2;
   overflow: hidden;
-
-  // border-radius: 9px;
 }
 
 .ls-sticker__overlay {
@@ -228,8 +220,6 @@ function handleClick() {
   letter-spacing: 0.05em;
   white-space: nowrap;
   background: linear-gradient(90deg, var(--sticker-color), var(--sticker-color-dark));
-
-  // border-radius: 4px;
 }
 
 .ls-sticker__hint {
@@ -269,8 +259,6 @@ function handleClick() {
 .skel-card {
   width: 100% !important;
   height: 100% !important;
-
-  // border-radius: 9px !important;
 }
 
 @media (prefers-reduced-motion: no-preference) {

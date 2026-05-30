@@ -75,12 +75,26 @@ const handleBeforeUnload = (event: BeforeUnloadEvent) => {
   }
 };
 
+// Trigger SW update check whenever the tab becomes visible
+function checkForSWUpdate() {
+  if (document.visibilityState === 'visible') {
+    navigator.serviceWorker?.getRegistration().then((reg) => reg?.update());
+  }
+}
+
+// Track PWA install event in GA4
+window.addEventListener('appinstalled', () => {
+  window.dataLayer?.push(['event', 'pwa_installed']);
+});
+
 onMounted(() => {
   window.addEventListener('beforeunload', handleBeforeUnload);
+  document.addEventListener('visibilitychange', checkForSWUpdate);
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener('beforeunload', handleBeforeUnload);
+  document.removeEventListener('visibilitychange', checkForSWUpdate);
 });
 
 // ------ Computed ------

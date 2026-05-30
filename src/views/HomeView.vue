@@ -15,6 +15,17 @@
       class="widget-grid"
     >
       <WidgetCard
+        v-if="isMobile && activeProfile && showPushCard"
+        key="push-notifications"
+        :draggable="false"
+        :is-drag-over="false"
+        :is-dragging="false"
+        :title="t('pushNotifications.prompt.title')"
+        widget-id="push-notifications"
+      >
+        <PushNotificationsWidget @done="showPushCard = false" />
+      </WidgetCard>
+      <WidgetCard
         v-for="widgetId in visibleWidgets"
         :key="widgetId"
         :widget-id="widgetId"
@@ -56,6 +67,8 @@ import { useI18n } from 'vue-i18n';
 import BannerComponent from '@/components/BannerComponent.vue';
 import { LIVE_GAME } from '@/constants/match';
 import MatchService from '@/services/match';
+import { useViewport } from '@/services/viewport';
+import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useMatchesStore } from '@/stores/matches';
 
 import ExtrasWidget from './Home/ExtrasWidget.vue';
@@ -64,6 +77,7 @@ import LogoWidget from './Home/LogoWidget.vue';
 import NewsWidget from './Home/NewsWidget.vue';
 import NextMatchBetStatusWidget from './Home/NextMatchBetStatusWidget.vue';
 import NextMatchesWidget from './Home/NextMatchesWidget.vue';
+import PushNotificationsWidget from './Home/PushNotificationsWidget.vue';
 import RankingWidget from './Home/RankingWidget.vue';
 import RulesWidget from './Home/RulesWidget.vue';
 import SocialGroupsWidget from './Home/SocialGroupsWidget.vue';
@@ -125,7 +139,13 @@ const STORAGE_KEY = 'home-widget-order';
 
 // ------ Stores ------
 const matchesStore = useMatchesStore();
+const activeProfileStore = useActiveProfileStore();
+const { isMobile } = useViewport();
 const { t } = useI18n();
+
+// ------ Push notification widget ------
+const activeProfile = computed(() => activeProfileStore.activeProfile);
+const showPushCard = ref('PushManager' in window && 'Notification' in window && Notification.permission !== 'granted');
 
 // ------ Initialization ------
 const matchService = new MatchService();

@@ -12,13 +12,15 @@
   >
     <div
       class="drag-handle"
-      draggable="true"
+      :class="{ 'drag-handle--static': !draggable }"
+      :draggable="draggable"
       role="button"
       :aria-label="'Reordenar widget'"
-      @dragstart.stop="emit('dragstart')"
-      @dragend.stop="emit('dragend')"
+      @dragstart.stop="draggable && emit('dragstart')"
+      @dragend.stop="draggable && emit('dragend')"
     >
       <i
+        v-if="draggable"
         class="pi pi-bars drag-icon"
         @touchstart.passive="emit('handleTouchStart', $event)"
       />
@@ -31,12 +33,16 @@
 </template>
 
 <script lang="ts" setup>
-defineProps<{
-  isDragging: boolean;
-  isDragOver: boolean;
-  title: string;
-  widgetId: string;
-}>();
+withDefaults(
+  defineProps<{
+    draggable?: boolean;
+    isDragging: boolean;
+    isDragOver: boolean;
+    title: string;
+    widgetId: string;
+  }>(),
+  { draggable: true },
+);
 
 const emit = defineEmits<{
   dragend: [];
@@ -100,6 +106,11 @@ const emit = defineEmits<{
   transition:
     color 0.15s ease,
     background-color 0.15s ease;
+
+  &--static {
+    pointer-events: none;
+    cursor: default;
+  }
 
   &:hover {
     color: var(--bolao-c-grey1);
