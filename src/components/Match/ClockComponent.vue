@@ -108,6 +108,7 @@ watch(
 }
 
 .outer-clock {
+  cursor: pointer;
   position: relative;
   display: flex;
   align-items: center;
@@ -123,6 +124,37 @@ watch(
     var(--bolao-c-white-t1);
   border-radius: var(--border-radius);
   box-shadow: 0 2px 8px rgb(0 0 0 / 12%);
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+
+  &:hover {
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--color-main) 65%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, var(--color-anchor) 45%, transparent),
+      inset 0 -2px 0 rgb(0 0 0 / 8%),
+      0 6px 18px rgb(0 0 0 / 22%);
+    transform: translateY(-2px);
+
+    &::before {
+      opacity: 1;
+    }
+
+    i {
+      color: var(--color-anchor);
+      transform: scale(1.2);
+    }
+  }
+
+  i {
+    position: relative;
+    z-index: 1;
+    font-size: var(--l-font-size);
+    color: var(--color-contrast);
+    transition:
+      color 0.2s ease,
+      transform 0.2s ease;
+  }
 
   @media (width >=1440px) {
     width: 140px;

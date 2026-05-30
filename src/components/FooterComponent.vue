@@ -89,7 +89,7 @@
     </div>
     <div class="footer-bottom">
       <span>v{{ appVersion }}</span>
-      <span v-if="envMode !== 'prod'">({{ envMode }})</span>
+      <span v-if="envMode !== 'production'">({{ envMode }})</span>
       <span>·</span>
       <RouterLink to="/changelog">{{ t('footer.about.changelog') }}</RouterLink>
       <span>·</span>

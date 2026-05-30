@@ -293,6 +293,8 @@
       "seeAll": "See full ranking"
     },
     "news": {
+      "hideNeymar": "Hide Neymar",
+      "showNeymar": "Show Neymar",
       "loadingError": "Failed to load news",
       "noNews": "No news available",
       "readMore": "Read more",

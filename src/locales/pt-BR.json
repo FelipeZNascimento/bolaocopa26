@@ -293,6 +293,8 @@
       "seeAll": "Ver ranking completo"
     },
     "news": {
+      "hideNeymar": "Esconder Neymar",
+      "showNeymar": "Mostrar Neymar",
       "loadingError": "Erro ao carregar notícias",
       "noNews": "Nenhuma notícia disponível",
       "readMore": "Ler mais",

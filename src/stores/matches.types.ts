@@ -13,9 +13,10 @@ export interface IBet {
 }
 
 export interface IEvent {
+  code: string;
   description: string;
   descriptionEn: string;
-  gametime: string;
+  fifaId: number;
   id: number;
 }
 
@@ -40,10 +41,12 @@ export interface IMatch {
 
 export interface IMatchEvent {
   event: IEvent;
-  id: number;
+  gametime: string;
+  id?: number;
   matchId: number;
   player: IPlayer;
   playerAssist: IPlayer | null;
+  teamId: number;
 }
 
 export interface IPointsAwarded {

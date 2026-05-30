@@ -1,5 +1,5 @@
 import type { IUser } from '@/stores/activeProfile.types';
-import type { TMatchListSorting, TRankingPositionValue, TThemeValue } from '@/stores/configuration.types';
+import type { TMatchListSorting, TRankingPositionValue, TThemeValue, TViewBetOptionValue, TViewNeymarValue } from '@/stores/configuration.types';
 import type { ITeam } from '@/stores/teams.types';
 
 import { detectLocale, LOCALE_STORAGE_KEY } from '@/i18n';
@@ -97,6 +97,8 @@ export default class StartupService {
     const themePreference = localStorage.getItem('theme-preference');
     const rankingPositionPreference = localStorage.getItem('ranking-position') as TRankingPositionValue;
     const matchListSortingPreference = localStorage.getItem('match-list-sorting') as TMatchListSorting;
+    const viewBetOptionPreference = localStorage.getItem('view-bet-option') as TViewBetOptionValue;
+    const neymarVisibilityPreference = localStorage.getItem('view-neymar-option') as TViewNeymarValue;
     const localePreference = detectLocale(); // This will also validate the locale against supported ones
 
     this.configurationStore.setLanguage(localePreference as 'en' | 'pt-BR');
@@ -112,6 +114,18 @@ export default class StartupService {
       this.configurationStore.setRankingPosition(rankingPositionPreference);
     } else {
       localStorage.setItem('ranking-position', 'active');
+    }
+
+    if (viewBetOptionPreference) {
+      this.configurationStore.setViewBetOption(viewBetOptionPreference);
+    } else {
+      localStorage.setItem('view-bet-option', 'viewBets');
+    }
+
+    if (neymarVisibilityPreference) {
+      this.configurationStore.setNeymarVisibility(neymarVisibilityPreference);
+    } else {
+      localStorage.setItem('view-neymar-option', 'viewNeymar');
     }
 
     if (themePreference) {
