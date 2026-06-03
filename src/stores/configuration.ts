@@ -1,7 +1,13 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-import type { TMatchListSorting, TRankingPositionValue, TThemeValue, TViewBetOptionValue, TViewNeymarValue } from './configuration.types';
+import type {
+  TMatchListSorting,
+  TRankingPositionValue,
+  TThemeValue,
+  TViewBetOptionValue,
+  TViewNeymarValue,
+} from './configuration.types';
 
 const initialState = {
   matchListSorting: 'group' as TMatchListSorting,

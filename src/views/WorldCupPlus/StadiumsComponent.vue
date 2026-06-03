@@ -255,6 +255,7 @@ stadiumService.fetch();
     color: var(--sticker-color-dark);
   }
 }
+
 .link-row {
   display: flex;
   gap: 4px;

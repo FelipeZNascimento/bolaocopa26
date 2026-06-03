@@ -291,11 +291,12 @@ function sortIcon(key: TSortKey): string {
 .extras-before-player-outer {
   display: flex;
   flex: 1;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
   width: 100%;
 }
+
 .search-bar {
   position: relative;
   width: 100%;
@@ -383,7 +384,7 @@ function sortIcon(key: TSortKey): string {
     color: var(--bolao-c-grey2);
     text-align: left;
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
       padding: var(--m-spacing) var(--s-spacing);
     }
   }
@@ -412,9 +413,9 @@ function sortIcon(key: TSortKey): string {
 .col-club,
 .col-country {
   display: flex;
+  flex: 1;
   flex-direction: row;
   gap: var(--xs-spacing);
-  flex: 1;
 }
 
 .col-age {

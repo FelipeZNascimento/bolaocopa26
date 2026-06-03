@@ -108,13 +108,13 @@ watch(
 }
 
 .outer-clock {
-  cursor: pointer;
   position: relative;
   display: flex;
   align-items: center;
   min-width: 120px;
   font-size: var(--m-font-size);
   color: var(--color-contrast);
+  cursor: pointer;
   background:
     linear-gradient(
       150deg,

@@ -125,7 +125,6 @@ const newsStore = useNewsStore();
 const newsService = new NewsService();
 const imageLoading = reactive<Record<number, boolean>>({});
 
-
 watch(pageSize, (size) => {
   visibleCount.value = size;
 });
