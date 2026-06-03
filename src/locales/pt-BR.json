@@ -453,7 +453,12 @@
     "noPhoto": "Sem foto",
     "noResults": "Nenhum jogador encontrado",
     "search": "Buscar jogador, seleção ou clube...",
-    "years": "anos"
+    "years": "anos",
+    "age": "Idade",
+    "country": "País",
+    "name": "Jogador",
+    "yo": "anos",
+    "club": "Clube"
   },
   "teamDetailsModal": {
     "coach": "Técnico",

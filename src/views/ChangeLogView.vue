@@ -37,8 +37,10 @@ const changelogEntries = ref([
       '[Match] Improvement on live events',
       '[Match] Clicking on the clock now opens match details',
       '[WorldCup+] Stadiums now can be clicked for larger image view',
+      '[WorldCup+] Standings for groups and playoffs now split into two different sections for better organization',
+      '[Extras] Ready for players extras',
     ],
-    date: '31/05/2026',
+    date: '03/06/2026',
     version: 'v1.0.14',
   },
   {

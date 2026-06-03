@@ -453,7 +453,12 @@
     "noPhoto": "No photo",
     "noResults": "No players found",
     "search": "Search player, team or club...",
-    "years": "yo"
+    "years": "yo",
+    "age": "Age",
+    "country": "Country",
+    "name": "Player",
+    "yo": "yo",
+    "club": "Club"
   },
   "teamDetailsModal": {
     "coach": "Coach",

@@ -132,7 +132,7 @@ export default class ExtraBetService {
   }
 
   public async update(
-    updateObj: { extraType: number; teamId: null | number },
+    updateObj: { extraType: number; playerId?: null | number; teamId: null | number },
     callback?: (isSuccess: boolean, error?: Error) => void,
   ) {
     this.extraBetStore.setUpdating(true);

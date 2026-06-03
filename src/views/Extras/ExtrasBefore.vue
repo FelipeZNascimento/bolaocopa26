@@ -41,26 +41,19 @@
       :isLoading="isLoading"
     />
     <h2>{{ currentSelectedToggle ? t(currentSelectedToggle.label) : '' }}</h2>
-
-    <div
+    <ExtrasBeforeTeam
       v-if="
         currentSelectedToggle?.value != EXTRA_BETS_VALUES.TOP_SCORER &&
         currentSelectedToggle?.value != EXTRA_BETS_VALUES.BEST_PLAYER
       "
-      class="teams-grid"
-    >
-      <ClickableTeamCard
-        v-for="team in teams"
-        :key="team.id"
-        :team="team"
-        :is-selected="currentSelectedToggle?.selectedTeam?.some((e) => e.team.id === team.id)"
-        :handle-click="handleTeamClick"
-        :is-loading="isLoading"
-      />
-    </div>
-    <div v-else>
-      <p style="color: var(--color-text); text-align: center">{{ t('extraBets.playersWarning') }}</p>
-    </div>
+      :selectedToggle="currentSelectedToggle"
+      @teamClickFail="onTeamClickFail"
+    />
+    <ExtrasBeforePlayer
+      v-else
+      :selectedToggle="currentSelectedToggle"
+      @playerClickFail="onPlayerClickFail"
+    />
   </div>
   <!-- Modals -->
   <LoginModal
@@ -73,21 +66,19 @@ import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import type { BannerItem } from '@/components/BannerComponent.vue';
-import type { ITeam } from '@/stores/teams.types';
-import type { IToggleOption } from '@/views/Extras/extrasView.types';
+import type { IPlayer } from '@/stores/teams.types';
+import type { ISelectedTeamEntry, IToggleOption } from '@/views/Extras/extrasView.types';
 
-import ClickableTeamCard from '@/components/ClickableTeamCard.vue';
 import CountdownComponent from '@/components/CountdownComponent.vue';
 import LoginModal from '@/components/LoginModal.vue';
 import { EXTRA_BETS_LABELS, EXTRA_BETS_VALUES } from '@/constants/bets';
-import ExtraBetService from '@/services/extra_bet';
-// import TeamService from '@/services/team';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useClockStore } from '@/stores/clock';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useExtraBetStore } from '@/stores/extraBet';
-import { useNotificationStore } from '@/stores/notification';
 import { useTeamsStore } from '@/stores/teams';
+import ExtrasBeforePlayer from '@/views/Extras/ExtrasBeforePlayer.vue';
+import ExtrasBeforeTeam from '@/views/Extras/ExtrasBeforeTeam.vue';
 import MyExtrasComponent from '@/views/Extras/MyExtrasComponent.vue';
 
 import { BUTTON_OPTIONS } from './extrasView.constants';
@@ -101,13 +92,10 @@ const BANNER_ITEMS: BannerItem[] = [
 // ------ Services & Stores ------
 const teamsStore = useTeamsStore();
 const extraBetStore = useExtraBetStore();
-// const teamsService = new TeamService();
-const extraBetService = new ExtraBetService();
-const notificationStore = useNotificationStore();
 const activeProfileStore = useActiveProfileStore();
 const configurationStore = useConfigurationStore();
 const clockStore = useClockStore();
-const { locale, t } = useI18n();
+const { t } = useI18n();
 
 // ------ Refs ------
 const isLoginModalOpen = ref(false);
@@ -126,12 +114,6 @@ const showCountdown = computed(() => {
 
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 const activeProfileBets = computed(() => extraBetStore.activeProfileBets);
-const teams = computed(() => {
-  const filteredTeams = teamsStore.teams.filter((team) => team.id !== 33);
-  return locale.value === 'pt-BR'
-    ? filteredTeams.toSorted((a, b) => a.name.localeCompare(b.name))
-    : filteredTeams.toSorted((a, b) => a.nameEn.localeCompare(b.nameEn));
-}); // Filter out placeholder team and sort by name based on locale
 const currentSelectedToggle = computed(
   () =>
     extraBetsOptions.value.find((option) => option.value === selectedToggle.value.value) ?? extraBetsOptions.value[0],
@@ -154,9 +136,6 @@ const extraBetsOptions = computed<IToggleOption[]>(() => {
   return options;
 });
 
-// ------ Initialization ------
-// teamsService.fetch();
-
 // ------ Rules banner ------
 const BANNER_STORAGE_KEY = 'extra-bets-rules-banner-dismissed';
 const isDashboardBannerDismissed = ref(localStorage.getItem(BANNER_STORAGE_KEY) === 'true');
@@ -171,59 +150,16 @@ function handleCloseLoginModal() {
   isLoginModalOpen.value = false;
 }
 
-async function handleTeamClick(team: ITeam) {
-  if (!activeProfile.value) {
-    isLoginModalOpen.value = true;
-    return;
-  }
-
-  if (!activeProfile.value.isActive) {
-    notificationStore.message(
-      t('floatingButton.notifications.inactiveProfile.message'),
-      t('floatingButton.notifications.inactiveProfile.title'),
-    );
-    return;
-  }
-
-  if (currentSelectedToggle.value) {
-    // Save the previous state for potential rollback
-    const previousTeam = currentSelectedToggle.value.selectedTeam;
-
-    // Optimistically update UI
-    if (currentSelectedToggle.value.selectedTeam?.[0]?.team.id === team.id) {
-      return; // No change, do nothing
-    }
-
-    await extraBetService.update(
-      {
-        extraType: currentSelectedToggle.value.value,
-        teamId: team.id,
-      },
-      (isSuccess: boolean, error?: Error) => {
-        if (isSuccess) {
-          const teamName = locale.value === 'pt-BR' ? team.name : team.nameEn;
-
-          // Refresh the extra bets from the store to reflect the update
-          extraBetService.fetch();
-          notificationStore.success(
-            `${t(currentSelectedToggle.value.label)}: ${teamName || 'Nenhum'}`,
-            t('extraBets.notification.success'),
-          );
-        } else {
-          console.error('Failed to update extra bet:', error);
-          // Revert to previous state on failure
-          if (currentSelectedToggle.value) {
-            currentSelectedToggle.value.selectedTeam = previousTeam;
-          }
-          notificationStore.error(t('extraBets.notification.error'));
-        }
-      },
-    );
-  }
+function onPlayerClickFail(previousPlayer: IPlayer | null) {
+  currentSelectedToggle.value.selectedPlayer = previousPlayer;
 }
 
 function onSelectToggle(option: IToggleOption) {
   selectedToggle.value = option;
+}
+
+function onTeamClickFail(previousTeam: ISelectedTeamEntry[]) {
+  currentSelectedToggle.value.selectedTeam = previousTeam;
 }
 </script>
 <style lang="scss" scoped>
@@ -326,17 +262,5 @@ function onSelectToggle(option: IToggleOption) {
 
 .skeleton {
   height: 200px !important;
-}
-
-.teams-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-  gap: var(--m-spacing);
-  width: 100%;
-
-  @media (width <= 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-    gap: var(--s-spacing);
-  }
 }
 </style>

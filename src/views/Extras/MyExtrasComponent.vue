@@ -35,7 +35,20 @@
           </p>
         </div>
         <div
-          v-if="option.selectedTeam?.length"
+          v-if="option.selectedPlayer"
+          class="bet-value"
+        >
+          <div class="bet-value__entry">
+            <img
+              class="bet-flag"
+              :src="`https://assets.omegafox.me/copa/countries_flags/${option.selectedPlayer.team.isoCode.toLowerCase()}.png`"
+              :alt="`${option.selectedPlayer.team.name} Flag`"
+            />
+            {{ option.selectedPlayer.name }}
+          </div>
+        </div>
+        <div
+          v-else-if="option.selectedTeam?.length"
           class="bet-value"
         >
           <div

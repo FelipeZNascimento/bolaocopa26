@@ -1,19 +1,40 @@
 <template>
-  <div class="standings-toolbar">
+  <nav class="section-nav">
     <PrimeButton
       variant="text"
-      icon="pi pi-refresh"
-      :loading="isLoading"
-      :label="t('standings.refresh')"
+      icon="pi pi-list"
+      label="Grupos"
+      style="color: var(--bolao-c-mint)"
+      :aria-label="t('worldCupPlus.standings')"
+      :class="{ active: selectedSection === SECTIONS.GROUPS }"
       size="small"
-      @click="fetchStandings"
+      @click="() => (selectedSection = SECTIONS.GROUPS)"
     />
-  </div>
+    <span class="section-nav__divider" />
 
-  <!-- v-if="isBracketLoading || bracketData.length > 0" -->
-  <!-- Temporarily hiding bracket section until we decide how to handle group stage matches in the bracket API -->
+    <PrimeButton
+      variant="text"
+      icon="pi pi-shield"
+      label="Mata-mata"
+      :aria-label="t('worldCupPlus.teams')"
+      :class="{ active: selectedSection === SECTIONS.PLAYOFFS }"
+      style="color: var(--bolao-c-mint)"
+      size="small"
+      @click="() => (selectedSection = SECTIONS.PLAYOFFS)"
+    />
+  </nav>
+  <PrimeButton
+    variant="text"
+    icon="pi pi-refresh"
+    :loading="isLoading"
+    :label="t('standings.refresh')"
+    size="small"
+    @click="fetchStandings"
+  />
+  <div class="standings-toolbar"></div>
+
   <section
-    v-if="false || isBracketLoading || bracketData.length > 0"
+    v-if="selectedSection === SECTIONS.PLAYOFFS && bracketData.length > 0"
     class="bracket-section"
   >
     <div class="stage-tabs">
@@ -107,11 +128,11 @@
         </div>
       </div>
     </div>
-
-    <div class="bracket-divider" />
   </section>
-
-  <div class="standings-grid">
+  <div
+    v-if="selectedSection === SECTIONS.GROUPS"
+    class="standings-grid"
+  >
     <template v-if="isLoading">
       <div
         v-for="i in 12"
@@ -128,7 +149,6 @@
         </div>
       </div>
     </template>
-
     <div
       v-for="group in groupedStandings"
       v-else
@@ -278,7 +298,14 @@ const teamsStore = useTeamsStore();
 const { locale, t } = useI18n();
 const { isSmallMobile } = useViewport();
 const STANDINGS_URL = `https://api.fifa.com/api/v3/calendar/17/285023/289273/standing?language=${locale.value}`;
+const SECTIONS = {
+  GROUPS: 'GROUPS',
+  PLAYOFFS: 'PLAYOFFS',
+} as const;
+type TSection = (typeof SECTIONS)[keyof typeof SECTIONS];
 
+// ------ Refs ------
+const selectedSection = ref<TSection>(SECTIONS.GROUPS); // 'GROUPS' | 'PLAYOFFS'
 const standings = ref<IStandingEntry[]>([]);
 const isLoading = ref(true);
 const selectedTeam = ref<ITeam | null>(null);
@@ -397,6 +424,43 @@ async function fetchStandings() {
 </script>
 
 <style lang="scss" scoped>
+.section-nav {
+  display: flex;
+  gap: var(--xs-spacing);
+  align-items: center;
+  justify-content: center;
+  padding: var(--xs-spacing) var(--m-spacing);
+  background-color: var(--bolao-c-blue4);
+  border: 1px solid var(--bolao-c-blue3);
+  border-radius: var(--border-radius);
+
+  &__divider {
+    width: 1px;
+    height: 16px;
+    background-color: var(--bolao-c-blue3);
+  }
+
+  :deep(.p-button.active) {
+    background-color: rgb(255 255 255 / 8%);
+    box-shadow: inset 0 -2px 0 currentcolor;
+  }
+
+  @media (width <= 400px) {
+    padding: var(--xs-spacing);
+
+    :deep(.p-button-label) {
+      display: none;
+    }
+
+    :deep(.p-button) {
+      justify-content: center;
+      min-width: 44px;
+      min-height: 44px;
+      padding: var(--xs-spacing);
+    }
+  }
+}
+
 .standings-toolbar {
   display: flex;
   justify-content: flex-end;
@@ -588,6 +652,7 @@ async function fetchStandings() {
   flex-wrap: wrap;
   gap: var(--xs-spacing);
   align-items: center;
+  justify-content: center;
   margin-bottom: var(--m-spacing);
   overflow-x: auto;
 }
@@ -646,7 +711,7 @@ async function fetchStandings() {
   padding: 4px var(--s-spacing);
   font-size: 10px;
   font-weight: 600;
-  color: var(--bolao-c-grey5);
+  color: var(--bolao-c-grey3);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   background-color: var(--bolao-c-blue3);
@@ -699,13 +764,6 @@ async function fetchStandings() {
   font-size: 10px;
   color: var(--bolao-c-grey5);
   text-align: center;
-  background-color: var(--bolao-c-blue3);
-}
-
-.bracket-divider {
-  width: 100%;
-  height: 1px;
-  margin-bottom: var(--xl-spacing);
   background-color: var(--bolao-c-blue3);
 }
 </style>
