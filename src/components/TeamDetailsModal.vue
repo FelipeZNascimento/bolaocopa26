@@ -46,12 +46,6 @@
                   :player="coach"
                 />
               </p>
-              <!-- <p
-                v-if="locale !== 'en'"
-                class="team-name-en"
-              >
-                {{ team.nameEn }}
-              </p> -->
               <p class="team-name-en">
                 {{ team.confederation.abbreviation }}
               </p>
@@ -70,7 +64,7 @@
         </div>
       </div>
 
-      <h3 class="players-title">{{ t('teamDetailsModal.players') }} ({{ sortedPlayers.length }})</h3>
+      <h3 class="players-title">{{ t('teamDetailsModal.players') }}</h3>
       <div class="players-grid">
         <div
           v-for="player in sortedPlayers"
@@ -338,24 +332,33 @@ watch(isVisible, (newValue) => {
 }
 
 .players-title {
-  margin: 0 0 var(--l-spacing) 0;
+  margin: var(--l-spacing) 0 0 0;
   font-size: var(--l-font-size);
   color: var(--bolao-c-white);
 
   @media (width <= 768px) {
-    margin: 0 0 var(--m-spacing) 0;
+    margin: var(--m-spacing) 0 0 0;
     font-size: var(--m-font-size);
   }
 }
 
 .players-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: var(--m-spacing);
+  grid-template-rows: repeat(11, 80px);
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-auto-flow: column;
+  gap: var(--s-spacing);
 
-  @media (width <= 768px) {
+  @media (width <= 1024px) {
+    grid-template-rows: repeat(13, 80px);
     grid-template-columns: 1fr;
-    gap: var(--s-spacing);
+    gap: var(--xs-spacing);
+  }
+
+  @media (width < 768px) {
+    grid-template-rows: repeat(26, 80px);
+    grid-template-columns: 1fr;
+    gap: var(--xs-spacing);
   }
 }
 
@@ -363,14 +366,14 @@ watch(isVisible, (newValue) => {
   display: flex;
   gap: var(--m-spacing);
   align-items: center;
-  padding: var(--m-spacing);
+  padding: var(--s-spacing);
   background: color-mix(in srgb, var(--color-contrast) 5%, transparent);
   border-radius: var(--border-radius);
   transition: all 0.2s ease;
 
   @media (width <= 768px) {
     gap: var(--s-spacing);
-    padding: var(--s-spacing) var(--m-spacing);
+    padding: var(--s-spacing);
   }
 
   &:hover {
@@ -401,7 +404,7 @@ watch(isVisible, (newValue) => {
     flex: 1;
 
     .player-name {
-      margin-bottom: var(--xs-spacing);
+      margin-bottom: var(--xxs-spacing);
       font-size: var(--m-font-size);
       font-weight: 600;
     }

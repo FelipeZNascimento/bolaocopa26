@@ -1,4 +1,11 @@
 <template>
+  <PrimePaginator
+    :rows="50"
+    :totalRecords="filteredPlayers.length !== allPlayers.length ? filteredPlayers.length : allPlayers.length"
+    :rowsPerPageOptions="[50, 100, 200]"
+    @page="(e: PageState) => (currentPage = e.page + 1)"
+    @update:rows="(rows: number) => (itemsPerPage = rows)"
+  />
   <div class="search-bar">
     <i class="pi pi-search search-bar__icon" />
     <input
@@ -20,7 +27,7 @@
     </template>
 
     <PlayerStickerComponent
-      v-for="player in filteredPlayers"
+      v-for="player in filteredPlayers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)"
       v-else
       :key="player.id"
       :player="player"
@@ -37,6 +44,8 @@
 </template>
 
 <script lang="ts" setup>
+import type { PageState } from 'primevue/paginator';
+
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -49,14 +58,15 @@ const teamsStore = useTeamsStore();
 const { t } = useI18n();
 
 const isLoading = computed(() => teamsStore.isLoading);
-
 const allPlayers = computed(() => teamsStore.teams.filter((team) => team.id !== 33).flatMap((team) => team.players));
 
 const searchQuery = ref('');
+const currentPage = ref(1);
+const itemsPerPage = ref(50);
 
 const filteredPlayers = computed(() => {
   const q = searchQuery.value.toLowerCase().trim();
-  if (!q) return allPlayers.value;
+  if (!q || q.length < 2) return allPlayers.value;
 
   return allPlayers.value.filter(
     (player) =>
