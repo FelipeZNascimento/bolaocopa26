@@ -51,8 +51,11 @@
           @click.stop="isFlipped = false"
         >
           <slot name="back" />
-          <div class="ls-sticker__back-hint">
-            <i class="pi pi-sync" />
+          <div
+            v-if="flippable || clickable"
+            class="ls-sticker__hint"
+          >
+            <i :class="flippable ? 'pi pi-sync' : 'pi pi-info-circle'" />
           </div>
         </div>
       </div>

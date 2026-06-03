@@ -11,6 +11,9 @@
       :is-mini="isMini"
       :points-awarded="match.pointsAwarded"
       :gametime="match.gametime"
+      @click="handleMatchClick"
+      @keydown.enter="handleMatchClick"
+      @keydown.space.prevent="handleMatchClick"
     />
     <div
       class="match-connector"
@@ -41,6 +44,9 @@
       :is-mini="isMini"
       :points-awarded="match.pointsAwarded"
       :gametime="match.gametime"
+      @click="handleMatchClick"
+      @keydown.enter="handleMatchClick"
+      @keydown.space.prevent="handleMatchClick"
     />
     <ScoreComponent
       :match="match"

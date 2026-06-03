@@ -82,6 +82,14 @@ function checkForSWUpdate() {
   }
 }
 
+// Every minute, check if the websocket connection is alive, and reconnect if it isn't.
+// This is a workaround for an issue where the connection can drop after some time,
+// especially on mobile networks. The WebsocketService already has its own internal
+// reconnection logic, but this adds an extra layer of reliability.
+setInterval(function () {
+  matchService.checkWebsocketConnection();
+}, 60 * 1000);
+
 // Track PWA install event in GA4
 window.addEventListener('appinstalled', () => {
   window.dataLayer?.push(['event', 'pwa_installed']);

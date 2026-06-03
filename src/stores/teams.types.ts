@@ -34,6 +34,7 @@ export interface IPlayer {
   number: number;
   position: IPosition;
   team: ITeam;
+  weight: number;
 }
 
 export interface IPosition {

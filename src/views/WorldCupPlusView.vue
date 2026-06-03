@@ -2,15 +2,6 @@
   <div class="outer-teams">
     <!-- Section navigation -->
     <nav class="section-nav">
-      <!-- <PrimeButton
-        variant="text"
-        icon="pi pi-th-large"
-        :label="!isMobile ? t('worldCupPlus.groups') : ''"
-        :aria-label="t('worldCupPlus.groups')"
-        :class="{ active: selectedSection === SECTIONS.GROUPS }"
-        style="color: var(--bolao-c-mint)"
-        @click="() => (selectedSection = SECTIONS.GROUPS)"
-      /> -->
       <PrimeButton
         variant="text"
         icon="pi pi-list"
@@ -85,7 +76,6 @@ import StandingsComponent from '@/views/WorldCupPlus/StandingsComponent.vue';
 import TeamsComponent from '@/views/WorldCupPlus/TeamsComponent.vue';
 
 const SECTIONS = {
-  // GROUPS: 'GROUPS',
   PLAYERS: 'PLAYERS',
   REFEREES: 'REFEREES',
   STADIUMS: 'STADIUMS',

@@ -31,6 +31,14 @@
     </div>
 
     <template v-else>
+      <PrimeButton
+        style="padding: var(--l-spacing) 0"
+        :icon="viewNeymarOption === 'hideNeymar' ? 'pi pi-eye' : 'pi pi-eye-slash'"
+        :label="viewNeymarOption === 'hideNeymar' ? t('home.news.showNeymar') : t('home.news.hideNeymar')"
+        variant="text"
+        severity="secondary"
+        @click="handleHideNeymarToggle"
+      />
       <div class="news-list">
         <a
           v-for="item in visibleNews"
@@ -85,22 +93,37 @@ import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import NewsService from '@/services/news';
+import { useConfigurationStore } from '@/stores/configuration';
 import { useNewsStore } from '@/stores/news';
 
+// ------ Initialization ------
 const MOBILE_BREAKPOINT = '(max-width: 768px)';
 const MOBILE_PAGE_SIZE = 3;
 const DESKTOP_PAGE_SIZE = 5;
-
 const { t } = useI18n();
 
+// ------ Refs ------
+const isMobile = ref(window.matchMedia(MOBILE_BREAKPOINT).matches);
+
+// ------ Computed Properties ------
+const pageSize = computed(() => (isMobile.value ? MOBILE_PAGE_SIZE : DESKTOP_PAGE_SIZE));
+const visibleCount = ref(pageSize.value);
+const showToggle = computed(() => visibleCount.value < newsStore.news.length);
+const viewNeymarOption = computed(() => configurationStore.viewNeymarOption);
+const visibleNews = computed(() => {
+  if (viewNeymarOption.value === 'hideNeymar') {
+    return newsStore.news
+      .filter((item) => !item.title.toLowerCase().includes('neymar') && !item.summary.toLowerCase().includes('neymar'))
+      .slice(0, visibleCount.value);
+  }
+  return newsStore.news.slice(0, visibleCount.value);
+});
+
+// ------ Stores and Services ------
+const configurationStore = useConfigurationStore();
 const newsStore = useNewsStore();
 const newsService = new NewsService();
 const imageLoading = reactive<Record<number, boolean>>({});
-const isMobile = ref(window.matchMedia(MOBILE_BREAKPOINT).matches);
-const pageSize = computed(() => (isMobile.value ? MOBILE_PAGE_SIZE : DESKTOP_PAGE_SIZE));
-const visibleCount = ref(pageSize.value);
-const visibleNews = computed(() => newsStore.news.slice(0, visibleCount.value));
-const showToggle = computed(() => visibleCount.value < newsStore.news.length);
 
 watch(pageSize, (size) => {
   visibleCount.value = size;
@@ -117,6 +140,12 @@ watch(
   },
   { immediate: true },
 );
+
+function handleHideNeymarToggle() {
+  const newOption = viewNeymarOption.value === 'viewNeymar' ? 'hideNeymar' : 'viewNeymar';
+  visibleCount.value = pageSize.value; // Reset visible count when toggling
+  configurationStore.setNeymarVisibility(newOption);
+}
 
 function loadMore() {
   visibleCount.value += pageSize.value;

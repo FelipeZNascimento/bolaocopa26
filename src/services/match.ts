@@ -22,6 +22,10 @@ export default class MatchService {
     this.websocketInstance = new WebsocketService(this.onWebsocketUpdate);
   }
 
+  public checkWebsocketConnection() {
+    this.websocketInstance.connectIfNeeded();
+  }
+
   public async fetch(round?: null | number, edition?: null | number) {
     this.matchesStore.setLoading(true);
     // Week may be "0" so needs to be checked against null and undefined

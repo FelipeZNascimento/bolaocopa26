@@ -8,7 +8,6 @@
       :placeholder="t('teams.search')"
     />
   </div>
-  <p>{{ locale }}</p>
   <div class="items-grid">
     <template v-if="isLoading">
       <WorldCupLandscapeStickerComponent
@@ -125,11 +124,16 @@ teamService.fetch();
 <style lang="scss" scoped>
 .items-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: var(--l-spacing);
   width: 100%;
 
   @media (width <= 768px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--m-spacing);
+  }
+
+  @media (width <= 425px) {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--m-spacing);
   }

@@ -69,7 +69,8 @@ const sortedEvents = computed(() => {
       const added = match[2] ? parseInt(match[2], 10) / 100 : 0;
       return minutes + added;
     };
-    return parseGametime(a.event.gametime) - parseGametime(b.event.gametime);
+
+    return parseGametime(a.gametime) - parseGametime(b.gametime);
   });
 });
 </script>

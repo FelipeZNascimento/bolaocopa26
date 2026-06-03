@@ -69,6 +69,7 @@ import { LIVE_GAME } from '@/constants/match';
 import MatchService from '@/services/match';
 import { useViewport } from '@/services/viewport';
 import { useActiveProfileStore } from '@/stores/activeProfile';
+import { useExtraBetStore } from '@/stores/extraBet';
 import { useMatchesStore } from '@/stores/matches';
 
 import ExtrasWidget from './Home/ExtrasWidget.vue';
@@ -139,6 +140,7 @@ const STORAGE_KEY = 'home-widget-order';
 
 // ------ Stores ------
 const matchesStore = useMatchesStore();
+const extraBetsStore = useExtraBetStore();
 const activeProfileStore = useActiveProfileStore();
 const { isMobile } = useViewport();
 const { t } = useI18n();
@@ -153,11 +155,6 @@ matchService.fetchNextMatches();
 
 // ------ Dashboard banner ------
 const isDashboardBannerDismissed = ref(localStorage.getItem(BANNER_STORAGE_KEY) === 'true');
-
-// function dismissBanner() {
-//   isDashboardBannerDismissed.value = true;
-//   localStorage.setItem(BANNER_STORAGE_KEY, 'true');
-// }
 
 // ------ Widget order ------
 function loadOrder(): WidgetId[] {
@@ -196,10 +193,12 @@ function saveOrder() {
 const matches = computed(() => matchesStore.matches);
 const nextMatches = computed(() => matchesStore.nextMatches);
 const liveMatches = computed(() => matches.value.filter((m) => LIVE_GAME.includes(m.status)));
+const hasExtraBets = computed(() => extraBetsStore.activeProfileBets.length > 0);
 
 const visibleWidgets = computed(() =>
   widgetOrder.value.filter((id) => {
     if (id === 'live-matches') return liveMatches.value.length > 0;
+    if (id === 'welcome') return !hasExtraBets.value;
     return true;
   }),
 );

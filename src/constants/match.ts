@@ -95,6 +95,7 @@ export enum MATCH_EVENT {
   CARD_RED,
   CARD_YELLOW_RED,
   SUB,
+  PENALTY_SHOOTOUT,
 }
 
 export type MatchStatus = (typeof MATCH_STATUS)[keyof typeof MATCH_STATUS];

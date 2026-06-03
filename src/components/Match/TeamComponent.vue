@@ -56,16 +56,22 @@
         class="event"
         :style="{
           flexDirection: isHomeTeam ? 'row' : 'row-reverse',
-          visibility: event.player.team.id === team.id ? 'visible' : 'hidden',
+          visibility: event.teamId === team.id ? 'visible' : 'hidden',
         }"
       >
         <div class="line">
+          <span
+            v-if="isHomeTeam"
+            style="width:"
+          >
+            {{ event.event.id === MATCH_EVENT.PENALTY_SHOOTOUT ? 'PEN' : event.gametime }}
+          </span>
           <img
             style="width: 20px; height: 20px"
             :src="getEventIconUrl(event.event.id, isHomeTeam)"
             :alt="event.event.description"
           />
-          <span>{{ event.event.gametime }}</span>
+          <span v-if="!isHomeTeam">{{ event.event.id === MATCH_EVENT.PENALTY_SHOOTOUT ? 'PEN' : event.gametime }}</span>
         </div>
         <HoverablePlayerName
           v-if="event.player"
@@ -143,6 +149,12 @@ function closeTeamModal() {
 
 function getEventIconUrl(eventType: number, isHome: boolean) {
   switch (eventType) {
+    case MATCH_EVENT.CARD_RED: {
+      return 'https://assets.omegafox.me/copa/icons/red_card.png';
+    }
+    case MATCH_EVENT.CARD_YELLOW: {
+      return 'https://assets.omegafox.me/copa/icons/yellow_card.png';
+    }
     case MATCH_EVENT.GOAL: {
       return isHome
         ? 'https://assets.omegafox.me/copa/icons/goal.png'
@@ -157,6 +169,11 @@ function getEventIconUrl(eventType: number, isHome: boolean) {
       return isHome
         ? 'https://assets.omegafox.me/copa/icons/penalty_goal.png'
         : 'https://assets.omegafox.me/copa/icons/penalty_goal_a.png';
+    }
+    case MATCH_EVENT.PENALTY_SHOOTOUT: {
+      return isHome
+        ? 'https://assets.omegafox.me/copa/icons/penalty_shootout.png'
+        : 'https://assets.omegafox.me/copa/icons/penalty_shootout_a.png';
     }
   }
 }
@@ -370,7 +387,7 @@ function openTeamModal(team: ITeam) {
     display: flex;
     align-items: center;
     width: 100%;
-    min-height: 40px;
+    min-height: 30px;
     padding: var(--xxs-spacing) var(--xs-spacing);
     border-bottom: 1px solid color-mix(in srgb, var(--bolao-c-grey3), transparent 80%);
 
@@ -380,23 +397,14 @@ function openTeamModal(team: ITeam) {
 
     .line {
       display: flex;
-      flex-direction: column;
       gap: 0;
       align-items: center;
-      justify-content: center;
-      width: 60px;
-      min-width: 60px;
+      justify-content: space-evenly;
+      width: 76px;
+      min-width: 76px;
       font-size: var(--xs-font-size);
       line-height: 1;
     }
-  }
-
-  &.is-home-events .event {
-    border-left: 3px solid color-mix(in srgb, var(--bolao-c-mint), transparent 55%);
-  }
-
-  &:not(.is-home-events) .event {
-    border-right: 3px solid color-mix(in srgb, var(--bolao-c-red), transparent 55%);
   }
 }
 

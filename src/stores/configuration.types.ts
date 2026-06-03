@@ -9,3 +9,5 @@ export type TTheme = { label: string; value: TThemeValue };
 export type TThemeValue = 'dark' | 'light';
 export type TViewBetOption = { label: string; value: TViewBetOptionValue };
 export type TViewBetOptionValue = 'hideBets' | 'viewBets';
+export type TViewNeymarOption = { label: string; value: TViewNeymarValue };
+export type TViewNeymarValue = 'hideNeymar' | 'viewNeymar';

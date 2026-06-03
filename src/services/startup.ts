@@ -1,6 +1,12 @@
 import type { IUser } from '@/stores/activeProfile.types';
-import type { TMatchListSorting, TRankingPositionValue, TThemeValue } from '@/stores/configuration.types';
-import type { ITeam } from '@/stores/teams.types';
+import type {
+  TMatchListSorting,
+  TRankingPositionValue,
+  TThemeValue,
+  TViewBetOptionValue,
+  TViewNeymarValue,
+} from '@/stores/configuration.types';
+import type { IPlayer, ITeam } from '@/stores/teams.types';
 
 import { detectLocale, LOCALE_STORAGE_KEY } from '@/i18n';
 import { useActiveProfileStore } from '@/stores/activeProfile';
@@ -42,22 +48,32 @@ export default class StartupService {
     this.configurationStore.setLoading(true);
     this.extraBetStore.setLoading(true);
     try {
-      const [activeProfileResponse, editionResponse, teamResponse] = await Promise.allSettled([
+      const [activeProfileResponse, editionResponse, teamResponse, playerResponse] = await Promise.allSettled([
         this.apiRequest.get<IUser>('user/activeProfile', undefined, { retries: 3 }),
         this.apiRequest.get<InitializeObj>('edition/current', undefined, { retries: 3 }),
         this.apiRequest.get<ITeam[]>('team/all/', undefined, { retries: 3 }),
+        this.apiRequest.get<IPlayer[]>('team/players/', undefined, { retries: 3 }),
       ]);
 
-      if (isRejected(activeProfileResponse) || isRejected(editionResponse) || isRejected(teamResponse)) {
+      if (
+        isRejected(activeProfileResponse) ||
+        isRejected(editionResponse) ||
+        isRejected(teamResponse) ||
+        isRejected(playerResponse)
+      ) {
         throw new Error('Falha ao inicializar a aplicação');
       }
 
       const loggedUser = isFulfilled(activeProfileResponse) ? activeProfileResponse.value : null;
       const seasonData = isFulfilled(editionResponse) ? editionResponse.value : null;
       const teamsData = isFulfilled(teamResponse) ? teamResponse.value : [];
+      const playersData = isFulfilled(playerResponse) ? playerResponse.value : [];
 
       // Set Teams store properties
       this.teamsStore.setTeams(teamsData);
+
+      // Set Players store properties
+      this.teamsStore.setPlayers(playersData);
 
       // Set Active Profile store properties
       this.activeProfileStore.setLoading(false);
@@ -97,6 +113,8 @@ export default class StartupService {
     const themePreference = localStorage.getItem('theme-preference');
     const rankingPositionPreference = localStorage.getItem('ranking-position') as TRankingPositionValue;
     const matchListSortingPreference = localStorage.getItem('match-list-sorting') as TMatchListSorting;
+    const viewBetOptionPreference = localStorage.getItem('view-bet-option') as TViewBetOptionValue;
+    const neymarVisibilityPreference = localStorage.getItem('view-neymar-option') as TViewNeymarValue;
     const localePreference = detectLocale(); // This will also validate the locale against supported ones
 
     this.configurationStore.setLanguage(localePreference as 'en' | 'pt-BR');
@@ -112,6 +130,18 @@ export default class StartupService {
       this.configurationStore.setRankingPosition(rankingPositionPreference);
     } else {
       localStorage.setItem('ranking-position', 'active');
+    }
+
+    if (viewBetOptionPreference) {
+      this.configurationStore.setViewBetOption(viewBetOptionPreference);
+    } else {
+      localStorage.setItem('view-bet-option', 'viewBets');
+    }
+
+    if (neymarVisibilityPreference) {
+      this.configurationStore.setNeymarVisibility(neymarVisibilityPreference);
+    } else {
+      localStorage.setItem('view-neymar-option', 'viewNeymar');
     }
 
     if (themePreference) {

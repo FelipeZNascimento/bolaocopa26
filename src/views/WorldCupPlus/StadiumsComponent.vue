@@ -71,15 +71,46 @@
             <i class="pi pi-users" />
             <span>{{ stadium.capacity.toLocaleString(locale) }}</span>
           </div>
+          <PrimeButton
+            rel="noopener noreferrer"
+            class="link-row"
+            icon="pi pi-search-plus"
+            :label="t('common.seeMore')"
+            @click="(event: MouseEvent) => onStadiumClick(stadium, event)"
+          />
         </div>
       </template>
     </WorldCupLandscapeStickerComponent>
   </div>
+  <PrimeDialog
+    v-model:visible="lightbox.visible"
+    dismissable-mask
+    modal
+    :draggable="false"
+    :style="{ maxWidth: '90vw', width: 'fit-content' }"
+  >
+    <template #header>
+      <img
+        :src="`https://assets.omegafox.me/copa/countries_flags/${lightbox.stadium?.isoCode.toLowerCase()}.png`"
+        :alt="`${locale === 'pt-BR' ? lightbox.stadium?.country : lightbox.stadium?.countryEn} Flag`"
+        class="overlay-flag"
+      />
+      {{ locale === 'pt-BR' ? lightbox.stadium?.country : lightbox.stadium?.countryEn }} -
+      {{ lightbox.stadium?.name }}
+    </template>
+    <img
+      :src="`https://assets.omegafox.me/copa/2026/stadiums/${lightbox.stadium?.id}.png`"
+      :alt="lightbox.stadium?.name"
+      style="display: block; max-width: 70vw; max-height: 70vh"
+    />
+  </PrimeDialog>
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+
+import type { IStadium } from '@/stores/matches.types';
 
 import WorldCupLandscapeStickerComponent from '@/components/WorldCupLandscapeStickerComponent.vue';
 import StadiumService from '@/services/stadium';
@@ -87,11 +118,20 @@ import { useStadiumsStore } from '@/stores/stadiums';
 
 const stadiumService = new StadiumService();
 const stadiumsStore = useStadiumsStore();
-const { locale } = useI18n();
+const { locale, t } = useI18n();
 
+const lightbox = ref({ stadium: null as IStadium | null, visible: false });
 const isLoading = computed(() => stadiumsStore.isLoading);
 const stadiums = computed(() => stadiumsStore.stadiums);
 const imageErrors = reactive<Record<number, boolean>>({});
+
+function onStadiumClick(stadium: IStadium, event: MouseEvent) {
+  openImage(stadium);
+  event.stopPropagation();
+}
+function openImage(stadium: IStadium) {
+  lightbox.value = { stadium, visible: true };
+}
 
 stadiumService.fetch();
 </script>
@@ -214,5 +254,14 @@ stadiumService.fetch();
     font-size: 11px;
     color: var(--sticker-color-dark);
   }
+}
+
+.link-row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: #444;
 }
 </style>

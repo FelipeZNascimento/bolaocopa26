@@ -1,13 +1,20 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-import type { TMatchListSorting, TRankingPositionValue, TThemeValue, TViewBetOptionValue } from './configuration.types';
+import type {
+  TMatchListSorting,
+  TRankingPositionValue,
+  TThemeValue,
+  TViewBetOptionValue,
+  TViewNeymarValue,
+} from './configuration.types';
 
 const initialState = {
   matchListSorting: 'group' as TMatchListSorting,
   rankingPosition: 'active' as TRankingPositionValue,
   theme: 'dark' as TThemeValue,
   viewBetOption: 'viewBets' as TViewBetOptionValue,
+  viewNeymarOption: 'viewNeymar' as TViewNeymarValue,
 };
 
 export const useConfigurationStore = defineStore('configuration', () => {
@@ -22,12 +29,15 @@ export const useConfigurationStore = defineStore('configuration', () => {
   const matchListSorting = ref<TMatchListSorting>(initialState.matchListSorting);
   const rankingPosition = ref<TRankingPositionValue>(initialState.rankingPosition);
   const viewBetOption = ref<TViewBetOptionValue>(initialState.viewBetOption);
+  const viewNeymarOption = ref<TViewNeymarValue>(initialState.viewNeymarOption);
 
   function setInitialState() {
     theme.value = initialState.theme;
     rankingPosition.value = initialState.rankingPosition;
     matchListSorting.value = initialState.matchListSorting;
     viewBetOption.value = initialState.viewBetOption;
+    viewNeymarOption.value = initialState.viewNeymarOption;
+
     localStorage.removeItem('ranking-columns');
     localStorage.removeItem('theme-preference');
     localStorage.removeItem('ranking-position');
@@ -90,9 +100,13 @@ export const useConfigurationStore = defineStore('configuration', () => {
   }
 
   function setViewBetOption(newOption: TViewBetOptionValue) {
-    console.log('Setting view bet option to:', newOption);
     viewBetOption.value = newOption;
     localStorage.setItem('view-bet-option', newOption);
+  }
+
+  function setNeymarVisibility(newOption: TViewNeymarValue) {
+    viewNeymarOption.value = newOption;
+    localStorage.setItem('view-neymar-option', newOption);
   }
 
   return {
@@ -114,11 +128,13 @@ export const useConfigurationStore = defineStore('configuration', () => {
     setLanguage,
     setLoading,
     setMatchListSorting,
+    setNeymarVisibility,
     setRankingPosition,
     setSelectedRound,
     setTheme,
     setViewBetOption,
     theme,
     viewBetOption,
+    viewNeymarOption,
   };
 });
