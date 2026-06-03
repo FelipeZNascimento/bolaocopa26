@@ -33,11 +33,21 @@ import { ref } from 'vue';
 const changelogEntries = ref([
   {
     changes: [
+      '🐛 [Extras] Selected indicator was not being updated correctly',
+      '[WorldCup+] Improvement on table for referees',
+      '[WorldCup+] Google Maps links added for stadiums coordinates',
+    ],
+    date: '03/06/2026',
+    version: 'v1.0.15',
+  },
+  {
+    changes: [
       '[News] Hide Neymar button (!!!!)',
       '[Match] Improvement on live events',
       '[Match] Clicking on the clock now opens match details',
       '[WorldCup+] Stadiums now can be clicked for larger image view',
       '[WorldCup+] Standings for groups and playoffs now split into two different sections for better organization',
+      '[WorldCup+] Improvement on table for referees',
       '[Extras] Ready for players extras',
     ],
     date: '03/06/2026',

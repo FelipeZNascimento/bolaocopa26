@@ -64,7 +64,13 @@
           </div>
           <div class="back-row">
             <i class="pi pi-map-marker" />
-            <span>{{ stadium.geoLatitude }}, {{ stadium.geoLongitude }}</span>
+            <a
+              :href="'https://www.google.com/maps?q=' + stadium.geoLatitude + ',' + stadium.geoLongitude"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {{ stadium.geoLatitude }}, {{ stadium.geoLongitude }}
+            </a>
           </div>
 
           <div class="back-row">
