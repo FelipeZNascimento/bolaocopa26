@@ -55,10 +55,22 @@ import { useTeamsStore } from '@/stores/teams';
 
 const teamService = new TeamService();
 const teamsStore = useTeamsStore();
-const { t } = useI18n();
+const { locale, t } = useI18n();
 
 const isLoading = computed(() => teamsStore.isLoading);
-const allPlayers = computed(() => teamsStore.teams.filter((team) => team.id !== 33).flatMap((team) => team.players));
+const allPlayers = computed(() =>
+  teamsStore.teams
+    .filter((team) => team.id !== 33)
+    .flatMap((team) => team.players)
+    .sort((a, b) => {
+      const compareTeam =
+        locale.value === 'pt-BR' ? a.team.name.localeCompare(b.team.name) : a.team.nameEn.localeCompare(b.team.nameEn);
+      const compareNumber = a.position.id - b.position.id;
+      const compareName = a.name.localeCompare(b.name);
+
+      return compareTeam || compareNumber || compareName;
+    }),
+);
 
 const searchQuery = ref('');
 const currentPage = ref(1);
@@ -70,6 +82,8 @@ const filteredPlayers = computed(() => {
 
   return allPlayers.value.filter(
     (player) =>
+      player.position.description.toLowerCase().includes(q) ||
+      player.position.descriptionEn.toLowerCase().includes(q) ||
       player.name.toLowerCase().includes(q) ||
       player.team.name.toLowerCase().includes(q) ||
       player.team.nameEn.toLowerCase().includes(q) ||

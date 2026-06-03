@@ -3,7 +3,7 @@
     <PrimeButton
       variant="text"
       icon="pi pi-list"
-      label="Grupos"
+      :label="t('worldCupPlus.groups')"
       style="color: var(--bolao-c-mint)"
       :aria-label="t('worldCupPlus.standings')"
       :class="{ active: selectedSection === SECTIONS.GROUPS }"
@@ -15,7 +15,7 @@
     <PrimeButton
       variant="text"
       icon="pi pi-shield"
-      label="Mata-mata"
+      :label="t('worldCupPlus.playoffs')"
       :aria-label="t('worldCupPlus.teams')"
       :class="{ active: selectedSection === SECTIONS.PLAYOFFS }"
       style="color: var(--bolao-c-mint)"

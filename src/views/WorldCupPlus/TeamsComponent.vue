@@ -8,7 +8,6 @@
       :placeholder="t('teams.search')"
     />
   </div>
-  <p>{{ locale }}</p>
   <div class="items-grid">
     <template v-if="isLoading">
       <WorldCupLandscapeStickerComponent

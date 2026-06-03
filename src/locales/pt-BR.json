@@ -452,7 +452,7 @@
   "players": {
     "noPhoto": "Sem foto",
     "noResults": "Nenhum jogador encontrado",
-    "search": "Buscar jogador, seleção ou clube...",
+    "search": "Buscar jogador, posição, seleção ou clube...",
     "years": "anos",
     "age": "Idade",
     "country": "País",
@@ -741,6 +741,7 @@
     "title": "Copa+",
     "description": "Conheça um pouco mais sobre as equipes, estádios, jogadores e treinadores que participam da Copa do Mundo!",
     "groups": "Grupos",
+    "playoffs": "Eliminatórias",
     "players": "Jogadores",
     "referees": "Árbitros",
     "stadiums": "Estádios",

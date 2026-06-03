@@ -74,11 +74,21 @@
           </div>
           <div class="ps-sticker__detail-row">
             <i class="pi pi-calendar" />
-            <span>{{ playerAge }} {{ t('players.years') }}</span>
+            <span>{{ player.dateOfBirth }} ({{ playerAge }} {{ t('players.years') }})</span>
           </div>
-          <div class="ps-sticker__detail-row">
+          <div
+            v-if="player.height"
+            class="ps-sticker__detail-row"
+          >
             <i class="pi pi-arrows-v" />
             <span>{{ player.height }} cm</span>
+          </div>
+          <div
+            v-if="player.weight"
+            class="ps-sticker__detail-row"
+          >
+            <i class="pi pi-arrows-v" />
+            <span>{{ player.weight }} kg</span>
           </div>
         </div>
       </div>

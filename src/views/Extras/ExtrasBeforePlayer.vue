@@ -1,7 +1,7 @@
 <template>
   <div class="extras-before-player-outer">
     <p
-      v-if="players.length === 0"
+      v-if="allPlayers.length === 0"
       style="color: var(--color-text); text-align: center"
     >
       {{ t('extraBets.playersWarning') }}
@@ -17,101 +17,89 @@
         />
       </div>
       <div class="table-card">
-        <table class="players-table">
-          <thead>
-            <tr>
-              <th
-                class="col-country col-sortable"
-                :class="{ 'col-sortable--active': sortKey === 'country' }"
-                @click="setSort('country')"
-              >
-                <span class="th-inner">
-                  {{ t('players.country') }}
-                  <i :class="sortIcon('country')" />
-                </span>
-              </th>
-              <th
-                class="col-name col-sortable"
-                :class="{ 'col-sortable--active': sortKey === 'name' }"
-                @click="setSort('name')"
-              >
-                <span class="th-inner">
-                  {{ t('players.name') }}
-                  <i :class="sortIcon('name')" />
-                </span>
-              </th>
-              <th
-                v-if="!isMobile"
-                class="col-country col-sortable"
-                :class="{ 'col-sortable--active': sortKey === 'club' }"
-                @click="setSort('club')"
-              >
-                <span class="th-inner">
-                  {{ t('players.club') }}
-                  <i :class="sortIcon('club')" />
-                </span>
-              </th>
-              <th
-                class="col-age col-sortable"
-                :class="{ 'col-sortable--active': sortKey === 'age' }"
-                @click="setSort('age')"
-              >
-                <span class="th-inner">
-                  {{ t('players.age') }}
-                  <i :class="sortIcon('age')" />
-                </span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <template v-if="isLoading">
-              <tr
-                v-for="i in 20"
-                :key="i"
-              >
-                <td class="col-name"><PrimeSkeleton class="skel-text" /></td>
-                <td class="col-country"><PrimeSkeleton class="skel-text" /></td>
-                <td
-                  v-if="!isMobile"
-                  class="col-club"
-                >
-                  <PrimeSkeleton class="skel-text" />
-                </td>
-                <td class="col-age"><PrimeSkeleton class="skel-age" /></td>
-              </tr>
-            </template>
-            <tr
-              v-for="player in sortedPlayers"
-              v-else
-              :key="player.id"
-              :class="{ selected: player.id === selectedToggle.selectedPlayer?.id }"
-              @click="() => handlePlayerClick(player)"
-            >
-              <td class="col-country">
+        <PrimeDataTable
+          v-model:selection="selectedPlayer"
+          :value="filteredPlayers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)"
+          paginator
+          :rows="10"
+          :rowsPerPageOptions="[10, 50, 100]"
+          size="small"
+          selectionMode="single"
+          striped-rows
+          row-hover
+          :loading="isLoading"
+          @rowSelect="onPlayerClick($event.data)"
+        >
+          <PrimeColumn
+            :header="t('players.country')"
+            :sortable="true"
+            :sortField="locale === 'pt-BR' ? 'team.name' : 'team.nameEn'"
+            :style="{ width: isMobile ? '50%' : '25%' }"
+          >
+            <template #body="slotProps">
+              <div style="display: flex; gap: var(--s-spacing); align-items: center">
                 <img
-                  v-if="player.team?.isoCode"
-                  class="referee-flag"
-                  :src="`https://assets.omegafox.me/copa/countries_flags/${player.team.isoCode.toLowerCase()}.png`"
-                  :alt="getCountry(player)"
+                  v-if="slotProps.data.team.isoCode"
+                  class="flag"
+                  :src="`https://assets.omegafox.me/copa/countries_flags/${slotProps.data.team.isoCode.toLowerCase()}.png`"
+                  :alt="locale === 'pt-BR' ? slotProps.data.team.name : slotProps.data.team.nameEn"
                 />
-                {{ getCountry(player) }}
-              </td>
-              <td class="col-name">{{ player.name }}</td>
-              <td
+
+                {{ locale === 'pt-BR' ? slotProps.data.team.name : slotProps.data.team.nameEn }}
+              </div>
+            </template>
+          </PrimeColumn>
+          <PrimeColumn
+            :header="t('players.name')"
+            :sortable="true"
+            :sortField="'name'"
+            :field="'name'"
+            :style="{ width: isMobile ? '50%' : '30%' }"
+          >
+            <template #body="slotProps">
+              <span style="margin-right: var(--s-spacing); font-size: var(--xs-font-size)">{{
+                slotProps.data.position.abbreviation
+              }}</span>
+              <HoverablePlayerName
                 v-if="!isMobile"
-                class="col-club"
-              >
+                :player="slotProps.data"
+              />
+              <span v-else>{{ slotProps.data.name }}</span>
+            </template>
+          </PrimeColumn>
+          <PrimeColumn
+            v-if="!isMobile"
+            :header="t('players.club')"
+            :sortable="true"
+            :sortField="'club.name'"
+            :field="'club.name'"
+            style="width: 30%"
+          >
+            <template #body="slotProps">
+              <div style="display: flex; gap: var(--s-spacing); align-items: center">
                 <img
-                  v-if="player.team?.isoCode"
-                  class="referee-flag"
-                  :src="`https://assets.omegafox.me/copa/countries_flags/${player.club.country.isoCode.toLowerCase()}.png`"
-                  :alt="getCountry(player)"
-                />{{ player.club.name }}
-              </td>
-              <td class="col-age">{{ getAge(player.dateOfBirth) }}</td>
-            </tr>
-          </tbody>
-        </table>
+                  v-if="slotProps.data.team?.isoCode"
+                  class="flag"
+                  :src="`https://assets.omegafox.me/copa/countries_flags/${slotProps.data.club.country.isoCode.toLowerCase()}.png`"
+                  :alt="locale === 'pt-BR' ? slotProps.data.club.country.name : slotProps.data.club.country.nameEn"
+                />
+                {{ slotProps.data.club.name }}
+              </div>
+            </template>
+          </PrimeColumn>
+          <PrimeColumn
+            v-if="!isMobile"
+            :header="t('players.age')"
+            :sortable="true"
+            :sortField="'age'"
+            :field="'age'"
+            style="width: 15%"
+          >
+            <template #body="slotProps">
+              {{ getAge(slotProps.data.dateOfBirth) }}
+            </template>
+          </PrimeColumn>
+        </PrimeDataTable>
       </div>
     </template>
   </div>
@@ -129,6 +117,7 @@ import { useI18n } from 'vue-i18n';
 import type { IPlayer } from '@/stores/teams.types';
 import type { IToggleOption } from '@/views/Extras/extrasView.types';
 
+import HoverablePlayerName from '@/components/HoverablePlayerName.vue';
 import LoginModal from '@/components/LoginModal.vue';
 import ExtraBetService from '@/services/extra_bet';
 import { useViewport } from '@/services/viewport';
@@ -136,9 +125,6 @@ import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useExtraBetStore } from '@/stores/extraBet';
 import { useNotificationStore } from '@/stores/notification';
 import { useTeamsStore } from '@/stores/teams';
-
-type TSortDir = 'asc' | 'desc';
-type TSortKey = 'age' | 'club' | 'country' | 'name';
 
 const props = defineProps<{
   selectedToggle: IToggleOption;
@@ -161,8 +147,9 @@ const { locale, t } = useI18n();
 // ------ Refs ------
 const isLoginModalOpen = ref(false);
 const searchQuery = ref('');
-const sortKey = ref<TSortKey>('name');
-const sortDir = ref<TSortDir>('asc');
+const currentPage = ref(1);
+const itemsPerPage = ref(50);
+const selectedPlayer = ref<IPlayer | null>(props.selectedToggle.selectedPlayer || null);
 
 // ------ Computed Properties ------
 const isLoading = computed(() => {
@@ -170,32 +157,22 @@ const isLoading = computed(() => {
 });
 
 const activeProfile = computed(() => activeProfileStore.activeProfile);
-const players = computed(() => teamsStore.players);
+const allPlayers = computed(() => teamsStore.players);
 
 const filteredPlayers = computed(() => {
   const q = searchQuery.value.toLowerCase().trim();
-  if (!q) return teamsStore.players;
-  return teamsStore.players.filter(
+  if (!q || q.length < 2) return allPlayers.value;
+  return allPlayers.value.filter(
     (p) =>
+      p.position.description.toLowerCase().includes(q) ||
+      p.position.descriptionEn.toLowerCase().includes(q) ||
       p.name.toLowerCase().includes(q) ||
-      p.team?.name.toLowerCase().includes(q) ||
-      p.team?.nameEn.toLowerCase().includes(q) ||
+      p.team.name.toLowerCase().includes(q) ||
+      p.team.nameEn.toLowerCase().includes(q) ||
+      p.team.abbreviation.toLowerCase().includes(q) ||
+      p.team.abbreviationEn.toLowerCase().includes(q) ||
       p.club.name.toLowerCase().includes(q),
   );
-});
-
-const sortedPlayers = computed(() => {
-  return [...filteredPlayers.value].sort((a, b) => {
-    let cmp: number;
-    if (sortKey.value === 'name') {
-      cmp = a.name.localeCompare(b.name);
-    } else if (sortKey.value === 'country') {
-      cmp = getCountry(a).localeCompare(getCountry(b));
-    } else {
-      cmp = getAgeValue(a.dateOfBirth) - getAgeValue(b.dateOfBirth);
-    }
-    return sortDir.value === 'asc' ? cmp : -cmp;
-  });
 });
 
 // ------ Functions ------
@@ -216,15 +193,11 @@ function getAgeValue(dateOfBirth: string): number {
   return age;
 }
 
-function getCountry(player: IPlayer): string {
-  return locale.value === 'pt-BR' ? player.team?.name : player.team?.nameEn;
-}
-
 function handleCloseLoginModal() {
   isLoginModalOpen.value = false;
 }
 
-async function handlePlayerClick(player: IPlayer) {
+async function onPlayerClick(player: IPlayer) {
   if (!activeProfile.value) {
     isLoginModalOpen.value = true;
     return;
@@ -273,20 +246,6 @@ async function handlePlayerClick(player: IPlayer) {
     );
   }
 }
-
-function setSort(key: TSortKey) {
-  if (sortKey.value === key) {
-    sortDir.value = sortDir.value === 'asc' ? 'desc' : 'asc';
-  } else {
-    sortKey.value = key;
-    sortDir.value = 'asc';
-  }
-}
-
-function sortIcon(key: TSortKey): string {
-  if (sortKey.value !== key) return 'pi pi-sort';
-  return sortDir.value === 'asc' ? 'pi pi-sort-up' : 'pi pi-sort-down';
-}
 </script>
 <style lang="scss" scoped>
 .extras-before-player-outer {
@@ -302,7 +261,7 @@ function sortIcon(key: TSortKey): string {
   position: relative;
   width: 100%;
   max-width: 400px;
-  margin-bottom: var(--l-spacing);
+  margin: var(--l-spacing) 0;
 }
 
 .search-bar__icon {
@@ -349,125 +308,20 @@ function sortIcon(key: TSortKey): string {
   border-radius: var(--border-radius);
 }
 
-.players-table {
-  width: 100%;
-  border-collapse: collapse;
-
-  thead tr th {
-    padding: var(--xs-spacing) var(--m-spacing);
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--color-contrast);
-    text-align: left;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    white-space: nowrap;
-    border-bottom: 1px solid var(--bolao-c-blue3);
-  }
-
-  tbody tr {
-    cursor: pointer;
-
-    &:not(:last-child) td {
-      border-bottom: 1px solid rgb(from var(--bolao-c-blue3) r g b / 40%);
-    }
-
-    @media (hover: hover) {
-      &:hover td {
-        background-color: rgb(from var(--bolao-c-blue3) r g b / 30%);
-      }
-    }
-  }
-
-  td {
-    padding: var(--m-spacing) var(--m-spacing);
-    font-size: var(--xs-font-size);
-    color: var(--bolao-c-grey2);
-    text-align: left;
-
-    @media (width <= 768px) {
-      padding: var(--m-spacing) var(--s-spacing);
-    }
-  }
-
-  .selected {
-    color: var(--bolao-c-white);
-    box-shadow: inset 0 0 5px 3px color-mix(in srgb, var(--bolao-c-gold), transparent 10%);
-    transition: all 0.2s;
-
-    @media (hover: hover) {
-      &:hover {
-        color: black;
-        background-color: var(--bolao-c-gold-t3);
-      }
-    }
-  }
-}
-
-.col-sortable {
-  cursor: pointer;
-  transition: color 0.2s ease;
-
-  &:hover,
-  &.col-sortable--active {
-    color: var(--bolao-c-gold);
-  }
-}
-
-.th-inner {
-  display: inline-flex;
-  gap: 4px;
-  align-items: center;
-}
-
-.col-name {
-  flex: 1;
-}
-
-.col-club,
-.col-country {
-  display: flex;
-  flex: 1;
-  flex-direction: row;
-  gap: var(--xs-spacing);
-}
-
-.col-age {
-  width: 80px;
-  text-align: center;
-}
-
-.referee-flag {
+.flag {
   display: block;
   width: 20px;
   height: 14px;
   object-fit: contain;
   filter: drop-shadow(0 1px 2px rgb(0 0 0 / 20%));
 }
-
-.skel-flag {
-  width: 20px;
-  height: 14px;
-}
-
-.skel-text {
-  height: 14px;
-}
-
-.skel-age {
-  width: 40px;
-  height: 14px;
-}
-
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-spacing);
-  align-items: center;
-  justify-content: center;
-  padding: var(--xxl-spacing);
-  font-size: var(--m-font-size);
-  color: var(--color-text);
-  opacity: 0.6;
+</style>
+<style lang="scss">
+.p-datatable.p-datatable-striped .p-datatable-tbody > tr.p-row-odd.p-datatable-row-selected,
+.p-datatable-tbody > tr.p-datatable-row-selected {
+  color: var(--bolao-c-white);
+  background-color: var(--bolao-c-black-t1) !important;
+  box-shadow: inset 0 0 5px 3px color-mix(in srgb, var(--bolao-c-gold), transparent 10%);
+  transition: all 0.2s;
 }
 </style>

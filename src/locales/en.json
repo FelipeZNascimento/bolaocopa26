@@ -452,7 +452,7 @@
   "players": {
     "noPhoto": "No photo",
     "noResults": "No players found",
-    "search": "Search player, team or club...",
+    "search": "Search player, position, team or club...",
     "years": "yo",
     "age": "Age",
     "country": "Country",
@@ -752,6 +752,7 @@
     "title": "World Cup+",
     "description": "Get to know a little bit more about the teams, stadiums, players and coaches participating in the World Cup!",
     "groups": "Groups",
+    "playoffs": "Playoffs",
     "players": "Players",
     "referees": "Referees",
     "stadiums": "Stadiums",
