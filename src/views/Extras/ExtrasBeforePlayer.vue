@@ -84,6 +84,7 @@
               v-for="player in sortedPlayers"
               v-else
               :key="player.id"
+              :class="{ selected: player.id === selectedToggle.selectedPlayer?.id }"
               @click="() => handlePlayerClick(player)"
             >
               <td class="col-country">
@@ -386,6 +387,19 @@ function sortIcon(key: TSortKey): string {
 
     @media (width <= 768px) {
       padding: var(--m-spacing) var(--s-spacing);
+    }
+  }
+
+  .selected {
+    box-shadow: inset 0 0 5px 3px color-mix(in srgb, var(--bolao-c-gold), transparent 10%);
+    color: var(--bolao-c-white);
+    transition: all 0.2s;
+
+    @media (hover: hover) {
+      &:hover {
+        background-color: var(--bolao-c-gold-t3);
+        color: black;
+      }
     }
   }
 }

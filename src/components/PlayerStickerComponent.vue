@@ -64,7 +64,12 @@
         }}</span>
         <div class="ps-sticker__details">
           <div class="ps-sticker__detail-row">
-            <i class="pi pi-shield" />
+            <!-- <i class="pi pi-shield" /> -->
+            <img
+              class="ps-sticker__club-flag"
+              :src="`https://assets.omegafox.me/copa/countries_flags/${player.club.country.isoCode.toLowerCase()}.png`"
+              :alt="player.club.country.name"
+            />
             <span>{{ player.club.name }}</span>
           </div>
           <div class="ps-sticker__detail-row">
@@ -337,5 +342,11 @@ function handleImageError() {
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+}
+
+.ps-sticker__club-flag {
+  width: auto;
+  height: 10px;
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 30%));
 }
 </style>
