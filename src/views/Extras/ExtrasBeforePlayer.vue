@@ -391,14 +391,14 @@ function sortIcon(key: TSortKey): string {
   }
 
   .selected {
-    box-shadow: inset 0 0 5px 3px color-mix(in srgb, var(--bolao-c-gold), transparent 10%);
     color: var(--bolao-c-white);
+    box-shadow: inset 0 0 5px 3px color-mix(in srgb, var(--bolao-c-gold), transparent 10%);
     transition: all 0.2s;
 
     @media (hover: hover) {
       &:hover {
-        background-color: var(--bolao-c-gold-t3);
         color: black;
+        background-color: var(--bolao-c-gold-t3);
       }
     }
   }
