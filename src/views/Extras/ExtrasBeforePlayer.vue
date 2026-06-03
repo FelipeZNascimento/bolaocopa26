@@ -111,7 +111,7 @@
   />
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import type { IPlayer } from '@/stores/teams.types';
@@ -150,6 +150,14 @@ const searchQuery = ref('');
 const currentPage = ref(1);
 const itemsPerPage = ref(50);
 const selectedPlayer = ref<IPlayer | null>(props.selectedToggle.selectedPlayer || null);
+
+// ------ Watchers ------
+watch(
+  () => props.selectedToggle.selectedPlayer,
+  (newPlayer) => {
+    selectedPlayer.value = newPlayer || null;
+  },
+);
 
 // ------ Computed Properties ------
 const isLoading = computed(() => {
