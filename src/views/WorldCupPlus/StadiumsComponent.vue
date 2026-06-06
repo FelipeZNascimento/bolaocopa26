@@ -238,11 +238,11 @@ stadiumService.fetch();
 }
 
 .back-info {
-  align-items: center;
   display: flex;
   flex: 1;
   flex-direction: column;
   gap: var(--s-spacing);
+  align-items: center;
   justify-content: center;
   padding: var(--s-spacing) var(--m-spacing);
 }
@@ -281,8 +281,8 @@ stadiumService.fetch();
 
 .dialog-header-text {
   margin-left: var(--xs-spacing);
-  font-weight: 600;
   font-size: var(--m-font-size);
+  font-weight: 600;
 
   @media (width <= 768px) {
     font-size: var(--xs-font-size);

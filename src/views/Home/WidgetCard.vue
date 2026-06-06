@@ -135,10 +135,6 @@ const emit = defineEmits<{
 .toggle-mini-max-icon {
   position: absolute;
   right: var(--s-spacing);
-  font-size: var(--s-font-size);
-  color: var(--bolao-c-grey2);
-  cursor: pointer;
-  transition: color 0.15s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -146,6 +142,9 @@ const emit = defineEmits<{
   height: 30px;
   font-size: var(--s-font-size);
   color: var(--bolao-c-grey2);
+  cursor: pointer;
+  transition: color 0.15s ease;
+
   // background-color: var(--bolao-c-blue3);
   // border: 1px solid var(--bolao-c-blue1-t2);
   // border-radius: 8px;
