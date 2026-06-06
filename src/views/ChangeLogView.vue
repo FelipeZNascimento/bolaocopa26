@@ -34,6 +34,16 @@ const changelogEntries = ref([
   {
     changes: [
       '🐛 [Extras] Selected indicator was not being updated correctly',
+      '[WorldCup+] Changed icon for players weight',
+      '[WorldCup+] Improved stadiums stickers',
+      '[WorldCup+] Reordered players so now positions make more sense (coaches -> gks -> defenders -> midfielders -> strikers)',
+    ],
+    date: '0x/06/2026',
+    version: 'v1.0.16',
+  },
+  {
+    changes: [
+      '🐛 [Extras] Selected indicator was not being updated correctly',
       '[WorldCup+] Improvement on table for referees',
       '[WorldCup+] Google Maps links added for stadiums coordinates',
     ],

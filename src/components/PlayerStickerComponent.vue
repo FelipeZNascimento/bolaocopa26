@@ -63,7 +63,10 @@
           locale === 'pt-BR' ? player.position.description : player.position.descriptionEn
         }}</span>
         <div class="ps-sticker__details">
-          <div class="ps-sticker__detail-row">
+          <div
+            v-if="player.position.id !== 1"
+            class="ps-sticker__detail-row"
+          >
             <!-- <i class="pi pi-shield" /> -->
             <img
               class="ps-sticker__club-flag"
@@ -87,7 +90,7 @@
             v-if="player.weight"
             class="ps-sticker__detail-row"
           >
-            <i class="pi pi-arrows-v" />
+            <i class="pi pi-arrows-h" />
             <span>{{ player.weight }} kg</span>
           </div>
         </div>

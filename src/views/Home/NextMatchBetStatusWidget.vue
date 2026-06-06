@@ -102,7 +102,7 @@ const isLoading = computed(() => matchesStore.isLoading);
 
 // All NOT_STARTED matches sorted by timestamp
 const sortedNotStarted = computed(() =>
-  matchesStore.matches
+  matchesStore.nextMatches
     .filter((m) => m.status === MATCH_STATUS.NOT_STARTED)
     .sort((a, b) => parseInt(a.timestamp, 10) - parseInt(b.timestamp, 10)),
 );

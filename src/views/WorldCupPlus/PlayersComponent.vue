@@ -57,6 +57,16 @@ const teamService = new TeamService();
 const teamsStore = useTeamsStore();
 const { locale, t } = useI18n();
 
+const positionSortOrder: Record<number, number> = {
+  1: 1, // Técnico
+  2: 2, // Goleiro
+  3: 3, // Zagueiro
+  4: 4, // Lateral
+  5: 5, // Meia
+  6: 6, // Meia
+  7: 3, // Defensor
+};
+
 const isLoading = computed(() => teamsStore.isLoading);
 const allPlayers = computed(() =>
   teamsStore.teams
@@ -65,10 +75,10 @@ const allPlayers = computed(() =>
     .sort((a, b) => {
       const compareTeam =
         locale.value === 'pt-BR' ? a.team.name.localeCompare(b.team.name) : a.team.nameEn.localeCompare(b.team.nameEn);
-      const compareNumber = a.position.id - b.position.id;
+      const comparePosition = positionSortOrder[a.position.id] - positionSortOrder[b.position.id];
       const compareName = a.name.localeCompare(b.name);
 
-      return compareTeam || compareNumber || compareName;
+      return compareTeam || comparePosition || compareName;
     }),
 );
 

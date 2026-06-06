@@ -216,7 +216,7 @@ function handleClick() {
   padding: 2px var(--xs-spacing);
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 10px;
+  font-size: var(--xs-font-size);
   font-weight: 700;
   color: rgb(0 0 0 / 80%);
   text-transform: uppercase;

@@ -12,7 +12,6 @@
   >
     <div
       class="drag-handle"
-      :class="{ 'drag-handle--static': !draggable }"
       :draggable="draggable"
       role="button"
       :aria-label="'Reordenar widget'"
@@ -22,11 +21,20 @@
       <i
         v-if="draggable"
         class="pi pi-bars drag-icon"
+        :class="{ 'drag-handle--static': !draggable }"
         @touchstart.passive="emit('handleTouchStart', $event)"
       />
       <span class="widget-title">{{ title }}</span>
+      <i
+        class="pi toggle-mini-max-icon"
+        :class="isMinimized ? 'pi-angle-down' : 'pi-angle-up'"
+        @click="emit('toggleMiniMax')"
+      />
     </div>
-    <div class="widget-content">
+    <div
+      v-if="!isMinimized"
+      class="widget-content"
+    >
       <slot />
     </div>
   </div>
@@ -38,10 +46,11 @@ withDefaults(
     draggable?: boolean;
     isDragging: boolean;
     isDragOver: boolean;
+    isMinimized?: boolean;
     title: string;
     widgetId: string;
   }>(),
-  { draggable: true },
+  { draggable: true, isMinimized: false },
 );
 
 const emit = defineEmits<{
@@ -51,6 +60,7 @@ const emit = defineEmits<{
   dragstart: [];
   drop: [];
   handleTouchStart: [event: TouchEvent];
+  toggleMiniMax: [];
 }>();
 </script>
 
@@ -122,6 +132,37 @@ const emit = defineEmits<{
   }
 }
 
+.toggle-mini-max-icon {
+  position: absolute;
+  right: var(--s-spacing);
+  font-size: var(--s-font-size);
+  color: var(--bolao-c-grey2);
+  cursor: pointer;
+  transition: color 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  font-size: var(--s-font-size);
+  color: var(--bolao-c-grey2);
+  // background-color: var(--bolao-c-blue3);
+  // border: 1px solid var(--bolao-c-blue1-t2);
+  // border-radius: 8px;
+  transition:
+    background-color 0.15s ease,
+    transform 0.15s ease;
+
+  &:active {
+    background-color: var(--bolao-c-blue1-t2);
+    transform: scale(0.93);
+  }
+
+  &:hover {
+    color: var(--bolao-c-grey1);
+  }
+}
+
 .drag-icon {
   touch-action: none;
   cursor: grab;
@@ -158,6 +199,10 @@ const emit = defineEmits<{
   color: var(--bolao-c-grey3);
   text-transform: uppercase;
   letter-spacing: 0.06em;
+
+  @media (width <= 1024px) {
+    font-size: var(--xs-font-size);
+  }
 }
 
 .widget-content {

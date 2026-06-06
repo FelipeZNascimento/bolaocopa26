@@ -408,15 +408,6 @@ function openTeamModal(team: ITeam) {
   }
 }
 
-:deep(.player-sticker-popover) {
-  .p-popover {
-    padding: 0;
-    background: transparent;
-    border: none;
-    box-shadow: 0 10px 40px rgb(0 0 0 / 50%);
-  }
-}
-
 :deep(.player-name-hover) {
   font-weight: 500;
 }

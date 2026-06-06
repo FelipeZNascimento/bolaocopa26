@@ -20,16 +20,20 @@
         :draggable="false"
         :is-drag-over="false"
         :is-dragging="false"
-        :title="t('pushNotifications.prompt.title')"
+        :is-minimized="minimizedWidgets.includes('push-notifications')"
+        :title="WIDGET_TITLES['push-notifications']"
         widget-id="push-notifications"
+        @toggleMiniMax="onToggleminiMax('push-notifications')"
       >
         <PushNotificationsWidget @done="showPushCard = false" />
       </WidgetCard>
+      <!-- Only maximized widgets -->
       <WidgetCard
-        v-for="widgetId in visibleWidgets"
+        v-for="widgetId in visibleWidgets.filter((id) => isMobile || !minimizedWidgets.includes(id))"
         :key="widgetId"
         :widget-id="widgetId"
         :title="WIDGET_TITLES[widgetId]"
+        :is-minimized="minimizedWidgets.includes(widgetId)"
         :is-dragging="draggedId === widgetId"
         :is-drag-over="dragOverId === widgetId || touchTargetId === widgetId"
         @dragstart="onDragStart(widgetId)"
@@ -38,6 +42,7 @@
         @dragleave="onDragLeave"
         @drop="onDrop(widgetId)"
         @handle-touch-start="onTouchStart($event, widgetId)"
+        @toggleMiniMax="onToggleminiMax(widgetId)"
       >
         <NextMatchesWidget
           v-if="widgetId === 'next-matches'"
@@ -56,6 +61,25 @@
         <RankingWidget v-else-if="widgetId === 'ranking'" />
         <NewsWidget v-else-if="widgetId === 'news'" />
       </WidgetCard>
+      <!-- Only minimized widgets -->
+      <div v-if="!isMobile">
+        <WidgetCard
+          v-for="widgetId in visibleWidgets.filter((id) => minimizedWidgets.includes(id))"
+          :key="widgetId"
+          :widget-id="widgetId"
+          :title="WIDGET_TITLES[widgetId]"
+          :is-minimized="true"
+          :is-dragging="draggedId === widgetId"
+          :is-drag-over="dragOverId === widgetId || touchTargetId === widgetId"
+          @dragstart="onDragStart(widgetId)"
+          @dragend="onDragEnd"
+          @dragover="onDragOver(widgetId)"
+          @dragleave="onDragLeave"
+          @drop="onDrop(widgetId)"
+          @handle-touch-start="onTouchStart($event, widgetId)"
+          @toggleMiniMax="onToggleminiMax(widgetId)"
+        />
+      </div>
     </TransitionGroup>
   </div>
 </template>
@@ -92,6 +116,7 @@ type WidgetId =
   | 'logo'
   | 'news'
   | 'next-matches'
+  | 'push-notifications'
   | 'ranking'
   | 'rules'
   | 'social-groups'
@@ -104,6 +129,7 @@ const WIDGET_TITLES = computed<Record<WidgetId, string>>(() => ({
   logo: t('home.widgets.logo'),
   news: t('home.widgets.news'),
   'next-matches': t('home.widgets.nextMatches'),
+  'push-notifications': t('pushNotifications.prompt.title'),
   ranking: t('home.widgets.ranking'),
   rules: t('home.widgets.rules'),
   'social-groups': t('home.widgets.socialGroups'),
@@ -137,6 +163,7 @@ function checkFirstVisitForNewWidget(): boolean {
 }
 const BANNER_STORAGE_KEY = 'home-dashboard-banner-dismissed';
 const STORAGE_KEY = 'home-widget-order';
+const STORAGE_KEY_MINIMIZED = 'home-widget-minimized';
 
 // ------ Stores ------
 const matchesStore = useMatchesStore();
@@ -152,6 +179,28 @@ const showPushCard = ref('PushManager' in window && 'Notification' in window && 
 // ------ Initialization ------
 const matchService = new MatchService();
 matchService.fetchNextMatches();
+
+// ------ Handle Minimized/Maximized Widgets ------
+function loadMinimized(): WidgetId[] {
+  const minimized = localStorage.getItem(STORAGE_KEY_MINIMIZED);
+  return minimized ? (JSON.parse(minimized) as WidgetId[]) : [];
+}
+
+function onToggleminiMax(widgetId: WidgetId) {
+  console.log('calling here with: ', widgetId);
+  const index = minimizedWidgets.value.findIndex((id) => id === widgetId);
+  if (index === -1) {
+    minimizedWidgets.value.push(widgetId);
+  } else {
+    minimizedWidgets.value.splice(index, 1);
+  }
+
+  saveMiniMax();
+}
+
+function saveMiniMax() {
+  localStorage.setItem(STORAGE_KEY_MINIMIZED, JSON.stringify(minimizedWidgets.value));
+}
 
 // ------ Dashboard banner ------
 const isDashboardBannerDismissed = ref(localStorage.getItem(BANNER_STORAGE_KEY) === 'true');
@@ -184,17 +233,16 @@ function loadOrder(): WidgetId[] {
 }
 
 const widgetOrder = ref<WidgetId[]>(loadOrder());
+const minimizedWidgets = ref<WidgetId[]>(loadMinimized());
 
 function saveOrder() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(widgetOrder.value));
 }
-
 // ------ Computed ------
 const matches = computed(() => matchesStore.matches);
 const nextMatches = computed(() => matchesStore.nextMatches);
 const liveMatches = computed(() => matches.value.filter((m) => LIVE_GAME.includes(m.status)));
 const hasExtraBets = computed(() => extraBetsStore.activeProfileBets.length > 0);
-
 const visibleWidgets = computed(() =>
   widgetOrder.value.filter((id) => {
     if (id === 'live-matches') return liveMatches.value.length > 0;

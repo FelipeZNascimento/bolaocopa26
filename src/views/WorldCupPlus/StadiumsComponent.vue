@@ -32,18 +32,17 @@
       </template>
 
       <template #badge>
-        {{ stadium.city }}
+        {{ stadium.name }}
       </template>
 
       <template #overlay>
-        <strong class="overlay-name">{{ stadium.name }}</strong>
         <span class="overlay-sub">
           <img
             :src="`https://assets.omegafox.me/copa/countries_flags/${stadium.isoCode.toLowerCase()}.png`"
             :alt="`${locale === 'pt-BR' ? stadium.country : stadium.countryEn} Flag`"
             class="overlay-flag"
           />
-          {{ locale === 'pt-BR' ? stadium.country : stadium.countryEn }}
+          {{ stadium.city }}, {{ locale === 'pt-BR' ? stadium.country : stadium.countryEn }}
         </span>
       </template>
 
@@ -59,8 +58,12 @@
         <div class="back-info">
           <strong class="back-name">{{ stadium.name }}</strong>
           <div class="back-row">
-            <i class="pi pi-map-marker" />
-            <span>{{ locale === 'pt-BR' ? stadium.country : stadium.countryEn }}</span>
+            <img
+              :src="`https://assets.omegafox.me/copa/countries_flags/${stadium.isoCode.toLowerCase()}.png`"
+              :alt="`${locale === 'pt-BR' ? stadium.country : stadium.countryEn} Flag`"
+              class="overlay-flag"
+            />
+            <span> {{ stadium.city }}, {{ locale === 'pt-BR' ? stadium.country : stadium.countryEn }}</span>
           </div>
           <div class="back-row">
             <i class="pi pi-map-marker" />
@@ -77,13 +80,15 @@
             <i class="pi pi-users" />
             <span>{{ stadium.capacity.toLocaleString(locale) }}</span>
           </div>
-          <PrimeButton
-            rel="noopener noreferrer"
-            class="link-row"
-            icon="pi pi-search-plus"
-            :label="t('common.seeMore')"
-            @click="(event: MouseEvent) => onStadiumClick(stadium, event)"
-          />
+          <div>
+            <PrimeButton
+              rel="noopener noreferrer"
+              class="link-row"
+              icon="pi pi-search-plus"
+              :label="t('common.seeMore')"
+              @click="(event: MouseEvent) => onStadiumClick(stadium, event)"
+            />
+          </div>
         </div>
       </template>
     </WorldCupLandscapeStickerComponent>
@@ -101,8 +106,10 @@
         :alt="`${locale === 'pt-BR' ? lightbox.stadium?.country : lightbox.stadium?.countryEn} Flag`"
         class="overlay-flag"
       />
-      {{ locale === 'pt-BR' ? lightbox.stadium?.country : lightbox.stadium?.countryEn }} -
-      {{ lightbox.stadium?.name }}
+      <span class="dialog-header-text">
+        {{ locale === 'pt-BR' ? lightbox.stadium?.country : lightbox.stadium?.countryEn }} -
+        {{ lightbox.stadium?.name }}
+      </span>
     </template>
     <img
       :src="`https://assets.omegafox.me/copa/2026/stadiums/${lightbox.stadium?.id}.png`"
@@ -154,7 +161,7 @@ stadiumService.fetch();
     gap: var(--m-spacing);
   }
 
-  @media (width <= 380px) {
+  @media (width <= 425px) {
     grid-template-columns: 1fr;
   }
 }
@@ -231,16 +238,17 @@ stadiumService.fetch();
 }
 
 .back-info {
+  align-items: center;
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: var(--xs-spacing);
+  gap: var(--s-spacing);
   justify-content: center;
   padding: var(--s-spacing) var(--m-spacing);
 }
 
 .back-name {
-  font-size: var(--xs-font-size);
+  font-size: var(--s-font-size);
   font-weight: 800;
   line-height: 1.2;
   color: #1a1a1a;
@@ -252,12 +260,12 @@ stadiumService.fetch();
   display: flex;
   gap: 4px;
   align-items: center;
-  font-size: 11px;
+  font-size: var(--xs-font-size);
   font-weight: 600;
   color: #444;
 
   i {
-    font-size: 11px;
+    font-size: var(--m-font-size);
     color: var(--sticker-color-dark);
   }
 }
@@ -266,8 +274,18 @@ stadiumService.fetch();
   display: flex;
   gap: 4px;
   align-items: center;
-  font-size: 11px;
+  font-size: var(--xs-font-size);
   font-weight: 600;
   color: #444;
+}
+
+.dialog-header-text {
+  margin-left: var(--xs-spacing);
+  font-weight: 600;
+  font-size: var(--m-font-size);
+
+  @media (width <= 768px) {
+    font-size: var(--xs-font-size);
+  }
 }
 </style>
