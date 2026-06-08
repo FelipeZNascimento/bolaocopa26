@@ -105,7 +105,7 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { EXTRA_BETS_LABELS, EXTRA_BETS_VALUES } from '@/constants/bets';
+import { EXTRA_BETS_LABELS, EXTRA_BETS_VALUES, STAGE_ID } from '@/constants/bets';
 import { useExtraBetStore } from '@/stores/extraBet';
 
 import type { IToggleOption } from './extrasView.types';
@@ -139,9 +139,17 @@ function isExtraCorrect(option: IToggleOption) {
   if (option.value === EXTRA_BETS_VALUES.BEST_PLAYER || option.value === EXTRA_BETS_VALUES.TOP_SCORER) {
     return extraType.results.find((result) => result.player?.id === option.selectedPlayer?.id);
   } else {
-    return extraType.results.find(
-      (result) => result.team?.id && option.selectedTeam?.some((e) => e.team.id === result.team?.id),
-    );
+    if (option.value === EXTRA_BETS_VALUES.CHAMPION) {
+      return extraType.results.find(
+        (result) =>
+          result.team?.id &&
+          option.selectedTeam?.some((e) => e.team.id === result.team?.id && e.stageId === STAGE_ID.WINNER),
+      );
+    } else {
+      return extraType.results.find(
+        (result) => result.team?.id && option.selectedTeam?.some((e) => e.team.id === result.team?.id),
+      );
+    }
   }
 }
 </script>

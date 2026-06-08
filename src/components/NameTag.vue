@@ -83,7 +83,11 @@ function isFavorite(): boolean {
   display: flex;
   flex-direction: row;
   align-items: center;
-  max-width: 120px;
+  max-width: 200px;
+
+  @media (width <= 768px) {
+    max-width: 120px;
+  }
 }
 
 .username {

@@ -35,6 +35,16 @@ export const EXTRA_BETS_VALUES = {
   CHAMPION: 0,
 };
 
+export enum STAGE_ID {
+  BEFORE_START = 1,
+  GROUP_STAGE = 2,
+  BEFORE_QUARTERFINALS = 3,
+  QUARTERFINALS = 4,
+  SEMIFINALS = 5,
+  FINAL = 6,
+  WINNER = 7,
+}
+
 export const EXTRA_BETS_LABELS: Record<TEXTRA_BETS_VALUES, string> = {
   [EXTRA_BETS_VALUES.OFFENSE]: 'extraBets.bestOffense',
   [EXTRA_BETS_VALUES.DEFENSE]: 'extraBets.bestDefense',

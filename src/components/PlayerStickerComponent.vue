@@ -43,7 +43,7 @@
         <img
           v-if="player.fifa.pictureId && !imageError"
           class="ps-sticker__img"
-          :src="`https://digitalhub.fifa.com/transform/${player.fifa.pictureId.toLowerCase()}/`"
+          :src="`https://digitalhub.fifa.com/transform/${player.fifa.pictureId.toLowerCase()}/?&io=transform:fill,aspectratio:2x1,width:640,gravity:top&quality=100`"
           :alt="player.name"
           @load="isLoadingImage = false"
           @error="handleImageError"
@@ -275,8 +275,8 @@ function handleImageError() {
 }
 
 .ps-sticker__img {
-  width: 100%;
-  height: 100%;
+  width: 110%;
+  height: 110%;
   object-fit: cover;
   object-position: top;
   filter: contrast(1.05) saturate(1.1);
