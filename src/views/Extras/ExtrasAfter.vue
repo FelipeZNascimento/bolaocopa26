@@ -407,11 +407,11 @@ function scrollToSection(el: HTMLElement | null) {
 .result-card {
   display: flex;
   flex-direction: column;
+  min-height: 200px;
   overflow: hidden;
   background-color: var(--bolao-c-blue4);
   border: 1px solid var(--bolao-c-blue3);
   border-radius: var(--border-radius);
-  min-height: 200px;
 
   &__header {
     display: flex;

@@ -401,10 +401,11 @@ watch(isVisible, (newValue) => {
       font-size: var(--m-font-size);
     }
   }
+
   .player-position {
+    font-size: var(--s-font-size);
     font-weight: 600;
     color: var(--bolao-c-orange);
-    font-size: var(--s-font-size);
   }
 
   .player-info {
