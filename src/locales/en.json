@@ -374,6 +374,11 @@
         "backButton": "Back",
         "confirmButton": "Confirm change"
       }
+    },
+    "stages": {
+      "final": "You still scored {points}pts as {team} reached the final.",
+      "semifinal": "You still scored {points} pts as {team} reached the semifinals.",
+      "quarterfinal": "You still scored {points} pts as {team} reached the quarterfinals."
     }
   },
   "extraBetsDetailsModal": {

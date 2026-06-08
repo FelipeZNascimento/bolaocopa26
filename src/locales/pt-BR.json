@@ -374,6 +374,11 @@
         "backButton": "Voltar",
         "confirmButton": "Confirmar alteração"
       }
+    },
+    "stages": {
+      "final": "Você fez {points} pontos: {team} chegou à final.",
+      "semifinal": "Você fez {points} pontos: {team} caiu nas semi-finais.",
+      "quarterfinal": "Você fez {points} pontos: {team} caiu nas quartas."
     }
   },
   "extraBetsDetailsModal": {

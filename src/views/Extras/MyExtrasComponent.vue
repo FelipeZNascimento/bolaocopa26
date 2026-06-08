@@ -23,69 +23,81 @@
         }"
         @click="onSelectToggle(option)"
       >
-        <span class="bet-radio" />
-        <div class="bet-label">
-          {{ t(EXTRA_BETS_LABELS[option.value]) }}
-          <span v-if="option.value === EXTRA_BETS_VALUES.CHAMPION">*</span>
-          <p
-            v-if="option.value === EXTRA_BETS_VALUES.DEFENSE || option.value === EXTRA_BETS_VALUES.OFFENSE"
-            style="font-size: var(--xs-font-size)"
-          >
-            ({{ t('common.groupStage') }})
-          </p>
-        </div>
-        <div
-          v-if="option.selectedPlayer"
-          class="bet-value"
-        >
-          <div class="bet-value__entry">
-            <img
-              class="bet-flag"
-              :src="`https://assets.omegafox.me/copa/countries_flags/${option.selectedPlayer.team.isoCode.toLowerCase()}.png`"
-              :alt="`${option.selectedPlayer.team.name} Flag`"
-            />
-            {{ option.selectedPlayer.name }}
+        <div style="display: flex; gap: var(--xl-spacing); align-items: center; justify-content: space-between">
+          <span class="bet-radio" />
+          <div class="bet-label">
+            {{ t(EXTRA_BETS_LABELS[option.value]) }}
+            <span v-if="option.value === EXTRA_BETS_VALUES.CHAMPION">*</span>
+            <p
+              v-if="option.value === EXTRA_BETS_VALUES.DEFENSE || option.value === EXTRA_BETS_VALUES.OFFENSE"
+              style="font-size: var(--xs-font-size)"
+            >
+              ({{ t('common.groupStage') }})
+            </p>
           </div>
-        </div>
-        <div
-          v-else-if="option.selectedTeam?.length"
-          class="bet-value"
-        >
           <div
-            v-for="(entry, index) in option.selectedTeam"
-            :key="entry.team.id"
-            :class="{ 'bet-value__entry--replaced': index > 0 }"
-            class="bet-value__entry"
+            v-if="option.selectedPlayer"
+            class="bet-value"
           >
-            <img
-              class="bet-flag"
-              :src="`https://assets.omegafox.me/copa/countries_flags/${entry.team.isoCode.toLowerCase()}.png`"
-              :alt="`${entry.team.name} Flag`"
-            />
-            {{ locale === 'pt-BR' ? entry.team.name : entry.team.nameEn }}
+            <div class="bet-value__entry">
+              <img
+                class="bet-flag"
+                :src="`https://assets.omegafox.me/copa/countries_flags/${option.selectedPlayer.team.isoCode.toLowerCase()}.png`"
+                :alt="`${option.selectedPlayer.team.name} Flag`"
+              />
+              {{ option.selectedPlayer.name }}
+            </div>
+          </div>
+          <div
+            v-else-if="option.selectedTeam?.length"
+            class="bet-value"
+          >
+            <div
+              v-for="(entry, index) in option.selectedTeam"
+              :key="entry.team.id"
+              :class="{ 'bet-value__entry--replaced': index > 0 }"
+              class="bet-value__entry"
+            >
+              <img
+                class="bet-flag"
+                :src="`https://assets.omegafox.me/copa/countries_flags/${entry.team.isoCode.toLowerCase()}.png`"
+                :alt="`${entry.team.name} Flag`"
+              />
+              {{ locale === 'pt-BR' ? entry.team.name : entry.team.nameEn }}
+            </div>
+          </div>
+          <span
+            v-else
+            class="bet-empty"
+          >
+            —
+          </span>
+          <PrimeButton
+            v-if="onChampionChange && option.value === EXTRA_BETS_VALUES.CHAMPION"
+            :disabled="isLoading"
+            icon="pi pi-pencil"
+            severity="secondary"
+            size="small"
+            @click.stop="onChampionChange"
+          />
+          <div
+            v-if="isBetFinished(option)"
+            v-tooltip.top="isExtraCorrect(option) ? 'Congratulations!' : 'Better luck next time'"
+            class="bet-result"
+            :class="isExtraCorrect(option) ? 'bet-result--correct' : 'bet-result--wrong'"
+          >
+            <i :class="isExtraCorrect(option) ? 'pi pi-trophy' : 'pi pi-times'" />
           </div>
         </div>
-        <span
-          v-else
-          class="bet-empty"
-        >
-          —
-        </span>
-        <PrimeButton
-          v-if="onChampionChange && option.value === EXTRA_BETS_VALUES.CHAMPION"
-          :disabled="isLoading"
-          icon="pi pi-pencil"
-          severity="secondary"
-          size="small"
-          @click.stop="onChampionChange"
-        />
-        <div
-          v-if="isBetFinished(option)"
-          v-tooltip.top="isExtraCorrect(option) ? 'Congratulations!' : 'Better luck next time'"
-          class="bet-result"
-          :class="isExtraCorrect(option) ? 'bet-result--correct' : 'bet-result--wrong'"
-        >
-          <i :class="isExtraCorrect(option) ? 'pi pi-trophy' : 'pi pi-times'" />
+        <div v-if="option.value === EXTRA_BETS_VALUES.CHAMPION && championProgressiveMatch && userRanking">
+          <PrimeDivider />
+          {{
+            stageTranslator(
+              championProgressiveMatch.team,
+              userRanking.accumulatedScore.extras.champion,
+              championProgressiveMatch.stageId,
+            )
+          }}
         </div>
       </div>
     </div>
@@ -105,12 +117,17 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import type { IExtraBetResult, TStageId } from '@/stores/extraBet.types';
+import type { ITeam } from '@/stores/teams.types';
+
 import { EXTRA_BETS_LABELS, EXTRA_BETS_VALUES, STAGE_ID } from '@/constants/bets';
+import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useExtraBetStore } from '@/stores/extraBet';
+import { useRankingStore } from '@/stores/ranking';
 
 import type { IToggleOption } from './extrasView.types';
 
-defineProps<{
+const props = defineProps<{
   extraBetsOptions: IToggleOption[];
   isLoading: boolean;
   onChampionChange?: () => void;
@@ -121,9 +138,27 @@ defineProps<{
 // ------ Services & Stores ------
 const { locale, t } = useI18n();
 const extraBetStore = useExtraBetStore();
+const rankingStore = useRankingStore();
+const activeProfileStore = useActiveProfileStore();
 
 // ------ Computed Properties ------
+const activeProfile = computed(() => activeProfileStore.activeProfile);
+const userRanking = computed(() => (activeProfile.value ? rankingStore.getUserRanking(activeProfile.value?.id) : null));
 const extraBetsResults = computed(() => extraBetStore.results);
+const championProgressiveMatch = computed(() => {
+  const championBet = props.extraBetsOptions.find(
+    (option) => option.value === EXTRA_BETS_VALUES.CHAMPION,
+  )?.selectedTeam;
+  const championResults = extraBetsResults.value.find((bet) => bet.extraType === EXTRA_BETS_VALUES.CHAMPION)?.results;
+
+  if (!championResults || !championBet) {
+    return null;
+  }
+
+  const championMatch: IExtraBetResult | null =
+    championResults.find((result) => result.team.id === championBet[0].team.id) ?? null;
+  return championMatch;
+});
 
 // ------ Functions ------
 
@@ -152,6 +187,20 @@ function isExtraCorrect(option: IToggleOption) {
     }
   }
 }
+
+function stageTranslator(team: ITeam, points: number, stageId: TStageId) {
+  const teamName = locale.value === 'pt-BR' ? team.name : team.nameEn;
+  switch (stageId) {
+    case STAGE_ID.FINAL:
+      return t('extraBets.stages.final', { points: points, team: teamName });
+    case STAGE_ID.QUARTERFINALS:
+      return t('extraBets.stages.quarterfinal', { points: points, team: teamName });
+    case STAGE_ID.SEMIFINALS:
+      return t('extraBets.stages.semifinal', { points: points, team: teamName });
+    default:
+      return '';
+  }
+}
 </script>
 <style lang="scss" scoped>
 .update-overlay {
@@ -174,10 +223,7 @@ function isExtraCorrect(option: IToggleOption) {
 }
 
 .bet-row {
-  display: flex;
-  gap: var(--xl-spacing);
   align-items: center;
-  justify-content: space-between;
   padding: var(--s-spacing) var(--m-spacing);
   font-size: var(--m-font-size);
   cursor: pointer;

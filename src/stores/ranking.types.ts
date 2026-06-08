@@ -17,6 +17,13 @@ export interface IRankingResponse {
 export interface IRankingScore {
   betCount: number;
   exacts: number;
+  extras: {
+    champion: number;
+    defense: number;
+    offense: number;
+    points: number;
+    striker: number;
+  };
   gameCount: number;
   misses: number;
   oneScores: number;

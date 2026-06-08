@@ -33,12 +33,15 @@ import { ref } from 'vue';
 const changelogEntries = ref([
   {
     changes: [
-      '🐛 [Extras] Selected indicator was not being updated correctly',
+      '[Extras] Improved display of progressive bets',
       '[WorldCup+] Changed icon for players weight',
       '[WorldCup+] Improved stadiums stickers',
+      '[WorldCup+] Improved players images positioning',
       '[WorldCup+] Reordered players so now positions make more sense (coaches -> gks -> defenders -> midfielders -> strikers)',
+      '🐛 [Extras] Selected indicator was not being updated correctly',
+      '🐛 [Ranking] Selector for with/without extras was inverted',
     ],
-    date: '0x/06/2026',
+    date: '08/06/2026',
     version: 'v1.0.16',
   },
   {
