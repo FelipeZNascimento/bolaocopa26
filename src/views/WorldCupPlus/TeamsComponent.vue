@@ -83,7 +83,11 @@ const teams = computed(() => teamsStore.teams.filter((team) => team.id !== 33));
 const searchQuery = ref('');
 
 const filteredTeams = computed(() => {
-  const q = searchQuery.value.toLowerCase().trim();
+  const q = searchQuery.value
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '');
   if (!q)
     return locale.value === 'pt-BR'
       ? teams.value.toSorted((a, b) => a.name.localeCompare(b.name))
@@ -91,13 +95,41 @@ const filteredTeams = computed(() => {
 
   const filtered = teams.value.filter(
     (team) =>
-      team.name.toLowerCase().includes(q) ||
-      team.nameEn.toLowerCase().includes(q) ||
-      team.abbreviation.toLowerCase().includes(q) ||
-      team.abbreviationEn.toLowerCase().includes(q) ||
-      team.confederation.name.toLowerCase().includes(q) ||
-      team.confederation.nameEn.toLowerCase().includes(q) ||
-      team.confederation.abbreviation.toLowerCase().includes(q),
+      team.name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q) ||
+      team.nameEn
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q) ||
+      team.abbreviation
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q) ||
+      team.abbreviationEn
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q) ||
+      team.confederation.name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q) ||
+      team.confederation.nameEn
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q) ||
+      team.confederation.abbreviation
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q),
   );
 
   return locale.value === 'pt-BR'

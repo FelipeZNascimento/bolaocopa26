@@ -87,19 +87,55 @@ const currentPage = ref(1);
 const itemsPerPage = ref(50);
 
 const filteredPlayers = computed(() => {
-  const q = searchQuery.value.toLowerCase().trim();
+  const q = searchQuery.value
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '');
   if (!q || q.length < 2) return allPlayers.value;
 
   return allPlayers.value.filter(
     (player) =>
-      player.position.description.toLowerCase().includes(q) ||
-      player.position.descriptionEn.toLowerCase().includes(q) ||
-      player.name.toLowerCase().includes(q) ||
-      player.team.name.toLowerCase().includes(q) ||
-      player.team.nameEn.toLowerCase().includes(q) ||
-      player.team.abbreviation.toLowerCase().includes(q) ||
-      player.team.abbreviationEn.toLowerCase().includes(q) ||
-      player.club.name.toLowerCase().includes(q),
+      player.position.description
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q) ||
+      player.position.descriptionEn
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q) ||
+      player.name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q) ||
+      player.team.name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q) ||
+      player.team.nameEn
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q) ||
+      player.team.abbreviation
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q) ||
+      player.team.abbreviationEn
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q) ||
+      player.club.name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q),
   );
 });
 

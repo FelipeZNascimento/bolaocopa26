@@ -59,12 +59,10 @@ const activeProfile = computed(() => activeProfileStore.activeProfile);
 
 // ------ Functions ------
 function handleUserClick() {
-  console.log('User clicked:', props.user.nickname);
   if (!props.isClickable) {
     return;
   }
 
-  console.log('Opening User Tracking Modal for user:', props.user.nickname);
   isUserTrackingModalOpen.value = true;
 }
 

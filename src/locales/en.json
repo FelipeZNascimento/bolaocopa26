@@ -30,6 +30,10 @@
     "capacity": "Capacity: {capacity} attendees",
     "stadium": "Stadium",
     "referee": "Referee",
+    "weather": "Weather",
+    "temperature": "Temperature",
+    "humidity": "Humidity",
+    "windSpeed": "Wind speed",
     "dateAndTime": "Date and Time",
     "round": "Round",
     "countdown": "There are {countdown} left"

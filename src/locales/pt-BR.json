@@ -30,6 +30,10 @@
     "capacity": "Capacidade: {capacity} pessoas",
     "stadium": "Estádio",
     "referee": "Árbitro",
+    "weather": "Tempo",
+    "temperature": "Temperatura",
+    "humidity": "Umidade",
+    "windSpeed": "Vento",
     "dateAndTime": "Data e Hora",
     "round": "Rodada",
     "countdown": "Faltam {countdown}"

@@ -104,13 +104,8 @@
                 <ClickableTeamCard
                   :team="result.team"
                   :is-loading="isLoading"
+                  :title="isPlayerType(extraBetType.value) && result.player ? result.player.name : ''"
                 />
-                <span
-                  v-if="isPlayerType(extraBetType.value) && result.player"
-                  class="result-item__player"
-                >
-                  {{ result.player.name }}
-                </span>
               </div>
             </template>
             <div
@@ -151,6 +146,7 @@
         :key="teamOrPlayer.team.id"
         :team="teamOrPlayer.team"
         :handle-click="() => handleTeamClick(teamOrPlayer)"
+        :title="isPlayer(teamOrPlayer) ? teamOrPlayer.player.name : ''"
         :is-loading="isLoading"
         :see-more="true"
         :counter="filterBetsByType(teamOrPlayer.bets, selectedToggle.value).length"
@@ -331,6 +327,10 @@ function handleCloseDetailsModal() {
 function handleTeamClick(teamOrPlayer: IPlayerWithExtras | ITeamWithExtras) {
   selectedItem.value = teamOrPlayer;
   isDetailsModalOpen.value = true;
+}
+
+function isPlayer(element: IPlayerWithExtras | ITeamWithExtras): element is IPlayerWithExtras {
+  return (<IPlayerWithExtras>element).player !== undefined;
 }
 
 function isPlayerType(extraType: TEXTRA_BETS_VALUES) {
