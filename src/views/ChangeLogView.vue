@@ -32,6 +32,14 @@ import { ref } from 'vue';
 
 const changelogEntries = ref([
   {
+    changes: [
+      '[App] Success notification/toast was impossible to read on light mode',
+      '[Extras] Improved display when related to players',
+    ],
+    date: '09/06/2026',
+    version: 'v1.0.20',
+  },
+  {
     changes: ['🐛 [Extras] MyExtras component not being rendered'],
     date: '09/06/2026',
     version: 'v1.0.19',
