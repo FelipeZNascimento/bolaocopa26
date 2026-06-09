@@ -293,10 +293,10 @@ $colors: (
   --p-datatable-row-hover-color: var(--bolao-c-white) !important;
 
   // Toast
-  --p-toast-success-background: var(--bolao-c-mint-t1) !important;
+  --p-toast-success-background: var(--bolao-c-green) !important;
   --p-toast-success-border-color: var(--bolao-c-mint-d1) !important;
-  --p-toast-success-color: var(--text-color) !important;
-  --p-toast-success-detail-color: var(--text-color) !important;
+  --p-toast-success-color: var(--bolao-c-white) !important;
+  --p-toast-success-detail-color: var(--bolao-c-grey1) !important;
 
   // Chart
   --surface-card: var(--bolao-c-white-t3) !important;

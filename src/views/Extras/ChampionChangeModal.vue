@@ -335,7 +335,7 @@ watch(isVisible, (newValue) => {
 
 .teams-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: var(--m-spacing);
   padding: var(--xs-spacing) var(--xs-spacing) var(--m-spacing);
 }

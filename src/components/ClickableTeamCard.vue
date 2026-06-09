@@ -1,11 +1,11 @@
 <template>
-  <div style="min-width: 100px">
-    <div
+  <div style="width: 150px">
+    <!-- <div
       v-if="title"
       style="font-size: var(--xs-font-size); text-align: center"
     >
-      {{ t(title) }}
-    </div>
+      {{ title }}
+    </div> -->
     <div
       class="team-card"
       :class="{ selected: isSelected, clickable: !!handleClick }"
@@ -28,7 +28,16 @@
           class="team-flag"
         />
       </div>
-      <div class="team-name">
+      <div
+        v-if="title"
+        class="team-name"
+      >
+        {{ title }}
+      </div>
+      <div
+        v-else
+        class="team-name"
+      >
         {{ locale === 'pt-BR' ? team.name : team.nameEn }}
       </div>
       <div
@@ -77,7 +86,7 @@ const { locale, t } = useI18n();
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  min-height: 100px;
+  min-height: 140px;
   padding: 0;
   overflow: hidden;
   background: linear-gradient(150deg, var(--bolao-c-blue3-t3) 0%, var(--bolao-c-blue5-t2) 60%);
@@ -139,8 +148,8 @@ const { locale, t } = useI18n();
 }
 
 .team-flag {
-  width: 64px;
-  height: 40px;
+  width: 96px;
+  height: 60px;
   object-fit: cover;
   border-radius: 3px;
   filter: drop-shadow(0 2px 6px rgb(0 0 0 / 40%));
