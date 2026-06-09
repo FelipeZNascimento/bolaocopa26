@@ -35,6 +35,7 @@ const changelogEntries = ref([
     changes: [
       '[Extras] Improved display of progressive bets',
       '[Extras] Now will show points for each extra separately',
+      '[WorldCup+] Images added for players (more to come when available)',
       '[WorldCup+] Changed icon for players weight',
       '[WorldCup+] Improved stadiums stickers',
       '[WorldCup+] Improved players images positioning',
@@ -43,7 +44,7 @@ const changelogEntries = ref([
       '🐛 [Extras] Selected indicator was not being updated correctly',
       '🐛 [Ranking] Selector for with/without extras was inverted',
     ],
-    date: '08/06/2026',
+    date: '09/06/2026',
     version: 'v1.0.16',
   },
   {
