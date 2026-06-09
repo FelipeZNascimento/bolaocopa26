@@ -122,7 +122,7 @@ async function handleTeamClick(team: ITeam) {
 <style lang="scss" scoped>
 .teams-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
   gap: var(--m-spacing);
   width: 100%;
 

@@ -1,11 +1,5 @@
 <template>
-  <div style="width: 150px">
-    <!-- <div
-      v-if="title"
-      style="font-size: var(--xs-font-size); text-align: center"
-    >
-      {{ title }}
-    </div> -->
+  <div class="clickable-team-card-outer">
     <div
       class="team-card"
       :class="{ selected: isSelected, clickable: !!handleClick }"
@@ -80,6 +74,13 @@ const { locale, t } = useI18n();
   backdrop-filter: blur(2px);
 }
 
+.clickable-team-card-outer {
+  width: 130px;
+
+  @media (width <= 768px) {
+    width: 90px;
+  }
+}
 .team-card {
   position: relative;
   display: flex;
