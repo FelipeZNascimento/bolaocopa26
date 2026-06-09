@@ -168,18 +168,56 @@ const activeProfile = computed(() => activeProfileStore.activeProfile);
 const allPlayers = computed(() => teamsStore.players);
 
 const filteredPlayers = computed(() => {
-  const q = searchQuery.value.toLowerCase().trim();
+  const q = searchQuery.value
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '');
+
+  console.log(q);
   if (!q || q.length < 2) return allPlayers.value;
   return allPlayers.value.filter(
     (p) =>
-      p.position.description.toLowerCase().includes(q) ||
-      p.position.descriptionEn.toLowerCase().includes(q) ||
-      p.name.toLowerCase().includes(q) ||
-      p.team.name.toLowerCase().includes(q) ||
-      p.team.nameEn.toLowerCase().includes(q) ||
-      p.team.abbreviation.toLowerCase().includes(q) ||
-      p.team.abbreviationEn.toLowerCase().includes(q) ||
-      p.club.name.toLowerCase().includes(q),
+      p.position.description
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q) ||
+      p.position.descriptionEn
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q) ||
+      p.name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q) ||
+      p.team.name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q) ||
+      p.team.nameEn
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q) ||
+      p.team.abbreviation
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q) ||
+      p.team.abbreviationEn
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q) ||
+      p.club.name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q),
   );
 });
 

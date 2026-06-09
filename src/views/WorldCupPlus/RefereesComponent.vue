@@ -99,11 +99,29 @@ function getAgeValue(dateOfBirth: string): number {
 }
 
 const filteredReferees = computed(() => {
-  const q = searchQuery.value.toLowerCase().trim();
+  const q = searchQuery.value
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '');
   if (!q) return refereesStore.referees;
   return refereesStore.referees.filter(
     (r) =>
-      r.name.toLowerCase().includes(q) || r.country.toLowerCase().includes(q) || r.countryEn.toLowerCase().includes(q),
+      r.name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q) ||
+      r.country
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q) ||
+      r.countryEn
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/\p{Diacritic}/gu, '')
+        .includes(q),
   );
 });
 

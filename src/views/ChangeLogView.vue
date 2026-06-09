@@ -45,7 +45,7 @@ const changelogEntries = ref([
       '🐛 [Ranking] Selector for with/without extras was inverted',
     ],
     date: '09/06/2026',
-    version: 'v1.0.16',
+    version: 'v1.0.18',
   },
   {
     changes: [

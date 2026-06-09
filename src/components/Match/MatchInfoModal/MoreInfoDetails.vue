@@ -6,17 +6,19 @@
         class="outer"
       >
         <div class="match-info">
+          <StadiumStickerComponent :stadium="match.stadium" />
           <div class="info-section">
-            <h3><i class="pi pi-building" /> {{ t('matches.stadium') }}</h3>
-            <p class="info-title">
-              {{ match.stadium.name }}
-            </p>
-            <p class="info-detail">{{ match.stadium.city }}, {{ match.stadium.country }}</p>
-            <p class="info-detail">
-              {{ t('matches.capacity', { capacity: match.stadium.capacity.toLocaleString('pt-BR') }) }}
+            <h3><i class="pi pi-sun" /><i class="pi pi-cloud" /> {{ t('matches.weather') }}</h3>
+            <p class="info-title">{{ match.weather?.temperature ?? '10' }} °C</p>
+            <p class="info-detail">{{ t('matches.humidity') }}: {{ match.weather?.humidity ?? '62' }}%</p>
+            <p class="info-detail">{{ t('matches.windSpeed') }}: {{ match.weather?.windSpeed ?? '5' }}km/h</p>
+            <p
+              v-if="locale === 'pt-BR'"
+              class="info-detail"
+            >
+              {{ match.weather?.description ?? 'Noite parcialmente nublada' }}
             </p>
           </div>
-
           <div class="info-section">
             <h3><i class="pi pi-user" /> {{ t('matches.referee') }}</h3>
             <p class="info-title">
@@ -33,7 +35,7 @@
               {{ clockStore.getFormattedDate(parseInt(match.timestamp, 10)) }}
             </p>
             <p class="info-detail">
-              {{ clockStore.getFormattedTime(parseInt(match.timestamp, 10)) }}
+              <i class="pi pi-clock" /> {{ clockStore.getFormattedTime(parseInt(match.timestamp, 10)) }}
             </p>
             <p
               v-if="countdown"
@@ -46,10 +48,10 @@
 
           <div class="info-section">
             <h3><i class="pi pi-flag" /> {{ t('matches.round') }}</h3>
-            <p class="info-title">
+            <p class="info-detail">
               {{ clockStore.getRoundName(match.round) }}
             </p>
-            <p class="info-title">{{ match.group ? `${t('matches.group', { group: match.group })}` : '' }}</p>
+            <p class="info-detail">{{ match.group ? `${t('matches.group', { group: match.group })}` : '' }}</p>
           </div>
         </div>
       </div>
@@ -62,6 +64,7 @@ import { useI18n } from 'vue-i18n';
 
 import type { IMatch } from '@/stores/matches.types';
 
+import StadiumStickerComponent from '@/components/StadiumStickerComponent.vue';
 import { useClockStore } from '@/stores/clock';
 
 const props = defineProps<{
@@ -86,15 +89,15 @@ const countdown = computed(() => {
 
 .match-info {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--l-spacing);
-  padding: var(--l-spacing) 0;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: var(--s-spacing);
+  padding: var(--s-spacing) 0;
 }
 
 .info-section {
   padding: var(--m-spacing);
   background-color: var(--bolao-c-blue3-d1);
-  border-radius: var(--border-radius);
+  // border-radius: var(--border-radius);
 }
 
 .info-section h3 {
@@ -108,15 +111,19 @@ const countdown = computed(() => {
 
 .info-section .info-title {
   margin-bottom: var(--s-spacing);
-  font-size: 1.1rem;
+  font-size: var(--s-font-size);
   font-weight: bold;
   color: var(--bolao-c-white);
 }
 
 .info-section .info-detail {
   margin-bottom: var(--xs-spacing);
-  font-size: 0.9rem;
+  font-size: var(--xs-font-size);
   color: var(--bolao-c-grey1-t2);
+}
+.overlay-flag {
+  height: 12px;
+  border-radius: 2px;
 }
 
 .expand-enter-active,
