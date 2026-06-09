@@ -81,23 +81,56 @@
             @click.stop="onChampionChange"
           />
           <div
-            v-if="isBetFinished(option)"
-            v-tooltip.top="isExtraCorrect(option) ? 'Congratulations!' : 'Better luck next time'"
-            class="bet-result"
-            :class="isExtraCorrect(option) ? 'bet-result--correct' : 'bet-result--wrong'"
+            v-if="isBetFinished(option) && isExtraCorrect(option)"
+            v-tooltip.top="t('extraBets.correctBet')"
+            class="bet-result bet-result--correct"
           >
-            <i :class="isExtraCorrect(option) ? 'pi pi-trophy' : 'pi pi-times'" />
+            <i class="pi pi-trophy" />
+          </div>
+          <div
+            v-else-if="
+              isBetFinished(option) &&
+              !isExtraCorrect(option) &&
+              option.value === EXTRA_BETS_VALUES.CHAMPION &&
+              championProgressiveMatch
+            "
+            v-tooltip.top="t('extraBets.progressiveBet')"
+            class="bet-result bet-result--almost"
+          >
+            <i class="pi pi-sliders-h" />
+          </div>
+          <div
+            v-else-if="isBetFinished(option)"
+            v-tooltip.top="t('extraBets.wrongBet')"
+            class="bet-result bet-result--wrong"
+          >
+            <i class="pi pi-times" />
           </div>
         </div>
-        <div v-if="option.value === EXTRA_BETS_VALUES.CHAMPION && championProgressiveMatch && userRanking">
+        <div
+          v-if="rankingPointsForOption(option) > 0"
+          class="points-scored"
+        >
           <PrimeDivider />
-          {{
-            stageTranslator(
-              championProgressiveMatch.team,
-              userRanking.accumulatedScore.extras.champion,
-              championProgressiveMatch.stageId,
-            )
-          }}
+          <span
+            v-if="
+              option.value === EXTRA_BETS_VALUES.CHAMPION &&
+              championProgressiveMatch &&
+              userRanking &&
+              !isExtraCorrect(option)
+            "
+          >
+            {{
+              stageTranslator(
+                championProgressiveMatch.team,
+                userRanking.accumulatedScore.extras.champion,
+                championProgressiveMatch.stageId,
+              )
+            }}
+          </span>
+          <span v-else>
+            {{ t('extraBets.pointsScored', { points: rankingPointsForOption(option) }) }}
+          </span>
         </div>
       </div>
     </div>
@@ -178,13 +211,32 @@ function isExtraCorrect(option: IToggleOption) {
       return extraType.results.find(
         (result) =>
           result.team?.id &&
-          option.selectedTeam?.some((e) => e.team.id === result.team?.id && e.stageId === STAGE_ID.WINNER),
+          option.selectedTeam?.some((e) => e.team.id === result.team?.id && result.stageId === STAGE_ID.WINNER),
       );
     } else {
       return extraType.results.find(
         (result) => result.team?.id && option.selectedTeam?.some((e) => e.team.id === result.team?.id),
       );
     }
+  }
+}
+
+function rankingPointsForOption(option: IToggleOption) {
+  if (!userRanking.value) return 0;
+
+  switch (option.value) {
+    case EXTRA_BETS_VALUES.BEST_PLAYER:
+      return userRanking.value?.accumulatedScore.extras.bestPlayer;
+    case EXTRA_BETS_VALUES.CHAMPION:
+      return userRanking.value?.accumulatedScore.extras.champion;
+    case EXTRA_BETS_VALUES.DEFENSE:
+      return userRanking.value?.accumulatedScore.extras.defense;
+    case EXTRA_BETS_VALUES.OFFENSE:
+      return userRanking.value?.accumulatedScore.extras.offense;
+    case EXTRA_BETS_VALUES.TOP_SCORER:
+      return userRanking.value?.accumulatedScore.extras.topScorer;
+    default:
+      return 0;
   }
 }
 
@@ -370,6 +422,14 @@ function stageTranslator(team: ITeam, points: number, stageId: TStageId) {
   border-color: var(--bolao-c-mint);
 }
 
+.points-scored {
+  font-size: var(--s-font-size);
+
+  @media (width <= 768px) {
+    font-size: var(--xs-font-size);
+  }
+}
+
 .bet-result {
   display: flex;
   flex-shrink: 0;
@@ -387,6 +447,13 @@ function stageTranslator(team: ITeam, points: number, stageId: TStageId) {
       0 0 10px rgb(from var(--bolao-c-gold) r g b / 50%),
       0 2px 6px rgb(0 0 0 / 30%);
     animation: trophy-pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+  }
+
+  &--almost {
+    font-size: 14px;
+    color: var(--bolao-c-orange-l3);
+    background: linear-gradient(135deg, var(--bolao-c-orange-d2), var(--bolao-c-orange));
+    border: 1px solid rgb(from var(--bolao-c-orange-l1) r g b / 30%);
   }
 
   &--wrong {

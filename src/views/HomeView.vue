@@ -89,7 +89,6 @@ import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import BannerComponent from '@/components/BannerComponent.vue';
-import { LIVE_GAME } from '@/constants/match';
 import MatchService from '@/services/match';
 import { useViewport } from '@/services/viewport';
 import { useActiveProfileStore } from '@/stores/activeProfile';
@@ -179,6 +178,7 @@ const showPushCard = ref('PushManager' in window && 'Notification' in window && 
 // ------ Initialization ------
 const matchService = new MatchService();
 matchService.fetchNextMatches();
+matchService.fetchLiveMatches();
 
 // ------ Handle Minimized/Maximized Widgets ------
 function loadMinimized(): WidgetId[] {
@@ -239,9 +239,8 @@ function saveOrder() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(widgetOrder.value));
 }
 // ------ Computed ------
-const matches = computed(() => matchesStore.matches);
 const nextMatches = computed(() => matchesStore.nextMatches);
-const liveMatches = computed(() => matches.value.filter((m) => LIVE_GAME.includes(m.status)));
+const liveMatches = computed(() => matchesStore.liveMatches);
 const hasExtraBets = computed(() => extraBetsStore.activeProfileBets.length > 0);
 const visibleWidgets = computed(() =>
   widgetOrder.value.filter((id) => {

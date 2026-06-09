@@ -18,11 +18,12 @@ export interface IRankingScore {
   betCount: number;
   exacts: number;
   extras: {
+    bestPlayer: number;
     champion: number;
     defense: number;
     offense: number;
     points: number;
-    striker: number;
+    topScorer: number;
   };
   gameCount: number;
   misses: number;

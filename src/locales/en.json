@@ -342,6 +342,7 @@
     "myBets": "My Bets",
     "results": "Results",
     "correctBet": "Congratulations",
+    "progressiveBet": "Almost there",
     "wrongBet": "Better luck next time",
     "rulesBanner": "Extra bets are additional bets you can make beyond the regular match predictions. They offer an opportunity to earn extra points and stand out in the overall pool ranking!",
     "rulesBannerLink": "Learn more in the rules",
@@ -350,6 +351,7 @@
       "message2": "Learn more at ",
       "link": "Rules -> Extra Bets"
     },
+    "pointsScored": "You score {points} points.",
     "champion": "Champion",
     "topScorer": "Top Scorer",
     "bestPlayer": "Best Player",

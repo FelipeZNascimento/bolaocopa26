@@ -342,6 +342,7 @@
     "myBets": "Minhas Apostas",
     "results": "Resultados",
     "correctBet": "Parabéns",
+    "progressiveBet": "Quase lá",
     "wrongBet": "Mais sorte da próxima vez",
     "rulesBanner": "Apostas extras são apostas adicionais que você pode fazer além dos palpites normais das partidas. Elas oferecem uma oportunidade de ganhar pontos extras e se destacar no ranking geral do bolão!",
     "rulesBannerLink": "Saiba mais nas regras",
@@ -350,6 +351,7 @@
       "message2": "Saiba mais em ",
       "link": "Regras -> Apostas Extras"
     },
+    "pointsScored": "Você fez {points} pontos.",
     "champion": "Campeão",
     "topScorer": "Artilheiro",
     "bestPlayer": "Melhor Jogador",

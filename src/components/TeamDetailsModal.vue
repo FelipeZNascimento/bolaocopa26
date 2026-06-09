@@ -406,6 +406,7 @@ watch(isVisible, (newValue) => {
     font-size: var(--s-font-size);
     font-weight: 600;
     color: var(--bolao-c-orange);
+    text-align: center;
   }
 
   .player-info {

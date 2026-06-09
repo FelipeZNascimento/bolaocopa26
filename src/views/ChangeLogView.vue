@@ -34,10 +34,12 @@ const changelogEntries = ref([
   {
     changes: [
       '[Extras] Improved display of progressive bets',
+      '[Extras] Now will show points for each extra separately',
       '[WorldCup+] Changed icon for players weight',
       '[WorldCup+] Improved stadiums stickers',
       '[WorldCup+] Improved players images positioning',
       '[WorldCup+] Reordered players so now positions make more sense (coaches -> gks -> defenders -> midfielders -> strikers)',
+      '🐛 [Extras] Best player was not being calculated',
       '🐛 [Extras] Selected indicator was not being updated correctly',
       '🐛 [Ranking] Selector for with/without extras was inverted',
     ],
