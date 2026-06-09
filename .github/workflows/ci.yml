@@ -57,6 +57,7 @@ jobs:
     needs: [pprod-deployment]
     if: failure()
     steps:
+      - run: git config --global --add safe.directory $PWD
       - name: Rerun failed jobs in the current workflow
         env:
           GH_TOKEN: ${{ github.token }}
