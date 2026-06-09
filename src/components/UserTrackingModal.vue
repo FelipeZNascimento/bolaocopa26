@@ -219,7 +219,7 @@ const activeProfile = computed(() => activeProfileStore.activeProfile);
 const favorites = computed(() => activeProfileStore.activeProfile?.favorites || []);
 const roundsRanking = computed(() => rankingStore.roundsRanking);
 const editionRanking = computed(() => rankingStore.editionRanking);
-const isLoadingExtras = computed(() => extraBetStore.isLoading);
+// const isLoadingExtras = computed(() => extraBetStore.isLoading);
 const selectedUserExtraBets = computed(() => {
   // Deep-copy each option so mutations never bleed back
   const userExtraBetsOriginal =
