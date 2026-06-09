@@ -33,6 +33,14 @@ import { ref } from 'vue';
 const changelogEntries = ref([
   {
     changes: [
+      '🐛 [Match] Hide weather when its not available yet',
+      '🐛 [Extras] Adjusted grid for new team component dimensions',
+    ],
+    date: '09/06/2026',
+    version: 'v1.0.20',
+  },
+  {
+    changes: [
       '[App] Success notification/toast was impossible to read on light mode',
       '[Extras] Improved display when related to players',
     ],

@@ -7,7 +7,10 @@
       >
         <div class="match-info">
           <StadiumStickerComponent :stadium="match.stadium" />
-          <div class="info-section">
+          <div
+            v-if="match.weather"
+            class="info-section"
+          >
             <h3><i class="pi pi-sun" /><i class="pi pi-cloud" /> {{ t('matches.weather') }}</h3>
             <p class="info-title">{{ match.weather?.temperature ?? '10' }} °C</p>
             <p class="info-detail">{{ t('matches.humidity') }}: {{ match.weather?.humidity ?? '62' }}%</p>
@@ -25,6 +28,11 @@
               {{ match.referee.name }}
             </p>
             <p class="info-detail">
+              <img
+                class="flag"
+                :src="`https://assets.omegafox.me/copa/countries_flags/${match.referee.isoCode.toLowerCase()}.png`"
+                :alt="locale === 'pt-BR' ? match.referee.country : match.referee.country"
+              />
               {{ locale === 'pt-BR' ? match.referee.country : match.referee.countryEn }}
             </p>
           </div>
@@ -39,7 +47,7 @@
             </p>
             <p
               v-if="countdown"
-              class="countdown"
+              class="info-detail"
             >
               <i class="pi pi-clock" />
               {{ t('matches.countdown', { countdown }) }}
@@ -117,10 +125,23 @@ const countdown = computed(() => {
 }
 
 .info-section .info-detail {
+  display: flex;
+  align-items: center;
+  gap: var(--xs-spacing);
+
   margin-bottom: var(--xs-spacing);
   font-size: var(--xs-font-size);
   color: var(--bolao-c-grey1-t2);
 }
+
+.flag {
+  display: block;
+  width: 20px;
+  height: 14px;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 20%));
+}
+
 .overlay-flag {
   height: 12px;
   border-radius: 2px;
