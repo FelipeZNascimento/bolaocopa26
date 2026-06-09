@@ -15,6 +15,7 @@ export const useMatchesStore = defineStore('matches', () => {
   const updatingMatches = ref<number[]>([]); // Array to track which matches are currently being updated
   const matches = ref<IMatch[]>([]);
   const nextMatches = ref<IMatch[]>([]);
+  const liveMatches = ref<IMatch[]>([]);
   const error = ref<Error | null>(null);
 
   // Working bets state for tracking unsaved changes
@@ -39,6 +40,10 @@ export const useMatchesStore = defineStore('matches', () => {
 
   function setNextMatches(newNextMatches: IMatch[]) {
     nextMatches.value = newNextMatches;
+  }
+
+  function setLiveMatches(newLiveMatches: IMatch[]) {
+    liveMatches.value = newLiveMatches;
   }
 
   function initializeBets(matches: IMatch[]) {
@@ -247,6 +252,7 @@ export const useMatchesStore = defineStore('matches', () => {
     hasAnyChanges,
     hasWorkingBetChanged,
     isLoading,
+    liveMatches,
     matches,
     nextMatches,
     originalBets,
@@ -255,6 +261,7 @@ export const useMatchesStore = defineStore('matches', () => {
     resetWorkingBets,
     saveTrigger,
     setError,
+    setLiveMatches,
     setLoading,
     setMatches,
     setNextMatches,

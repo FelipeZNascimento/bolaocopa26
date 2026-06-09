@@ -184,7 +184,7 @@ import type { IExtraBet, IPlayerWithExtras, ITeamWithExtras } from '@/stores/ext
 import type { ITeam } from '@/stores/teams.types';
 
 import ClickableTeamCard from '@/components/ClickableTeamCard.vue';
-import { EXTRA_BETS_LABELS, EXTRA_BETS_VALUES, type TEXTRA_BETS_VALUES } from '@/constants/bets';
+import { EXTRA_BETS_LABELS, EXTRA_BETS_VALUES, STAGE_ID, type TEXTRA_BETS_VALUES } from '@/constants/bets';
 import ExtraBetService from '@/services/extra_bet';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useExtraBetStore } from '@/stores/extraBet';
@@ -297,6 +297,11 @@ function filterBetsByType(bets: IExtraBet[], extraType: TEXTRA_BETS_VALUES) {
 }
 
 function filterResultsByType(extraType: TEXTRA_BETS_VALUES) {
+  if (extraType === EXTRA_BETS_VALUES.CHAMPION) {
+    return extraBetsResults.value
+      .find((result) => result.extraType === extraType)
+      ?.results.filter((r) => r.stageId === STAGE_ID.WINNER);
+  }
   return extraBetsResults.value.find((result) => result.extraType === extraType)?.results;
 }
 
@@ -402,6 +407,7 @@ function scrollToSection(el: HTMLElement | null) {
 .result-card {
   display: flex;
   flex-direction: column;
+  min-height: 200px;
   overflow: hidden;
   background-color: var(--bolao-c-blue4);
   border: 1px solid var(--bolao-c-blue3);

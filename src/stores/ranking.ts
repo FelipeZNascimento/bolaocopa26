@@ -20,6 +20,10 @@ export const useRankingStore = defineStore('ranking', () => {
   const columnsOption = ref<TColumnsValue>(initialState.columnsOption);
   const rowSpacing = ref<TRowSpacingValue>(initialState.rowSpacing);
 
+  function getUserRanking(userId: number) {
+    return editionRanking.value.find((userRanking) => userRanking.user.id === userId) ?? null;
+  }
+
   function setInitialState() {
     columnsOption.value = initialState.columnsOption;
     rowSpacing.value = initialState.rowSpacing;
@@ -72,6 +76,7 @@ export const useRankingStore = defineStore('ranking', () => {
     editionRankingWithoutExtras,
     errorRounds,
     errorSeason,
+    getUserRanking,
     isLoadingRounds,
     isLoadingSeason,
     roundsRanking,

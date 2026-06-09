@@ -52,11 +52,10 @@
         :class="{ 'bet-item--inactive': !bet.user.isActive }"
       >
         <i class="pi pi-user bet-icon" />
-        <span class="bet-nickname"
-          ><NameTag
-            :user="bet.user"
-            :isClickable="true"
-        /></span>
+        <NameTag
+          :user="bet.user"
+          :isClickable="true"
+        />
       </li>
     </ul>
     <p
@@ -220,12 +219,6 @@ watch(isVisible, (newValue) => {
 .bet-icon {
   font-size: var(--s-font-size);
   color: var(--bolao-c-grey3);
-}
-
-.bet-nickname {
-  font-size: var(--m-font-size);
-  font-weight: 500;
-  color: var(--bolao-c-grey1);
 }
 
 .empty-state {

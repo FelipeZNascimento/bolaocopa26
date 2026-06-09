@@ -26,8 +26,11 @@ export default class MatchService {
     this.websocketInstance.connectIfNeeded();
   }
 
-  public async fetch(round?: null | number, edition?: null | number) {
-    this.matchesStore.setLoading(true);
+  public async fetch(round?: null | number, edition?: null | number, silent = false) {
+    if (!silent) {
+      this.matchesStore.setLoading(true);
+    }
+
     // Week may be "0" so needs to be checked against null and undefined
     if (round === undefined || round === null) {
       round = this.configurationStore.selectedRound;
@@ -52,8 +55,28 @@ export default class MatchService {
     }
   }
 
-  public async fetchNextMatches() {
-    this.matchesStore.setLoading(true);
+  public async fetchLiveMatches(silent = false) {
+    if (!silent) {
+      this.matchesStore.setLoading(true);
+    }
+
+    try {
+      const response = await this.apiRequest.get<IMatch[]>(`match/live-matches`);
+      this.matchesStore.setLiveMatches(response);
+      this.matchesStore.setLoading(false);
+      this.matchesStore.setError(null);
+    } catch (error: unknown) {
+      this.matchesStore.setLoading(false);
+      console.error('[MatchService.fetchNextMatches]', error);
+      this.matchesStore.setError(new Error(error instanceof Error ? error.message : String(error)));
+    }
+  }
+
+  public async fetchNextMatches(silent = false) {
+    if (!silent) {
+      this.matchesStore.setLoading(true);
+    }
+
     try {
       const response = await this.apiRequest.get<IMatch[]>(`match/next-matches`);
       this.matchesStore.setNextMatches(response);
@@ -66,22 +89,11 @@ export default class MatchService {
     }
   }
 
-  private async fetchSilent() {
-    try {
-      const round = this.configurationStore.selectedRound;
-      const edition = this.configurationStore.currentEdition;
-      const response = await this.apiRequest.get<IMatch[]>(`match/${edition}/${round}`);
-      this.matchesStore.setMatches(response);
-      this.matchesStore.setError(null);
-    } catch (error: unknown) {
-      console.error('[MatchService.fetchSilent]', error);
-      this.matchesStore.setError(new Error(error instanceof Error ? error.message : String(error)));
-    }
-  }
-
   private onWebsocketUpdate = (ev: MessageEvent<unknown>) => {
     if (ev.data === WEBSOCKET_EVENTS.MATCHES_UPDATED) {
-      this.fetchSilent();
+      this.fetch(null, null, true);
+      this.fetchNextMatches(true);
+      this.fetchLiveMatches(true);
       this.rankingService.fetch(true);
     }
   };

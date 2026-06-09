@@ -43,7 +43,7 @@
         <img
           v-if="player.fifa.pictureId && !imageError"
           class="ps-sticker__img"
-          :src="`https://digitalhub.fifa.com/transform/${player.fifa.pictureId.toLowerCase()}/`"
+          :src="`https://digitalhub.fifa.com/transform/${player.fifa.pictureId.toLowerCase()}/?&io=transform:fill,aspectratio:2x1,width:640,gravity:top&quality=100`"
           :alt="player.name"
           @load="isLoadingImage = false"
           @error="handleImageError"
@@ -63,7 +63,10 @@
           locale === 'pt-BR' ? player.position.description : player.position.descriptionEn
         }}</span>
         <div class="ps-sticker__details">
-          <div class="ps-sticker__detail-row">
+          <div
+            v-if="player.position.id !== 1"
+            class="ps-sticker__detail-row"
+          >
             <!-- <i class="pi pi-shield" /> -->
             <img
               class="ps-sticker__club-flag"
@@ -87,7 +90,7 @@
             v-if="player.weight"
             class="ps-sticker__detail-row"
           >
-            <i class="pi pi-arrows-v" />
+            <i class="pi pi-arrows-h" />
             <span>{{ player.weight }} kg</span>
           </div>
         </div>
@@ -272,8 +275,8 @@ function handleImageError() {
 }
 
 .ps-sticker__img {
-  width: 100%;
-  height: 100%;
+  width: 110%;
+  height: 110%;
   object-fit: cover;
   object-position: top;
   filter: contrast(1.05) saturate(1.1);

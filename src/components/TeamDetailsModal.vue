@@ -71,8 +71,13 @@
           :key="player.id"
           class="player-card"
         >
-          <div class="player-number">
-            {{ player.number }}
+          <div>
+            <div class="player-number">
+              {{ player.number }}
+            </div>
+            <div class="player-position">
+              {{ locale === 'pt-BR' ? player.position.abbreviation : player.position.abbreviationEn }}
+            </div>
           </div>
           <div class="player-info">
             <div class="player-name">
@@ -82,9 +87,6 @@
               />
             </div>
             <div class="player-details">
-              <span class="player-position">{{
-                locale === 'pt-BR' ? player.position.abbreviation : player.position.abbreviationEn
-              }}</span>
               <span class="player-club">{{ player.club.name }}</span>
             </div>
           </div>
@@ -400,6 +402,13 @@ watch(isVisible, (newValue) => {
     }
   }
 
+  .player-position {
+    font-size: var(--s-font-size);
+    font-weight: 600;
+    color: var(--bolao-c-orange);
+    text-align: center;
+  }
+
   .player-info {
     flex: 1;
 
@@ -419,11 +428,6 @@ watch(isVisible, (newValue) => {
       @media (width <= 768px) {
         gap: var(--s-spacing);
         font-size: var(--xs-font-size);
-      }
-
-      .player-position {
-        font-weight: 600;
-        color: var(--bolao-c-orange);
       }
 
       .player-club {

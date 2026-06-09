@@ -339,7 +339,7 @@ const selectedRound = computed(() => configurationStore.selectedRound);
 
 const filteredRankingData = computed(() => {
   if (!showFavoritesOnly.value) {
-    return isExtrasActive.value ? editionRankingWithoutExtras.value : selectedRanking.value;
+    return isExtrasActive.value ? selectedRanking.value : editionRankingWithoutExtras.value;
   }
 
   if (showFavoritesOnly.value && favorites.value.length === 0) {

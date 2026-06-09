@@ -33,6 +33,22 @@ import { ref } from 'vue';
 const changelogEntries = ref([
   {
     changes: [
+      '[Extras] Improved display of progressive bets',
+      '[Extras] Now will show points for each extra separately',
+      '[WorldCup+] Images added for players (more to come when available)',
+      '[WorldCup+] Changed icon for players weight',
+      '[WorldCup+] Improved stadiums stickers',
+      '[WorldCup+] Improved players images positioning',
+      '[WorldCup+] Reordered players so now positions make more sense (coaches -> gks -> defenders -> midfielders -> strikers)',
+      '🐛 [Extras] Best player was not being calculated',
+      '🐛 [Extras] Selected indicator was not being updated correctly',
+      '🐛 [Ranking] Selector for with/without extras was inverted',
+    ],
+    date: '09/06/2026',
+    version: 'v1.0.16',
+  },
+  {
+    changes: [
       '🐛 [Extras] Selected indicator was not being updated correctly',
       '[WorldCup+] Improvement on table for referees',
       '[WorldCup+] Google Maps links added for stadiums coordinates',
