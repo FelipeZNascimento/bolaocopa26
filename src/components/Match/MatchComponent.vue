@@ -13,7 +13,6 @@
       :gametime="match.gametime"
       @click="handleMatchClick"
       @keydown.enter="handleMatchClick"
-      @keydown.space.prevent="handleMatchClick"
     />
     <div
       class="match-connector"
@@ -46,7 +45,6 @@
       :gametime="match.gametime"
       @click="handleMatchClick"
       @keydown.enter="handleMatchClick"
-      @keydown.space.prevent="handleMatchClick"
     />
     <ScoreComponent
       :match="match"
