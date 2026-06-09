@@ -32,6 +32,11 @@ import { ref } from 'vue';
 
 const changelogEntries = ref([
   {
+    changes: ['🐛 [Extras] MyExtras component not being rendered'],
+    date: '09/06/2026',
+    version: 'v1.0.19',
+  },
+  {
     changes: [
       '[Extras] Improved display of progressive bets',
       '[Extras] Now will show points for each extra separately',
@@ -45,7 +50,7 @@ const changelogEntries = ref([
       '🐛 [Ranking] Selector for with/without extras was inverted',
     ],
     date: '09/06/2026',
-    version: 'v1.0.18',
+    version: 'v1.0.16-18',
   },
   {
     changes: [

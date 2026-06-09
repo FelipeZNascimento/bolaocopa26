@@ -184,7 +184,7 @@ const championProgressiveMatch = computed(() => {
   )?.selectedTeam;
   const championResults = extraBetsResults.value.find((bet) => bet.extraType === EXTRA_BETS_VALUES.CHAMPION)?.results;
 
-  if (!championResults || !championBet) {
+  if (!championResults || !championBet || championResults?.length === 0 || championBet?.length === 0) {
     return null;
   }
 
