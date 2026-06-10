@@ -36,7 +36,7 @@ export interface IMatch {
   score: IScore;
   stadium: IStadium;
   status: TMatchStatus;
-  timestamp: string;
+  timestamp: number;
   weather?: IWeather;
 }
 

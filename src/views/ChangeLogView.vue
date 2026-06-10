@@ -33,11 +33,21 @@ import { ref } from 'vue';
 const changelogEntries = ref([
   {
     changes: [
+      '[App] No more registrations after the limit date and time',
+      '[Extras] Improvements on when and how to show champion bets with lower factors',
+      '[Match] Improvements on match clock for mobile on light theme',
+      '[Match] Stadiums are a little bit larger',
+    ],
+    date: '10/06/2026',
+    version: 'v1.0.22',
+  },
+  {
+    changes: [
       '🐛 [Match] Hide weather when its not available yet',
       '🐛 [Extras] Adjusted grid for new team component dimensions',
     ],
     date: '09/06/2026',
-    version: 'v1.0.20',
+    version: 'v1.0.21',
   },
   {
     changes: [

@@ -146,6 +146,7 @@
         v-if="selectedUserExtraBets[EXTRA_BETS_VALUES.CHAMPION].length > 0"
         class="teams-grid"
       >
+        <PrimeDivider v-if="isMobile" />
         <p style="text-align: center">{{ t(EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.CHAMPION]) }}</p>
         <WorldCupLandscapeStickerComponent
           v-for="(value, index) in selectedUserExtraBets[EXTRA_BETS_VALUES.CHAMPION]"
@@ -163,7 +164,10 @@
             />
           </template>
           <template #overlay>
-            <strong class="overlay-name">{{ locale === 'pt-BR' ? value.team.name : value.team.nameEn }}</strong>
+            <span class="overlay-name">{{ locale === 'pt-BR' ? value.team.name : value.team.nameEn }}</span>
+            <span class="overlay-sub">
+              {{ t('userTrackingModal.factor', { percentage: returnChampionFactor(value.stageId) }) }}
+            </span>
           </template>
         </WorldCupLandscapeStickerComponent>
       </div>
@@ -264,6 +268,18 @@ function isFavorite(): boolean {
   return userService.isFavorite(props.selectedUser.id);
 }
 
+function returnChampionFactor(stageId: number): string {
+  let factor = '';
+  if (stageId === 1) {
+    factor = '100%';
+  } else if (stageId === 2) {
+    factor = '60%';
+  } else if (stageId === 3) {
+    factor = '30%';
+  }
+
+  return factor;
+}
 function returnLabelForRound(round: null | number): string {
   if (round === null) {
     return '';
@@ -399,6 +415,8 @@ const chartOptions = computed(() => ({
     },
     y: {
       grid: { color: getCssVar('--bolao-c-grey1-t1', 'rgb(128 128 128 / 20%)') },
+      max: 100,
+      min: 0,
       position: 'left' as const,
       stacked: true,
       ticks: { color: getCssVar('--bolao-c-white', '#495057') },
@@ -494,7 +512,8 @@ watch(isVisible, async (newValue) => {
   text-decoration: line-through;
   opacity: 0.4;
 
-  .overlay-name {
+  .overlay-name,
+  .overlay-sub {
     text-decoration: line-through;
   }
 }
@@ -509,8 +528,8 @@ watch(isVisible, async (newValue) => {
 
 .teams-grid {
   display: grid;
-  grid-template-columns: repeat(1, minmax(110px, 140px));
   grid-template-rows: auto auto 1fr;
+  grid-template-columns: repeat(1, minmax(110px, 140px));
   gap: var(--m-spacing);
   justify-content: center;
   width: 100%;
@@ -522,9 +541,9 @@ watch(isVisible, async (newValue) => {
 }
 
 .sticker-flag {
-  min-height: 90px;
   width: 100%;
   height: 100%;
+  min-height: 90px;
   object-fit: cover;
   object-position: center;
 }
@@ -535,21 +554,22 @@ watch(isVisible, async (newValue) => {
   font-weight: 800;
   line-height: 1.2;
   color: #fff;
+  text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-  text-align: center;
 
   @media (width <= 768px) {
-    font-size: var(--s-font-size);
+    font-size: var(--xs-font-size);
   }
 }
 
 .overlay-sub {
   display: flex;
-  font-weight: bold;
   gap: 4px;
-  text-align: center;
+  justify-content: center;
   font-size: var(--xs-font-size);
+  font-weight: bold;
+  text-align: center;
 }
 
 .overlay-group {

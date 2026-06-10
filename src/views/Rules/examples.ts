@@ -123,7 +123,7 @@ export const firstExample: IMatch = {
   score: { away: 1, awayPenalties: 0, home: 2, homePenalties: 0 },
   stadium: stadium,
   status: 1,
-  timestamp: '1',
+  timestamp: 1,
 };
 
 export const secondExample: IMatch = {
@@ -140,5 +140,5 @@ export const secondExample: IMatch = {
   score: { away: 1, awayPenalties: 0, home: 1, homePenalties: 0 },
   stadium: stadium,
   status: 1,
-  timestamp: '1',
+  timestamp: 1,
 };

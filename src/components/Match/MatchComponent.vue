@@ -5,7 +5,7 @@
   >
     <ClockComponent
       :hit-level="hitLevel"
-      :timestamp="parseInt(match.timestamp, 10)"
+      :timestamp="match.timestamp"
       :status="match.status"
       :is-match-started="isMatchStarted"
       :is-mini="isMini"
@@ -37,7 +37,7 @@
     <ClockComponent
       v-if="!isMobile && !isDemo"
       :hit-level="hitLevel"
-      :timestamp="parseInt(match.timestamp, 10)"
+      :timestamp="match.timestamp"
       :status="match.status"
       :is-match-started="isMatchStarted"
       :is-mini="isMini"
@@ -121,7 +121,7 @@ const { isMobile } = useViewport();
 // const correctBets = { bullseye: [], half: [] };
 // const correctBets = computed(() => calculateCorrectBets(props.match.away.score, props.match.home.score));
 const isMatchStarted = computed(() => {
-  return clockStore.currentTimestamp >= parseInt(props.match.timestamp, 10);
+  return clockStore.currentTimestamp >= props.match.timestamp;
 });
 
 const hitLevel = computed(() => {
@@ -229,8 +229,8 @@ watch(
   margin: 0 var(--xxs-spacing);
   background-image: repeating-linear-gradient(
     to right,
-    color-mix(in srgb, var(--color-contrast) 20%, transparent) 0,
-    color-mix(in srgb, var(--color-contrast) 20%, transparent) 3px,
+    color-mix(in srgb, var(--bolao-c-grey4) 20%, transparent) 0,
+    color-mix(in srgb, var(--bolao-c-grey4) 20%, transparent) 3px,
     transparent 3px,
     transparent 9px
   );

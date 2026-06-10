@@ -6,7 +6,9 @@
         class="outer"
       >
         <div class="match-info">
-          <StadiumStickerComponent :stadium="match.stadium" />
+          <div :class="{ 'span-two': isMobile }">
+            <StadiumStickerComponent :stadium="match.stadium" />
+          </div>
           <div
             v-if="match.weather"
             class="info-section"
@@ -40,11 +42,9 @@
           <div class="info-section">
             <h3><i class="pi pi-calendar" /> {{ t('matches.dateAndTime') }}</h3>
             <p class="info-title">
-              {{ clockStore.getFormattedDate(parseInt(match.timestamp, 10)) }}
+              {{ clockStore.getFormattedDate(match.timestamp) }}
             </p>
-            <p class="info-detail">
-              <i class="pi pi-clock" /> {{ clockStore.getFormattedTime(parseInt(match.timestamp, 10)) }}
-            </p>
+            <p class="info-detail"><i class="pi pi-clock" /> {{ clockStore.getFormattedTime(match.timestamp) }}</p>
             <p
               v-if="countdown"
               class="info-detail"
@@ -73,6 +73,7 @@ import { useI18n } from 'vue-i18n';
 import type { IMatch } from '@/stores/matches.types';
 
 import StadiumStickerComponent from '@/components/StadiumStickerComponent.vue';
+import { useViewport } from '@/services/viewport';
 import { useClockStore } from '@/stores/clock';
 
 const props = defineProps<{
@@ -83,10 +84,11 @@ const props = defineProps<{
 // ------ Initialization ------
 const clockStore = useClockStore();
 const { locale, t } = useI18n();
+const { isMobile } = useViewport();
 
 // ------ Computed Properties ------
 const countdown = computed(() => {
-  return clockStore.getCountdown(parseInt(props.match.timestamp, 10));
+  return clockStore.getCountdown(props.match.timestamp);
 });
 </script>
 <style lang="scss" scoped>
@@ -102,9 +104,14 @@ const countdown = computed(() => {
   padding: var(--s-spacing) 0;
 }
 
+.span-two {
+  grid-column: span 2;
+}
+
 .info-section {
   padding: var(--m-spacing);
   background-color: var(--bolao-c-blue3-d1);
+
   // border-radius: var(--border-radius);
 }
 
@@ -126,9 +133,8 @@ const countdown = computed(() => {
 
 .info-section .info-detail {
   display: flex;
-  align-items: center;
   gap: var(--xs-spacing);
-
+  align-items: center;
   margin-bottom: var(--xs-spacing);
   font-size: var(--xs-font-size);
   color: var(--bolao-c-grey1-t2);

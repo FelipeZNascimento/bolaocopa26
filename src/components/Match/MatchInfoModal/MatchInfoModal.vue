@@ -131,11 +131,11 @@ const { locale, t } = useI18n();
 // ------ Computed Properties ------
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 const isMatchStarted = computed(() => {
-  return clockStore.currentTimestamp >= parseInt(props.match.timestamp, 10);
+  return clockStore.currentTimestamp >= props.match.timestamp;
 });
 
 const countdown = computed(() => {
-  return clockStore.getCountdown(parseInt(props.match.timestamp, 10));
+  return clockStore.getCountdown(props.match.timestamp);
 });
 
 const betsWithOutcome = computed(() => {

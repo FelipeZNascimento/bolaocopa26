@@ -2,9 +2,9 @@
   <div class="more-info-desktop-view-outer">
     <ClockComponent
       style="margin-right: var(--l-spacing)"
-      :timestamp="parseInt(match.timestamp, 10)"
+      :timestamp="match.timestamp"
       :status="match.status"
-      :clock="match.timestamp ? clockStore.getFormattedTime(parseInt(match.timestamp, 10)) : null"
+      :clock="match.timestamp ? clockStore.getFormattedTime(match.timestamp) : null"
       :hit-level="hitLevel"
       :is-match-started="isMatchStarted"
       :points-awarded="match.pointsAwarded"

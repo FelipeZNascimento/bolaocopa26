@@ -65,15 +65,9 @@
             Google Maps
           </a>
         </div>
-        <div>
-          <PrimeButton
-            rel="noopener noreferrer"
-            class="link-row"
-            icon="pi pi-search-plus"
-            :label="t('common.seeMore')"
-            size="small"
-            @click="(event: MouseEvent) => onStadiumClick(stadium, event)"
-          />
+        <div class="back-row-button">
+          <i class="pi pi-search-plus" />
+          <span @click="(event: MouseEvent) => onStadiumClick(stadium, event)">{{ t('common.seeMore') }}</span>
         </div>
       </div>
     </template>
@@ -174,23 +168,26 @@ function openImage(stadium: IStadium) {
 .overlay-flag {
   height: 12px;
   border-radius: 2px;
+
+  @media (width <= 768px) {
+    height: 8px;
+  }
 }
 
 // Back face content
 .back-header {
-  font-size: var(--xs-font-size);
-  font-weight: 700;
-  color: rgb(0 0 0 / 80%);
-  text-transform: uppercase;
-
   display: flex;
   gap: var(--xs-spacing);
   align-items: center;
   padding: var(--xs-spacing) var(--s-spacing);
+  font-size: var(--xs-font-size);
+  font-weight: 700;
+  color: rgb(0 0 0 / 80%);
+  text-transform: uppercase;
   background: linear-gradient(90deg, var(--sticker-color), var(--sticker-color-dark));
 
   @media (width <= 768px) {
-    font-size: var(--xxs-font-size);
+    font-size: var(--m-font-size);
   }
 }
 
@@ -207,6 +204,10 @@ function openImage(stadium: IStadium) {
   color: rgb(0 0 0 / 80%);
   letter-spacing: 0.05em;
   white-space: nowrap;
+
+  @media (width <= 768px) {
+    font-size: var(--m-font-size);
+  }
 }
 
 .back-info {
@@ -238,6 +239,40 @@ function openImage(stadium: IStadium) {
   i {
     font-size: var(--m-font-size);
     color: var(--sticker-color-dark);
+
+    @media (width <= 768px) {
+      font-size: var(--s-font-size);
+    }
+  }
+
+  @media (width <= 768px) {
+    font-size: var(--s-font-size);
+  }
+}
+
+.back-row-button {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  font-size: var(--xs-font-size);
+  color: var(--color-anchor);
+  cursor: pointer;
+
+  i {
+    font-size: var(--m-font-size);
+    color: var(--sticker-color-dark);
+
+    @media (width <= 768px) {
+      font-size: var(--s-font-size);
+    }
+  }
+
+  @media (width <= 768px) {
+    font-size: var(--s-font-size);
+  }
+
+  span:hover {
+    text-decoration: underline;
   }
 }
 
@@ -246,14 +281,12 @@ function openImage(stadium: IStadium) {
   gap: 4px;
   align-items: center;
   font-size: var(--xs-font-size);
-  font-weight: 600;
   color: #444;
 }
 
 .dialog-header-text {
   margin-left: var(--xs-spacing);
   font-size: var(--m-font-size);
-  font-weight: 600;
 
   @media (width <= 768px) {
     font-size: var(--xs-font-size);
