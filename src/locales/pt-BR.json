@@ -87,7 +87,8 @@
     "extraBets": "Apostas Extras",
     "position": "Posição",
     "globalPosition": "Posição Global",
-    "pointsPercentage": "% de Pontos"
+    "pointsPercentage": "% de Pontos",
+    "factor": "Fator: {percentage}"
   },
   "loginModal": {
     "titles": {
