@@ -132,11 +132,10 @@ function handleClick() {
 
 .ls-sticker__inner {
   position: relative;
+  width: 100%;
+  height: 100%;
   transform-style: preserve-3d;
   transition: transform 0.55s cubic-bezier(0.4, 0.2, 0.2, 1);
-
-  height: 100%;
-  width: 100%;
 }
 
 .ls-sticker--flipped .ls-sticker__inner {
@@ -162,8 +161,8 @@ function handleClick() {
 
 .ls-sticker__front {
   position: relative;
-  height: 100%;
   width: 100%;
+  height: 100%;
 }
 
 .ls-sticker--flippable .ls-sticker__front::after {
@@ -200,8 +199,8 @@ function handleClick() {
 
 .ls-sticker__photo {
   position: relative;
-  height: 100%;
   width: 100%;
+  height: 100%;
   overflow: hidden;
 }
 
@@ -236,17 +235,16 @@ function handleClick() {
 
 .ls-sticker__hint {
   position: absolute;
+  top: var(--xxs-spacing);
+  right: var(--xxs-spacing);
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 18px;
+  height: 18px;
   color: rgb(255 255 255 / 85%);
   background-color: rgb(0 0 0 / 45%);
   border-radius: 50%;
-
-  top: var(--xxs-spacing);
-  right: var(--xxs-spacing);
-  width: 18px;
-  height: 18px;
 
   i {
     font-size: var(--xxs-font-size);

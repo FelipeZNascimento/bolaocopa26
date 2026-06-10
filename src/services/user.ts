@@ -105,7 +105,7 @@ export default class UserService {
     this.adminStore.setLoading(true);
 
     try {
-      const response = await this.apiService.get<IUser[]>('admin/all-users');
+      const response = await this.apiService.get<IUser[]>('admin/all-users', { 'Cache-Control': 'no-cache' });
       this.adminStore.setUsers(response);
       this.adminStore.setLoading(false);
       return callback(true);

@@ -136,7 +136,7 @@ const configurationStore = useConfigurationStore();
 const { t } = useI18n();
 
 // ------ Computed Properties ------
-const isMatchStarted = computed(() => clockStore.currentTimestamp >= parseInt(props.match.timestamp, 10));
+const isMatchStarted = computed(() => clockStore.currentTimestamp >= props.match.timestamp);
 const isOnPenalties = computed(() => PENALTIES.includes(props.match.status));
 const isLoadingMatch = computed(() => matchesStore.updatingMatches.includes(props.match.id));
 const viewBetOption = computed(() => configurationStore.viewBetOption);

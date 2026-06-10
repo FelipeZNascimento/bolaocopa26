@@ -173,7 +173,7 @@ const createMatch = (overrides = {}): IMatch => ({
     url: '',
   },
   status: 1,
-  timestamp: '2000000', // Future match
+  timestamp: 2000000, // Future match
   ...overrides,
 });
 

@@ -180,7 +180,6 @@ watch(
   @media (width <=768px) {
     height: 30px;
     font-size: var(--xs-font-size);
-    background: none;
     box-shadow: none;
   }
 

@@ -104,19 +104,19 @@ const isLoading = computed(() => matchesStore.isLoading);
 const sortedNotStarted = computed(() =>
   matchesStore.nextMatches
     .filter((m) => m.status === MATCH_STATUS.NOT_STARTED)
-    .sort((a, b) => parseInt(a.timestamp, 10) - parseInt(b.timestamp, 10)),
+    .sort((a, b) => a.timestamp - b.timestamp),
 );
 
 // Timestamp of the soonest match
 const nextTimestamp = computed(() => {
   if (sortedNotStarted.value.length === 0) return null;
-  return parseInt(sortedNotStarted.value[0].timestamp, 10);
+  return sortedNotStarted.value[0].timestamp;
 });
 
 // All matches that share the same earliest timestamp
 const nextMatches = computed<IMatch[]>(() => {
   if (nextTimestamp.value === null) return [];
-  return sortedNotStarted.value.filter((m) => parseInt(m.timestamp, 10) === nextTimestamp.value);
+  return sortedNotStarted.value.filter((m) => m.timestamp === nextTimestamp.value);
 });
 
 // ------ Functions ------

@@ -81,6 +81,7 @@ const { locale, t } = useI18n();
     width: 90px;
   }
 }
+
 .team-card {
   position: relative;
   display: flex;

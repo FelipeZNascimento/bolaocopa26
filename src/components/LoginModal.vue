@@ -141,7 +141,7 @@
         @click="setFormMode('login')"
       />
       <PrimeButton
-        v-else
+        v-else-if="!hasEditionStarted"
         type="submit"
         :label="t('loginModal.buttons.signup')"
         variant="link"
@@ -160,6 +160,7 @@ import { useI18n } from 'vue-i18n';
 import { useScrollLock } from '@/composables/useScrollLock';
 import UserService from '@/services/user';
 import { useActiveProfileStore } from '@/stores/activeProfile';
+import { useClockStore } from '@/stores/clock';
 import { useNotificationStore } from '@/stores/notification';
 import { forgotPasswordResolver, loginResolver, signupResolver } from '@/util/zodResolvers';
 
@@ -194,8 +195,10 @@ const resolverDecider = () => {
 const userService = new UserService();
 const activeProfileStore = useActiveProfileStore();
 const notificationStore = useNotificationStore();
+const clockStore = useClockStore();
 
 // ------ Computed Properties ------
+const hasEditionStarted = computed(() => clockStore.hasEditionStarted);
 const isLoading = computed(() => activeProfileStore.isLoading);
 const loginError = computed(() => activeProfileStore.error);
 const formTitle = computed(() => {

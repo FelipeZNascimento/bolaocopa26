@@ -87,7 +87,8 @@
     "extraBets": "Apostas Extras",
     "position": "Posição",
     "globalPosition": "Posição Global",
-    "pointsPercentage": "% de Pontos"
+    "pointsPercentage": "% de Pontos",
+    "factor": "Fator: {percentage}"
   },
   "loginModal": {
     "titles": {
@@ -705,7 +706,7 @@
     },
     "faqItems": {
       "pwaInstall": {
-        "question": "Posso instalar o aplicativo como PWA?",
+        "question": "Posso instalar como um aplicativo?",
         "answer1": "Sim! Você pode instalar o aplicativo como um Progressive Web App (PWA) no seu dispositivo. Para fazer isso no seu computador, abra o aplicativo no seu navegador e procure a opção de instalação ao lado da barra de endereços:",
         "answer2": "Se você estiver no seu dispositivo móvel, também pode instalar o aplicativo. Basta abrir o menu no seu navegador e procurar a opção de adicionar à tela inicial:"
       },
