@@ -32,6 +32,19 @@ import { ref } from 'vue';
 
 const changelogEntries = ref([
   {
+    changes: ['🐛 [Extras] Top scorer and best players were being scrambled up'],
+    date: '11/06/2026',
+    version: 'v1.0.24',
+  },
+  {
+    changes: [
+      '🐛 [Extras] Adjusted timing for extras after Cup has started',
+      '🐛 [Extras] Showing players names instead of teams for best player and top scorer',
+    ],
+    date: '11/06/2026',
+    version: 'v1.0.23',
+  },
+  {
     changes: [
       '[App] No more registrations after the limit date and time',
       '[Extras] Improvements on when and how to show champion bets with lower factors',

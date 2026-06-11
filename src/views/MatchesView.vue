@@ -3,7 +3,7 @@
   <div style="display: flex">
     <div class="outer-matches">
       <PaginatorComponent />
-      <ErrorChecker />
+      <!-- <ErrorChecker /> -->
       <div class="outer-line">
         <MatchesSkeleton
           v-if="isLoading"
@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import ErrorChecker from '@/components/ErrorChecker.vue';
+// import ErrorChecker from '@/components/ErrorChecker.vue';
 import MatchesSkeleton from '@/components/MatchesSkeleton.vue';
 import PaginatorComponent from '@/components/PaginatorComponent.vue';
 import RankingComponent from '@/components/Ranking/RankingComponent.vue';
