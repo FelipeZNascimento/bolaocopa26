@@ -10,18 +10,18 @@
             <StadiumStickerComponent :stadium="match.stadium" />
           </div>
           <div
-            v-if="match.weather"
+            v-if="match.weather.temperature"
             class="info-section"
           >
             <h3><i class="pi pi-sun" /><i class="pi pi-cloud" /> {{ t('matches.weather') }}</h3>
-            <p class="info-title">{{ match.weather?.temperature ?? '10' }} °C</p>
-            <p class="info-detail">{{ t('matches.humidity') }}: {{ match.weather?.humidity ?? '62' }}%</p>
-            <p class="info-detail">{{ t('matches.windSpeed') }}: {{ match.weather?.windSpeed ?? '5' }}km/h</p>
+            <p class="info-title">{{ match.weather?.temperature ?? '' }} °C</p>
+            <p class="info-detail">{{ t('matches.humidity') }}: {{ match.weather?.humidity ?? '' }}%</p>
+            <p class="info-detail">{{ t('matches.windSpeed') }}: {{ match.weather?.windSpeed ?? '' }}km/h</p>
             <p
               v-if="locale === 'pt-BR'"
               class="info-detail"
             >
-              {{ match.weather?.description ?? 'Noite parcialmente nublada' }}
+              {{ match.weather.description ?? '' }}
             </p>
           </div>
           <div class="info-section">

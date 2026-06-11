@@ -174,6 +174,13 @@ const createMatch = (overrides = {}): IMatch => ({
   },
   status: 1,
   timestamp: 2000000, // Future match
+  weather: {
+    description: null,
+    humidity: null,
+    temperature: null,
+    windSpeed: null,
+  },
+
   ...overrides,
 });
 

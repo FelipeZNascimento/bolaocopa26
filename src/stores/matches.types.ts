@@ -37,7 +37,7 @@ export interface IMatch {
   stadium: IStadium;
   status: TMatchStatus;
   timestamp: number;
-  weather?: IWeather;
+  weather: IWeather;
 }
 
 export interface IMatchEvent {
@@ -89,10 +89,10 @@ export interface IStadium {
 }
 
 export interface IWeather {
-  description?: string;
-  humidity: string;
-  temperature: string;
-  windSpeed: string;
+  description: null | string;
+  humidity: null | string;
+  temperature: null | string;
+  windSpeed: null | string;
 }
 
 export type TConference = 'AFC' | 'NFC';

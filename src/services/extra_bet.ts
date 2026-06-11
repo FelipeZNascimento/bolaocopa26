@@ -52,9 +52,13 @@ export default class ExtraBetService {
       const topScorerBetsByPlayer = this.splitBetsByPlayers(
         extraBets.filter((betType) => betType.extraType === EXTRA_BETS_VALUES.TOP_SCORER),
       );
+      const bestPlayerByPlayer = this.splitBetsByPlayers(
+        extraBets.filter((betType) => betType.extraType === EXTRA_BETS_VALUES.BEST_PLAYER),
+      );
 
       const splittedBetsByUser = this.splitBetsByUsers(extraBets);
       this.extraBetStore.setTopScorerBetsByPlayer(topScorerBetsByPlayer);
+      this.extraBetStore.setBestPlayerByPlayer(bestPlayerByPlayer);
       this.extraBetStore.setExtraBetsByTeam(splittedBetsByTeam);
       this.extraBetStore.setExtraBetsByUser(splittedBetsByUser);
 
