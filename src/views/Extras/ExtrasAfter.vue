@@ -98,7 +98,7 @@
             <template v-if="filterResultsByType(extraBetType.value)?.length">
               <div
                 v-for="result in filterResultsByType(extraBetType.value)"
-                :key="result.team?.id ?? result.player?.id"
+                :key="result.player?.id ?? result.team?.id"
                 class="result-item"
               >
                 <ClickableTeamCard
@@ -143,7 +143,7 @@
     >
       <ClickableTeamCard
         v-for="teamOrPlayer in selectedExtras"
-        :key="teamOrPlayer.team.id"
+        :key="isPlayer(teamOrPlayer) ? teamOrPlayer.player?.id : teamOrPlayer.team.id"
         :team="teamOrPlayer.team"
         :handle-click="() => handleTeamClick(teamOrPlayer)"
         :title="isPlayer(teamOrPlayer) ? teamOrPlayer.player.name : ''"

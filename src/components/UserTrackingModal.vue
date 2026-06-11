@@ -247,7 +247,6 @@ const selectedUserExtraBets = computed(() => {
       (a, b) => b.stageId - a.stageId,
     );
   });
-  console.log(extraBetsByType);
   return extraBetsByType;
 });
 
