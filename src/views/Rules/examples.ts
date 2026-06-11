@@ -124,6 +124,12 @@ export const firstExample: IMatch = {
   stadium: stadium,
   status: 1,
   timestamp: 1,
+  weather: {
+    description: null,
+    humidity: null,
+    temperature: null,
+    windSpeed: null,
+  },
 };
 
 export const secondExample: IMatch = {
@@ -141,4 +147,10 @@ export const secondExample: IMatch = {
   stadium: stadium,
   status: 1,
   timestamp: 1,
+  weather: {
+    description: null,
+    humidity: null,
+    temperature: null,
+    windSpeed: null,
+  },
 };

@@ -8,6 +8,7 @@ export const useExtraBetStore = defineStore('extraBet', () => {
   const results = ref<IExtraResults[]>([]);
   const activeProfileBets = ref<IExtraBet[]>([]);
   const topScorerBetsByPlayer = ref<IPlayerWithExtras[]>([]);
+  const bestPlayerByPlayer = ref<IPlayerWithExtras[]>([]);
   const extraBetsByUser = ref<IUserWithExtras[]>([]);
 
   const isUpdating = ref<boolean>(false);
@@ -16,6 +17,10 @@ export const useExtraBetStore = defineStore('extraBet', () => {
 
   function setExtraBetsByTeam(newValue: ITeamWithExtras[]) {
     extraBetsByTeam.value = newValue;
+  }
+
+  function setBestPlayerByPlayer(newExtras: IPlayerWithExtras[]) {
+    bestPlayerByPlayer.value = newExtras;
   }
 
   function setTopScorerBetsByPlayer(newExtras: IPlayerWithExtras[]) {
@@ -52,6 +57,7 @@ export const useExtraBetStore = defineStore('extraBet', () => {
 
   return {
     activeProfileBets,
+    bestPlayerByPlayer,
     error,
     extraBetsByTeam,
     extraBetsByUser,
@@ -60,6 +66,7 @@ export const useExtraBetStore = defineStore('extraBet', () => {
     resetActiveProfileBets,
     results,
     setActiveProfileBets,
+    setBestPlayerByPlayer,
     setError,
     setExtraBetsByTeam,
     setExtraBetsByUser,

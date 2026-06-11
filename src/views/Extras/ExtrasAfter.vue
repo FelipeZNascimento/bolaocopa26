@@ -227,6 +227,7 @@ const extraBetsResults = computed(() => extraBetStore.results);
 const activeProfileBets = computed(() => extraBetStore.activeProfileBets);
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 const extraBetsByTeam = computed(() => extraBetStore.extraBetsByTeam);
+const bestPlayerByPlayer = computed(() => extraBetStore.bestPlayerByPlayer);
 const topScorersByPlayer = computed(() => extraBetStore.topScorerBetsByPlayer);
 const validBetsByTeam = computed(() => {
   // Build a map of the highest stageId per (userId, extraType) across all teams
@@ -273,6 +274,10 @@ const extraBetsOptions = computed<IToggleOption[]>(() => {
 const selectedExtras = computed<IPlayerWithExtras[] | ITeamWithExtras[]>(() => {
   if (selectedToggle.value.value === EXTRA_BETS_VALUES.TOP_SCORER) {
     return [...topScorersByPlayer.value].sort((a, b) => a.player.name.localeCompare(b.player.name));
+  }
+
+  if (selectedToggle.value.value === EXTRA_BETS_VALUES.BEST_PLAYER) {
+    return [...bestPlayerByPlayer.value].sort((a, b) => a.player.name.localeCompare(b.player.name));
   }
 
   const filteredTeams = validBetsByTeam.value.filter((team) =>
