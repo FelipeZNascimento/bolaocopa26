@@ -83,7 +83,7 @@
     </div>
   </div>
   <div
-    v-else-if="matchStatus === MATCH_STATUS.NOT_STARTED"
+    v-else-if="matchStatus === MATCH_STATUS.NOT_STARTED && isMobile"
     class="no-events-message"
   >
     <i class="pi pi-clock" />
@@ -98,6 +98,7 @@ import { useI18n } from 'vue-i18n';
 import type { IMatchEvent } from '@/stores/matches.types';
 
 import { FINISHED_GAME, MATCH_EVENT, MATCH_STATUS } from '@/constants/match';
+import { useViewport } from '@/services/viewport.ts';
 
 import HoverablePlayerName from '../HoverablePlayerName.vue';
 
@@ -108,7 +109,7 @@ const props = defineProps<{
 }>();
 
 const { t } = useI18n();
-
+const { isMobile } = useViewport();
 const sortedEvents = computed(() => {
   return [...props.events].sort((a, b) => {
     return parseGametime(a.gametime) - parseGametime(b.gametime);
