@@ -211,7 +211,8 @@
   },
   "moreInfoModal": {
     "countdownMessage": "Você tem {countdown} para fazer sua aposta nesse jogo.",
-    "betsAvailable": "As apostas de todos os participantes estarão disponíveis quando a partida começar."
+    "betsAvailable": "As apostas de todos os participantes estarão disponíveis quando a partida começar.",
+    "eventsNotStarted": "Os eventos estarão disponíveis quando a partida começar."
   },
   "bets": {
     "filterLabel": "Filtrar por resultado",

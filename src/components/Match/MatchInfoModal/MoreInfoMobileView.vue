@@ -25,7 +25,7 @@
       <span :class="{ 'selected-button': selectedOption === OPTIONS.BETS }">
         <PrimeButton
           variant="text"
-          icon="pi pi-list-check"
+          icon="pi pi-trophy"
           size="small"
           :label="t('matches.bets')"
           :aria-label="t('matches.bets')"
@@ -65,7 +65,7 @@
     mode="out-in"
   >
     <div
-      v-if="selectedOption === OPTIONS.EVENTS && match.events.length > 0"
+      v-if="selectedOption === OPTIONS.EVENTS"
       key="events"
       class="events-container"
     >
@@ -106,7 +106,7 @@ import ScoreComponent from '../ScoreComponent.vue';
 import BetsContainer from './BetsContainer.vue';
 import MoreInfoDetails from './MoreInfoDetails.vue';
 
-defineProps<{
+const props = defineProps<{
   hitLevel: null | THitLevel;
   isMatchStarted: boolean;
   match: IMatch;
@@ -119,7 +119,7 @@ enum OPTIONS {
 }
 
 // ------ Initialization ------
-const selectedOption = ref(OPTIONS.MATCH_INFO);
+const selectedOption = ref(props.isMatchStarted ? OPTIONS.EVENTS : OPTIONS.MATCH_INFO);
 const clockStore = useClockStore();
 const { t } = useI18n();
 
@@ -139,7 +139,7 @@ function toggleOption(newOption: OPTIONS) {
 
 .events-container {
   display: flex;
-  margin-top: var(--s-spacing);
+  margin: var(--s-spacing) var(--xs-spacing) var(--s-spacing) var(--xs-spacing);
   background: color-mix(in srgb, var(--color-main) 20%, transparent);
   border-radius: var(--border-radius);
 }

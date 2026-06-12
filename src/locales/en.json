@@ -211,7 +211,8 @@
   },
   "moreInfoModal": {
     "countdownMessage": "You have {countdown} to place your bet on this match.",
-    "betsAvailable": "All participants' bets will be available once the match starts."
+    "betsAvailable": "All participants' bets will be available once the match starts.",
+    "eventsNotStarted": "Events will be available once the match starts."
   },
   "bets": {
     "filterLabel": "Filter by outcome",

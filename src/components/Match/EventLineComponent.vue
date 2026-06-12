@@ -1,5 +1,8 @@
 <template>
-  <div class="events-line-outer">
+  <div
+    v-if="events.length > 0"
+    class="events-line-outer"
+  >
     <div class="full-line separator">
       {{ t('matches.start') }}
     </div>
@@ -79,6 +82,13 @@
       </div>
     </div>
   </div>
+  <div
+    v-else-if="matchStatus === MATCH_STATUS.NOT_STARTED"
+    class="no-events-message"
+  >
+    <i class="pi pi-clock" />
+    <p>{{ t('moreInfoModal.eventsNotStarted') }}</p>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -87,7 +97,7 @@ import { useI18n } from 'vue-i18n';
 
 import type { IMatchEvent } from '@/stores/matches.types';
 
-import { FINISHED_GAME, MATCH_EVENT } from '@/constants/match';
+import { FINISHED_GAME, MATCH_EVENT, MATCH_STATUS } from '@/constants/match';
 
 import HoverablePlayerName from '../HoverablePlayerName.vue';
 
@@ -191,6 +201,28 @@ function parseGametime(gametime: string) {
         min-width: 40px;
       }
     }
+  }
+}
+
+.no-events-message {
+  display: flex;
+  flex-direction: column;
+  gap: var(--m-spacing);
+  align-items: center;
+  justify-content: center;
+  padding: var(--xl-spacing) var(--l-spacing);
+  text-align: center;
+
+  i {
+    font-size: var(--xxl-font-size);
+    color: var(--bolao-c-grey1-t2);
+  }
+
+  p {
+    margin: 0;
+    font-size: var(--m-font-size);
+    line-height: 1.6;
+    color: var(--bolao-c-grey1-t2);
   }
 }
 
