@@ -4,7 +4,7 @@
       :is-home-team="true"
       :show-events="isScoreModalOpen"
       :is-winning="isHomeTeamWinning"
-      :events="sortedEvents"
+      :events="showEvents ? sortedEvents : []"
       :match="match"
       :is-demo="isDemo"
       :is-mini="isMini"
@@ -15,7 +15,7 @@
       :show-events="isScoreModalOpen"
       :is-winning="isAwayTeamWinning"
       :match="match"
-      :events="sortedEvents"
+      :events="showEvents ? sortedEvents : []"
       :is-demo="isDemo"
       :is-mini="isMini"
       :hit-level="hitLevel"
@@ -40,8 +40,9 @@ const props = withDefaults(
     isMini?: boolean;
     isScoreModalOpen?: boolean;
     match: IMatch;
+    showEvents?: boolean;
   }>(),
-  { isDemo: false, isMini: false, isScoreModalOpen: false },
+  { isDemo: false, isMini: false, isScoreModalOpen: false, showEvents: false },
 );
 
 const isHomeTeamWinning = computed(() => {
@@ -62,15 +63,7 @@ const isAwayTeamWinning = computed(() => {
 
 const sortedEvents = computed(() => {
   return [...props.match.events].sort((a, b) => {
-    const parseGametime = (gametime: string) => {
-      const match = gametime.match(/^(\d+)(?:\+(\d+))?'/);
-      if (!match) return 0;
-      const minutes = parseInt(match[1], 10);
-      const added = match[2] ? parseInt(match[2], 10) / 100 : 0;
-      return minutes + added;
-    };
-
-    return parseGametime(a.gametime) - parseGametime(b.gametime);
+    return a.gametime.localeCompare(b.gametime);
   });
 });
 </script>

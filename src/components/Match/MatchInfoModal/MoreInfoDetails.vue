@@ -1,69 +1,64 @@
 <template>
   <div header="Informações">
-    <Transition name="expand">
-      <div
-        v-show="showMatchInfo"
-        class="outer"
-      >
-        <div class="match-info">
-          <div :class="{ 'span-two': isMobile }">
-            <StadiumStickerComponent :stadium="match.stadium" />
-          </div>
-          <div
-            v-if="match.weather.temperature"
-            class="info-section"
+    <div class="outer">
+      <div class="match-info">
+        <div :class="{ 'span-two': isMobile }">
+          <StadiumStickerComponent :stadium="match.stadium" />
+        </div>
+        <div
+          v-if="match.weather.temperature"
+          class="info-section"
+        >
+          <h3><i class="pi pi-sun" /><i class="pi pi-cloud" /> {{ t('matches.weather') }}</h3>
+          <p class="info-title">{{ match.weather?.temperature ?? '' }} °C</p>
+          <p class="info-detail">{{ t('matches.humidity') }}: {{ match.weather?.humidity ?? '' }}%</p>
+          <p class="info-detail">{{ t('matches.windSpeed') }}: {{ match.weather?.windSpeed ?? '' }}km/h</p>
+          <p
+            v-if="locale === 'pt-BR'"
+            class="info-detail"
           >
-            <h3><i class="pi pi-sun" /><i class="pi pi-cloud" /> {{ t('matches.weather') }}</h3>
-            <p class="info-title">{{ match.weather?.temperature ?? '' }} °C</p>
-            <p class="info-detail">{{ t('matches.humidity') }}: {{ match.weather?.humidity ?? '' }}%</p>
-            <p class="info-detail">{{ t('matches.windSpeed') }}: {{ match.weather?.windSpeed ?? '' }}km/h</p>
-            <p
-              v-if="locale === 'pt-BR'"
-              class="info-detail"
-            >
-              {{ match.weather.description ?? '' }}
-            </p>
-          </div>
-          <div class="info-section">
-            <h3><i class="pi pi-user" /> {{ t('matches.referee') }}</h3>
-            <p class="info-title">
-              {{ match.referee.name }}
-            </p>
-            <p class="info-detail">
-              <img
-                class="flag"
-                :src="`https://assets.omegafox.me/copa/countries_flags/${match.referee.isoCode.toLowerCase()}.png`"
-                :alt="locale === 'pt-BR' ? match.referee.country : match.referee.country"
-              />
-              {{ locale === 'pt-BR' ? match.referee.country : match.referee.countryEn }}
-            </p>
-          </div>
+            {{ match.weather.description ?? '' }}
+          </p>
+        </div>
+        <div class="info-section">
+          <h3><i class="pi pi-user" /> {{ t('matches.referee') }}</h3>
+          <p class="info-title">
+            {{ match.referee.name }}
+          </p>
+          <p class="info-detail">
+            <img
+              class="flag"
+              :src="`https://assets.omegafox.me/copa/countries_flags/${match.referee.isoCode.toLowerCase()}.png`"
+              :alt="locale === 'pt-BR' ? match.referee.country : match.referee.country"
+            />
+            {{ locale === 'pt-BR' ? match.referee.country : match.referee.countryEn }}
+          </p>
+        </div>
 
-          <div class="info-section">
-            <h3><i class="pi pi-calendar" /> {{ t('matches.dateAndTime') }}</h3>
-            <p class="info-title">
-              {{ clockStore.getFormattedDate(match.timestamp) }}
-            </p>
-            <p class="info-detail"><i class="pi pi-clock" /> {{ clockStore.getFormattedTime(match.timestamp) }}</p>
-            <p
-              v-if="countdown"
-              class="info-detail"
-            >
-              <i class="pi pi-clock" />
-              {{ t('matches.countdown', { countdown }) }}
-            </p>
-          </div>
+        <div class="info-section">
+          <h3><i class="pi pi-calendar" /> {{ t('matches.dateAndTime') }}</h3>
+          <p class="info-title">
+            {{ clockStore.getFormattedDate(match.timestamp) }}
+          </p>
+          <p class="info-detail"><i class="pi pi-clock" /> {{ clockStore.getFormattedTime(match.timestamp) }}</p>
+          <p
+            v-if="countdown"
+            class="info-detail"
+          >
+            <i class="pi pi-clock" />
+            {{ t('matches.countdown', { countdown }) }}
+          </p>
+        </div>
 
-          <div class="info-section">
-            <h3><i class="pi pi-flag" /> {{ t('matches.round') }}</h3>
-            <p class="info-detail">
-              {{ clockStore.getRoundName(match.round) }}
-            </p>
-            <p class="info-detail">{{ match.group ? `${t('matches.group', { group: match.group })}` : '' }}</p>
-          </div>
+        <div class="info-section">
+          <h3><i class="pi pi-flag" /> {{ t('matches.round') }}</h3>
+          <p class="info-detail">
+            {{ clockStore.getRoundName(match.round) }}
+          </p>
+          <p class="info-detail">{{ match.group ? `${t('matches.group', { group: match.group })}` : '' }}</p>
         </div>
       </div>
-    </Transition>
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
@@ -78,7 +73,6 @@ import { useClockStore } from '@/stores/clock';
 
 const props = defineProps<{
   match: IMatch;
-  showMatchInfo: boolean;
 }>();
 
 // ------ Initialization ------

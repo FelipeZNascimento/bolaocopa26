@@ -44,42 +44,49 @@
         @login-required="isLoginModalOpen = true"
       />
     </div>
-    <div
-      v-if="showEvents && events.length > 0"
-      class="events-container"
-      :class="{ 'is-home-events': isHomeTeam }"
-      :style="{ alignItems: isHomeTeam ? 'flex-start' : 'flex-end' }"
-    >
+    <Transition name="expand">
       <div
-        v-for="event in events"
-        :key="event.id"
-        class="event"
-        :style="{
-          flexDirection: isHomeTeam ? 'row' : 'row-reverse',
-          visibility: event.teamId === team.id ? 'visible' : 'hidden',
-        }"
+        v-if="showEvents && events.length > 0"
+        class="events-container"
+        :class="{ 'is-home-events': isHomeTeam }"
+        :style="{ alignItems: isHomeTeam ? 'flex-start' : 'flex-end' }"
       >
-        <div class="line">
-          <span
-            v-if="isHomeTeam"
-            style="width:"
-          >
-            {{ event.event.id === MATCH_EVENT.PENALTY_SHOOTOUT ? 'PEN' : event.gametime }}
-          </span>
-          <img
-            style="width: 20px; height: 20px"
-            :src="getEventIconUrl(event.event.id, isHomeTeam)"
-            :alt="event.event.description"
+        <div
+          v-for="event in events"
+          :key="event.id"
+          class="event"
+          :style="{
+            flexDirection: isHomeTeam ? 'row' : 'row-reverse',
+            visibility: event.teamId === team.id ? 'visible' : 'hidden',
+          }"
+        >
+          <div class="line">
+            <div class="line-icon-and-time">
+              <img
+                style="width: 20px; height: 20px"
+                :src="getEventIconUrl(event.event.id, isHomeTeam)"
+                :alt="event.event.description"
+              />
+
+              <span
+                v-if="isHomeTeam"
+                style="width:"
+              >
+                {{ event.event.id === MATCH_EVENT.PENALTY_SHOOTOUT ? 'PEN' : event.gametime }}
+              </span>
+              <span v-if="!isHomeTeam">{{
+                event.event.id === MATCH_EVENT.PENALTY_SHOOTOUT ? 'PEN' : event.gametime
+              }}</span>
+            </div>
+          </div>
+          <HoverablePlayerName
+            v-if="event.player"
+            :player="event.player"
+            :text-align="isHomeTeam ? 'right' : 'left'"
           />
-          <span v-if="!isHomeTeam">{{ event.event.id === MATCH_EVENT.PENALTY_SHOOTOUT ? 'PEN' : event.gametime }}</span>
         </div>
-        <HoverablePlayerName
-          v-if="event.player"
-          :player="event.player"
-          :text-align="isHomeTeam ? 'right' : 'left'"
-        />
       </div>
-    </div>
+    </Transition>
   </div>
 
   <!-- Modals -->
@@ -404,11 +411,30 @@ function openTeamModal(team: ITeam) {
       min-width: 76px;
       font-size: var(--xs-font-size);
       line-height: 1;
+
+      @media (width <=768px) {
+        width: 40px;
+        min-width: 40px;
+      }
+    }
+
+    .line-icon-and-time {
+      display: flex;
+      flex-direction: row;
+      gap: var(--s-spacing);
+      align-items: center;
+      justify-content: center;
+
+      @media (width <=768px) {
+        flex-direction: column;
+      }
     }
   }
 }
 
 :deep(.player-name-hover) {
+  flex: 1;
+  font-size: var(--xs-font-size);
   font-weight: 500;
 }
 
@@ -416,5 +442,20 @@ function openTeamModal(team: ITeam) {
   text-decoration: dotted underline;
   text-underline-offset: 2px;
   cursor: pointer;
+}
+
+.expand-enter-active,
+.expand-leave-active {
+  max-height: 500px;
+  opacity: 1;
+  transition: all 0.4s ease;
+}
+
+.expand-enter-from,
+.expand-leave-to {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  opacity: 0;
 }
 </style>

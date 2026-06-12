@@ -138,13 +138,6 @@ const selectedSection = ref<TSection>(SECTIONS.STANDINGS); // 'STANDINGS' | 'STA
     :deep(.p-button-label) {
       display: none;
     }
-
-    :deep(.p-button) {
-      justify-content: center;
-      min-width: 44px;
-      min-height: 44px;
-      padding: var(--xs-spacing);
-    }
   }
 }
 

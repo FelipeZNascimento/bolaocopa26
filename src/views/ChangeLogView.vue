@@ -32,6 +32,14 @@ import { ref } from 'vue';
 
 const changelogEntries = ref([
   {
+    changes: [
+      '🐛 [Ranking] Now updating in real time',
+      '[Match] Match modal was changed to improve visibility and performance',
+    ],
+    date: '12/06/2026',
+    version: 'v1.0.25',
+  },
+  {
     changes: ['🐛 [Extras] Top scorer and best players were being scrambled up'],
     date: '11/06/2026',
     version: 'v1.0.24',

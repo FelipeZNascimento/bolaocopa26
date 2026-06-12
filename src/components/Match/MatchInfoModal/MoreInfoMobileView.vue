@@ -1,5 +1,5 @@
 <template>
-  <div class="outer">
+  <div class="more-info-mobile-view-outer">
     <ClockComponent
       style="width: 100%"
       :timestamp="match.timestamp"
@@ -16,21 +16,80 @@
       :active-user-bet="match.loggedUserBets"
       :hit-level="hitLevel"
       :is-match-started="isMatchStarted"
+      :show-events="false"
     />
-    <button
-      class="match-info-toggle"
-      :aria-expanded="showMatchInfo"
-      :aria-label="t('matches.moreDetails')"
-      @click="toggleMatchInfo"
+    <nav
+      class="section-nav"
+      style="display: flex; gap: var(--xs-spacing)"
     >
-      <i :class="showMatchInfo ? 'pi pi-minus' : 'pi pi-info-circle'" />
-      <span>{{ t('matches.moreDetails') }}</span>
-    </button>
+      <span :class="{ 'selected-button': selectedOption === OPTIONS.BETS }">
+        <PrimeButton
+          variant="text"
+          icon="pi pi-trophy"
+          size="small"
+          :label="t('matches.bets')"
+          :aria-label="t('matches.bets')"
+          style="color: var(--bolao-c-mint-l2)"
+          @click="toggleOption(OPTIONS.BETS)"
+        />
+      </span>
+      <span class="section-nav__divider" />
+      <span :class="{ 'selected-button': selectedOption === OPTIONS.EVENTS }">
+        <PrimeButton
+          variant="text"
+          icon="pi pi-list-check"
+          :label="t('matches.events')"
+          size="small"
+          :aria-label="t('matches.events')"
+          style="color: var(--bolao-c-blue-l2)"
+          @click="toggleOption(OPTIONS.EVENTS)"
+        />
+      </span>
+      <span class="section-nav__divider" />
+      <span :class="{ 'selected-button': selectedOption === OPTIONS.MATCH_INFO }">
+        <PrimeButton
+          variant="text"
+          icon="pi pi-info-circle"
+          :label="t('matches.moreDetails')"
+          size="small"
+          style="color: var(--bolao-c-white)"
+          :aria-label="t('matches.moreDetails')"
+          @click="toggleOption(OPTIONS.MATCH_INFO)"
+        />
+      </span>
+    </nav>
   </div>
-  <MoreInfoDetails
-    :match="match"
-    :showMatchInfo="showMatchInfo"
-  />
+
+  <Transition
+    name="expand"
+    mode="out-in"
+  >
+    <div
+      v-if="selectedOption === OPTIONS.EVENTS"
+      key="events"
+      class="events-container"
+    >
+      <div style="display: flex; flex: 1">
+        <EventLineComponent
+          :events="match.events"
+          :home-team-id="match.homeTeam.id"
+          :match-status="match.status"
+        />
+      </div>
+    </div>
+    <div
+      v-else-if="selectedOption === OPTIONS.MATCH_INFO"
+      key="match-info"
+    >
+      <MoreInfoDetails :match="match" />
+    </div>
+  </Transition>
+  <div
+    v-if="selectedOption === OPTIONS.BETS"
+    key="bets"
+  >
+    <BetsContainer :match="match" />
+  </div>
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
@@ -42,31 +101,47 @@ import type { IMatch } from '@/stores/matches.types';
 import { useClockStore } from '@/stores/clock';
 
 import ClockComponent from '../ClockComponent.vue';
+import EventLineComponent from '../EventLineComponent.vue';
 import ScoreComponent from '../ScoreComponent.vue';
+import BetsContainer from './BetsContainer.vue';
 import MoreInfoDetails from './MoreInfoDetails.vue';
 
-defineProps<{
+const props = defineProps<{
   hitLevel: null | THitLevel;
   isMatchStarted: boolean;
   match: IMatch;
 }>();
 
+enum OPTIONS {
+  BETS,
+  EVENTS,
+  MATCH_INFO,
+}
+
 // ------ Initialization ------
-const showMatchInfo = ref(false);
+const selectedOption = ref(props.isMatchStarted ? OPTIONS.EVENTS : OPTIONS.MATCH_INFO);
 const clockStore = useClockStore();
 const { t } = useI18n();
 
 // ------ Functions ------
-function toggleMatchInfo() {
-  showMatchInfo.value = !showMatchInfo.value;
+
+function toggleOption(newOption: OPTIONS) {
+  selectedOption.value = newOption;
 }
 </script>
 <style lang="scss" scoped>
-.outer {
+.more-info-mobile-view-outer {
   display: flex;
   flex-direction: column;
   gap: var(--s-spacing);
   margin: 0 var(--xs-spacing) !important;
+}
+
+.events-container {
+  display: flex;
+  margin: var(--s-spacing) var(--xs-spacing) var(--s-spacing) var(--xs-spacing);
+  background: color-mix(in srgb, var(--color-main) 20%, transparent);
+  border-radius: var(--border-radius);
 }
 
 .match-info-toggle {
@@ -79,7 +154,7 @@ function toggleMatchInfo() {
   width: 100%;
   height: 30px;
   overflow: hidden;
-  font-size: var(--s-font-size);
+  font-size: var(--xs-font-size);
   font-weight: 600;
   color: var(--color-contrast);
   cursor: pointer;
@@ -145,7 +220,7 @@ function toggleMatchInfo() {
     }
 
     i {
-      color: var(--color-anchor);
+      // color: var(--color-anchor);
       transform: scale(1.2);
     }
   }
@@ -164,5 +239,43 @@ function toggleMatchInfo() {
       transform: scale(0.93);
     }
   }
+}
+
+.section-nav {
+  display: flex;
+  gap: var(--xs-spacing);
+  align-items: center;
+  justify-content: center;
+  padding: var(--xs-spacing) var(--m-spacing);
+  background-color: color-mix(in srgb, var(--color-main) 20%, transparent);
+  border: 1px solid var(--bolao-c-blue3);
+  border-radius: var(--border-radius);
+
+  &__divider {
+    width: 1px;
+    height: 16px;
+    background-color: var(--bolao-c-blue3);
+  }
+}
+
+.expand-enter-active,
+.expand-leave-active,
+.fade-enter-active,
+.fade-leave-active {
+  opacity: 1;
+  transition: opacity 0.25s ease;
+}
+
+.expand-enter-from,
+.expand-leave-to {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  opacity: 0;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

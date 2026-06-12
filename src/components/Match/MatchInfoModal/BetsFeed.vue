@@ -34,31 +34,37 @@
       role="list"
       aria-live="polite"
     >
-      <div
-        v-for="bet in visibleBets"
-        :key="bet.id"
-        class="bet-row"
-        :class="[`bet-row--${bet.hitLevel}`, { 'bet-row--self': bet.isActiveUser }]"
-        role="listitem"
+      <PrimeVirtualScroller
+        class="virtual-scroller"
+        :items="visibleBets"
+        :itemSize="56"
       >
-        <span
-          class="bet-row__chip"
-          :class="`bet-row__chip--${bet.hitLevel}`"
-        >
-          <i :class="`pi ${OUTCOME_ICONS[bet.hitLevel]}`" />
-        </span>
-        <div class="bet-row__name">
-          <NameTag
-            :user="bet.user"
-            :is-clickable="true"
-          />
-        </div>
-        <span
-          class="bet-row__connector"
-          aria-hidden="true"
-        />
-        <span class="bet-row__score">{{ bet.scoreHome }} × {{ bet.scoreAway }}</span>
-      </div>
+        <!-- scrollHeight="360px" -->
+        <template #item="{ item }">
+          <div
+            class="bet-row"
+            :class="[`bet-row--${item.hitLevel}`, { 'bet-row--self': item.isActiveUser }]"
+          >
+            <span
+              class="bet-row__chip"
+              :class="`bet-row__chip--${item.hitLevel}`"
+            >
+              <i :class="`pi ${OUTCOME_ICONS[item.hitLevel]}`" />
+            </span>
+            <div class="bet-row__name">
+              <NameTag
+                :user="item.user"
+                :is-clickable="true"
+              />
+            </div>
+            <span
+              class="bet-row__connector"
+              aria-hidden="true"
+            />
+            <span class="bet-row__score">{{ item.scoreHome }} × {{ item.scoreAway }}</span>
+          </div>
+        </template>
+      </PrimeVirtualScroller>
     </div>
     <p
       v-else
@@ -91,7 +97,6 @@ const props = defineProps<{
 const { t } = useI18n();
 
 const activeFilter = ref<null | THitLevel>(null);
-
 const OUTCOME_ICONS: Record<THitLevel, string> = {
   [HIT_LEVELS.exactScore]: 'pi-trophy',
   [HIT_LEVELS.miss]: 'pi-times-circle',
@@ -203,6 +208,10 @@ function toggleFilter(level: THitLevel) {
     font-size: var(--l-font-size);
     color: color-mix(in srgb, var(--outcome-color) 65%, var(--bolao-c-white) 35%);
     transition: transform 0.2s ease;
+
+    @media (width <= 768px) {
+      font-size: var(--m-font-size);
+    }
   }
 
   &.is-selected {
@@ -253,6 +262,10 @@ function toggleFilter(level: THitLevel) {
   font-weight: 700;
   line-height: 1;
   color: color-mix(in srgb, var(--outcome-color) 65%, var(--bolao-c-white) 35%);
+
+  @media (width <= 768px) {
+    font-size: var(--m-font-size);
+  }
 }
 
 .outcome-card__label {
@@ -277,6 +290,18 @@ function toggleFilter(level: THitLevel) {
 
 .bet-list {
   overflow-y: auto;
+}
+
+.virtual-scroller {
+  min-height: 300px;
+
+  @media (width <= 1024px) {
+    min-height: 300px;
+  }
+
+  @media (width <= 768px) {
+    min-height: 200px;
+  }
 }
 
 .bet-row {

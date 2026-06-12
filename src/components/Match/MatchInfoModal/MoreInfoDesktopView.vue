@@ -16,6 +16,7 @@
       :active-user-bet="match.loggedUserBets"
       :hit-level="hitLevel"
       :is-match-started="isMatchStarted"
+      :show-events="false"
     />
     <div
       class="match-info-toggle"
@@ -29,10 +30,24 @@
       <i class="pi pi-info-circle" />
     </div>
   </div>
-  <MoreInfoDetails
-    :match="match"
-    :showMatchInfo="showMatchInfo"
-  />
+  <div class="events-container">
+    <div style="width: 120px">&nbsp;</div>
+    <div style="display: flex; flex: 1">
+      <EventLineComponent
+        :events="match.events"
+        :home-team-id="match.homeTeam.id"
+        :match-status="match.status"
+      />
+    </div>
+    <div style="width: 60px">&nbsp;</div>
+  </div>
+  <Transition name="expand">
+    <MoreInfoDetails
+      v-if="showMatchInfo"
+      :match="match"
+    />
+  </Transition>
+  <BetsContainer :match="match" />
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
@@ -40,10 +55,12 @@ import { ref } from 'vue';
 import type { THitLevel } from '@/constants/bets';
 import type { IMatch } from '@/stores/matches.types';
 
-import { useClockStore } from '@/stores/clock';
+import { useClockStore } from '@/stores/clock.ts';
 
 import ClockComponent from '../ClockComponent.vue';
+import EventLineComponent from '../EventLineComponent.vue';
 import ScoreComponent from '../ScoreComponent.vue';
+import BetsContainer from './BetsContainer.vue';
 import MoreInfoDetails from './MoreInfoDetails.vue';
 
 defineProps<{
@@ -66,7 +83,18 @@ function toggleMatchInfo() {
   padding: var(--m-spacing);
   margin: 0 var(--l-spacing) !important;
   background: color-mix(in srgb, var(--color-main) 60%, transparent);
-  border-radius: var(--border-radius);
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+}
+
+.events-container {
+  display: flex;
+  gap: var(--l-spacing);
+  padding: 0 var(--m-spacing) var(--m-spacing) var(--m-spacing);
+  margin: 0 var(--l-spacing) !important;
+  background: color-mix(in srgb, var(--color-main) 60%, transparent);
+  border-bottom-right-radius: var(--border-radius);
+  border-bottom-left-radius: var(--border-radius);
 }
 
 .match-info-toggle {
@@ -164,5 +192,19 @@ function toggleMatchInfo() {
       transform: scale(0.93);
     }
   }
+}
+
+.expand-enter-active,
+.expand-leave-active {
+  opacity: 1;
+  transition: opacity 0.25s ease;
+}
+
+.expand-enter-from,
+.expand-leave-to {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  opacity: 0;
 }
 </style>

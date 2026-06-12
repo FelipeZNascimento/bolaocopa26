@@ -25,8 +25,10 @@
     "profile": "Profile"
   },
   "matches": {
+    "bets": "Bets",
     "group": "Group {group}",
     "moreDetails": "Details",
+    "events": "Events",
     "capacity": "Capacity: {capacity} attendees",
     "stadium": "Stadium",
     "referee": "Referee",
@@ -36,7 +38,13 @@
     "windSpeed": "Wind speed",
     "dateAndTime": "Date and Time",
     "round": "Round",
-    "countdown": "There are {countdown} left"
+    "countdown": "There are {countdown} left",
+    "start": "Start",
+    "firstHalf": "First Half",
+    "secondHalf": "Second Half",
+    "extraTimeFirst": "Extra Time - First",
+    "extraTimeSecond": "Extra Time - Second",
+    "finish": "Finished"
   },
   "profileModal": {
     "title": "My Profile",
@@ -203,7 +211,8 @@
   },
   "moreInfoModal": {
     "countdownMessage": "You have {countdown} to place your bet on this match.",
-    "betsAvailable": "All participants' bets will be available once the match starts."
+    "betsAvailable": "All participants' bets will be available once the match starts.",
+    "eventsNotStarted": "Events will be available once the match starts."
   },
   "bets": {
     "filterLabel": "Filter by outcome",
