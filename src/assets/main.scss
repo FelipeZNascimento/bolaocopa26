@@ -67,6 +67,19 @@ a {
   }
 }
 
+.p-button {
+  @media (width <= 400px) {
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: var(--xs-spacing);
+  }
+
+  @media (width <= 768px) {
+    font-size: var(--xs-font-size) !important;
+  }
+}
+
 .p-dialog {
   color: var(--bolao-c-white) !important;
   border-color: transparent !important;

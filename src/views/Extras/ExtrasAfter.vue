@@ -361,7 +361,7 @@ function scrollToSection(el: HTMLElement | null) {
 <style lang="scss" scoped>
 .section-nav {
   display: flex;
-  gap: var(--xs-spacing);
+  gap: 0;
   align-items: center;
   justify-content: center;
   padding: var(--xs-spacing) var(--m-spacing);
@@ -381,13 +381,6 @@ function scrollToSection(el: HTMLElement | null) {
 
     :deep(.p-button-label) {
       display: none;
-    }
-
-    :deep(.p-button) {
-      justify-content: center;
-      min-width: 44px;
-      min-height: 44px;
-      padding: var(--xs-spacing);
     }
   }
 }

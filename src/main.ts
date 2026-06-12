@@ -54,6 +54,7 @@ import PrimeToast from 'primevue/toast';
 import PrimeToastService from 'primevue/toastservice';
 import PrimeToggleSwitch from 'primevue/toggleswitch';
 import PrimeTooltip from 'primevue/tooltip';
+import PrimeVirtualScroller from 'primevue/virtualscroller';
 /* ---- PrimeVue ---- */
 import { createApp } from 'vue';
 
@@ -127,6 +128,7 @@ app.component('PrimeOverlayBadge', PrimeOverlayBadge);
 app.component('PrimePanel', PrimePanel);
 app.component('PrimeCard', PrimeCard);
 app.component('PrimeProgressSpinner', PrimeProgressSpinner);
+app.component('PrimeVirtualScroller', PrimeVirtualScroller);
 
 app.directive('tooltip', PrimeTooltip);
 
