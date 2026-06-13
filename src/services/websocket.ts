@@ -5,9 +5,9 @@ export const WEBSOCKET_EVENTS = {
 export default class WebsocketService {
   public websocketInstance: null | WebSocket;
   private baseUrl: string;
-  private onMessage: (ev: MessageEvent<unknown>) => void;
+  private onMessage: (ev: MessageEvent<string>) => void;
 
-  constructor(onMessage: (ev: MessageEvent<unknown>) => void) {
+  constructor(onMessage: (ev: MessageEvent<string>) => void) {
     // this.baseUrl = import.meta.env.PROD ? 'wss://apicopa.omegafox.me/' : 'ws://localhost:9002/';
     this.baseUrl = import.meta.env.VITE_BOLAO_WS_BASE_URL;
     this.onMessage = onMessage;
