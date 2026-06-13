@@ -33,6 +33,15 @@ import { ref } from 'vue';
 const changelogEntries = ref([
   {
     changes: [
+      '🐛 [Match] Own goals now are being properly shown',
+      '🐛 [Ranking] Now correctly showing round ranking when selected',
+      '[App] General improvements on performance (websocket is now smarter)',
+    ],
+    date: '13/06/2026',
+    version: 'v1.0.26',
+  },
+  {
+    changes: [
       '🐛 [Ranking] Now updating in real time',
       '[Match] Match modal was changed to improve visibility and performance',
     ],
