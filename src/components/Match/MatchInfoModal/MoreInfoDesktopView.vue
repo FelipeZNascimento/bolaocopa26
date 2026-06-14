@@ -32,7 +32,7 @@
   </div>
   <div
     class="events-container"
-    style=" flex: 1; align-items: center;justify-content: center; border-radius: 0"
+    style="flex: 1; align-items: center; justify-content: center; border-radius: 0"
   >
     <PrimeToggleSwitch v-model="showEvents" />{{ t('matches.showEvents') }}
   </div>

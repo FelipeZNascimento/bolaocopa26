@@ -241,11 +241,11 @@ watch(
 .more-info {
   position: relative;
   display: flex;
+  gap: var(--s-spacing);
   align-items: center;
   justify-content: center;
-  min-width: 60px;
-  gap: var(--s-spacing);
   justify-content: space-around;
+  min-width: 60px;
   padding: var(--s-spacing);
   overflow: hidden;
   font-weight: 600;
