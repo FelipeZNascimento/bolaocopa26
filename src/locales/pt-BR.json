@@ -13,7 +13,9 @@
     "clickHere": "Clique aqui",
     "loggedInOnly": "Esta área é exclusivamente para usuários logados. Por favor, faça login para acessar este conteúdo.",
     "seeMore": "Ver mais",
-    "groupStage": "Fase de grupos"
+    "groupStage": "Fase de grupos",
+    "points": "Pontos",
+    "pointsShort": "Pts."
   },
   "navigation": {
     "home": "Início",

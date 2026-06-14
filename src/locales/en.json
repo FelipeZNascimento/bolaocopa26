@@ -13,7 +13,9 @@
     "clickHere": "Click here",
     "loggedInOnly": "This area is exclusively for logged-in users. Please log in to access this content.",
     "seeMore": "See more",
-    "groupStage": "Group stage"
+    "groupStage": "Group stage",
+    "points": "Points",
+    "pointsShort": "Pts."
   },
   "navigation": {
     "home": "Home",

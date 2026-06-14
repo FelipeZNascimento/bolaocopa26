@@ -30,6 +30,12 @@
       <span v-else-if="!isClockStopped">{{ gametimeDisplay ?? `0'` }}</span>
     </span>
     <span
+      v-if="isMobile && showPoints"
+      style="position: absolute; right: 40px"
+    >
+      {{ getPointsAwarded(props.pointsAwarded, props.hitLevel) }} {{ t('common.pointsShort') }}
+    </span>
+    <span
       v-if="!isMatchStarted"
       class="clock-future"
       :class="{ 'is-mini': isMini }"
@@ -51,11 +57,13 @@
 </template>
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import type { IPointsAwarded } from '@/stores/matches.types';
 
 import { type THitLevel } from '@/constants/bets';
 import { MATCH_STATUS, MATCH_STATUS_LABELS, STOPPED_GAME, type TMatchStatus } from '@/constants/match';
+import { useViewport } from '@/services/viewport.ts';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useClockStore } from '@/stores/clock';
 import { getPointsAwarded } from '@/util/betsCalculator';
@@ -68,6 +76,7 @@ const props = defineProps<{
   isMatchStarted: boolean;
   isMini?: boolean;
   pointsAwarded?: IPointsAwarded;
+  showPoints?: boolean | null;
   status: TMatchStatus;
   timestamp: number;
 }>();
@@ -75,6 +84,8 @@ const props = defineProps<{
 // ------ Initialization ------
 const clockStore = useClockStore();
 const activeProfileStore = useActiveProfileStore();
+const { isMobile } = useViewport();
+const { t } = useI18n();
 
 // ------ Computed Properties ------
 const activeProfile = computed(() => {

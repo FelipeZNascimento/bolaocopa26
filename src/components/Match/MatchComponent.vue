@@ -27,7 +27,7 @@
       @keydown.enter="handleMatchClick"
       @keydown.space.prevent="handleMatchClick"
     >
-      <i class="pi pi-plus-circle" />
+      {{ t('common.seeMore') }} <i class="pi pi-plus-circle" />
     </div>
   </div>
   <div
@@ -82,6 +82,7 @@
 </template>
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import type { IMatch } from '@/stores/matches.types';
 
@@ -116,6 +117,7 @@ const sweepColor = ref('');
 // ------ Initialization ------
 const clockStore = useClockStore();
 const { isMobile } = useViewport();
+const { t } = useI18n();
 
 // ------ Computed Properties ------
 // const correctBets = { bullseye: [], half: [] };
@@ -239,11 +241,11 @@ watch(
 .more-info {
   position: relative;
   display: flex;
-  flex-direction: column;
-  gap: var(--xxs-spacing);
+  gap: var(--s-spacing);
   align-items: center;
   justify-content: center;
-  width: 60px;
+  justify-content: space-around;
+  min-width: 60px;
   padding: var(--s-spacing);
   overflow: hidden;
   font-weight: 600;
@@ -333,7 +335,7 @@ watch(
   @media (width <=768px) {
     min-width: 48px;
     min-height: 30px;
-    padding: var(--xs-spacing);
+    padding: var(--xs-spacing) var(--m-spacing);
     font-size: var(--xxs-font-size);
 
     i {
