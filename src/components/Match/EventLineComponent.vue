@@ -1,9 +1,9 @@
 <template>
-  <div
-    v-if="events.length > 0"
-    class="events-line-outer"
-  >
-    <div class="full-line separator">
+  <div class="events-line-outer">
+    <div
+      v-if="matchStatus !== MATCH_STATUS.NOT_STARTED"
+      class="full-line separator"
+    >
       {{ t('matches.start') }}
     </div>
     <div
@@ -83,7 +83,7 @@
     </div>
   </div>
   <div
-    v-else-if="matchStatus === MATCH_STATUS.NOT_STARTED && isMobile"
+    v-if="matchStatus === MATCH_STATUS.NOT_STARTED && isMobile"
     class="no-events-message"
   >
     <i class="pi pi-clock" />

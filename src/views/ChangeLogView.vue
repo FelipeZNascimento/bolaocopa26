@@ -35,9 +35,11 @@ const changelogEntries = ref([
     changes: [
       '🐛 [Match] Own goals now are being properly shown',
       '🐛 [Ranking] Now correctly showing round ranking when selected',
+      '[Match] Scrollbar is now performing better while showing bets',
+      '[Match] Added a toggle on desktop view to hide/show match events',
       '[App] General improvements on performance (websocket is now smarter)',
     ],
-    date: '13/06/2026',
+    date: '14/06/2026',
     version: 'v1.0.26',
   },
   {
