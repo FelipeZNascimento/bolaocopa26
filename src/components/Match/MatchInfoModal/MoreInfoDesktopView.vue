@@ -30,17 +30,28 @@
       <i class="pi pi-info-circle" />
     </div>
   </div>
-  <div class="events-container">
-    <div style="width: 120px">&nbsp;</div>
-    <div style="display: flex; flex: 1">
-      <EventLineComponent
-        :events="match.events"
-        :home-team-id="match.homeTeam.id"
-        :match-status="match.status"
-      />
-    </div>
-    <div style="width: 60px">&nbsp;</div>
+  <div
+    class="events-container"
+    style="justify-content: center; align-items: center; flex: 1; border-radius: 0"
+  >
+    <PrimeToggleSwitch @click="showEvents = !showEvents" />{{ t('matches.showEvents') }}
   </div>
+  <Transition name="expand">
+    <div
+      v-if="showEvents"
+      class="events-container"
+    >
+      <div style="width: 120px">&nbsp;</div>
+      <div style="display: flex; flex: 1">
+        <EventLineComponent
+          :events="match.events"
+          :home-team-id="match.homeTeam.id"
+          :match-status="match.status"
+        />
+      </div>
+      <div style="width: 60px">&nbsp;</div>
+    </div>
+  </Transition>
   <Transition name="expand">
     <MoreInfoDetails
       v-if="showMatchInfo"
@@ -51,6 +62,7 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import type { THitLevel } from '@/constants/bets';
 import type { IMatch } from '@/stores/matches.types';
@@ -72,6 +84,8 @@ defineProps<{
 // ------ Initialization ------
 const clockStore = useClockStore();
 const showMatchInfo = ref(false);
+const showEvents = ref(true);
+const { t } = useI18n();
 
 function toggleMatchInfo() {
   showMatchInfo.value = !showMatchInfo.value;

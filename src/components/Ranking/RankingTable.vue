@@ -339,6 +339,9 @@ const selectedRound = computed(() => configurationStore.selectedRound);
 
 const filteredRankingData = computed(() => {
   if (!showFavoritesOnly.value) {
+    if (isRound.value) {
+      return selectedRoundRanking.value;
+    }
     return isExtrasActive.value ? selectedRanking.value : editionRankingWithoutExtras.value;
   }
 

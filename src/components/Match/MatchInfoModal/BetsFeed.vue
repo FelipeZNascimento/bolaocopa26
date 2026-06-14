@@ -37,7 +37,7 @@
       <PrimeVirtualScroller
         class="virtual-scroller"
         :items="visibleBets"
-        :itemSize="56"
+        :itemSize="40"
       >
         <!-- scrollHeight="360px" -->
         <template #item="{ item }">
@@ -293,14 +293,26 @@ function toggleFilter(level: THitLevel) {
 }
 
 .virtual-scroller {
-  min-height: 300px;
-
-  @media (width <= 1024px) {
-    min-height: 300px;
-  }
-
   @media (width <= 768px) {
-    min-height: 200px;
+    @media (height <= 700px) {
+      min-height: 230px;
+    }
+    @media (height <= 800px) {
+      min-height: 300px;
+    }
+
+    @media (height <= 900px) {
+      min-height: 380px;
+    }
+    @media (height <= 1000px) {
+      min-height: 450px;
+    }
+    @media (height > 1000px) {
+      min-height: 500px;
+    }
+  }
+  @media (width > 768px) {
+    min-height: 500px;
   }
 }
 

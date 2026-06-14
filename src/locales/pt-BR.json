@@ -44,7 +44,8 @@
     "secondHalf": "Segundo Tempo",
     "extraTimeFirst": "Prorrogação - 1o Tempo",
     "extraTimeSecond": "Prorrogação - 2o Tempo",
-    "finish": "Fim"
+    "finish": "Fim",
+    "showEvents": "Ver eventos da partida"
   },
   "profileModal": {
     "title": "Meu Perfil",

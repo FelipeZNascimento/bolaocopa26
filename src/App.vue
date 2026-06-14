@@ -111,13 +111,6 @@ const activeProfile = computed(() => activeProfileStore.activeProfile);
 const isLoading = computed(() => activeProfileStore.isLoading);
 
 // ------ Watches ------
-// Fetches week's matches and week's ranking when selectedRound is changed
-watch(selectedRound, async (newValue, oldValue) => {
-  if (newValue && oldValue && newValue !== oldValue) {
-    matchService.fetch();
-  }
-});
-
 // Fetches rankings and week's matches when user logs in or out
 // Fetches rankings and week's matches when user updates profile
 watch(activeProfile, async (newValue) => {

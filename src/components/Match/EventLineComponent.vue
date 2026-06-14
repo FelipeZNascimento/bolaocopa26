@@ -1,9 +1,9 @@
 <template>
-  <div
-    v-if="events.length > 0"
-    class="events-line-outer"
-  >
-    <div class="full-line separator">
+  <div class="events-line-outer">
+    <div
+      v-if="matchStatus !== MATCH_STATUS.NOT_STARTED"
+      class="full-line separator"
+    >
       {{ t('matches.start') }}
     </div>
     <div
@@ -53,7 +53,7 @@
           >
             <img
               style="width: 20px; height: 20px"
-              :src="getEventIconUrl(event.event.id, homeTeamId === event.teamId)"
+              :src="getEventIconUrl(event.event, homeTeamId === event.teamId)"
               :alt="event.event.description"
             />
 
@@ -83,7 +83,7 @@
     </div>
   </div>
   <div
-    v-else-if="matchStatus === MATCH_STATUS.NOT_STARTED && isMobile"
+    v-if="matchStatus === MATCH_STATUS.NOT_STARTED && isMobile"
     class="no-events-message"
   >
     <i class="pi pi-clock" />
@@ -95,7 +95,7 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import type { IMatchEvent } from '@/stores/matches.types';
+import type { IEvent, IMatchEvent } from '@/stores/matches.types';
 
 import { FINISHED_GAME, MATCH_EVENT, MATCH_STATUS } from '@/constants/match';
 import { useViewport } from '@/services/viewport.ts';
@@ -116,8 +116,8 @@ const sortedEvents = computed(() => {
   });
 });
 
-function getEventIconUrl(eventType: number, isHome: boolean) {
-  switch (eventType) {
+function getEventIconUrl(event: IEvent, isHome: boolean) {
+  switch (event.id) {
     case MATCH_EVENT.CARD_RED: {
       return 'https://assets.omegafox.me/copa/icons/red_card.png';
     }
@@ -144,6 +144,9 @@ function getEventIconUrl(eventType: number, isHome: boolean) {
         ? 'https://assets.omegafox.me/copa/icons/penalty_shootout.png'
         : 'https://assets.omegafox.me/copa/icons/penalty_shootout_a.png';
     }
+    default: {
+      return 'https://assets.omegafox.me/copa/icons/whistle.png';
+    }
   }
 }
 
@@ -151,7 +154,8 @@ function parseGametime(gametime: string) {
   const match = gametime.match(/^(\d+)(?:\+(\d+))?'/);
   if (!match) return 0;
   const minutes = parseInt(match[1], 10);
-  return minutes;
+  const added = match[2] ? parseInt(match[2], 10) / 100 : 0;
+  return minutes + added;
 }
 </script>
 <style lang="scss" scoped>

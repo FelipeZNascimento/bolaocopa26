@@ -89,11 +89,16 @@ export default class MatchService {
     }
   }
 
-  private onWebsocketUpdate = (ev: MessageEvent<unknown>) => {
-    if (ev.data === WEBSOCKET_EVENTS.MATCHES_UPDATED) {
-      this.fetch(null, null, true);
-      this.fetchNextMatches(true);
-      this.fetchLiveMatches(true);
+  private onWebsocketUpdate = (ev: MessageEvent<string>) => {
+    const parsedEvent: {
+      data: { allMatches: IMatch[]; liveMatches: IMatch[]; nextMatches: IMatch[] };
+      message: string;
+    } = JSON.parse(ev.data);
+    if (parsedEvent.message === WEBSOCKET_EVENTS.MATCHES_UPDATED) {
+      this.matchesStore.setMatches(parsedEvent.data.allMatches);
+      this.matchesStore.setNextMatches(parsedEvent.data.nextMatches);
+      this.matchesStore.setLiveMatches(parsedEvent.data.liveMatches);
+
       this.rankingService.fetch(true);
     }
   };

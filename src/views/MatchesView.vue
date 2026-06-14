@@ -43,10 +43,10 @@ const { isDesktop } = useViewport();
 // ------ Computed Properties ------
 const isConfigurationLoading = computed(() => configurationStore.isLoading);
 const isMatchesLoading = computed(() => matchesStore.isLoading);
-const matches = computed(() => matchesStore.matches);
+const selectedRound = computed(() => configurationStore.selectedRound);
+const matches = computed(() => matchesStore.matches.filter((m) => m.round === selectedRound.value));
 const isLoading = computed(() => isConfigurationLoading.value || isMatchesLoading.value);
 const rankingPosition = computed(() => configurationStore.rankingPosition);
-const selectedRound = computed(() => configurationStore.selectedRound);
 </script>
 <style scoped lang="scss">
 .outer-matches {

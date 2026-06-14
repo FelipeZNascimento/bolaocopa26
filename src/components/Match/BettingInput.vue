@@ -20,7 +20,13 @@
         {{ isHomeTeam ? props.match.score.home : props.match.score.away }}
       </div>
       <div
-        v-if="!isDemo"
+        v-if="props.match.loggedUserBets === null"
+        class="bet"
+      >
+        x
+      </div>
+      <div
+        v-else-if="!isDemo"
         class="bet"
         :class="{
           gold: hitLevel === HIT_LEVELS.exactScore,
