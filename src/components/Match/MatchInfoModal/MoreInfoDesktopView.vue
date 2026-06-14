@@ -34,7 +34,7 @@
     class="events-container"
     style="justify-content: center; align-items: center; flex: 1; border-radius: 0"
   >
-    <PrimeToggleSwitch @click="showEvents = !showEvents" />{{ t('matches.showEvents') }}
+    <PrimeToggleSwitch v-model="showEvents" />{{ t('matches.showEvents') }}
   </div>
   <Transition name="expand">
     <div
