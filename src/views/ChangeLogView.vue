@@ -32,6 +32,11 @@ import { ref } from 'vue';
 
 const changelogEntries = ref([
   {
+    changes: ['🐛 [Match] Bets on live matches were not being updated'],
+    date: '14/06/2026',
+    version: 'v1.0.26',
+  },
+  {
     changes: [
       '🐛 [Match] Own goals now are being properly shown',
       '🐛 [Ranking] Now correctly showing round ranking when selected',

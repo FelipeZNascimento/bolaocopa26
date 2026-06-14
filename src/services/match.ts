@@ -90,14 +90,36 @@ export default class MatchService {
   }
 
   private onWebsocketUpdate = (ev: MessageEvent<string>) => {
-    const parsedEvent: {
+    const parsedData: {
       data: { allMatches: IMatch[]; liveMatches: IMatch[]; nextMatches: IMatch[] };
       message: string;
     } = JSON.parse(ev.data);
-    if (parsedEvent.message === WEBSOCKET_EVENTS.MATCHES_UPDATED) {
-      this.matchesStore.setMatches(parsedEvent.data.allMatches);
-      this.matchesStore.setNextMatches(parsedEvent.data.nextMatches);
-      this.matchesStore.setLiveMatches(parsedEvent.data.liveMatches);
+    if (parsedData.message === WEBSOCKET_EVENTS.MATCHES_UPDATED) {
+      const mappedByIdCurrent = new Map(this.matchesStore.matches.map((m) => [m.id, m]));
+      const allMatches = parsedData.data.allMatches.map((m) => {
+        return {
+          ...m,
+          loggedUserBets: mappedByIdCurrent.get(m.id)?.loggedUserBets ?? null,
+        };
+      });
+
+      const nextMatches = parsedData.data.nextMatches.map((m) => {
+        return {
+          ...m,
+          loggedUserBets: mappedByIdCurrent.get(m.id)?.loggedUserBets ?? null,
+        };
+      });
+
+      const liveMatches = parsedData.data.liveMatches.map((m) => {
+        return {
+          ...m,
+          loggedUserBets: mappedByIdCurrent.get(m.id)?.loggedUserBets ?? null,
+        };
+      });
+
+      this.matchesStore.setMatches(allMatches);
+      this.matchesStore.setNextMatches(nextMatches);
+      this.matchesStore.setLiveMatches(liveMatches);
 
       this.rankingService.fetch(true);
     }

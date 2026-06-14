@@ -26,8 +26,8 @@
         <span class="live-dot" />
       </span>
       <span v-if="status === MATCH_STATUS.NOT_STARTED">0'</span>
+      <span v-else-if="isClockStopped">{{ MATCH_STATUS_LABELS[status] }}</span>
       <span v-else-if="!isClockStopped">{{ gametimeDisplay ?? `0'` }}</span>
-      {{ MATCH_STATUS_LABELS[status] }}
     </span>
     <span
       v-if="!isMatchStarted"
