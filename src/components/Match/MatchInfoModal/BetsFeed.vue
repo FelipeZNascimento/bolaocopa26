@@ -297,6 +297,7 @@ function toggleFilter(level: THitLevel) {
     @media (height <= 700px) {
       min-height: 230px;
     }
+
     @media (height <= 800px) {
       min-height: 300px;
     }
@@ -304,13 +305,16 @@ function toggleFilter(level: THitLevel) {
     @media (height <= 900px) {
       min-height: 380px;
     }
+
     @media (height <= 1000px) {
       min-height: 450px;
     }
+
     @media (height > 1000px) {
       min-height: 500px;
     }
   }
+
   @media (width > 768px) {
     min-height: 500px;
   }

@@ -9,6 +9,7 @@
       :is-match-started="isMatchStarted"
       :points-awarded="match.pointsAwarded"
       :gametime="match.gametime"
+      :show-points="true"
     />
     <ScoreComponent
       :is-score-modal-open="true"

@@ -32,9 +32,17 @@ import { ref } from 'vue';
 
 const changelogEntries = ref([
   {
+    changes: [
+      '[Match] On mobile view, "See more" button is now more evident',
+      '[Match] On mobile view, match modal now shows points awarded',
+    ],
+    date: '14/06/2026',
+    version: 'v1.0.28',
+  },
+  {
     changes: ['🐛 [Match] Bets on live matches were not being updated'],
     date: '14/06/2026',
-    version: 'v1.0.26',
+    version: 'v1.0.27',
   },
   {
     changes: [
