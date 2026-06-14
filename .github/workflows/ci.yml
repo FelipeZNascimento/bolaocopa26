@@ -47,6 +47,7 @@ jobs:
 
       - id: deployPreprod
         name: 📂 Sync files to PPROD folder
+        continue-on-error: true
         uses: Dylan700/sftp-upload-action@latest
         with:
           server: ${{ secrets.server }}

@@ -49,6 +49,7 @@ jobs:
 
       - id: deployProd
         name: 📂 Sync files to prod folder
+        continue-on-error: true
         uses: Dylan700/sftp-upload-action@latest
         with:
           server: ${{ secrets.server }}
