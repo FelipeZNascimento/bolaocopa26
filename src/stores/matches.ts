@@ -33,6 +33,15 @@ export const useMatchesStore = defineStore('matches', () => {
     originalBets.value = [];
   }
 
+  function updateMatches(newMatches: IMatch[]) {
+    newMatches.forEach((m) => {
+      const index = matches.value.findIndex((mm) => mm.id === m.id);
+      if (index != -1) {
+        matches.value[index] = m;
+      }
+    });
+  }
+
   function setMatches(newMatches: IMatch[]) {
     matches.value = newMatches;
     initializeBets(newMatches);
@@ -267,6 +276,7 @@ export const useMatchesStore = defineStore('matches', () => {
     setNextMatches,
     setUpdatingMatch,
     updateLoggedUserBets,
+    updateMatches,
     updateWorkingBet,
     updatingMatches,
     workingBets,
