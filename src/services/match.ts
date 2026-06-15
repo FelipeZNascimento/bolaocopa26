@@ -91,18 +91,11 @@ export default class MatchService {
 
   private onWebsocketUpdate = (ev: MessageEvent<string>) => {
     const parsedData: {
-      data: { allMatches: IMatch[]; liveMatches: IMatch[]; nextMatches: IMatch[] };
+      data: { allMatches: IMatch[]; liveMatches: IMatch[]; nextMatches: IMatch[]; updatedMatches: IMatch[] };
       message: string;
     } = JSON.parse(ev.data);
     if (parsedData.message === WEBSOCKET_EVENTS.MATCHES_UPDATED) {
       const mappedByIdCurrent = new Map(this.matchesStore.matches.map((m) => [m.id, m]));
-      const allMatches = parsedData.data.allMatches.map((m) => {
-        return {
-          ...m,
-          loggedUserBets: mappedByIdCurrent.get(m.id)?.loggedUserBets ?? null,
-        };
-      });
-
       const nextMatches = parsedData.data.nextMatches.map((m) => {
         return {
           ...m,
@@ -117,7 +110,7 @@ export default class MatchService {
         };
       });
 
-      this.matchesStore.setMatches(allMatches);
+      this.matchesStore.updateMatches(parsedData.data.updatedMatches);
       this.matchesStore.setNextMatches(nextMatches);
       this.matchesStore.setLiveMatches(liveMatches);
 
