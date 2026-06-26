@@ -3,7 +3,7 @@
     <TeamComponent
       :is-home-team="true"
       :show-events="isScoreModalOpen"
-      :is-winning="isHomeTeamWinning"
+      :is-winner="isHomeTeamWinner"
       :events="showEvents ? sortedEvents : []"
       :match="match"
       :is-demo="isDemo"
@@ -13,7 +13,7 @@
     <TeamComponent
       :is-home-team="false"
       :show-events="isScoreModalOpen"
-      :is-winning="isAwayTeamWinning"
+      :is-winner="isAwayTeamWinner"
       :match="match"
       :events="showEvents ? sortedEvents : []"
       :is-demo="isDemo"
@@ -28,7 +28,7 @@ import { computed } from 'vue';
 import type { THitLevel } from '@/constants/bets';
 import type { IBet, IMatch } from '@/stores/matches.types';
 
-import { PENALTIES } from '@/constants/match';
+import { FINISHED_GAME } from '@/constants/match';
 
 import TeamComponent from './TeamComponent.vue';
 const props = withDefaults(
@@ -45,20 +45,26 @@ const props = withDefaults(
   { isDemo: false, isMini: false, isScoreModalOpen: false, showEvents: false },
 );
 
-const isHomeTeamWinning = computed(() => {
-  if (PENALTIES.includes(props.match.status)) {
-    return props.match.score.homePenalties > props.match.score.awayPenalties;
+const isHomeTeamWinner = computed(() => {
+  if (FINISHED_GAME.includes(props.match.status)) {
+    if (props.match.score.home === props.match.score.away) {
+      return props.match.score.homePenalties > props.match.score.awayPenalties;
+    }
+    return props.match.score.home > props.match.score.away;
   }
 
-  return props.match.score.home > props.match.score.away;
+  return null;
 });
 
-const isAwayTeamWinning = computed(() => {
-  if (PENALTIES.includes(props.match.status)) {
-    return props.match.score.awayPenalties > props.match.score.homePenalties;
+const isAwayTeamWinner = computed(() => {
+  if (FINISHED_GAME.includes(props.match.status)) {
+    if (props.match.score.home === props.match.score.away) {
+      return props.match.score.homePenalties < props.match.score.awayPenalties;
+    }
+    return props.match.score.home < props.match.score.away;
   }
 
-  return props.match.score.away > props.match.score.home;
+  return null;
 });
 
 const sortedEvents = computed(() => {

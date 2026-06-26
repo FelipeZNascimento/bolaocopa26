@@ -24,7 +24,7 @@
       <div
         v-if="!isNameless"
         class="team-alias clickable"
-        :class="{ 'is-mini': isMini }"
+        :class="{ 'is-mini': isMini, winner: isWinner, loser: isWinner === false }"
         :style="{ textAlign: isHomeTeam ? 'right' : 'left' }"
         role="button"
         tabindex="0"
@@ -39,7 +39,6 @@
         :is-demo="isDemo"
         :match="match"
         :is-home-team="isHomeTeam"
-        :is-winning="isWinning"
         :hit-level="hitLevel"
         @login-required="isLoginModalOpen = true"
       />
@@ -124,7 +123,7 @@ const props = withDefaults(
     isHomeTeam?: boolean;
     isMini?: boolean;
     isNameless?: boolean;
-    isWinning?: boolean;
+    isWinner?: boolean | null;
     match: IMatch;
     showEvents?: boolean;
   }>(),
@@ -134,7 +133,7 @@ const props = withDefaults(
     isHomeTeam: false,
     isMini: false,
     isNameless: false,
-    isWinning: false,
+    isWinner: null,
     showEvents: false,
   },
 );
@@ -241,6 +240,13 @@ function openTeamModal(team: ITeam) {
     &.is-mini {
       height: 40px;
     }
+  }
+
+  .winner {
+    color: var(--color-contrast);
+  }
+  .loser {
+    color: var(--color-contrast-t);
   }
 }
 

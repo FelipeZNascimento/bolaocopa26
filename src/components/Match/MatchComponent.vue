@@ -4,11 +4,11 @@
     style="display: flex; gap: var(--xs-spacing); justify-content: center; justify-content: space-between"
   >
     <ClockComponent
+      v-if="!isMini"
       :hit-level="hitLevel"
       :timestamp="match.timestamp"
       :status="match.status"
       :is-match-started="isMatchStarted"
-      :is-mini="isMini"
       :points-awarded="match.pointsAwarded"
       :gametime="match.gametime"
       @click="handleMatchClick"
@@ -19,6 +19,7 @@
       aria-hidden="true"
     />
     <div
+      v-if="!isMini"
       class="more-info"
       role="button"
       tabindex="0"
@@ -35,12 +36,11 @@
     :class="{ clickable: isMatchStarted, 'is-mini': isMini }"
   >
     <ClockComponent
-      v-if="!isMobile && !isDemo"
+      v-if="!isMobile && !isDemo && !isMini"
       :hit-level="hitLevel"
       :timestamp="match.timestamp"
       :status="match.status"
       :is-match-started="isMatchStarted"
-      :is-mini="isMini"
       :points-awarded="match.pointsAwarded"
       :gametime="match.gametime"
       @click="handleMatchClick"
@@ -55,7 +55,7 @@
       :is-demo="isDemo"
     />
     <div
-      v-if="!isDemo && !isMobile"
+      v-if="!isDemo && !isMobile && !isMini"
       class="more-info"
       role="button"
       tabindex="0"

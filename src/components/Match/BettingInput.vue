@@ -70,7 +70,6 @@
         placeholder="_"
         :readonly="isMatchStarted || !activeProfile || isLoadingMatch"
         :style="{
-          fontWeight: isWinning ? 'bold' : 'normal',
           textAlign: isOnPenalties && !isMobile ? 'left' : 'center',
           pointerEvents: activeProfile && !isMatchStarted ? 'auto' : 'none',
         }"
@@ -86,9 +85,6 @@
       <div
         v-if="isOnPenalties && !isMobile"
         class="penalties-outer"
-        :style="{
-          fontWeight: isWinning ? 'bold' : 'normal',
-        }"
       >
         <p class="score">
           {{ isHomeTeam ? props.match.score?.homePenalties : props.match.score?.awayPenalties }}
@@ -118,7 +114,6 @@ const props = withDefaults(
     isDemo?: boolean;
     isHomeTeam?: boolean;
     isMini?: boolean;
-    isWinning?: boolean;
     match: IMatch;
   }>(),
   {
@@ -126,7 +121,6 @@ const props = withDefaults(
     isDemo: false,
     isHomeTeam: false,
     isMini: false,
-    isWinning: false,
   },
 );
 

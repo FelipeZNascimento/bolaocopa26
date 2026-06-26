@@ -33,6 +33,18 @@ import { ref } from 'vue';
 const changelogEntries = ref([
   {
     changes: [
+      `🐛 [Match] Bets on live matches are no longer flickering or being displayed wrongly`,
+      `[Match] Refresh button was added if you're too anxious to wait for 30s`,
+      '[Match] Finished matches are now more evident and show date and time when it has started',
+      '[Match] Matches without bets are now shown with an empty grey ribbon',
+      '[Match] Winner team is now highlighted when a match is finished',
+      '[User Modal] Lower limit placement is now 163',
+    ],
+    date: '14/06/2026',
+    version: 'v1.0.29 | v1.0.30',
+  },
+  {
+    changes: [
       '[Match] On mobile view, "See more" button is now more evident',
       '[Match] On mobile view, match modal now shows points awarded',
     ],

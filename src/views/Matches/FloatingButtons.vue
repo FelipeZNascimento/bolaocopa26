@@ -44,6 +44,18 @@
       </button>
       <p style="font-size: var(--xs-font-size)">{{ t('floatingButton.discard.label') }}</p>
     </div>
+    <div class="button-outer">
+      <button
+        v-tooltip.right="t('floatingButton.refresh.tooltip')"
+        class="action-btn refresh-btn"
+        :disabled="hasChanges || isRefreshing"
+        :aria-label="t('floatingButton.refresh.tooltip')"
+        @click="handleRefresh"
+      >
+        <i class="pi pi-sync" />
+      </button>
+      <p style="font-size: var(--xs-font-size)">{{ t('floatingButton.refresh.label') }}</p>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -51,6 +63,7 @@ import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import BetService from '@/services/bet';
+import MatchService from '@/services/match';
 import { useViewport } from '@/services/viewport';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useMatchesStore } from '@/stores/matches';
@@ -64,6 +77,7 @@ defineProps<{
 const isNearBottom = ref(false);
 const isScrolled = ref(false);
 const isSaving = ref(false);
+const isRefreshing = ref(false);
 const keyboardOffset = ref(0);
 
 // ------ Initialization ------
@@ -71,6 +85,7 @@ const matchesStore = useMatchesStore();
 const activeProfileStore = useActiveProfileStore();
 const notificationStore = useNotificationStore();
 const betService = new BetService();
+const matchService = new MatchService();
 const { isDesktop } = useViewport();
 const { t } = useI18n();
 
@@ -195,11 +210,14 @@ const handleReset = () => {
     t('floatingButton.notifications.discard.title'),
   );
 };
-
-// const handleHideRanking = () => {
-//   const newOption = rankingPosition.value === 'active' ? 'modal' : 'active';
-//   configurationStore.setRankingPosition(newOption);
-// };
+const handleRefresh = () => {
+  isRefreshing.value = true;
+  try {
+    matchService.fetch(null, null, true);
+  } finally {
+    isRefreshing.value = false;
+  }
+};
 </script>
 <style scoped lang="scss">
 @keyframes pulse {
@@ -441,6 +459,22 @@ const handleReset = () => {
 
   &:hover:not(:disabled) {
     background: var(--bolao-c-red);
+  }
+}
+
+// ============================================
+// Refresh Button Variant
+// ============================================
+.action-btn.refresh-btn {
+  background: var(--bolao-c-blue-l1);
+  border-color: var(--bolao-c-blue);
+
+  .pi {
+    color: white;
+  }
+
+  &:hover:not(:disabled) {
+    background: var(--bolao-c-blue);
   }
 }
 </style>

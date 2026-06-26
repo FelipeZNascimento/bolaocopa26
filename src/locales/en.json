@@ -154,6 +154,10 @@
       "label": "Discard",
       "tooltip": "Discard all changes"
     },
+    "refresh": {
+      "label": "Refresh",
+      "tooltip": "Refresh all matches"
+    },
     "notifications": {
       "success": {
         "title": "Bets Saved",

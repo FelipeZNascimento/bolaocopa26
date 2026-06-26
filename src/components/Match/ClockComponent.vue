@@ -1,10 +1,10 @@
 <template>
   <div
     class="left-aligned outer-clock"
-    :class="{ 'is-mini': isMini, 'is-live': isMatchStarted && !isClockStopped }"
+    :class="{ 'is-mini': isMini, 'is-live': isMatchStarted && !isClockStopped, finished: isGameFinished }"
   >
     <RibbonComponent
-      v-if="activeProfile && hitLevel"
+      v-if="activeProfile && status !== MATCH_STATUS.NOT_STARTED"
       :hit-level="hitLevel"
       :points="getPointsAwarded(props.pointsAwarded, props.hitLevel)"
     />
@@ -30,19 +30,19 @@
       <span v-else-if="!isClockStopped">{{ gametimeDisplay ?? `0'` }}</span>
     </span>
     <span
-      v-if="isMobile && showPoints"
+      v-if="isMobile && showPoints && hitLevel !== null"
       style="position: absolute; right: 40px"
     >
       {{ getPointsAwarded(props.pointsAwarded, props.hitLevel) }} {{ t('common.pointsShort') }}
     </span>
     <span
-      v-if="!isMatchStarted"
+      v-if="!isMatchStarted || isGameFinished"
       class="clock-future"
       :class="{ 'is-mini': isMini }"
     >
       <i
+        v-if="!isGameFinished"
         class="pi pi-clock"
-        style="font-size: var(--m-font-size)"
       />
       <div class="date">
         <p style="font-weight: bold">
@@ -62,7 +62,7 @@ import { useI18n } from 'vue-i18n';
 import type { IPointsAwarded } from '@/stores/matches.types';
 
 import { type THitLevel } from '@/constants/bets';
-import { MATCH_STATUS, MATCH_STATUS_LABELS, STOPPED_GAME, type TMatchStatus } from '@/constants/match';
+import { FINISHED_GAME, MATCH_STATUS, MATCH_STATUS_LABELS, STOPPED_GAME, type TMatchStatus } from '@/constants/match';
 import { useViewport } from '@/services/viewport.ts';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useClockStore } from '@/stores/clock';
@@ -95,6 +95,7 @@ const activeProfile = computed(() => {
 const gametimeDisplay = computed(() => (props.gametime != null ? props.gametime : ''));
 
 const isClockStopped = computed(() => STOPPED_GAME.includes(props.status));
+const isGameFinished = computed(() => FINISHED_GAME.includes(props.status));
 
 // ------ Refs ------
 const isHeartbeating = ref(false);
@@ -158,6 +159,27 @@ watch(
     }
   }
 
+  &.finished {
+    font-size: var(--xs-font-size);
+    color: var(--bolao-c-grey3);
+
+    background:
+      linear-gradient(
+        150deg,
+        color-mix(in srgb, var(--color-main) 28%, transparent) 0%,
+        color-mix(in srgb, var(--color-main) 5%, transparent) 100%
+      ),
+      var(--bolao-c-grey5-t1);
+
+    i {
+      font-size: var(--s-font-size) !important;
+    }
+
+    .date {
+      font-size: var(--xxs-font-size);
+    }
+  }
+
   i {
     position: relative;
     z-index: 1;
@@ -183,6 +205,7 @@ watch(
   @media (width <=1023px) {
     padding: 0 var(--m-spacing);
     font-size: var(--s-font-size);
+    min-width: 50%;
   }
 
   @media (width >=769px) {
@@ -312,7 +335,8 @@ watch(
   flex-direction: row;
   gap: var(--s-spacing);
   align-items: center;
-  justify-content: space-around;
+  margin-left: var(--m-spacing);
+  // justify-content: space-around;
   font-size: var(--m-font-size);
 
   &.is-mini {
@@ -326,6 +350,10 @@ watch(
     }
   }
 
+  i {
+    font-size: var(--s-font-size);
+  }
+
   .date {
     display: flex;
     flex-direction: column;
@@ -335,7 +363,7 @@ watch(
 
     @media (width <=1024px) {
       flex-direction: row;
-      gap: var(--s-spacing);
+      gap: var(--xs-spacing);
       font-size: var(--xs-font-size);
     }
   }

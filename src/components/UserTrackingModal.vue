@@ -431,7 +431,7 @@ const chartOptions = computed(() => ({
         color: '#f4b303',
         drawOnChartArea: false,
       },
-      max: 140,
+      max: 163,
       min: 1,
       position: 'right' as const,
       reverse: true,
