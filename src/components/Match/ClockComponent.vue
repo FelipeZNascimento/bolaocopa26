@@ -161,7 +161,7 @@ watch(
 
   &.finished {
     font-size: var(--xs-font-size);
-    color: var(--bolao-c-grey3);
+    color: var(--color-contrast-t);
     background:
       linear-gradient(
         150deg,

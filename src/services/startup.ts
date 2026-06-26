@@ -10,6 +10,7 @@ import type { IPlayer, ITeam } from '@/stores/teams.types';
 
 import { detectLocale, LOCALE_STORAGE_KEY } from '@/i18n';
 import { useActiveProfileStore } from '@/stores/activeProfile';
+import { type TServerHealth, useAdminStore } from '@/stores/admin';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useExtraBetStore } from '@/stores/extraBet';
 import { useTeamsStore } from '@/stores/teams';
@@ -25,6 +26,7 @@ export interface InitializeObj {
 
 export default class StartupService {
   private activeProfileStore;
+  private adminStore;
   private apiRequest;
   private configurationStore;
   private extraBetStore;
@@ -32,6 +34,7 @@ export default class StartupService {
 
   constructor() {
     this.apiRequest = new ApiService();
+    this.adminStore = useAdminStore();
     this.activeProfileStore = useActiveProfileStore();
     this.configurationStore = useConfigurationStore();
     this.extraBetStore = useExtraBetStore();
@@ -151,5 +154,11 @@ export default class StartupService {
     } else {
       this.configurationStore.setTheme('light');
     }
+  }
+
+  async serverHealth() {
+    const response: TServerHealth = await this.apiRequest.get('admin/health', undefined, { retries: 3 });
+    console.log('Setting response: ', response);
+    this.adminStore.setServerHealth(response);
   }
 }
