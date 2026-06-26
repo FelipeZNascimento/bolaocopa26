@@ -48,25 +48,25 @@ jobs:
       - id: deployPreprod
         name: 📂 Sync files to PPROD folder
         continue-on-error: true
-        uses: Dylan700/sftp-upload-action@latest
+        uses: wangyucode/sftp-upload-action@v3
         with:
-          server: ${{ secrets.server }}
+          host: ${{ secrets.server }}
           username: ${{ secrets.username_pprod }}
           password: ${{secrets.password_pprod}}
+          localDir: './dist-pprod/'
+          remoteDir: './'
           port: 22
-          uploads: |
-            ./dist-pprod/ => ./
 
       - name: 🔁 Retry PPROD upload if handshake failed
         if: steps.deployPreprod.outcome == 'failure'
-        uses: Dylan700/sftp-upload-action@latest
+        uses: wangyucode/sftp-upload-action@v3
         with:
-          server: ${{ secrets.server }}
+          host: ${{ secrets.server }}
           username: ${{ secrets.username_pprod }}
           password: ${{secrets.password_pprod}}
+          localDir: './dist-pprod/'
+          remoteDir: './'
           port: 22
-          uploads: |
-            ./dist/ => ./
 
   rerun-failed-jobs:
     runs-on: ubuntu-latest
