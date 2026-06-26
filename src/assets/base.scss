@@ -215,6 +215,7 @@ $colors: (
 :root {
   --color-main: var(--bolao-c-white);
   --color-contrast: var(--bolao-c-black);
+  --color-contrast-t: var(--bolao-c-black-t2);
   --color-match-overlay: var(--bolao-c-grey1);
   --color-anchor: var(--bolao-c-blue1);
   --color-background: linear-gradient(135deg, #d4dce6 0%, #c8d5e0 50%, #bccdd9 100%);
@@ -320,6 +321,7 @@ $colors: (
 html[data-theme='dark'] {
   --color-main: var(--bolao-c-black);
   --color-contrast: var(--bolao-c-white);
+  --color-contrast-t: var(--bolao-c-white-t2);
   --color-match-overlay: var(--bolao-c-black);
   --color-background: linear-gradient(135deg, #0a0e14 0%, #141c2c 50%, #1a2738 100%);
   --color-background-soft: var(--vt-c-black-soft);

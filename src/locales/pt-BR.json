@@ -154,6 +154,10 @@
       "label": "Descartar",
       "tooltip": "Descartar todas as alterações"
     },
+    "refresh": {
+      "label": "Atualizar",
+      "tooltip": "Atualizar partidas"
+    },
     "notifications": {
       "success": {
         "title": "Apostas Salvas",

@@ -34,10 +34,12 @@ export const useMatchesStore = defineStore('matches', () => {
   }
 
   function updateMatches(newMatches: IMatch[]) {
-    newMatches.forEach((m) => {
-      const index = matches.value.findIndex((mm) => mm.id === m.id);
+    newMatches.forEach((newM) => {
+      const index = matches.value.findIndex((m) => m.id === newM.id);
       if (index != -1) {
-        matches.value[index] = m;
+        const bets = matches.value[index].bets;
+        const activeProfileBets = matches.value[index].loggedUserBets;
+        matches.value[index] = { ...newM, bets: bets, loggedUserBets: activeProfileBets };
       }
     });
   }
