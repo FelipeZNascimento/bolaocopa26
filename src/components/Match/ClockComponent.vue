@@ -162,7 +162,6 @@ watch(
   &.finished {
     font-size: var(--xs-font-size);
     color: var(--bolao-c-grey3);
-
     background:
       linear-gradient(
         150deg,
@@ -203,9 +202,9 @@ watch(
   }
 
   @media (width <=1023px) {
+    min-width: 50%;
     padding: 0 var(--m-spacing);
     font-size: var(--s-font-size);
-    min-width: 50%;
   }
 
   @media (width >=769px) {
@@ -336,6 +335,7 @@ watch(
   gap: var(--s-spacing);
   align-items: center;
   margin-left: var(--m-spacing);
+
   // justify-content: space-around;
   font-size: var(--m-font-size);
 

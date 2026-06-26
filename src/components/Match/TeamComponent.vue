@@ -245,6 +245,7 @@ function openTeamModal(team: ITeam) {
   .winner {
     color: var(--color-contrast);
   }
+
   .loser {
     color: var(--color-contrast-t);
   }
