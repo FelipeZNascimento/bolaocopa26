@@ -33,6 +33,14 @@ import { ref } from 'vue';
 const changelogEntries = ref([
   {
     changes: [
+      '[Admin] New features on Admin view (but its a secret)',
+      '[Server] Improvements on server stability, logging and error handling to avoid downtime on live update',
+    ],
+    date: '27/06/2026',
+    version: 'v1.0.31',
+  },
+  {
+    changes: [
       `🐛 [Match] Bets on live matches are no longer flickering or being displayed wrongly`,
       `[Match] Refresh button was added if you're too anxious to wait for 30s`,
       '[Match] Finished matches are now more evident and show date and time when it has started',
@@ -40,7 +48,7 @@ const changelogEntries = ref([
       '[Match] Winner team is now highlighted when a match is finished',
       '[User Modal] Lower limit placement is now 163',
     ],
-    date: '14/06/2026',
+    date: '26/06/2026',
     version: 'v1.0.29 | v1.0.30',
   },
   {
