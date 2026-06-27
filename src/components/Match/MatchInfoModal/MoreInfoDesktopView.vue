@@ -18,47 +18,61 @@
       :is-match-started="isMatchStarted"
       :show-events="false"
     />
-    <div
-      class="match-info-toggle"
-      role="button"
-      tabindex="0"
-      :aria-label="$t('match.moreInfo')"
-      @click="toggleMatchInfo"
-      @keydown.enter="toggleMatchInfo"
-      @keydown.space.prevent="toggleMatchInfo"
+  </div>
+  <div class="events-container">
+    <PrimeSelectButton
+      v-model="selectedOption"
+      optionLabel="name"
+      optionValue="value"
+      :options="options"
+      :allowEmpty="false"
+      size="large"
     >
-      <i class="pi pi-info-circle" />
+      <template #option="slotProps">
+        <i
+          :class="slotProps.option.icon"
+          :style="{ color: 'var(' + slotProps.option.color + ')' }"
+        />
+        <span style="font-size: var(--s-font-size)">{{ slotProps.option.name }}</span>
+      </template>
+    </PrimeSelectButton>
+  </div>
+  <div
+    v-if="selectedOption === OPTIONS.SQUADS"
+    class="events-container"
+  >
+    <div style="width: 120px">&nbsp;</div>
+    <div style="display: flex; flex: 1">
+      <SquadsComponent
+        v-if="match.homeTeam.squad && match.awayTeam.squad"
+        :home-team="match.homeTeam"
+        :away-team="match.awayTeam"
+      />
     </div>
   </div>
   <div
+    v-if="selectedOption === OPTIONS.EVENTS"
     class="events-container"
-    style="flex: 1; align-items: center; justify-content: center; border-radius: 0"
   >
-    <PrimeToggleSwitch v-model="showEvents" />{{ t('matches.showEvents') }}
-  </div>
-  <Transition name="expand">
-    <div
-      v-if="showEvents"
-      class="events-container"
-    >
-      <div style="width: 120px">&nbsp;</div>
-      <div style="display: flex; flex: 1">
-        <EventLineComponent
-          :events="match.events"
-          :home-team-id="match.homeTeam.id"
-          :match-status="match.status"
-        />
-      </div>
-      <div style="width: 60px">&nbsp;</div>
+    <div style="width: 120px">&nbsp;</div>
+    <div style="display: flex; flex: 1">
+      <EventLineComponent
+        :events="match.events"
+        :home-team-id="match.homeTeam.id"
+        :match-status="match.status"
+      />
     </div>
-  </Transition>
-  <Transition name="expand">
-    <MoreInfoDetails
-      v-if="showMatchInfo"
-      :match="match"
-    />
-  </Transition>
-  <BetsContainer :match="match" />
+  </div>
+  <div
+    v-if="selectedOption === OPTIONS.MATCH_INFO"
+    class="events-container"
+  >
+    <MoreInfoDetails :match="match" />
+  </div>
+  <BetsContainer
+    v-if="selectedOption === OPTIONS.BETS"
+    :match="match"
+  />
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
@@ -72,24 +86,34 @@ import { useClockStore } from '@/stores/clock.ts';
 import ClockComponent from '../ClockComponent.vue';
 import EventLineComponent from '../EventLineComponent.vue';
 import ScoreComponent from '../ScoreComponent.vue';
+import SquadsComponent from '../SquadsComponent.vue';
 import BetsContainer from './BetsContainer.vue';
 import MoreInfoDetails from './MoreInfoDetails.vue';
 
-defineProps<{
+const props = defineProps<{
   hitLevel: null | THitLevel;
   isMatchStarted: boolean;
   match: IMatch;
 }>();
 
+enum OPTIONS {
+  BETS,
+  EVENTS,
+  SQUADS,
+  MATCH_INFO,
+}
+
 // ------ Initialization ------
 const clockStore = useClockStore();
-const showMatchInfo = ref(false);
-const showEvents = ref(true);
 const { t } = useI18n();
 
-function toggleMatchInfo() {
-  showMatchInfo.value = !showMatchInfo.value;
-}
+const selectedOption = ref(props.isMatchStarted ? OPTIONS.EVENTS : OPTIONS.MATCH_INFO);
+const options = ref([
+  { color: '--bolao-c-mint-l2', icon: 'pi pi-trophy', name: t('matches.bets'), value: OPTIONS.BETS },
+  { color: '--bolao-c-blue-l2', icon: 'pi pi-users', name: t('matches.squads'), value: OPTIONS.SQUADS },
+  { color: '--bolao-c-blue-l2', icon: 'pi pi-list-check', name: t('matches.events'), value: OPTIONS.EVENTS },
+  { color: '--bolao-c-white', icon: 'pi pi-info-circle', name: t('matches.moreDetails'), value: OPTIONS.MATCH_INFO },
+]);
 </script>
 <style lang="scss" scoped>
 .more-info-desktop-view-outer {
@@ -104,11 +128,12 @@ function toggleMatchInfo() {
 .events-container {
   display: flex;
   gap: var(--l-spacing);
+  align-items: center;
+  justify-content: center;
   padding: 0 var(--m-spacing) var(--m-spacing) var(--m-spacing);
   margin: 0 var(--l-spacing) !important;
+  text-align: center;
   background: color-mix(in srgb, var(--color-main) 60%, transparent);
-  border-bottom-right-radius: var(--border-radius);
-  border-bottom-left-radius: var(--border-radius);
 }
 
 .match-info-toggle {

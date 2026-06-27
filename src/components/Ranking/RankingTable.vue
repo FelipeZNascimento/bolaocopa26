@@ -338,6 +338,7 @@ const editionRankingWithoutExtras = computed(() => rankingStore.editionRankingWi
 const selectedRound = computed(() => configurationStore.selectedRound);
 
 const filteredRankingData = computed(() => {
+  // For all users
   if (!showFavoritesOnly.value) {
     if (isRound.value) {
       return selectedRoundRanking.value;
@@ -345,11 +346,21 @@ const filteredRankingData = computed(() => {
     return isExtrasActive.value ? selectedRanking.value : editionRankingWithoutExtras.value;
   }
 
+  // If showFavoritesOnly is true but there are no favorites, return empty array
   if (showFavoritesOnly.value && favorites.value.length === 0) {
-    return []; // If showFavoritesOnly is true but there are no favorites, return empty array
+    return [];
   }
 
-  return selectedRanking.value.filter((rankingLine) => {
+  // For favorite users
+  if (isExtrasActive.value) {
+    return selectedRanking.value.filter((rankingLine) => {
+      const isFavorite = userService.isFavorite(rankingLine.user.id);
+      const isLoggedInUser = activeProfile.value && rankingLine.user.id === activeProfile.value.id;
+      return isFavorite || isLoggedInUser;
+    });
+  }
+
+  return editionRankingWithoutExtras.value.filter((rankingLine) => {
     const isFavorite = userService.isFavorite(rankingLine.user.id);
     const isLoggedInUser = activeProfile.value && rankingLine.user.id === activeProfile.value.id;
     return isFavorite || isLoggedInUser;

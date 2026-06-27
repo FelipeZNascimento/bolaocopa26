@@ -69,7 +69,7 @@
         </div>
       </template>
       <div
-        v-for="match in selectedStageMatches"
+        v-for="match in selectedStageMatches.sort((a, b) => a.MatchNumber - b.MatchNumber)"
         v-else
         :key="match.IdMatch"
         class="match-card"

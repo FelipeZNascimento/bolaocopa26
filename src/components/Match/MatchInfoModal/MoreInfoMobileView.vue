@@ -19,46 +19,24 @@
       :is-match-started="isMatchStarted"
       :show-events="false"
     />
-    <nav
-      class="section-nav"
-      style="display: flex; gap: var(--xs-spacing)"
+    <PrimeSelectButton
+      v-model="selectedOption"
+      optionLabel="name"
+      optionValue="value"
+      :options="options"
+      size="small"
+      :allowEmpty="false"
+      fluid
     >
-      <span :class="{ 'selected-button': selectedOption === OPTIONS.BETS }">
-        <PrimeButton
-          variant="text"
-          icon="pi pi-trophy"
-          size="small"
-          :label="t('matches.bets')"
-          :aria-label="t('matches.bets')"
-          style="color: var(--bolao-c-mint-l2)"
-          @click="toggleOption(OPTIONS.BETS)"
+      <template #option="slotProps">
+        <i
+          :class="slotProps.option.icon"
+          style="font-size: var(--xs-font-size)"
+          :style="{ color: 'var(' + slotProps.option.color + ')' }"
         />
-      </span>
-      <span class="section-nav__divider" />
-      <span :class="{ 'selected-button': selectedOption === OPTIONS.EVENTS }">
-        <PrimeButton
-          variant="text"
-          icon="pi pi-list-check"
-          :label="t('matches.events')"
-          size="small"
-          :aria-label="t('matches.events')"
-          style="color: var(--bolao-c-blue-l2)"
-          @click="toggleOption(OPTIONS.EVENTS)"
-        />
-      </span>
-      <span class="section-nav__divider" />
-      <span :class="{ 'selected-button': selectedOption === OPTIONS.MATCH_INFO }">
-        <PrimeButton
-          variant="text"
-          icon="pi pi-info-circle"
-          :label="t('matches.moreDetails')"
-          size="small"
-          style="color: var(--bolao-c-white)"
-          :aria-label="t('matches.moreDetails')"
-          @click="toggleOption(OPTIONS.MATCH_INFO)"
-        />
-      </span>
-    </nav>
+        <span style="font-size: var(--xs-font-size)">{{ slotProps.option.name }}</span>
+      </template>
+    </PrimeSelectButton>
   </div>
 
   <Transition
@@ -79,16 +57,27 @@
       </div>
     </div>
     <div
+      v-else-if="selectedOption === OPTIONS.SQUADS"
+      key="squads"
+      class="events-container"
+    >
+      <div style="display: flex; flex: 1">
+        <SquadsComponent
+          v-if="match.homeTeam.squad && match.awayTeam.squad"
+          :home-team="match.homeTeam"
+          :away-team="match.awayTeam"
+          :squads="{ home: match.homeTeam.squad, away: match.awayTeam.squad }"
+        />
+      </div>
+    </div>
+    <div
       v-else-if="selectedOption === OPTIONS.MATCH_INFO"
       key="match-info"
     >
       <MoreInfoDetails :match="match" />
     </div>
   </Transition>
-  <div
-    v-if="selectedOption === OPTIONS.BETS"
-    key="bets"
-  >
+  <div v-if="selectedOption === OPTIONS.BETS">
     <BetsContainer :match="match" />
   </div>
 </template>
@@ -104,6 +93,7 @@ import { useClockStore } from '@/stores/clock';
 import ClockComponent from '../ClockComponent.vue';
 import EventLineComponent from '../EventLineComponent.vue';
 import ScoreComponent from '../ScoreComponent.vue';
+import SquadsComponent from '../SquadsComponent.vue';
 import BetsContainer from './BetsContainer.vue';
 import MoreInfoDetails from './MoreInfoDetails.vue';
 
@@ -116,19 +106,21 @@ const props = defineProps<{
 enum OPTIONS {
   BETS,
   EVENTS,
+  SQUADS,
   MATCH_INFO,
 }
 
 // ------ Initialization ------
-const selectedOption = ref(props.isMatchStarted ? OPTIONS.EVENTS : OPTIONS.MATCH_INFO);
 const clockStore = useClockStore();
 const { t } = useI18n();
 
-// ------ Functions ------
-
-function toggleOption(newOption: OPTIONS) {
-  selectedOption.value = newOption;
-}
+const selectedOption = ref(props.isMatchStarted ? OPTIONS.EVENTS : OPTIONS.MATCH_INFO);
+const options = ref([
+  { color: '--bolao-c-mint-l2', icon: 'pi pi-trophy', name: t('matches.bets'), value: OPTIONS.BETS },
+  { color: '--bolao-c-blue-l2', icon: 'pi pi-users', name: t('matches.squads'), value: OPTIONS.SQUADS },
+  { color: '--bolao-c-blue-l2', icon: 'pi pi-list-check', name: t('matches.events'), value: OPTIONS.EVENTS },
+  { color: '--bolao-c-white', icon: 'pi pi-info-circle', name: t('matches.moreDetails'), value: OPTIONS.MATCH_INFO },
+]);
 </script>
 <style lang="scss" scoped>
 .more-info-mobile-view-outer {
@@ -278,5 +270,10 @@ function toggleOption(newOption: OPTIONS) {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+</style>
+<style lang="scss">
+.p-togglebutton-content {
+  padding: var(--xs-spacing) 0 !important;
 }
 </style>

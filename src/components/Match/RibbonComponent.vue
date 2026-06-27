@@ -92,8 +92,6 @@ const activeProfile = computed(() => {
   width: 36px;
   height: 44px;
   padding-top: var(--s-spacing);
-
-  // font-size: var(--s-font-size);
   color: #fff;
   text-align: center;
   background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0 / calc(2 * var(--f)) var(--f) no-repeat

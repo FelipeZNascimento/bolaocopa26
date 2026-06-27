@@ -15,7 +15,10 @@
     "seeMore": "See more",
     "groupStage": "Group stage",
     "points": "Points",
-    "pointsShort": "Pts."
+    "pointsShort": "Pts.",
+    "chart": "Chart",
+    "bets": "Bets",
+    "extraBets": "Extra Bets"
   },
   "navigation": {
     "home": "Home",
@@ -31,6 +34,7 @@
     "group": "Group {group}",
     "moreDetails": "Details",
     "events": "Events",
+    "squads": "Squads",
     "capacity": "Capacity: {capacity} attendees",
     "stadium": "Stadium",
     "referee": "Referee",

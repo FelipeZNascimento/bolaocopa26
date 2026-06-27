@@ -6,7 +6,7 @@
     <RibbonComponent
       v-if="activeProfile && status !== MATCH_STATUS.NOT_STARTED"
       :hit-level="hitLevel"
-      :points="getPointsAwarded(props.pointsAwarded, props.hitLevel)"
+      :points="getPointsAwarded(pointsAwarded, hitLevel)"
     />
     <span
       v-if="isMatchStarted"

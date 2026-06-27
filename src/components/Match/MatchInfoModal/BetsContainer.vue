@@ -73,16 +73,6 @@ const showFavoritesOnly = ref(false);
 const { t } = useI18n();
 const userService = new UserService();
 
-// const betsFeedRef = ref<any>(null);
-
-// function refresh() {
-//   betsFeedRef.value?.refresh?.();
-// }
-
-// defineExpose({
-//   refresh,
-// });
-
 // ------ Computed ------
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 const isMatchStarted = computed(() => {
