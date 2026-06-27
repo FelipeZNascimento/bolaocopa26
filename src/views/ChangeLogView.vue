@@ -37,6 +37,7 @@ const changelogEntries = ref([
       '[User Modal] You can now check all bets for a specific user',
       '[Match] Improved color visibility for bets on mobile',
       '[Match] Modal improved to showcase features (bets, events, details)',
+      '[Match] Modal now has squads (as per FIFA)',
     ],
     date: '27/06/2026',
     version: 'v1.0.32',
