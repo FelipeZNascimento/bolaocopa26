@@ -57,6 +57,20 @@
       </div>
     </div>
     <div
+      v-else-if="selectedOption === OPTIONS.SQUADS"
+      key="squads"
+      class="events-container"
+    >
+      <div style="display: flex; flex: 1">
+        <SquadsComponent
+          v-if="match.homeTeam.squad && match.awayTeam.squad"
+          :home-team="match.homeTeam"
+          :away-team="match.awayTeam"
+          :squads="{ home: match.homeTeam.squad, away: match.awayTeam.squad }"
+        />
+      </div>
+    </div>
+    <div
       v-else-if="selectedOption === OPTIONS.MATCH_INFO"
       key="match-info"
     >
@@ -79,6 +93,7 @@ import { useClockStore } from '@/stores/clock';
 import ClockComponent from '../ClockComponent.vue';
 import EventLineComponent from '../EventLineComponent.vue';
 import ScoreComponent from '../ScoreComponent.vue';
+import SquadsComponent from '../SquadsComponent.vue';
 import BetsContainer from './BetsContainer.vue';
 import MoreInfoDetails from './MoreInfoDetails.vue';
 
@@ -91,6 +106,7 @@ const props = defineProps<{
 enum OPTIONS {
   BETS,
   EVENTS,
+  SQUADS,
   MATCH_INFO,
 }
 
@@ -101,6 +117,7 @@ const { t } = useI18n();
 const selectedOption = ref(props.isMatchStarted ? OPTIONS.EVENTS : OPTIONS.MATCH_INFO);
 const options = ref([
   { color: '--bolao-c-mint-l2', icon: 'pi pi-trophy', name: t('matches.bets'), value: OPTIONS.BETS },
+  { color: '--bolao-c-blue-l2', icon: 'pi pi-users', name: t('matches.squads'), value: OPTIONS.SQUADS },
   { color: '--bolao-c-blue-l2', icon: 'pi pi-list-check', name: t('matches.events'), value: OPTIONS.EVENTS },
   { color: '--bolao-c-white', icon: 'pi pi-info-circle', name: t('matches.moreDetails'), value: OPTIONS.MATCH_INFO },
 ]);
@@ -253,5 +270,10 @@ const options = ref([
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+</style>
+<style lang="scss">
+.p-togglebutton-content {
+  padding: var(--xs-spacing) 0 !important;
 }
 </style>

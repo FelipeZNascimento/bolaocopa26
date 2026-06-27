@@ -4,7 +4,7 @@
       {{ getPointsAwarded(match.pointsAwarded, hitLevel) }}
       {{ t('common.pointsShort') }}
     </div>
-    <div style=" display: flex;flex: 0; align-items: center; justify-content: space-between">
+    <div style="display: flex; flex: 0; align-items: center; justify-content: space-between">
       <img
         class="flag"
         :src="`https://assets.omegafox.me/copa/countries_flags/${match.homeTeam.isoCode.toLowerCase()}.png`"
@@ -45,7 +45,7 @@
     <div class="team-name">
       {{ getTeamName(match.awayTeam) }}
     </div>
-    <div style=" display: flex;flex: 0; align-items: center; justify-content: space-between; width: 40px">
+    <div style="display: flex; flex: 0; align-items: center; justify-content: space-between; width: 40px">
       <img
         class="flag"
         :src="`https://assets.omegafox.me/copa/countries_flags/${match.awayTeam.isoCode.toLowerCase()}.png`"

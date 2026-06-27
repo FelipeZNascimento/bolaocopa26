@@ -19,21 +19,14 @@
       :show-events="false"
     />
   </div>
-  <div
-    class="events-container"
-    style=" align-items: center; justify-content: center;text-align: center"
-    :style="{
-      borderBottomLeftRadius: selectedOption.length > 0 ? 0 : 'var(--border-radius)',
-      borderBottomRightRadius: selectedOption.length > 0 ? 0 : 'var(--border-radius)',
-    }"
-  >
+  <div class="events-container">
     <PrimeSelectButton
       v-model="selectedOption"
       optionLabel="name"
       optionValue="value"
       :options="options"
+      :allowEmpty="false"
       size="large"
-      multiple="true"
     >
       <template #option="slotProps">
         <i
@@ -44,40 +37,42 @@
       </template>
     </PrimeSelectButton>
   </div>
-  <Transition name="expand">
-    <div
-      v-if="selectedOption.includes(OPTIONS.EVENTS)"
-      class="events-container"
-      :style="{
-        borderBottomLeftRadius: selectedOption.includes(OPTIONS.MATCH_INFO) ? 0 : 'var(--border-radius)',
-        borderBottomRightRadius: selectedOption.includes(OPTIONS.MATCH_INFO) ? 0 : 'var(--border-radius)',
-      }"
-    >
-      <div style="width: 120px">&nbsp;</div>
-      <div style="display: flex; flex: 1">
-        <EventLineComponent
-          :events="match.events"
-          :home-team-id="match.homeTeam.id"
-          :match-status="match.status"
-        />
-      </div>
-      <div style="width: 60px">&nbsp;</div>
+  <div
+    v-if="selectedOption === OPTIONS.SQUADS"
+    class="events-container"
+  >
+    <div style="width: 120px">&nbsp;</div>
+    <div style="display: flex; flex: 1">
+      <SquadsComponent
+        v-if="match.homeTeam.squad && match.awayTeam.squad"
+        :home-team="match.homeTeam"
+        :away-team="match.awayTeam"
+      />
     </div>
-  </Transition>
-  <Transition name="expand">
-    <div
-      v-if="selectedOption.includes(OPTIONS.MATCH_INFO)"
-      class="events-container"
-    >
-      <MoreInfoDetails :match="match" />
+  </div>
+  <div
+    v-if="selectedOption === OPTIONS.EVENTS"
+    class="events-container"
+  >
+    <div style="width: 120px">&nbsp;</div>
+    <div style="display: flex; flex: 1">
+      <EventLineComponent
+        :events="match.events"
+        :home-team-id="match.homeTeam.id"
+        :match-status="match.status"
+      />
     </div>
-  </Transition>
-  <Transition name="expand">
-    <div v-if="selectedOption.includes(OPTIONS.BETS)">
-      <PrimeDivider />
-      <BetsContainer :match="match" />
-    </div>
-  </Transition>
+  </div>
+  <div
+    v-if="selectedOption === OPTIONS.MATCH_INFO"
+    class="events-container"
+  >
+    <MoreInfoDetails :match="match" />
+  </div>
+  <BetsContainer
+    v-if="selectedOption === OPTIONS.BETS"
+    :match="match"
+  />
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
@@ -91,6 +86,7 @@ import { useClockStore } from '@/stores/clock.ts';
 import ClockComponent from '../ClockComponent.vue';
 import EventLineComponent from '../EventLineComponent.vue';
 import ScoreComponent from '../ScoreComponent.vue';
+import SquadsComponent from '../SquadsComponent.vue';
 import BetsContainer from './BetsContainer.vue';
 import MoreInfoDetails from './MoreInfoDetails.vue';
 
@@ -103,6 +99,7 @@ const props = defineProps<{
 enum OPTIONS {
   BETS,
   EVENTS,
+  SQUADS,
   MATCH_INFO,
 }
 
@@ -110,9 +107,10 @@ enum OPTIONS {
 const clockStore = useClockStore();
 const { t } = useI18n();
 
-const selectedOption = ref(props.isMatchStarted ? [OPTIONS.EVENTS, OPTIONS.BETS] : [OPTIONS.MATCH_INFO]);
+const selectedOption = ref(props.isMatchStarted ? OPTIONS.EVENTS : OPTIONS.MATCH_INFO);
 const options = ref([
   { color: '--bolao-c-mint-l2', icon: 'pi pi-trophy', name: t('matches.bets'), value: OPTIONS.BETS },
+  { color: '--bolao-c-blue-l2', icon: 'pi pi-users', name: t('matches.squads'), value: OPTIONS.SQUADS },
   { color: '--bolao-c-blue-l2', icon: 'pi pi-list-check', name: t('matches.events'), value: OPTIONS.EVENTS },
   { color: '--bolao-c-white', icon: 'pi pi-info-circle', name: t('matches.moreDetails'), value: OPTIONS.MATCH_INFO },
 ]);
@@ -130,11 +128,12 @@ const options = ref([
 .events-container {
   display: flex;
   gap: var(--l-spacing);
+  align-items: center;
+  justify-content: center;
   padding: 0 var(--m-spacing) var(--m-spacing) var(--m-spacing);
   margin: 0 var(--l-spacing) !important;
+  text-align: center;
   background: color-mix(in srgb, var(--color-main) 60%, transparent);
-  border-bottom-right-radius: var(--border-radius);
-  border-bottom-left-radius: var(--border-radius);
 }
 
 .match-info-toggle {

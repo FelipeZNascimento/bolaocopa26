@@ -37,6 +37,11 @@ export interface IPlayer {
   weight: number;
 }
 
+export interface IPlayerSquad {
+  isCaptain: boolean;
+  isStarting: boolean;
+}
+
 export interface IPosition {
   abbreviation: string;
   abbreviationEn: string;
@@ -59,4 +64,5 @@ export interface ITeam {
   name: string;
   nameEn: string;
   players: IPlayer[];
+  squad?: (IPlayer & IPlayerSquad)[];
 }
