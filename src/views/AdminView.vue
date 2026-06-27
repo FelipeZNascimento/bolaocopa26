@@ -114,9 +114,9 @@
       <p>Status: {{ serverHealth?.status }}</p>
       <p>Pool</p>
       <ul>
-        <li>All Connections: {{ serverHealth?.pool.allConnections }}</li>
+        <li>All Connections: {{ serverHealth?.pool.activeConnections }}</li>
         <li>Free Connections: {{ serverHealth?.pool.freeConnections }}</li>
-        <li>Queue Length: {{ serverHealth?.pool.queueLength }}</li>
+        <li>Queue Length: {{ serverHealth?.pool.queuedRequests }}</li>
         <li>Connection Limit: {{ serverHealth?.pool.connectionLimit }}</li>
       </ul>
     </template>

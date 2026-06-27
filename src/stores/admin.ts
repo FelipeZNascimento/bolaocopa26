@@ -6,10 +6,10 @@ import type { IUser } from './activeProfile.types';
 export type TServerHealth = {
   db: string;
   pool: {
-    allConnections: number;
+    activeConnections: number;
     connectionLimit: number;
     freeConnections: number;
-    queueLength: number;
+    queuedRequests: number;
   };
   status: string;
 };

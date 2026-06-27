@@ -157,7 +157,7 @@ export default class StartupService {
   }
 
   async serverHealth() {
-    const response: TServerHealth = await this.apiRequest.get('admin/health', undefined, { retries: 3 });
+    const response: TServerHealth = await this.apiRequest.get('app/health', undefined, { retries: 3 });
     console.log('Setting response: ', response);
     this.adminStore.setServerHealth(response);
   }
