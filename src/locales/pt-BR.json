@@ -15,7 +15,10 @@
     "seeMore": "Ver mais",
     "groupStage": "Fase de grupos",
     "points": "Pontos",
-    "pointsShort": "Pts."
+    "pointsShort": "Pts.",
+    "chart": "Gráfico",
+    "bets": "Apostas",
+    "extraBets": "Extras"
   },
   "navigation": {
     "home": "Início",
@@ -29,7 +32,7 @@
   "matches": {
     "bets": "Apostas",
     "group": "Grupo {group}",
-    "moreDetails": "Ficha Técnica",
+    "moreDetails": "Detalhes",
     "events": "Eventos",
     "capacity": "Capacidade: {capacity} pessoas",
     "stadium": "Estádio",

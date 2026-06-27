@@ -18,28 +18,40 @@
       :is-match-started="isMatchStarted"
       :show-events="false"
     />
-    <div
-      class="match-info-toggle"
-      role="button"
-      tabindex="0"
-      :aria-label="$t('match.moreInfo')"
-      @click="toggleMatchInfo"
-      @keydown.enter="toggleMatchInfo"
-      @keydown.space.prevent="toggleMatchInfo"
-    >
-      <i class="pi pi-info-circle" />
-    </div>
   </div>
   <div
     class="events-container"
-    style="flex: 1; align-items: center; justify-content: center; border-radius: 0"
+    style="text-align: center; align-items: center; justify-content: center"
+    :style="{
+      borderBottomLeftRadius: selectedOption.length > 0 ? 0 : 'var(--border-radius)',
+      borderBottomRightRadius: selectedOption.length > 0 ? 0 : 'var(--border-radius)',
+    }"
   >
-    <PrimeToggleSwitch v-model="showEvents" />{{ t('matches.showEvents') }}
+    <PrimeSelectButton
+      v-model="selectedOption"
+      optionLabel="name"
+      optionValue="value"
+      :options="options"
+      size="large"
+      multiple="true"
+    >
+      <template #option="slotProps">
+        <i
+          :class="slotProps.option.icon"
+          :style="{ color: 'var(' + slotProps.option.color + ')' }"
+        />
+        <span style="font-size: var(--s-font-size)">{{ slotProps.option.name }}</span>
+      </template>
+    </PrimeSelectButton>
   </div>
   <Transition name="expand">
     <div
-      v-if="showEvents"
+      v-if="selectedOption.includes(OPTIONS.EVENTS)"
       class="events-container"
+      :style="{
+        borderBottomLeftRadius: selectedOption.includes(OPTIONS.MATCH_INFO) ? 0 : 'var(--border-radius)',
+        borderBottomRightRadius: selectedOption.includes(OPTIONS.MATCH_INFO) ? 0 : 'var(--border-radius)',
+      }"
     >
       <div style="width: 120px">&nbsp;</div>
       <div style="display: flex; flex: 1">
@@ -53,12 +65,19 @@
     </div>
   </Transition>
   <Transition name="expand">
-    <MoreInfoDetails
-      v-if="showMatchInfo"
-      :match="match"
-    />
+    <div
+      v-if="selectedOption.includes(OPTIONS.MATCH_INFO)"
+      class="events-container"
+    >
+      <MoreInfoDetails :match="match" />
+    </div>
   </Transition>
-  <BetsContainer :match="match" />
+  <Transition name="expand">
+    <div v-if="selectedOption.includes(OPTIONS.BETS)">
+      <PrimeDivider />
+      <BetsContainer :match="match" />
+    </div>
+  </Transition>
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
@@ -75,21 +94,28 @@ import ScoreComponent from '../ScoreComponent.vue';
 import BetsContainer from './BetsContainer.vue';
 import MoreInfoDetails from './MoreInfoDetails.vue';
 
-defineProps<{
+const props = defineProps<{
   hitLevel: null | THitLevel;
   isMatchStarted: boolean;
   match: IMatch;
 }>();
 
+enum OPTIONS {
+  BETS,
+  EVENTS,
+  MATCH_INFO,
+}
+
 // ------ Initialization ------
 const clockStore = useClockStore();
-const showMatchInfo = ref(false);
-const showEvents = ref(true);
 const { t } = useI18n();
 
-function toggleMatchInfo() {
-  showMatchInfo.value = !showMatchInfo.value;
-}
+const selectedOption = ref(props.isMatchStarted ? [OPTIONS.EVENTS, OPTIONS.BETS] : [OPTIONS.MATCH_INFO]);
+const options = ref([
+  { color: '--bolao-c-mint-l2', icon: 'pi pi-trophy', name: t('matches.bets'), value: OPTIONS.BETS },
+  { color: '--bolao-c-blue-l2', icon: 'pi pi-list-check', name: t('matches.events'), value: OPTIONS.EVENTS },
+  { color: '--bolao-c-white', icon: 'pi pi-info-circle', name: t('matches.moreDetails'), value: OPTIONS.MATCH_INFO },
+]);
 </script>
 <style lang="scss" scoped>
 .more-info-desktop-view-outer {

@@ -24,153 +24,187 @@
         {{ selectedUser?.nickname }}
       </p>
     </template>
-    <PrimeChart
-      type="bar"
-      :data="chartData"
-      :options="chartOptions"
-    />
-    <p style="text-align: center">
-      {{ t('userTrackingModal.chartExplanation') }}
-    </p>
-    <PrimeDivider />
-    <h2 style="text-align: center">{{ t('userTrackingModal.extraBets') }}</h2>
-    <div class="grid-container">
-      <div
-        v-if="selectedUserExtraBets[EXTRA_BETS_VALUES.OFFENSE].length > 0"
-        class="teams-grid"
-      >
-        <p style="text-align: center">{{ t(EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.OFFENSE]) }}</p>
-        <WorldCupLandscapeStickerComponent
-          v-for="(value, index) in selectedUserExtraBets[EXTRA_BETS_VALUES.OFFENSE]"
-          v-bind:key="value.id"
-          :class="{ 'replaced-bet': index > 0 }"
-          color="var(--bolao-c-blue-l2)"
-          color-dark="var(--bolao-c-blue)"
+    <PrimeSelectButton
+      v-model="selectedOption"
+      optionLabel="name"
+      optionValue="value"
+      :options="options"
+      :size="isMobile ? 'small' : 'large'"
+      :allowEmpty="false"
+      fluid
+    >
+      <template #option="slotProps">
+        <i
+          v-if="!isMobile"
+          :class="slotProps.option.icon"
+          :style="{ color: 'var(' + slotProps.option.color + ')' }"
+        />
+        <span>{{ slotProps.option.name }}</span>
+      </template>
+    </PrimeSelectButton>
+
+    <div
+      v-if="selectedOption === OPTIONS.CHART"
+      class="chart-container"
+    >
+      <PrimeChart
+        type="bar"
+        :data="chartData"
+        :options="chartOptions"
+      />
+      <p style="text-align: center">
+        {{ t('userTrackingModal.chartExplanation') }}
+      </p>
+    </div>
+    <div v-if="selectedOption === OPTIONS.EXTRAS">
+      <h2 style="text-align: center">{{ t('common.extraBets') }}</h2>
+      <div class="grid-container">
+        <div
+          v-if="selectedUserExtraBets[EXTRA_BETS_VALUES.OFFENSE].length > 0"
+          class="teams-grid"
         >
-          <template #photo>
-            <img
-              :src="`https://assets.omegafox.me/copa/countries_flags/${value.team.isoCode.toLowerCase()}.png`"
-              :alt="locale === 'pt-BR' ? value.team.name : value.team.nameEn"
-              class="sticker-flag"
-              loading="lazy"
-            />
-          </template>
-          <template #overlay>
-            <strong class="overlay-name">{{ locale === 'pt-BR' ? value.team.name : value.team.nameEn }}</strong>
-          </template>
-        </WorldCupLandscapeStickerComponent>
-      </div>
-      <div
-        v-if="selectedUserExtraBets[EXTRA_BETS_VALUES.DEFENSE].length > 0"
-        class="teams-grid"
-      >
-        <PrimeDivider v-if="isMobile" />
-        <p style="text-align: center">{{ t(EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.DEFENSE]) }}</p>
-        <WorldCupLandscapeStickerComponent
-          v-for="(value, index) in selectedUserExtraBets[EXTRA_BETS_VALUES.DEFENSE]"
-          v-bind:key="value.id"
-          :class="{ 'replaced-bet': index > 0 }"
-          color="var(--bolao-c-blue-l2)"
-          color-dark="var(--bolao-c-blue)"
+          <p style="text-align: center">{{ t(EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.OFFENSE]) }}</p>
+          <WorldCupLandscapeStickerComponent
+            v-for="(value, index) in selectedUserExtraBets[EXTRA_BETS_VALUES.OFFENSE]"
+            v-bind:key="value.id"
+            :class="{ 'replaced-bet': index > 0 }"
+            color="var(--bolao-c-blue-l2)"
+            color-dark="var(--bolao-c-blue)"
+          >
+            <template #photo>
+              <img
+                :src="`https://assets.omegafox.me/copa/countries_flags/${value.team.isoCode.toLowerCase()}.png`"
+                :alt="locale === 'pt-BR' ? value.team.name : value.team.nameEn"
+                class="sticker-flag"
+                loading="lazy"
+              />
+            </template>
+            <template #overlay>
+              <strong class="overlay-name">{{ locale === 'pt-BR' ? value.team.name : value.team.nameEn }}</strong>
+            </template>
+          </WorldCupLandscapeStickerComponent>
+        </div>
+        <div
+          v-if="selectedUserExtraBets[EXTRA_BETS_VALUES.DEFENSE].length > 0"
+          class="teams-grid"
         >
-          <template #photo>
-            <img
-              :src="`https://assets.omegafox.me/copa/countries_flags/${value.team.isoCode.toLowerCase()}.png`"
-              :alt="locale === 'pt-BR' ? value.team.name : value.team.nameEn"
-              class="sticker-flag"
-              loading="lazy"
-            />
-          </template>
-          <template #overlay>
-            <strong class="overlay-name">{{ locale === 'pt-BR' ? value.team.name : value.team.nameEn }}</strong>
-          </template>
-        </WorldCupLandscapeStickerComponent>
-      </div>
-      <div
-        v-if="selectedUserExtraBets[EXTRA_BETS_VALUES.TOP_SCORER].length > 0"
-        class="teams-grid"
-      >
-        <PrimeDivider v-if="isMobile" />
-        <p style="text-align: center">{{ t(EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.TOP_SCORER]) }}</p>
-        <WorldCupLandscapeStickerComponent
-          v-for="(value, index) in selectedUserExtraBets[EXTRA_BETS_VALUES.TOP_SCORER]"
-          v-bind:key="value.id"
-          :class="{ 'replaced-bet': index > 0 }"
-          color="var(--bolao-c-blue-l2)"
-          color-dark="var(--bolao-c-blue)"
+          <PrimeDivider v-if="isMobile" />
+          <p style="text-align: center">{{ t(EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.DEFENSE]) }}</p>
+          <WorldCupLandscapeStickerComponent
+            v-for="(value, index) in selectedUserExtraBets[EXTRA_BETS_VALUES.DEFENSE]"
+            v-bind:key="value.id"
+            :class="{ 'replaced-bet': index > 0 }"
+            color="var(--bolao-c-blue-l2)"
+            color-dark="var(--bolao-c-blue)"
+          >
+            <template #photo>
+              <img
+                :src="`https://assets.omegafox.me/copa/countries_flags/${value.team.isoCode.toLowerCase()}.png`"
+                :alt="locale === 'pt-BR' ? value.team.name : value.team.nameEn"
+                class="sticker-flag"
+                loading="lazy"
+              />
+            </template>
+            <template #overlay>
+              <strong class="overlay-name">{{ locale === 'pt-BR' ? value.team.name : value.team.nameEn }}</strong>
+            </template>
+          </WorldCupLandscapeStickerComponent>
+        </div>
+        <div
+          v-if="selectedUserExtraBets[EXTRA_BETS_VALUES.TOP_SCORER].length > 0"
+          class="teams-grid"
         >
-          <template #photo>
-            <img
-              :src="`https://assets.omegafox.me/copa/countries_flags/${value.team.isoCode.toLowerCase()}.png`"
-              :alt="locale === 'pt-BR' ? value.team.name : value.team.nameEn"
-              class="sticker-flag"
-              loading="lazy"
-            />
-          </template>
-          <template #overlay>
-            <span class="overlay-sub">
-              {{ value.player.name }}
-            </span>
-          </template>
-        </WorldCupLandscapeStickerComponent>
-      </div>
-      <div
-        v-if="selectedUserExtraBets[EXTRA_BETS_VALUES.BEST_PLAYER].length > 0"
-        class="teams-grid"
-      >
-        <PrimeDivider v-if="isMobile" />
-        <p style="text-align: center">{{ t(EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.BEST_PLAYER]) }}</p>
-        <WorldCupLandscapeStickerComponent
-          v-for="(value, index) in selectedUserExtraBets[EXTRA_BETS_VALUES.BEST_PLAYER]"
-          v-bind:key="value.id"
-          :class="{ 'replaced-bet': index > 0 }"
-          color="var(--bolao-c-blue-l2)"
-          color-dark="var(--bolao-c-blue)"
+          <PrimeDivider v-if="isMobile" />
+          <p style="text-align: center">{{ t(EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.TOP_SCORER]) }}</p>
+          <WorldCupLandscapeStickerComponent
+            v-for="(value, index) in selectedUserExtraBets[EXTRA_BETS_VALUES.TOP_SCORER]"
+            v-bind:key="value.id"
+            :class="{ 'replaced-bet': index > 0 }"
+            color="var(--bolao-c-blue-l2)"
+            color-dark="var(--bolao-c-blue)"
+          >
+            <template #photo>
+              <img
+                :src="`https://assets.omegafox.me/copa/countries_flags/${value.team.isoCode.toLowerCase()}.png`"
+                :alt="locale === 'pt-BR' ? value.team.name : value.team.nameEn"
+                class="sticker-flag"
+                loading="lazy"
+              />
+            </template>
+            <template #overlay>
+              <span class="overlay-sub">
+                {{ value.player.name }}
+              </span>
+            </template>
+          </WorldCupLandscapeStickerComponent>
+        </div>
+        <div
+          v-if="selectedUserExtraBets[EXTRA_BETS_VALUES.BEST_PLAYER].length > 0"
+          class="teams-grid"
         >
-          <template #photo>
-            <img
-              :src="`https://assets.omegafox.me/copa/countries_flags/${value.team.isoCode.toLowerCase()}.png`"
-              :alt="locale === 'pt-BR' ? value.team.name : value.team.nameEn"
-              class="sticker-flag"
-              loading="lazy"
-            />
-          </template>
-          <template #overlay>
-            <span class="overlay-sub">
-              {{ value.player.name }}
-            </span>
-          </template>
-        </WorldCupLandscapeStickerComponent>
-      </div>
-      <div
-        v-if="selectedUserExtraBets[EXTRA_BETS_VALUES.CHAMPION].length > 0"
-        class="teams-grid"
-      >
-        <PrimeDivider v-if="isMobile" />
-        <p style="text-align: center">{{ t(EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.CHAMPION]) }}</p>
-        <WorldCupLandscapeStickerComponent
-          v-for="(value, index) in selectedUserExtraBets[EXTRA_BETS_VALUES.CHAMPION]"
-          v-bind:key="value.id"
-          :class="{ 'replaced-bet': index > 0 }"
-          color="var(--bolao-c-blue-l2)"
-          color-dark="var(--bolao-c-blue)"
+          <PrimeDivider v-if="isMobile" />
+          <p style="text-align: center">{{ t(EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.BEST_PLAYER]) }}</p>
+          <WorldCupLandscapeStickerComponent
+            v-for="(value, index) in selectedUserExtraBets[EXTRA_BETS_VALUES.BEST_PLAYER]"
+            v-bind:key="value.id"
+            :class="{ 'replaced-bet': index > 0 }"
+            color="var(--bolao-c-blue-l2)"
+            color-dark="var(--bolao-c-blue)"
+          >
+            <template #photo>
+              <img
+                :src="`https://assets.omegafox.me/copa/countries_flags/${value.team.isoCode.toLowerCase()}.png`"
+                :alt="locale === 'pt-BR' ? value.team.name : value.team.nameEn"
+                class="sticker-flag"
+                loading="lazy"
+              />
+            </template>
+            <template #overlay>
+              <span class="overlay-sub">
+                {{ value.player.name }}
+              </span>
+            </template>
+          </WorldCupLandscapeStickerComponent>
+        </div>
+        <div
+          v-if="selectedUserExtraBets[EXTRA_BETS_VALUES.CHAMPION].length > 0"
+          class="teams-grid"
         >
-          <template #photo>
-            <img
-              :src="`https://assets.omegafox.me/copa/countries_flags/${value.team.isoCode.toLowerCase()}.png`"
-              :alt="locale === 'pt-BR' ? value.team.name : value.team.nameEn"
-              class="sticker-flag"
-              loading="lazy"
-            />
-          </template>
-          <template #overlay>
-            <span class="overlay-name">{{ locale === 'pt-BR' ? value.team.name : value.team.nameEn }}</span>
-            <span class="overlay-sub">
-              {{ t('userTrackingModal.factor', { percentage: returnChampionFactor(value.stageId) }) }}
-            </span>
-          </template>
-        </WorldCupLandscapeStickerComponent>
+          <PrimeDivider v-if="isMobile" />
+          <p style="text-align: center">{{ t(EXTRA_BETS_LABELS[EXTRA_BETS_VALUES.CHAMPION]) }}</p>
+          <WorldCupLandscapeStickerComponent
+            v-for="(value, index) in selectedUserExtraBets[EXTRA_BETS_VALUES.CHAMPION]"
+            v-bind:key="value.id"
+            :class="{ 'replaced-bet': index > 0 }"
+            color="var(--bolao-c-blue-l2)"
+            color-dark="var(--bolao-c-blue)"
+          >
+            <template #photo>
+              <img
+                :src="`https://assets.omegafox.me/copa/countries_flags/${value.team.isoCode.toLowerCase()}.png`"
+                :alt="locale === 'pt-BR' ? value.team.name : value.team.nameEn"
+                class="sticker-flag"
+                loading="lazy"
+              />
+            </template>
+            <template #overlay>
+              <span class="overlay-name">{{ locale === 'pt-BR' ? value.team.name : value.team.nameEn }}</span>
+              <span class="overlay-sub">
+                {{ t('userTrackingModal.factor', { percentage: returnChampionFactor(value.stageId) }) }}
+              </span>
+            </template>
+          </WorldCupLandscapeStickerComponent>
+        </div>
       </div>
+    </div>
+    <div v-if="selectedOption === OPTIONS.BETS && selectedUser">
+      <h2 style="text-align: center">{{ t('common.bets') }}</h2>
+      <MatchRow
+        v-for="item in matchesWithUserBets"
+        :key="item.id"
+        :match="item"
+        :user="selectedUser"
+      />
     </div>
   </PrimeDialog>
   <!-- Modals -->
@@ -191,12 +225,16 @@ import LoginModal from '@/components/LoginModal.vue';
 import WorldCupLandscapeStickerComponent from '@/components/WorldCupLandscapeStickerComponent.vue';
 import { useScrollLock } from '@/composables/useScrollLock';
 import { EXTRA_BETS_LABELS, EXTRA_BETS_VALUES } from '@/constants/bets';
+import { MATCH_STATUS } from '@/constants/match.ts';
 import UserService from '@/services/user';
 import { useViewport } from '@/services/viewport';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useExtraBetStore } from '@/stores/extraBet';
+import { useMatchesStore } from '@/stores/matches';
 import { useNotificationStore } from '@/stores/notification';
 import { useRankingStore } from '@/stores/ranking';
+
+import MatchRow from './UserTrackingModal/MatchRow.vue';
 
 const props = defineProps<{
   handleCloseModal: () => void;
@@ -205,25 +243,38 @@ const props = defineProps<{
   selectedUser: null | Pick<IUser, 'id' | 'nickname'>;
 }>();
 
-// ------ Refs ------
-const isVisible = ref(false);
-const isLoginModalOpen = ref(false);
+enum OPTIONS {
+  CHART,
+  EXTRAS,
+  BETS,
+}
 
 // ------ Initialization ------
 const rankingStore = useRankingStore();
 const activeProfileStore = useActiveProfileStore();
 const notificationStore = useNotificationStore();
 const extraBetStore = useExtraBetStore();
+const matchesStore = useMatchesStore();
 const userService = new UserService();
 const { locale, t } = useI18n();
 const { isMobile } = useViewport();
+
+// ------ Refs ------
+const isVisible = ref(false);
+const isLoginModalOpen = ref(false);
+const selectedOption = ref(0);
+const options = ref([
+  { color: '--bolao-c-white', icon: 'pi pi-chart-line', name: t('common.chart'), value: OPTIONS.CHART },
+  { color: '--bolao-c-white', icon: 'pi pi-star', name: t('common.extraBets'), value: OPTIONS.EXTRAS },
+  { color: '--bolao-c-white', icon: 'pi pi-money-bill', name: t('common.bets'), value: OPTIONS.BETS },
+]);
 
 // ------ Computed Properties  ------
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 const favorites = computed(() => activeProfileStore.activeProfile?.favorites || []);
 const roundsRanking = computed(() => rankingStore.roundsRanking);
 const editionRanking = computed(() => rankingStore.editionRanking);
-// const isLoadingExtras = computed(() => extraBetStore.isLoading);
+const matchesWithUserBets = computed(() => matchesStore.matches.filter((m) => m.status !== MATCH_STATUS.NOT_STARTED));
 const selectedUserExtraBets = computed(() => {
   // Deep-copy each option so mutations never bleed back
   const userExtraBetsOriginal =
@@ -517,6 +568,9 @@ watch(isVisible, async (newValue) => {
   }
 }
 
+.chart-container {
+  margin-top: var(--s-spacing);
+}
 .grid-container {
   display: flex;
 

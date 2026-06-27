@@ -15,7 +15,10 @@
     "seeMore": "See more",
     "groupStage": "Group stage",
     "points": "Points",
-    "pointsShort": "Pts."
+    "pointsShort": "Pts.",
+    "chart": "Chart",
+    "bets": "Bets",
+    "extraBets": "Extra Bets"
   },
   "navigation": {
     "home": "Home",
