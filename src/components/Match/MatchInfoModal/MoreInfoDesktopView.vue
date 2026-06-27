@@ -21,7 +21,7 @@
   </div>
   <div
     class="events-container"
-    style="text-align: center; align-items: center; justify-content: center"
+    style=" align-items: center; justify-content: center;text-align: center"
     :style="{
       borderBottomLeftRadius: selectedOption.length > 0 ? 0 : 'var(--border-radius)',
       borderBottomRightRadius: selectedOption.length > 0 ? 0 : 'var(--border-radius)',

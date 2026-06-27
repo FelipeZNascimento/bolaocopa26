@@ -571,6 +571,7 @@ watch(isVisible, async (newValue) => {
 .chart-container {
   margin-top: var(--s-spacing);
 }
+
 .grid-container {
   display: flex;
 

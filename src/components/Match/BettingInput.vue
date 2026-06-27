@@ -307,8 +307,8 @@ function handleScoreClick(event: Event) {
     @media (width <= 768px) {
       font-size: var(--xs-font-size);
       background-color: transparent !important;
-      border-top: none !important;
       border-width: 2px;
+      border-top: none !important;
     }
   }
 }

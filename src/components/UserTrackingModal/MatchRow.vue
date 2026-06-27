@@ -4,7 +4,7 @@
       {{ getPointsAwarded(match.pointsAwarded, hitLevel) }}
       {{ t('common.pointsShort') }}
     </div>
-    <div style="flex: 0; align-items: center; justify-content: space-between; display: flex">
+    <div style=" display: flex;flex: 0; align-items: center; justify-content: space-between">
       <img
         class="flag"
         :src="`https://assets.omegafox.me/copa/countries_flags/${match.homeTeam.isoCode.toLowerCase()}.png`"
@@ -45,7 +45,7 @@
     <div class="team-name">
       {{ getTeamName(match.awayTeam) }}
     </div>
-    <div style="flex: 0; width: 40px; align-items: center; justify-content: space-between; display: flex">
+    <div style=" display: flex;flex: 0; align-items: center; justify-content: space-between; width: 40px">
       <img
         class="flag"
         :src="`https://assets.omegafox.me/copa/countries_flags/${match.awayTeam.isoCode.toLowerCase()}.png`"
@@ -135,25 +135,25 @@ function getTeamName(team: ITeam) {
 </script>
 <style lang="scss" scoped>
 .row {
-  margin-bottom: var(--xs-spacing);
-  width: 100%;
   display: flex;
-  display: flex;
+  gap: var(--xs-spacing);
   align-items: center;
   justify-content: space-between;
+  width: 100%;
   padding: var(--xs-spacing) var(--s-spacing);
+  margin-bottom: var(--xs-spacing);
   background-color: rgb(255 255 255 / 4%);
   border: 1px solid var(--bolao-c-blue3);
   border-radius: var(--border-radius);
-  gap: var(--xs-spacing);
 }
 
 .points-awarded {
-  font-size: var(--xxs-font-size);
-  width: 40px;
-  flex-direction: row;
   display: flex;
+  flex-direction: row;
+  width: 40px;
+  font-size: var(--xxs-font-size);
 }
+
 .flag {
   width: 28px;
   height: 20px;
@@ -168,8 +168,8 @@ function getTeamName(team: ITeam) {
 
 .team-name {
   flex: 4;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   text-align: center;
 
   @media (width <= 768px) {
@@ -179,21 +179,21 @@ function getTeamName(team: ITeam) {
 
 .team-bet {
   width: 30px;
+  font-size: var(--m-font-size);
   color: var(--color-contrast);
   text-align: center;
-  border-radius: var(--border-radius);
-  font-size: var(--m-font-size);
   border: 1px solid color-mix(in srgb, var(--color-contrast), transparent 70%);
+  border-radius: var(--border-radius);
 }
 
 .team-score {
   width: 30px;
-  background-color: color-mix(in srgb, var(--color-main), transparent 50%);
+  font-size: var(--m-font-size);
   color: var(--color-contrast);
   text-align: center;
-  border-radius: var(--border-radius);
-  font-size: var(--m-font-size);
+  background-color: color-mix(in srgb, var(--color-main), transparent 50%);
   border: 1px solid color-mix(in srgb, var(--color-contrast), transparent 70%);
+  border-radius: var(--border-radius);
 }
 
 .green-bg {
@@ -204,6 +204,7 @@ function getTeamName(team: ITeam) {
     border-box;
   background-color: var(--c);
 }
+
 .blue-bg {
   --c: var(--bolao-c-blue-l2);
 
@@ -212,6 +213,7 @@ function getTeamName(team: ITeam) {
     border-box;
   background-color: var(--c);
 }
+
 .red-bg {
   --c: var(--bolao-c-red);
 
