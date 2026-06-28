@@ -117,8 +117,8 @@ const { t } = useI18n();
 const selectedOption = ref(props.isMatchStarted ? OPTIONS.EVENTS : OPTIONS.MATCH_INFO);
 const options = ref([
   { color: '--bolao-c-mint-l2', icon: 'pi pi-trophy', name: t('matches.bets'), value: OPTIONS.BETS },
-  { color: '--bolao-c-blue-l2', icon: 'pi pi-users', name: t('matches.squads'), value: OPTIONS.SQUADS },
-  { color: '--bolao-c-blue-l2', icon: 'pi pi-list-check', name: t('matches.events'), value: OPTIONS.EVENTS },
+  { color: '--bolao-c-gold-l2', icon: 'pi pi-users', name: t('matches.squads'), value: OPTIONS.SQUADS },
+  { color: '--bolao-c-gold-l2', icon: 'pi pi-list-check', name: t('matches.events'), value: OPTIONS.EVENTS },
   { color: '--bolao-c-white', icon: 'pi pi-info-circle', name: t('matches.moreDetails'), value: OPTIONS.MATCH_INFO },
 ]);
 </script>

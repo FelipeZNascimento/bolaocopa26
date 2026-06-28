@@ -1,7 +1,9 @@
 import type { IMatch } from '@/stores/matches.types';
+import type { IRankingLine, IRoundRanking } from '@/stores/ranking.types';
 
 import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
+import { useRankingStore } from '@/stores/ranking';
 
 import ApiService from './api_request';
 import RankingService from './ranking';
@@ -13,11 +15,13 @@ export default class MatchService {
   private configurationStore;
   private matchesStore;
   private rankingService;
+  private rankingStore;
 
   constructor() {
     this.apiRequest = new ApiService();
     this.configurationStore = useConfigurationStore();
     this.matchesStore = useMatchesStore();
+    this.rankingStore = useRankingStore();
     this.rankingService = new RankingService();
     this.websocketInstance = new WebsocketService(this.onWebsocketUpdate);
   }
@@ -90,31 +94,49 @@ export default class MatchService {
   }
 
   private onWebsocketUpdate = (ev: MessageEvent<string>) => {
+    interface IMatchData {
+      allMatches: IMatch[];
+      liveMatches: IMatch[];
+      nextMatches: IMatch[];
+      updatedMatches: IMatch[];
+    }
+
+    interface IRankingData {
+      edition: IRankingLine[];
+      editionWithoutExtras: IRankingLine[];
+      round: IRoundRanking[];
+    }
+
     const parsedData: {
-      data: { allMatches: IMatch[]; liveMatches: IMatch[]; nextMatches: IMatch[]; updatedMatches: IMatch[] };
+      data: IMatchData | IRankingData;
       message: string;
     } = JSON.parse(ev.data);
-    if (parsedData.message === WEBSOCKET_EVENTS.MATCHES_UPDATED) {
+    if (parsedData.message === WEBSOCKET_EVENTS.RANKING_UPDATED) {
+      const ranking = parsedData.data as IRankingData;
+      this.rankingStore.setEditionRankingWithoutExtras(ranking.editionWithoutExtras);
+      this.rankingStore.setEditionRanking(ranking.edition);
+      this.rankingStore.setRounds(ranking.round);
+    } else if (parsedData.message === WEBSOCKET_EVENTS.MATCHES_UPDATED) {
+      const matchData = parsedData.data as IMatchData;
+
       const mappedByIdCurrent = new Map(this.matchesStore.matches.map((m) => [m.id, m]));
-      const nextMatches = parsedData.data.nextMatches.map((m) => {
+      const nextMatches = matchData.nextMatches.map((m) => {
         return {
           ...m,
           loggedUserBets: mappedByIdCurrent.get(m.id)?.loggedUserBets ?? null,
         };
       });
 
-      const liveMatches = parsedData.data.liveMatches.map((m) => {
+      const liveMatches = matchData.liveMatches.map((m) => {
         return {
           ...m,
           loggedUserBets: mappedByIdCurrent.get(m.id)?.loggedUserBets ?? null,
         };
       });
 
-      this.matchesStore.updateMatches(parsedData.data.updatedMatches);
+      this.matchesStore.updateMatches(matchData.updatedMatches);
       this.matchesStore.setNextMatches(nextMatches);
       this.matchesStore.setLiveMatches(liveMatches);
-
-      this.rankingService.fetch(true);
     }
   };
 }
