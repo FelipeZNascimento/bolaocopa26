@@ -200,7 +200,7 @@
     <div v-if="selectedOption === OPTIONS.BETS && selectedUser">
       <h2 style="text-align: center">{{ t('common.bets') }}</h2>
       <MatchRow
-        v-for="item in matchesWithUserBets"
+        v-for="item in matchesWithUserBets.sort((a, b) => b.timestamp - a.timestamp)"
         :key="item.id"
         :match="item"
         :user="selectedUser"

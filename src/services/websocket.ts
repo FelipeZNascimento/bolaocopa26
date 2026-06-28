@@ -1,5 +1,6 @@
 export const WEBSOCKET_EVENTS = {
   MATCHES_UPDATED: 'MATCHES_UPDATED',
+  RANKING_UPDATED: 'RANKING_UPDATED',
 };
 
 export default class WebsocketService {

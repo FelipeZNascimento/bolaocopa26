@@ -33,6 +33,15 @@ import { ref } from 'vue';
 const changelogEntries = ref([
   {
     changes: [
+      '[Ranking] Now operates from cache, triggered only by match updates',
+      '[Ranking] New websocket event with updates on ranking - user no longer needs to fetch ranking after match update event',
+      '[User Modal] Bets now sorted from the most recent to the oldest',
+    ],
+    date: '28/06/2026',
+    version: 'v1.0.33',
+  },
+  {
+    changes: [
       '🐛 [Ranking] Favorites + No Extras now being displayed correctly',
       '[User Modal] You can now check all bets for a specific user',
       '[Match] Improved color visibility for bets on mobile',
