@@ -119,6 +119,13 @@
         <li>Queue Length: {{ serverHealth?.pool.queuedRequests }}</li>
         <li>Connection Limit: {{ serverHealth?.pool.connectionLimit }}</li>
       </ul>
+      <p>Cache</p>
+      <ul>
+        <li>Hits: {{ serverHealth?.cacheStats.hits }}</li>
+        <li>Misses: {{ serverHealth?.cacheStats.misses }}</li>
+        <li>Keys: {{ serverHealth?.cacheStats.keys }}</li>
+        <li>Vsize: {{ serverHealth?.cacheStats.vsize }}</li>
+      </ul>
     </template>
   </div>
 </template>
@@ -230,7 +237,6 @@ function handleFlushCache() {
 }
 
 onMounted(() => {
-  console.log('OLAR?');
   startupService.serverHealth();
 });
 

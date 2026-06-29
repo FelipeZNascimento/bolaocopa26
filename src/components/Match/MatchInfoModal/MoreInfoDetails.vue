@@ -123,6 +123,7 @@ const countdown = computed(() => {
   font-size: var(--s-font-size);
   font-weight: bold;
   color: var(--bolao-c-white);
+  text-align: left;
 }
 
 .info-section .info-detail {

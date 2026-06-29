@@ -4,6 +4,12 @@ import { ref } from 'vue';
 import type { IUser } from './activeProfile.types';
 
 export type TServerHealth = {
+  cacheStats: {
+    hits: number;
+    keys: number;
+    misses: number;
+    vsize: number;
+  };
   db: string;
   pool: {
     activeConnections: number;

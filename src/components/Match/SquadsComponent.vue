@@ -115,7 +115,7 @@ const options = ref([
   .full-line {
     display: flex;
     gap: var(--m-spacing);
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     margin-bottom: var(--xxs-spacing);
   }
