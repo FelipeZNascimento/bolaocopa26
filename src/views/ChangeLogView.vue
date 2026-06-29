@@ -32,6 +32,11 @@ import { ref } from 'vue';
 
 const changelogEntries = ref([
   {
+    changes: ['[Admin] Added cache health status', '[Admin] Cache flush now working', '[Match Modal] Minor UI fixes'],
+    date: '29/06/2026',
+    version: 'v1.0.34',
+  },
+  {
     changes: [
       '[Ranking] Now operates from cache, triggered only by match updates',
       '[Ranking] New websocket event with updates on ranking - user no longer needs to fetch ranking after match update event',
