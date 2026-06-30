@@ -110,6 +110,7 @@ const stadium: IStadium = {
 };
 
 export const firstExample: IMatch = {
+  attendance: '0',
   awayTeam: argentina,
   bets: [],
   events: [],
@@ -123,6 +124,7 @@ export const firstExample: IMatch = {
   score: { away: 1, awayPenalties: 0, home: 2, homePenalties: 0 },
   stadium: stadium,
   status: 1,
+  subs: [],
   timestamp: 1,
   weather: {
     description: null,
@@ -133,6 +135,7 @@ export const firstExample: IMatch = {
 };
 
 export const secondExample: IMatch = {
+  attendance: '0',
   awayTeam: germany,
   bets: [],
   events: [],
@@ -146,6 +149,7 @@ export const secondExample: IMatch = {
   score: { away: 1, awayPenalties: 0, home: 1, homePenalties: 0 },
   stadium: stadium,
   status: 1,
+  subs: [],
   timestamp: 1,
   weather: {
     description: null,

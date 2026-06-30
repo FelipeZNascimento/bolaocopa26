@@ -20,6 +20,7 @@
     />
   </div>
   <div class="events-container">
+    <div style="width: 120px">&nbsp;</div>
     <PrimeSelectButton
       v-model="selectedOption"
       optionLabel="name"
@@ -58,8 +59,10 @@
     <div style="display: flex; flex: 1">
       <EventLineComponent
         :events="match.events"
+        :subs="match.subs"
         :home-team-id="match.homeTeam.id"
         :match-status="match.status"
+        :match-score="match.score"
       />
     </div>
   </div>
@@ -248,7 +251,9 @@ const options = ref([
 }
 </style>
 <style lang="scss">
-.p-togglebutton-content {
-  padding: var(--xs-spacing) var(--m-spacing) !important;
+@media (width >768px) {
+  .p-togglebutton-content {
+    padding: var(--xs-spacing) var(--m-spacing) !important;
+  }
 }
 </style>

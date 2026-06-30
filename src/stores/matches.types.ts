@@ -21,6 +21,7 @@ export interface IEvent {
 }
 
 export interface IMatch {
+  attendance: null | string;
   awayTeam: ITeam;
   bets: IBet[];
   events: IMatchEvent[];
@@ -36,11 +37,13 @@ export interface IMatch {
   score: IScore;
   stadium: IStadium;
   status: TMatchStatus;
+  subs: ISub[];
   timestamp: number;
   weather: IWeather;
 }
 
 export interface IMatchEvent {
+  coach: boolean;
   event: IEvent;
   gametime: string;
   id?: number;
@@ -86,6 +89,14 @@ export interface IStadium {
   isoCode: string;
   name: string;
   url: string;
+}
+
+export interface ISub {
+  event: IEvent;
+  gametime: string;
+  player: IPlayer;
+  playerAssist: IPlayer | null;
+  teamId: number;
 }
 
 export interface IWeather {

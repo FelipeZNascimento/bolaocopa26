@@ -65,4 +65,5 @@ export interface ITeam {
   nameEn: string;
   players: IPlayer[];
   squad?: (IPlayer & IPlayerSquad)[];
+  tactics?: string;
 }

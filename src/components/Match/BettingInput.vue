@@ -16,8 +16,15 @@
       <div
         class="score"
         :class="{ 'is-flipping': isScoreFlipping }"
+        :style="{ flexDirection: isHomeTeam ? 'row' : 'row-reverse' }"
       >
         {{ isHomeTeam ? props.match.score.home : props.match.score.away }}
+        <span
+          v-if="isOnPenalties"
+          class="penalties"
+        >
+          ({{ isHomeTeam ? props.match.score?.homePenalties : props.match.score?.awayPenalties }})
+        </span>
       </div>
       <div
         v-if="props.match.loggedUserBets === null"
@@ -70,25 +77,16 @@
         placeholder="_"
         :readonly="isMatchStarted || !activeProfile || isLoadingMatch"
         :style="{
-          textAlign: isOnPenalties && !isMobile ? 'left' : 'center',
           pointerEvents: activeProfile && !isMatchStarted ? 'auto' : 'none',
         }"
         @input="handleInput($event)"
         @keydown="handleKeydown($event)"
       />
       <div
-        v-if="isLoadingMatch && !isOnPenalties"
+        v-if="isLoadingMatch"
         class="loading-spinner-wrapper"
       >
         <i class="pi pi-spin pi-spinner" />
-      </div>
-      <div
-        v-if="isOnPenalties && !isMobile"
-        class="penalties-outer"
-      >
-        <p class="score">
-          {{ isHomeTeam ? props.match.score?.homePenalties : props.match.score?.awayPenalties }}
-        </p>
       </div>
     </div>
   </Transition>
@@ -101,8 +99,6 @@ import { useI18n } from 'vue-i18n';
 import type { IMatch } from '@/stores/matches.types';
 
 import { HIT_LEVELS, type THitLevel } from '@/constants/bets';
-import { PENALTIES } from '@/constants/match';
-import { useViewport } from '@/services/viewport';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useClockStore } from '@/stores/clock';
 import { useConfigurationStore } from '@/stores/configuration';
@@ -129,7 +125,6 @@ const emit = defineEmits<{
 }>();
 
 const clockStore = useClockStore();
-const { isMobile } = useViewport();
 const activeProfileStore = useActiveProfileStore();
 const matchesStore = useMatchesStore();
 const configurationStore = useConfigurationStore();
@@ -137,7 +132,7 @@ const { t } = useI18n();
 
 // ------ Computed Properties ------
 const isMatchStarted = computed(() => clockStore.currentTimestamp >= props.match.timestamp);
-const isOnPenalties = computed(() => PENALTIES.includes(props.match.status));
+const isOnPenalties = computed(() => props.match.score.awayPenalties > 0 || props.match.score.homePenalties > 0);
 const isLoadingMatch = computed(() => matchesStore.updatingMatches.includes(props.match.id));
 const viewBetOption = computed(() => configurationStore.viewBetOption);
 
@@ -280,6 +275,7 @@ function handleScoreClick(event: Event) {
   .score {
     display: flex;
     flex: 1;
+    gap: var(--xs-spacing);
     align-items: center;
     justify-content: center;
     width: 100%;
@@ -290,6 +286,7 @@ function handleScoreClick(event: Event) {
     border-radius: var(--border-radius);
 
     @media (width <= 768px) {
+      gap: var(--xxs-spacing);
       font-size: var(--s-font-size);
     }
   }
@@ -309,6 +306,15 @@ function handleScoreClick(event: Event) {
       background-color: transparent !important;
       border-width: 2px;
       border-top: none !important;
+    }
+  }
+
+  .penalties {
+    font-size: var(--xs-font-size);
+    font-weight: normal;
+
+    @media (width <= 768px) {
+      font-size: var(--xxs-font-size);
     }
   }
 }
@@ -338,7 +344,7 @@ function handleScoreClick(event: Event) {
   padding: var(--xs-spacing);
   font-size: var(--l-font-size);
   color: var(--color-contrast);
-  text-align: left;
+  text-align: center;
   appearance: textfield;
   outline: none;
   background: transparent;
@@ -421,33 +427,6 @@ function handleScoreClick(event: Event) {
 
   @media (width <= 768px) {
     font-size: var(--s-font-size);
-  }
-}
-
-.penalties-outer {
-  position: absolute;
-  top: 0;
-  right: var(--xs-spacing);
-  height: 100%;
-  text-align: center;
-
-  .score {
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    height: 100%;
-    font-size: var(--l-font-size);
-    color: var(--bolao-c-red-l3);
-
-    @media (width <= 768px) {
-      height: 100%;
-      font-size: var(--s-font-size);
-    }
-  }
-
-  .label {
-    height: 40%;
-    font-size: var(--xxs-font-size);
   }
 }
 

@@ -4,11 +4,11 @@
       v-if="matchStatus !== MATCH_STATUS.NOT_STARTED"
       class="full-line separator"
     >
-      {{ t('matches.start') }}
+      <PrimeTag :value="t('matches.start')" />
     </div>
     <div
       v-for="(event, index) in sortedEvents"
-      :key="event.id"
+      :key="`${event.gametime} ${event.event.id}`"
     >
       <div
         v-if="
@@ -17,7 +17,7 @@
         "
         class="full-line separator"
       >
-        {{ t('matches.secondHalf') }}
+        <PrimeTag :value="t('matches.secondHalf')" />
       </div>
       <div
         v-if="
@@ -26,7 +26,7 @@
         "
         class="full-line separator"
       >
-        {{ t('matches.extraTimeFirst') }}
+        <PrimeTag :value="t('matches.extraTimeFirst')" />
       </div>
       <div
         v-if="
@@ -37,7 +37,9 @@
       >
         <PrimeTag :value="t('matches.extraTimeSecond')" />
       </div>
+      <!-- <div v-if="event.event"></div> -->
       <div
+        v-if="event.gametime"
         class="full-line"
         :style="{ justifyContent: homeTeamId === event.teamId ? 'flex-start' : 'flex-end' }"
       >
@@ -52,33 +54,79 @@
             :style="{ justifyContent: homeTeamId === event.teamId ? 'flex-start' : 'flex-end' }"
           >
             <img
+              v-if="event.event.id !== 7"
               style="width: 20px; height: 20px"
               :src="getEventIconUrl(event.event, homeTeamId === event.teamId)"
               :alt="event.event.description"
             />
+            <i
+              v-else
+              class="pi pi-arrow-right-arrow-left"
+            />
 
-            <span
-              v-if="homeTeamId === event.teamId"
-              style="width:"
-            >
+            <span v-if="homeTeamId === event.teamId">
               {{ event.event.id === MATCH_EVENT.PENALTY_SHOOTOUT ? 'PEN' : event.gametime }}
             </span>
             <span v-if="homeTeamId !== event.teamId">{{
               event.event.id === MATCH_EVENT.PENALTY_SHOOTOUT ? 'PEN' : event.gametime
             }}</span>
           </div>
-          <HoverablePlayerName
-            v-if="event.player"
-            :player="event.player"
-            :text-align="homeTeamId === event.teamId ? 'right' : 'left'"
-          />
+          <div>
+            <div
+              v-if="event.player"
+              style="display: flex; gap: var(--xs-spacing); align-items: center; justify-content: flex-start"
+              :style="{
+                flexDirection: homeTeamId === event.teamId ? 'row' : 'row-reverse',
+              }"
+            >
+              <i
+                v-if="event.event.id === 7"
+                style="font-size: var(--xs-font-size); color: var(--bolao-c-mint)"
+                :class="{
+                  'pi pi-chevron-right': homeTeamId === event.teamId,
+                  'pi pi-chevron-left': homeTeamId !== event.teamId,
+                }"
+              />
+              <HoverablePlayerName
+                :player="event.player"
+                :text-align="homeTeamId === event.teamId ? 'left' : 'right'"
+              />
+            </div>
+            <div
+              v-if="event.playerAssist"
+              style="display: flex; gap: var(--xs-spacing); align-items: center; justify-content: flex-start"
+              :style="{
+                flexDirection: homeTeamId === event.teamId ? 'row' : 'row-reverse',
+              }"
+            >
+              <i
+                style="font-size: var(--xs-font-size); color: var(--bolao-c-red)"
+                :class="{
+                  'pi pi-chevron-left': homeTeamId === event.teamId,
+                  'pi pi-chevron-right': homeTeamId !== event.teamId,
+                }"
+              />
+              <HoverablePlayerName
+                :player="event.playerAssist"
+                :text-align="homeTeamId === event.teamId ? 'left' : 'right'"
+              />
+            </div>
+          </div>
         </div>
+      </div>
+      <div
+        v-if="index === sortedEvents.length - 1 && (matchScore.awayPenalties > 0 || matchScore.homePenalties > 0)"
+        class="full-line separator"
+        style="flex-direction: column; padding-bottom: var(--m-spacing)"
+      >
+        <PrimeTag :value="t('matches.penalties')" />
+        <p>{{ matchScore.homePenalties }} x {{ matchScore.awayPenalties }}</p>
       </div>
       <div
         v-if="index === sortedEvents.length - 1 && FINISHED_GAME.includes(matchStatus)"
         class="full-line separator"
       >
-        {{ t('matches.finish') }}
+        <PrimeTag :value="t('matches.finish')" />
       </div>
     </div>
   </div>
@@ -95,7 +143,7 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import type { IEvent, IMatchEvent } from '@/stores/matches.types';
+import type { IEvent, IMatchEvent, IScore, ISub } from '@/stores/matches.types';
 
 import { FINISHED_GAME, MATCH_EVENT, MATCH_STATUS } from '@/constants/match';
 import { useViewport } from '@/services/viewport.ts';
@@ -105,13 +153,15 @@ import HoverablePlayerName from '../HoverablePlayerName.vue';
 const props = defineProps<{
   events: IMatchEvent[];
   homeTeamId: number;
+  matchScore: IScore;
   matchStatus: number;
+  subs: ISub[];
 }>();
 
 const { t } = useI18n();
 const { isMobile } = useViewport();
 const sortedEvents = computed(() => {
-  return [...props.events].sort((a, b) => {
+  return [...props.events, ...props.subs].sort((a, b) => {
     return parseGametime(a.gametime) - parseGametime(b.gametime);
   });
 });
