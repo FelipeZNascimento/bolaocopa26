@@ -4,7 +4,6 @@ import { nextTick } from 'vue';
 
 import type { IMatch } from '@/stores/matches.types';
 
-import { MATCH_STATUS } from '@/constants/match';
 import i18n from '@/i18n';
 
 import TeamComponent from './TeamComponent.vue';
