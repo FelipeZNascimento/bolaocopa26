@@ -28,6 +28,12 @@
         class="column"
         style="align-items: flex-start"
       >
+        <p
+          class="player-line"
+          style="text-align: center"
+        >
+          {{ homeTeam.tactics }}
+        </p>
         <div
           v-for="(player, index) in homeTeam.squad"
           :key="player.id"
@@ -52,6 +58,12 @@
         class="column"
         style="align-items: flex-end"
       >
+        <p
+          class="player-line"
+          style="text-align: center"
+        >
+          {{ awayTeam.tactics }}
+        </p>
         <div
           v-for="(player, index) in awayTeam.squad"
           :key="player.id"

@@ -51,8 +51,10 @@
       <div style="display: flex; flex: 1">
         <EventLineComponent
           :events="match.events"
+          :subs="match.subs"
           :home-team-id="match.homeTeam.id"
           :match-status="match.status"
+          :match-score="match.score"
         />
       </div>
     </div>
@@ -273,7 +275,9 @@ const options = ref([
 }
 </style>
 <style lang="scss">
-.p-togglebutton-content {
-  padding: var(--xs-spacing) 0 !important;
+@media (width <=768px) {
+  .p-togglebutton-content {
+    padding: var(--xs-spacing) 0 !important;
+  }
 }
 </style>

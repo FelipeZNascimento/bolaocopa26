@@ -135,6 +135,7 @@ const createTeam = (id: number, name: string, isoCode: string) => ({
 });
 
 const createMatch = (overrides = {}): IMatch => ({
+  attendance: '0',
   awayTeam: createTeam(2, 'Team B', 'AR'),
   bets: [],
   events: [],
@@ -173,6 +174,7 @@ const createMatch = (overrides = {}): IMatch => ({
     url: '',
   },
   status: 1,
+  subs: [],
   timestamp: 2000000, // Future match
   weather: {
     description: null,
@@ -602,22 +604,6 @@ describe('TeamComponent', () => {
       expect(spinner.exists()).toBe(false);
     });
 
-    it('should not show loading spinner during penalties even when updating', () => {
-      const match = createMatch({ status: MATCH_STATUS.PENALTIES });
-      mockUpdatingMatches = [1];
-
-      const wrapper = mountComponent({
-        props: {
-          events: [],
-          isHomeTeam: true,
-          match,
-        },
-      });
-
-      const spinner = wrapper.find('.loading-spinner-wrapper');
-      expect(spinner.exists()).toBe(false);
-    });
-
     it('should add is-loading class to input when match is updating', () => {
       const match = createMatch();
       mockUpdatingMatches = [1];
@@ -648,83 +634,6 @@ describe('TeamComponent', () => {
 
       const input = wrapper.find('input');
       expect(input.attributes('readonly')).toBeDefined();
-    });
-  });
-
-  describe('Penalties display', () => {
-    it('should show penalties score when match is on penalties (desktop)', () => {
-      mockIsMobile = false;
-      const match = createMatch({
-        score: {
-          away: 1,
-          awayPenalties: 4,
-          home: 1,
-          homePenalties: 5,
-        },
-        status: MATCH_STATUS.PENALTIES,
-      });
-
-      const wrapper = mountComponent({
-        props: {
-          events: [],
-          isHomeTeam: true,
-          isWinning: true,
-          match,
-        },
-      });
-
-      const penaltiesOuter = wrapper.find('.penalties-outer');
-      expect(penaltiesOuter.exists()).toBe(true);
-      expect(penaltiesOuter.text()).toContain('5');
-    });
-
-    it('should not show penalties score on mobile', () => {
-      mockIsMobile = true;
-      const match = createMatch({
-        score: {
-          away: 1,
-          awayPenalties: 4,
-          home: 1,
-          homePenalties: 5,
-        },
-        status: MATCH_STATUS.PENALTIES,
-      });
-
-      const wrapper = mountComponent({
-        props: {
-          events: [],
-          isHomeTeam: true,
-          match,
-        },
-      });
-
-      const penaltiesOuter = wrapper.find('.penalties-outer');
-      expect(penaltiesOuter.exists()).toBe(false);
-    });
-
-    it('should show penalties score for away team', () => {
-      mockIsMobile = false;
-      const match = createMatch({
-        score: {
-          away: 1,
-          awayPenalties: 4,
-          home: 1,
-          homePenalties: 5,
-        },
-        status: MATCH_STATUS.AWAITING_PENALTIES,
-      });
-
-      const wrapper = mountComponent({
-        props: {
-          events: [],
-          isHomeTeam: false,
-          match,
-        },
-      });
-
-      const penaltiesOuter = wrapper.find('.penalties-outer');
-      expect(penaltiesOuter.exists()).toBe(true);
-      expect(penaltiesOuter.text()).toContain('4');
     });
   });
 

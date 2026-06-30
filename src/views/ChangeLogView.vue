@@ -32,6 +32,15 @@ import { ref } from 'vue';
 
 const changelogEntries = ref([
   {
+    changes: [
+      '🐛 [Matches] FIFAs API is bad and we cant appropriately display penalties, so theyre now hidden',
+      `[Matches] If a match goes to penalties, we're now displaying it on the score (even though it doesn't impact the ranking)`,
+      '[Matches] Substitutions now are available on the match events',
+    ],
+    date: '30/06/2026',
+    version: 'v1.0.35',
+  },
+  {
     changes: ['[Admin] Added cache health status', '[Admin] Cache flush now working', '[Match Modal] Minor UI fixes'],
     date: '29/06/2026',
     version: 'v1.0.34',
