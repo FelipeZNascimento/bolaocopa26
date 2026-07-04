@@ -111,7 +111,7 @@
           >
             <img
               v-if="event.event.id !== 7"
-              style="width: 20px; height: 20px; display: block"
+              style=" display: block;width: 20px; height: 20px"
               :src="getEventIconUrl(event.event, false)"
               :alt="event.event.description"
             />
@@ -273,8 +273,8 @@ function parseGametime(gametime: string) {
 
     .player-line {
       display: flex;
-      align-items: center;
       gap: var(--m-spacing);
+      align-items: center;
       padding: var(--xxs-spacing) var(--l-spacing);
       border-radius: var(--border-radius);
     }
