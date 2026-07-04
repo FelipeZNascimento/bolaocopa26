@@ -174,15 +174,15 @@ onUnmounted(() => {
 .play-by-play-outer {
   display: flex;
   flex-direction: column;
-  gap: var(--l-spacing);
+  gap: var(--m-spacing);
   width: 100%;
   min-height: fit-content;
-  margin: var(--m-spacing);
-  overflow: visible;
+  padding: 0 var(--l-spacing);
+  overflow: hidden;
 
   @media (width <= 768px) {
     gap: var(--s-spacing);
-    margin: var(--xs-spacing);
+    padding: var(--xs-spacing);
   }
 }
 
@@ -207,13 +207,8 @@ onUnmounted(() => {
   display: flex;
   gap: var(--s-spacing);
   padding: var(--xl-spacing);
-  margin-bottom: var(--l-spacing);
   background-color: color-mix(in srgb, var(--color-contrast), transparent 90%);
   border-radius: var(--border-radius);
-
-  @media (width <= 768px) {
-    margin-bottom: var(--s-spacing);
-  }
 }
 
 .event-player {
