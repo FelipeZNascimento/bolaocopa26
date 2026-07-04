@@ -32,8 +32,17 @@ import { ref } from 'vue';
 
 const changelogEntries = ref([
   {
+    changes: [
+      '🐛 [Matches] It was taking too long to identify the current round - now fixed',
+      '[Match Modal] Squads now showing events (cards, goals and subs)',
+      '[Team Modal] A new tab was added to show all matches for a specific team',
+    ],
+    date: '04/07/2026',
+    version: 'v1.0.37',
+  },
+  {
     changes: ['[Match Modal] Play by play now added!'],
-    date: '30/06/2026',
+    date: '04/07/2026',
     version: 'v1.0.36',
   },
   {

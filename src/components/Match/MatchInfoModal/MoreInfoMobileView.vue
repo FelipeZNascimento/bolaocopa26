@@ -53,7 +53,8 @@
           v-if="match.homeTeam.squad && match.awayTeam.squad"
           :home-team="match.homeTeam"
           :away-team="match.awayTeam"
-          :squads="{ home: match.homeTeam.squad, away: match.awayTeam.squad }"
+          :events="match.events"
+          :subs="match.subs"
         />
       </div>
     </div>

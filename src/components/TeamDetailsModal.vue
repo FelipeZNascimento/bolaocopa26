@@ -63,9 +63,35 @@
           </div>
         </div>
       </div>
-
-      <h3 class="players-title">{{ t('teamDetailsModal.players') }}</h3>
-      <div class="players-grid">
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: var(--m-spacing) 0;
+        "
+      >
+        <PrimeSelectButton
+          v-model="selectedOption"
+          optionLabel="name"
+          optionValue="value"
+          :options="options"
+          :allowEmpty="false"
+          size="large"
+        >
+          <template #option="slotProps">
+            <i
+              :class="slotProps.option.icon"
+              :style="{ color: 'var(' + slotProps.option.color + ')' }"
+            />
+            <span style="font-size: var(--s-font-size)">{{ slotProps.option.name }}</span>
+          </template>
+        </PrimeSelectButton>
+      </div>
+      <div
+        v-if="selectedOption === OPTIONS.PLAYERS"
+        class="players-grid"
+      >
         <div
           v-for="player in sortedPlayers"
           :key="player.id"
@@ -92,6 +118,16 @@
           </div>
         </div>
       </div>
+      <div v-else>
+        <div style="display: flex; flex-direction: column; gap: var(--xs-spacing)">
+          <MatchComponent
+            v-for="match in teamMatches"
+            :key="match.id"
+            :match="match"
+            :is-demo="true"
+          />
+        </div>
+      </div>
     </div>
   </PrimeDialog>
 </template>
@@ -105,6 +141,9 @@ import type { ITeam } from '@/stores/teams.types';
 import HoverablePlayerName from '@/components/HoverablePlayerName.vue';
 import { useScrollLock } from '@/composables/useScrollLock';
 import { useViewport } from '@/services/viewport';
+import { useMatchesStore } from '@/stores/matches';
+
+import MatchComponent from './Match/MatchComponent.vue';
 
 const props = defineProps<{
   handleCloseModal: () => void;
@@ -113,13 +152,31 @@ const props = defineProps<{
 }>();
 
 // ------ Initialization ------
+
+const matchesStore = useMatchesStore();
 const { isMobile } = useViewport();
 const { locale, t } = useI18n();
+enum OPTIONS {
+  PLAYERS,
+  MATCHES,
+}
 
 // ------ Refs ------
+
 const isVisible = ref(false);
+const selectedOption = ref(OPTIONS.PLAYERS);
+const options = ref([
+  { color: '--bolao-c-gold-l2', icon: 'pi pi-users', name: t('common.players'), value: OPTIONS.PLAYERS },
+  { color: '--bolao-c-mint-l2', icon: 'pi pi-list-check', name: t('common.matches'), value: OPTIONS.MATCHES },
+]);
 
 // ------ Computed ------
+
+const teamMatches = computed(() => {
+  return matchesStore.matches.filter(
+    (match) => match.homeTeam.id === props.team?.id || match.awayTeam.id === props.team?.id,
+  );
+});
 const coach = computed(() => {
   if (!props.team) return null;
   const coachPlayer = props.team.players.find((player) => player.position.id === 1);
@@ -324,8 +381,6 @@ watch(isVisible, (newValue) => {
 }
 
 .players-container {
-  // padding: var(--m-spacing) 0;
-
   @media (width <= 768px) {
     p {
       font-size: var(--s-font-size);
