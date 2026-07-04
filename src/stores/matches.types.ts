@@ -53,6 +53,20 @@ export interface IMatchEvent {
   teamId: number;
 }
 
+export interface IPlayByPlay {
+  Event: IPlayByPlayEvent[];
+}
+export interface IPlayByPlayEvent {
+  EventDescription: { Description: string; Locale: string }[];
+  EventId: string;
+  IdPlayer?: string;
+  IdTeam: string;
+  MatchMinute: string;
+  PositionX: string;
+  PositionY: string;
+  TypeLocalized: { Description: string; Locale: string }[];
+}
+
 export interface IPointsAwarded {
   exact: number;
   minimal: number;

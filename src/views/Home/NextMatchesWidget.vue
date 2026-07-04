@@ -23,6 +23,7 @@
     <MatchComponent
       v-for="match in matches"
       :key="match.id"
+      :is-match-clickable="false"
       :match="match"
       :is-mini="true"
     />

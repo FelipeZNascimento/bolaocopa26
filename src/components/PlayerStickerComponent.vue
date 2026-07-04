@@ -9,7 +9,7 @@
   >
     <template v-if="loading">
       <PrimeSkeleton class="ps-sticker__skel-header" />
-      <PrimeSkeleton class="ps-sticker__skel-photo" />
+      <PrimeSkeleton :class="{ 'ps-sticker__skel-photo--mini': isMini, 'ps-sticker__skel-photo': !isMini }" />
       <div class="ps-sticker__info">
         <PrimeSkeleton class="ps-sticker__skel-name" />
         <PrimeSkeleton class="ps-sticker__skel-sub" />
@@ -29,11 +29,15 @@
           :src="`https://assets.omegafox.me/copa/countries_flags/${player.team.isoCode.toLowerCase()}.png`"
           :alt="player.team.name"
         />
-        <span class="ps-sticker__team-name">{{ locale === 'pt-BR' ? player.team.name : player.team.nameEn }}</span>
+        <span
+          v-if="!isMini"
+          class="ps-sticker__team-name"
+          >{{ locale === 'pt-BR' ? player.team.name : player.team.nameEn }}</span
+        >
         <span class="ps-sticker__number">{{ player.number }}</span>
       </div>
 
-      <div class="ps-sticker__photo">
+      <div :class="{ 'ps-sticker__photo--mini': isMini, 'ps-sticker__photo-photo': !isMini }">
         <div
           v-if="isLoadingImage && player.fifa.pictureId"
           class="ps-sticker__spinner"
@@ -57,7 +61,10 @@
         </div>
       </div>
 
-      <div class="ps-sticker__info">
+      <div
+        v-if="!isMini"
+        class="ps-sticker__info"
+      >
         <span class="ps-sticker__name">{{ player.name }}</span>
         <span class="ps-sticker__position">{{
           locale === 'pt-BR' ? player.position.description : player.position.descriptionEn
@@ -106,6 +113,7 @@ import { useI18n } from 'vue-i18n';
 import type { IPlayer } from '@/stores/teams.types';
 
 const props = defineProps<{
+  isMini?: boolean;
   loading?: boolean;
   player: IPlayer | null;
 }>();
@@ -207,6 +215,10 @@ function handleImageError() {
   height: 150px;
 }
 
+.ps-sticker__skel-photo--mini {
+  height: 40px;
+}
+
 .ps-sticker__skel-name {
   height: 14px;
   margin-bottom: var(--xxs-spacing);
@@ -271,6 +283,10 @@ function handleImageError() {
   height: 150px;
   overflow: hidden;
   background-color: #d4d0c8;
+}
+
+.ps-sticker__photo--mini {
+  height: 80px;
 }
 
 .ps-sticker__spinner {

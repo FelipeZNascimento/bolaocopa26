@@ -32,6 +32,11 @@ import { ref } from 'vue';
 
 const changelogEntries = ref([
   {
+    changes: ['[Match Modal] Play by play now added!'],
+    date: '30/06/2026',
+    version: 'v1.0.36',
+  },
+  {
     changes: [
       '🐛 [Matches] FIFAs API is bad and we cant appropriately display penalties, so theyre now hidden',
       `[Matches] If a match goes to penalties, we're now displaying it on the score (even though it doesn't impact the ranking)`,

@@ -52,7 +52,11 @@
     "extraTimeSecond": "Prorrogação - 2o Tempo",
     "penalties": "Pênaltis",
     "finish": "Fim",
-    "showEvents": "Ver eventos da partida"
+    "showEvents": "Ver eventos da partida",
+    "playByPlay": {
+      "title": "Lance a lance",
+      "refresh": "Atualização em {countdown}s"
+    }
   },
   "profileModal": {
     "title": "Meu Perfil",

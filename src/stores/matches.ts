@@ -1,9 +1,8 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
-import type { IBet, IMatch } from './matches.types';
-
 import { useActiveProfileStore } from './activeProfile';
+import { type IBet, type IMatch, type IPlayByPlayEvent } from './matches.types';
 
 interface IWorkingBet {
   scoreAway: null | number;
@@ -17,6 +16,7 @@ export const useMatchesStore = defineStore('matches', () => {
   const nextMatches = ref<IMatch[]>([]);
   const liveMatches = ref<IMatch[]>([]);
   const error = ref<Error | null>(null);
+  const playByPlay = ref<IPlayByPlayEvent[]>([]);
 
   // Working bets state for tracking unsaved changes
   const workingBets = ref<Map<number, IWorkingBet>>(new Map());
@@ -42,6 +42,10 @@ export const useMatchesStore = defineStore('matches', () => {
         matches.value[index] = { ...newM, bets: bets, loggedUserBets: activeProfileBets };
       }
     });
+  }
+
+  function setPlayByPlay(newPlayByPlay: IPlayByPlayEvent[]) {
+    playByPlay.value = newPlayByPlay;
   }
 
   function setMatches(newMatches: IMatch[]) {
@@ -267,6 +271,7 @@ export const useMatchesStore = defineStore('matches', () => {
     matches,
     nextMatches,
     originalBets,
+    playByPlay,
     requestSave,
     resetLoggedUserBets,
     resetWorkingBets,
@@ -276,6 +281,7 @@ export const useMatchesStore = defineStore('matches', () => {
     setLoading,
     setMatches,
     setNextMatches,
+    setPlayByPlay,
     setUpdatingMatch,
     updateLoggedUserBets,
     updateMatches,

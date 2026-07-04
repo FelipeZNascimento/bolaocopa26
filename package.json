@@ -14,6 +14,7 @@
     "test:unit": "vitest",
     "build-only": "vite build",
     "build-only:pprod": "vite build --mode pprod --outDir dist-pprod",
+    "all-checks": "npm run lint && npm run test",
     "type-check": "vue-tsc --build",
     "test": "npm run type-check && vitest run",
     "lint": "npm run format && npm run lint:js && npm run lint:style",

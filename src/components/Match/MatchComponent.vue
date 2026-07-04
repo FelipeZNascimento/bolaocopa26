@@ -10,7 +10,7 @@
       :is-match-started="isMatchStarted"
       :points-awarded="match.pointsAwarded"
       :gametime="match.gametime"
-      @click="handleMatchClick"
+      @click="isMatchClickable && handleMatchClick"
       @keydown.enter="handleMatchClick"
     />
     <div
