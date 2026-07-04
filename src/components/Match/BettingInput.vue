@@ -47,7 +47,7 @@
       </div>
     </div>
     <div
-      v-else-if="!isMini"
+      v-else-if="!isMini && !isDemo"
       class="team-score"
       :style="{
         cursor: activeProfile ? 'default' : 'pointer',

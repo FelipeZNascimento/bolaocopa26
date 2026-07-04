@@ -48,6 +48,8 @@
         v-if="match.homeTeam.squad && match.awayTeam.squad"
         :home-team="match.homeTeam"
         :away-team="match.awayTeam"
+        :events="match.events"
+        :subs="match.subs"
       />
     </div>
   </div>
@@ -114,6 +116,7 @@ enum OPTIONS {
 }
 
 // ------ Initialization ------
+
 const clockStore = useClockStore();
 const { t } = useI18n();
 

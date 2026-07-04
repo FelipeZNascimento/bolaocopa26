@@ -37,7 +37,6 @@
       >
         <PrimeTag :value="t('matches.extraTimeSecond')" />
       </div>
-      <!-- <div v-if="event.event"></div> -->
       <div
         v-if="event.gametime"
         class="full-line"
