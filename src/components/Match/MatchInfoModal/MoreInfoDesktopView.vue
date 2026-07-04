@@ -22,12 +22,12 @@
   <div class="events-container">
     <div style="width: 120px">&nbsp;</div>
     <PrimeSelectButton
-      v-model="selectedOption"
       optionLabel="name"
       optionValue="value"
       :options="options"
       :allowEmpty="false"
       size="large"
+      @change="onSelectOption"
     >
       <template #option="slotProps">
         <i
@@ -66,8 +66,11 @@
       />
     </div>
   </div>
+  <div v-else-if="selectedOption === OPTIONS.PLAY_BY_PLAY">
+    <PlayByPlayEvents :match="match" />
+  </div>
   <div
-    v-if="selectedOption === OPTIONS.MATCH_INFO"
+    v-else-if="selectedOption === OPTIONS.MATCH_INFO"
     class="events-container"
   >
     <MoreInfoDetails :match="match" />
@@ -78,6 +81,8 @@
   />
 </template>
 <script lang="ts" setup>
+import type { SelectButtonChangeEvent } from 'primevue';
+
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -92,6 +97,7 @@ import ScoreComponent from '../ScoreComponent.vue';
 import SquadsComponent from '../SquadsComponent.vue';
 import BetsContainer from './BetsContainer.vue';
 import MoreInfoDetails from './MoreInfoDetails.vue';
+import PlayByPlayEvents from './PlayByPlayEvents.vue';
 
 const props = defineProps<{
   hitLevel: null | THitLevel;
@@ -104,19 +110,34 @@ enum OPTIONS {
   EVENTS,
   SQUADS,
   MATCH_INFO,
+  PLAY_BY_PLAY,
 }
 
 // ------ Initialization ------
 const clockStore = useClockStore();
 const { t } = useI18n();
 
+// ------ Refs ------
+
 const selectedOption = ref(props.isMatchStarted ? OPTIONS.EVENTS : OPTIONS.MATCH_INFO);
 const options = ref([
-  { color: '--bolao-c-mint-l2', icon: 'pi pi-trophy', name: t('matches.bets'), value: OPTIONS.BETS },
-  { color: '--bolao-c-gold-l2', icon: 'pi pi-users', name: t('matches.squads'), value: OPTIONS.SQUADS },
-  { color: '--bolao-c-gold-l2', icon: 'pi pi-list-check', name: t('matches.events'), value: OPTIONS.EVENTS },
+  { color: '--bolao-c-gold-l2', icon: 'pi pi-trophy', name: t('matches.bets'), value: OPTIONS.BETS },
+  { color: '--bolao-c-mint-l2', icon: 'pi pi-users', name: t('matches.squads'), value: OPTIONS.SQUADS },
+  { color: '--bolao-c-mint-l2', icon: 'pi pi-list-check', name: t('matches.events'), value: OPTIONS.EVENTS },
+  {
+    color: '--bolao-c-orange',
+    icon: 'pi pi-play-circle',
+    name: t('matches.playByPlay.title'),
+    value: OPTIONS.PLAY_BY_PLAY,
+  },
   { color: '--bolao-c-white', icon: 'pi pi-info-circle', name: t('matches.moreDetails'), value: OPTIONS.MATCH_INFO },
 ]);
+
+// ------ Functions ------
+
+function onSelectOption(newOption: SelectButtonChangeEvent) {
+  selectedOption.value = newOption.value;
+}
 </script>
 <style lang="scss" scoped>
 .more-info-desktop-view-outer {

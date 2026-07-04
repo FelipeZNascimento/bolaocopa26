@@ -94,8 +94,10 @@
           <span
             v-if="match.HomeTeamScore !== null"
             class="match-team__score"
-            >{{ match.HomeTeamScore }}</span
           >
+            <span v-if="match.HomeTeamPenaltyScore !== null">({{ match.HomeTeamPenaltyScore }})</span>
+            {{ match.HomeTeamScore }}
+          </span>
         </div>
         <div class="match-divider" />
         <div
@@ -117,14 +119,10 @@
           <span
             v-if="match.AwayTeamScore !== null"
             class="match-team__score"
-            >{{ match.AwayTeamScore }}</span
           >
-        </div>
-        <div
-          v-if="match.HomeTeamPenaltyScore !== null"
-          class="match-penalties"
-        >
-          ({{ match.HomeTeamPenaltyScore }}–{{ match.AwayTeamPenaltyScore }} pen)
+            <span v-if="match.AwayTeamPenaltyScore !== null">({{ match.AwayTeamPenaltyScore }})</span>
+            {{ match.AwayTeamScore }}
+          </span>
         </div>
       </div>
     </div>

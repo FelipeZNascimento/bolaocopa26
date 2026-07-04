@@ -1,4 +1,4 @@
-import type { IMatch } from '@/stores/matches.types';
+import type { IMatch, IPlayByPlayEvent } from '@/stores/matches.types';
 import type { IRankingLine, IRoundRanking } from '@/stores/ranking.types';
 
 import { useConfigurationStore } from '@/stores/configuration';
@@ -6,7 +6,6 @@ import { useMatchesStore } from '@/stores/matches';
 import { useRankingStore } from '@/stores/ranking';
 
 import ApiService from './api_request';
-import RankingService from './ranking';
 import WebsocketService, { WEBSOCKET_EVENTS } from './websocket';
 
 export default class MatchService {
@@ -14,7 +13,6 @@ export default class MatchService {
   private apiRequest;
   private configurationStore;
   private matchesStore;
-  private rankingService;
   private rankingStore;
 
   constructor() {
@@ -22,7 +20,6 @@ export default class MatchService {
     this.configurationStore = useConfigurationStore();
     this.matchesStore = useMatchesStore();
     this.rankingStore = useRankingStore();
-    this.rankingService = new RankingService();
     this.websocketInstance = new WebsocketService(this.onWebsocketUpdate);
   }
 
@@ -91,6 +88,14 @@ export default class MatchService {
       console.error('[MatchService.fetchNextMatches]', error);
       this.matchesStore.setError(new Error(error instanceof Error ? error.message : String(error)));
     }
+  }
+
+  public async fetchPlayByPlay(matchId: number) {
+    const playByPlayUrl = `https://api.fifa.com/api/v3/timelines/${matchId}?language=pt-BR`;
+    const response = await fetch(playByPlayUrl);
+    const data = await response.json();
+    const events = (data.Event as IPlayByPlayEvent[]) ?? [];
+    this.matchesStore.setPlayByPlay(events);
   }
 
   private onWebsocketUpdate = (ev: MessageEvent<string>) => {

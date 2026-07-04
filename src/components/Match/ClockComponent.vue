@@ -1,7 +1,12 @@
 <template>
   <div
     class="left-aligned outer-clock"
-    :class="{ 'is-mini': isMini, 'is-live': isMatchStarted && !isClockStopped, finished: isGameFinished }"
+    :class="{
+      'is-mini': isMini,
+      'is-live': isMatchStarted && !isClockStopped,
+      finished: isGameFinished,
+      clickable: isClickable,
+    }"
   >
     <RibbonComponent
       v-if="activeProfile && status !== MATCH_STATUS.NOT_STARTED"
@@ -73,6 +78,7 @@ import RibbonComponent from './RibbonComponent.vue';
 const props = defineProps<{
   gametime?: null | string;
   hitLevel?: null | THitLevel;
+  isClickable?: boolean;
   isMatchStarted: boolean;
   isMini?: boolean;
   pointsAwarded?: IPointsAwarded;
@@ -120,6 +126,10 @@ watch(
   justify-content: flex-end;
 }
 
+.clickable {
+  cursor: pointer;
+}
+
 .outer-clock {
   position: relative;
   display: flex;
@@ -127,7 +137,6 @@ watch(
   min-width: 120px;
   font-size: var(--m-font-size);
   color: var(--color-contrast);
-  cursor: pointer;
   background:
     linear-gradient(
       150deg,
