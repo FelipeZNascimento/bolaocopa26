@@ -18,7 +18,9 @@
     "pointsShort": "Pts.",
     "chart": "Chart",
     "bets": "Bets",
-    "extraBets": "Extra Bets"
+    "extraBets": "Extra Bets",
+    "players": "Players",
+    "matches": "Matches"
   },
   "navigation": {
     "home": "Home",

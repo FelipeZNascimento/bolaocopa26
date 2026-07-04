@@ -37,7 +37,7 @@
         <span class="ps-sticker__number">{{ player.number }}</span>
       </div>
 
-      <div :class="{ 'ps-sticker__photo--mini': isMini, 'ps-sticker__photo-photo': !isMini }">
+      <div :class="{ 'ps-sticker__photo--mini': isMini, 'ps-sticker__photo': !isMini }">
         <div
           v-if="isLoadingImage && player.fifa.pictureId"
           class="ps-sticker__spinner"
