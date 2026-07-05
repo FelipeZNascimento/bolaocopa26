@@ -411,8 +411,8 @@
     },
     "stages": {
       "final": "Você fez {points} pontos: {team} chegou à final.",
-      "semifinal": "Você fez {points} pontos: {team} caiu nas semi-finais.",
-      "quarterfinal": "Você fez {points} pontos: {team} caiu nas quartas."
+      "semifinal": "Você fez {points} pontos: {team} chegou às semi-finais.",
+      "quarterfinal": "Você fez {points} pontos: {team} chegou nas quartas."
     }
   },
   "extraBetsDetailsModal": {
