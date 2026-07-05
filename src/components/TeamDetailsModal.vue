@@ -63,14 +63,7 @@
           </div>
         </div>
       </div>
-      <div
-        style="
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin: var(--m-spacing) 0;
-        "
-      >
+      <div style="display: flex; align-items: center; justify-content: center; margin: var(--m-spacing) 0">
         <PrimeSelectButton
           v-model="selectedOption"
           optionLabel="name"
