@@ -410,9 +410,9 @@
       }
     },
     "stages": {
-      "final": "You still scored {points}pts as {team} reached the final.",
-      "semifinal": "You still scored {points} pts as {team} reached the semifinals.",
-      "quarterfinal": "You still scored {points} pts as {team} reached the quarterfinals."
+      "final": "You scored {points}pts as {team} reached the final.",
+      "semifinal": "You scored {points} pts as {team} reached the semifinals.",
+      "quarterfinal": "You scored {points} pts as {team} reached the quarterfinals."
     }
   },
   "extraBetsDetailsModal": {

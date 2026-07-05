@@ -111,7 +111,7 @@
           >
             <img
               v-if="event.event.id !== 7"
-              style=" display: block;width: 20px; height: 20px"
+              style="display: block; width: 20px; height: 20px"
               :src="getEventIconUrl(event.event, false)"
               :alt="event.event.description"
             />

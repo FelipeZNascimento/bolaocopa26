@@ -73,7 +73,7 @@
             —
           </span>
           <PrimeButton
-            v-if="onChampionChange && option.value === EXTRA_BETS_VALUES.CHAMPION"
+            v-if="onChampionChange && option.value === EXTRA_BETS_VALUES.CHAMPION && currentRound <= 4"
             :disabled="isLoading"
             icon="pi pi-pencil"
             severity="secondary"
@@ -135,7 +135,10 @@
       </div>
     </div>
   </div>
-  <p style="margin-top: 10px; font-size: var(--xs-font-size); color: var(--color-text); text-align: center">
+  <p
+    v-if="currentRound <= 4"
+    style="margin-top: 10px; font-size: var(--xs-font-size); color: var(--color-text); text-align: center"
+  >
     {{ t('extraBets.championDisclaimer.message1') }}
     {{ t('extraBets.championDisclaimer.message2') }}
     <RouterLink
@@ -155,6 +158,7 @@ import type { ITeam } from '@/stores/teams.types';
 
 import { EXTRA_BETS_LABELS, EXTRA_BETS_VALUES, STAGE_ID } from '@/constants/bets';
 import { useActiveProfileStore } from '@/stores/activeProfile';
+import { useConfigurationStore } from '@/stores/configuration';
 import { useExtraBetStore } from '@/stores/extraBet';
 import { useRankingStore } from '@/stores/ranking';
 
@@ -173,10 +177,14 @@ const { locale, t } = useI18n();
 const extraBetStore = useExtraBetStore();
 const rankingStore = useRankingStore();
 const activeProfileStore = useActiveProfileStore();
+const configurationStore = useConfigurationStore();
 
 // ------ Computed Properties ------
+
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 const userRanking = computed(() => (activeProfile.value ? rankingStore.getUserRanking(activeProfile.value?.id) : null));
+const currentRound = computed(() => configurationStore.currentRound);
+
 const extraBetsResults = computed(() => extraBetStore.results);
 const championProgressiveMatch = computed(() => {
   const championBet = props.extraBetsOptions.find(

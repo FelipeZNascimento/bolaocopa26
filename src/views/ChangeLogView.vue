@@ -33,6 +33,13 @@ import { ref } from 'vue';
 const changelogEntries = ref([
   {
     changes: [
+      '🐛 [Extras] Disabling champion switch after round of 16 has started (it was already disabled on the server)',
+    ],
+    date: '05/07/2026',
+    version: 'v1.0.38',
+  },
+  {
+    changes: [
       '🐛 [Matches] It was taking too long to identify the current round - now fixed',
       '[Match Modal] Squads now showing events (cards, goals and subs)',
       '[Team Modal] A new tab was added to show all matches for a specific team',
