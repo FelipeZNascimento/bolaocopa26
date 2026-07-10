@@ -4,6 +4,10 @@ on:
     types: [opened, edited, closed, reopened, ready_for_review, converted_to_draft]
   issue_comment:
     types: [created, edited]
+
+    # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
 jobs:
   trello:
     permissions:
