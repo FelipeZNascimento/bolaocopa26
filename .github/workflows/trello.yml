@@ -19,6 +19,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           trello-api-key: ${{ secrets.TRELLO_API_KEY }}
           trello-auth-token: ${{ secrets.TRELLO_AUTH_TOKEN }}
+          github-include-pr-branch-name: true
           trello-list-id-pr-open: 69f864d58356f5f5e0d15442
           trello-list-id-pr-closed: 69f8ce4d7caf6cebcb9fb5fe
 
