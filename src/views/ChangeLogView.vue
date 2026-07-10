@@ -32,9 +32,14 @@ import { ref } from 'vue';
 
 const changelogEntries = ref([
   {
+    changes: ['🐛 [Match] All matches are now displayed correctly'],
+    date: '10/07/2026',
+    version: 'v1.0.41',
+  },
+  {
     changes: ['[App] Improvements on performance and stability'],
     date: '10/07/2026',
-    version: 'v1.0.39',
+    version: 'v1.0.39 | v1.0.40',
   },
   {
     changes: [
