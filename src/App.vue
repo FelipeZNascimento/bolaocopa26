@@ -31,7 +31,6 @@ import RankingService from './services/ranking';
 import StartupService from './services/startup';
 import { useViewport } from './services/viewport';
 import { useActiveProfileStore } from './stores/activeProfile';
-import { useClockStore } from './stores/clock';
 import { useConfigurationStore } from './stores/configuration';
 import { useExtraBetStore } from './stores/extraBet';
 import { useMatchesStore } from './stores/matches';
@@ -41,7 +40,6 @@ const route = useRoute();
 const matchService = new MatchService();
 const rankingService = new RankingService();
 const extraBetService = new ExtraBetService();
-const clockStore = useClockStore();
 const configurationStore = useConfigurationStore();
 const activeProfileStore = useActiveProfileStore();
 const extraBetStore = useExtraBetStore();
@@ -51,16 +49,8 @@ const { t } = useI18n();
 
 let appInitialized = false;
 
-function initializationCallback(isSuccess: boolean) {
-  if (isSuccess) {
-    matchService.fetch();
-  }
-}
-
 // ------ Initialization ------
-startupService.initialize(initializationCallback).then(() => {
-  clockStore.startClock();
-  rankingService.fetch();
+startupService.initialize().then(() => {
   if (activeProfile.value) {
     extraBetService.fetch();
   }
