@@ -46,7 +46,7 @@ export default class MatchService {
       const response = await this.apiRequest.get<{ liveMatches: IMatch[]; matches: IMatch[]; nextMatches: IMatch[] }>(
         `match/${edition}/${round}`,
       );
-      this.matchesStore.setMatches(response.nextMatches);
+      this.matchesStore.setMatches(response.matches);
       this.matchesStore.setLiveMatches(response.liveMatches);
       this.matchesStore.setNextMatches(response.nextMatches);
 
