@@ -44,14 +44,8 @@
         @handle-touch-start="onTouchStart($event, widgetId)"
         @toggleMiniMax="onToggleminiMax(widgetId)"
       >
-        <NextMatchesWidget
-          v-if="widgetId === 'next-matches'"
-          :matches="nextMatches"
-        />
-        <LiveMatchesWidget
-          v-else-if="widgetId === 'live-matches'"
-          :matches="liveMatches"
-        />
+        <NextMatchesWidget v-if="widgetId === 'next-matches'" />
+        <LiveMatchesWidget v-else-if="widgetId === 'live-matches'" />
         <NextMatchBetStatusWidget v-else-if="widgetId === 'betStatus'" />
         <WelcomeWidget v-else-if="widgetId === 'welcome'" />
         <LogoWidget v-else-if="widgetId === 'logo'" />
@@ -89,7 +83,6 @@ import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import BannerComponent from '@/components/BannerComponent.vue';
-import MatchService from '@/services/match';
 import { useViewport } from '@/services/viewport';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { useExtraBetStore } from '@/stores/extraBet';
@@ -175,11 +168,6 @@ const { t } = useI18n();
 const activeProfile = computed(() => activeProfileStore.activeProfile);
 const showPushCard = ref('PushManager' in window && 'Notification' in window && Notification.permission !== 'granted');
 
-// ------ Initialization ------
-const matchService = new MatchService();
-matchService.fetchNextMatches();
-matchService.fetchLiveMatches();
-
 // ------ Handle Minimized/Maximized Widgets ------
 function loadMinimized(): WidgetId[] {
   const minimized = localStorage.getItem(STORAGE_KEY_MINIMIZED);
@@ -239,7 +227,6 @@ function saveOrder() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(widgetOrder.value));
 }
 // ------ Computed ------
-const nextMatches = computed(() => matchesStore.nextMatches);
 const liveMatches = computed(() => matchesStore.liveMatches);
 const hasExtraBets = computed(() => extraBetsStore.activeProfileBets.length > 0);
 const visibleWidgets = computed(() =>
