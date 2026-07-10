@@ -43,8 +43,13 @@ export default class MatchService {
     }
 
     try {
-      const response = await this.apiRequest.get<IMatch[]>(`match/${edition}/${round}`);
-      this.matchesStore.setMatches(response);
+      const response = await this.apiRequest.get<{ liveMatches: IMatch[]; matches: IMatch[]; nextMatches: IMatch[] }>(
+        `match/${edition}/${round}`,
+      );
+      this.matchesStore.setMatches(response.nextMatches);
+      this.matchesStore.setLiveMatches(response.liveMatches);
+      this.matchesStore.setNextMatches(response.nextMatches);
+
       this.matchesStore.setLoading(false);
       this.matchesStore.setError(null);
 
@@ -52,40 +57,6 @@ export default class MatchService {
     } catch (error: unknown) {
       this.matchesStore.setLoading(false);
       console.error('[MatchService.fetch]', error);
-      this.matchesStore.setError(new Error(error instanceof Error ? error.message : String(error)));
-    }
-  }
-
-  public async fetchLiveMatches(silent = false) {
-    if (!silent) {
-      this.matchesStore.setLoading(true);
-    }
-
-    try {
-      const response = await this.apiRequest.get<IMatch[]>(`match/live-matches`);
-      this.matchesStore.setLiveMatches(response);
-      this.matchesStore.setLoading(false);
-      this.matchesStore.setError(null);
-    } catch (error: unknown) {
-      this.matchesStore.setLoading(false);
-      console.error('[MatchService.fetchNextMatches]', error);
-      this.matchesStore.setError(new Error(error instanceof Error ? error.message : String(error)));
-    }
-  }
-
-  public async fetchNextMatches(silent = false) {
-    if (!silent) {
-      this.matchesStore.setLoading(true);
-    }
-
-    try {
-      const response = await this.apiRequest.get<IMatch[]>(`match/next-matches`);
-      this.matchesStore.setNextMatches(response);
-      this.matchesStore.setLoading(false);
-      this.matchesStore.setError(null);
-    } catch (error: unknown) {
-      this.matchesStore.setLoading(false);
-      console.error('[MatchService.fetchNextMatches]', error);
       this.matchesStore.setError(new Error(error instanceof Error ? error.message : String(error)));
     }
   }

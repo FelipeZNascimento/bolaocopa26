@@ -10,7 +10,7 @@
     />
   </div>
   <div
-    v-else-if="matches.length === 0"
+    v-else-if="nextMatches.length === 0"
     class="empty-state"
   >
     <i class="pi pi-calendar-times" />
@@ -21,7 +21,7 @@
     class="match-list"
   >
     <MatchComponent
-      v-for="match in matches"
+      v-for="match in nextMatches"
       :key="match.id"
       :is-match-clickable="false"
       :match="match"
@@ -42,15 +42,10 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { RouterLink } from 'vue-router';
 
-import type { IMatch } from '@/stores/matches.types';
-
 import MatchComponent from '@/components/Match/MatchComponent.vue';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useMatchesStore } from '@/stores/matches';
 
-defineProps<{
-  matches: IMatch[];
-}>();
 // ------ Initialization ------
 const matchesStore = useMatchesStore();
 const configurationStore = useConfigurationStore();
@@ -59,6 +54,7 @@ const { t } = useI18n();
 // ------ Computed ------
 const isLoading = computed(() => matchesStore.isLoading);
 const isStartupLoading = computed(() => configurationStore.isLoading);
+const nextMatches = computed(() => matchesStore.nextMatches);
 </script>
 
 <style lang="scss" scoped>
