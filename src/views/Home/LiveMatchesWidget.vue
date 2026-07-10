@@ -1,7 +1,7 @@
 <template>
   <div class="match-list">
     <MatchComponent
-      v-for="match in matches"
+      v-for="match in liveMatches"
       :key="match.id"
       :match="match"
       :is-mini="true"
@@ -10,13 +10,13 @@
 </template>
 
 <script lang="ts" setup>
-import type { IMatch } from '@/stores/matches.types';
+import { computed } from 'vue';
 
 import MatchComponent from '@/components/Match/MatchComponent.vue';
+import { useMatchesStore } from '@/stores/matches';
 
-defineProps<{
-  matches: IMatch[];
-}>();
+const matchesStore = useMatchesStore();
+const liveMatches = computed(() => matchesStore.liveMatches);
 </script>
 
 <style lang="scss" scoped>

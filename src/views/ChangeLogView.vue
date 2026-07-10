@@ -32,6 +32,11 @@ import { ref } from 'vue';
 
 const changelogEntries = ref([
   {
+    changes: ['[App] Improvements on performance and stability'],
+    date: '10/07/2026',
+    version: 'v1.0.39',
+  },
+  {
     changes: [
       '🐛 [Extras] Disabling champion switch after round of 16 has started (it was already disabled on the server)',
     ],
