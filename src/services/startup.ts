@@ -6,13 +6,18 @@ import type {
   TViewBetOptionValue,
   TViewNeymarValue,
 } from '@/stores/configuration.types';
+import type { IMatch } from '@/stores/matches.types';
+import type { IRankingResponse } from '@/stores/ranking.types';
 import type { IPlayer, ITeam } from '@/stores/teams.types';
 
 import { detectLocale, LOCALE_STORAGE_KEY } from '@/i18n';
 import { useActiveProfileStore } from '@/stores/activeProfile';
 import { type TServerHealth, useAdminStore } from '@/stores/admin';
+import { useClockStore } from '@/stores/clock';
 import { useConfigurationStore } from '@/stores/configuration';
 import { useExtraBetStore } from '@/stores/extraBet';
+import { useMatchesStore } from '@/stores/matches';
+import { useRankingStore } from '@/stores/ranking';
 import { useTeamsStore } from '@/stores/teams';
 import { isFulfilled, isRejected } from '@/util/promiseCheck';
 
@@ -28,8 +33,11 @@ export default class StartupService {
   private activeProfileStore;
   private adminStore;
   private apiRequest;
+  private clockStore;
   private configurationStore;
   private extraBetStore;
+  private matchesStore;
+  private rankingStore;
   private teamsStore;
 
   constructor() {
@@ -39,30 +47,45 @@ export default class StartupService {
     this.configurationStore = useConfigurationStore();
     this.extraBetStore = useExtraBetStore();
     this.teamsStore = useTeamsStore();
+    this.matchesStore = useMatchesStore();
+    this.rankingStore = useRankingStore();
+    this.clockStore = useClockStore();
   }
 
   cacheFlush() {
     this.apiRequest.get('admin/flush', undefined, { retries: 3 });
   }
 
-  public async initialize(callback: (isSuccess: boolean) => void) {
+  public async initialize() {
+    this.clockStore.startClock();
     this.initializeLocalStoragePreferences();
     this.activeProfileStore.setLoading(true);
     this.configurationStore.setLoading(true);
     this.extraBetStore.setLoading(true);
     try {
-      const [activeProfileResponse, editionResponse, teamResponse, playerResponse] = await Promise.allSettled([
-        this.apiRequest.get<IUser>('user/activeProfile', undefined, { retries: 3 }),
-        this.apiRequest.get<InitializeObj>('edition/current', undefined, { retries: 3 }),
-        this.apiRequest.get<ITeam[]>('team/all/', undefined, { retries: 3 }),
-        this.apiRequest.get<IPlayer[]>('team/players/', undefined, { retries: 3 }),
-      ]);
+      const [activeProfileResponse, editionResponse, teamResponse, playerResponse, matchesResponse, rankingResponse] =
+        await Promise.allSettled([
+          this.apiRequest.get<IUser>('user/activeProfile', undefined, { retries: 3 }),
+          this.apiRequest.get<InitializeObj>('edition/current', undefined, { retries: 3 }),
+          this.apiRequest.get<ITeam[]>('team/all/', undefined, { retries: 3 }),
+          this.apiRequest.get<IPlayer[]>('team/players/', undefined, { retries: 3 }),
+          this.apiRequest.get<{ liveMatches: IMatch[]; matches: IMatch[]; nextMatches: IMatch[] }>(
+            `match/`,
+            undefined,
+            {
+              retries: 3,
+            },
+          ),
+          this.apiRequest.get<IRankingResponse>(`ranking/edition/`),
+        ]);
 
       if (
         isRejected(activeProfileResponse) ||
         isRejected(editionResponse) ||
         isRejected(teamResponse) ||
-        isRejected(playerResponse)
+        isRejected(playerResponse) ||
+        isRejected(matchesResponse) ||
+        isRejected(rankingResponse)
       ) {
         throw new Error('Falha ao inicializar a aplicação');
       }
@@ -71,6 +94,8 @@ export default class StartupService {
       const seasonData = isFulfilled(editionResponse) ? editionResponse.value : null;
       const teamsData = isFulfilled(teamResponse) ? teamResponse.value : [];
       const playersData = isFulfilled(playerResponse) ? playerResponse.value : [];
+      const matchesData = isFulfilled(matchesResponse) ? matchesResponse.value : null;
+      const rankingData = isFulfilled(rankingResponse) ? rankingResponse.value : null;
 
       // Set Teams store properties
       this.teamsStore.setTeams(teamsData);
@@ -101,14 +126,31 @@ export default class StartupService {
       // Set Extras store properties
       this.extraBetStore.setLoading(false);
 
-      return callback(true);
+      // Set Matches store properties
+      if (matchesData) {
+        this.matchesStore.setMatches(matchesData.matches);
+        this.matchesStore.setLiveMatches(matchesData.liveMatches);
+        this.matchesStore.setNextMatches(matchesData.nextMatches);
+
+        this.matchesStore.setLoading(false);
+        this.matchesStore.setError(null);
+      }
+
+      if (rankingData) {
+        this.rankingStore.setEditionRankingWithoutExtras(rankingData.editionWithoutExtras);
+        this.rankingStore.setEditionRanking(rankingData.edition);
+        this.rankingStore.setRounds(rankingData.round);
+        this.rankingStore.setErrorSeason(null);
+      }
+
+      return;
     } catch (error: unknown) {
       this.activeProfileStore.setLoading(false);
       this.configurationStore.setLoading(false);
       this.extraBetStore.setLoading(false);
       console.error('[StartupService.initialize]', error);
       this.configurationStore.setError(new Error(error instanceof Error ? error.message : String(error)));
-      return callback(false);
+      return;
     }
   }
 
